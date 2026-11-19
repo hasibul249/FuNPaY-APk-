@@ -134,11 +134,12 @@ const fmt = (iso) => { const n = new Date(iso), p = (x) => String(x).padStart(2,
 
 /* ---------- সার্ভারের সাথে যোগাযোগ ---------- */
 async function api(path, o = {}) {
-  const h = {apikey: SUPA_KEY, "Content-Type": "application/json"};
+  const BASE = String(SUPA_URL).replace(/[\s"']/g, "").replace(/\/+$/, ""), KEY = String(SUPA_KEY).replace(/[\s"']/g, "");
+  const h = {apikey: KEY, "Content-Type": "application/json"};
   if (o.auth !== false && S.tok) h.Authorization = "Bearer " + S.tok;
   let r;
-  try { r = await fetch(SUPA_URL + path, {method: o.m || "GET", headers: h, body: o.b ? JSON.stringify(o.b) : undefined}); }
-  catch (e) { throw new Error("NET"); }
+  try { r = await fetch(BASE + path, {method: o.m || "GET", headers: h, body: o.b ? JSON.stringify(o.b) : undefined}); }
+  catch (e) { window.__netErr = (e && e.message || "") + " | " + BASE.slice(0, 40) + " | key:" + KEY.length; throw new Error("NET"); }
   let j = null; try { j = await r.json(); } catch (e) {}
   if (r.status === 401 && o.auth !== false && S.rt && !o.retry) { try { await refreshTok(); return api(path, Object.assign({}, o, {retry: true})); } catch (e) { lock(true); throw new Error("NET"); } }
   if (!r.ok) throw new Error((j && (j.message || j.msg || j.error_description || j.error)) || "ERR");
@@ -157,7 +158,7 @@ async function refreshTok() { setSess(await api("/auth/v1/token?grant_type=refre
 function errMsg(e) {
   const m = (e && e.message) || "";
   const k = {LOW:"low", NOUSER:"nouser", NOAGENT:"noag", SELF:"self", NET:"net", BADAMT:"bada", CONFIRM:"conf1"}[m];
-  if (k) return t(k);
+  if (k) return t(k) + (m === "NET" && window.__netErr ? " [" + window.__netErr + "]" : "");
   if (/invalid login/i.test(m)) return t("wp");
   if (/already registered|already been registered|saving new user/i.test(m)) return t("exists");
   console.log(m);
