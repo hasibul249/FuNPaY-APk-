@@ -1,0 +1,114 @@
+name: Build FuNPaY
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: funpay-build
+  cancel-in-progress: false
+jobs:
+  # ০) আপলোড করা .zip থাকলে নিজে আনজিপ করে রিপোতে বসায় (পিসি/টার্মিনাল লাগে না)
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.p.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: p
+        run: |
+          Z="$(ls -1 *.zip 2>/dev/null | head -1 || true)"
+          if [ -n "$Z" ]; then
+            mkdir -p /tmp/x && unzip -q -o "$Z" -d /tmp/x
+            D=/tmp/x
+            if [ "$(ls -A /tmp/x | wc -l)" -eq 1 ] && [ -d "/tmp/x/$(ls -A /tmp/x)" ]; then D="/tmp/x/$(ls -A /tmp/x)"; fi
+            rm -rf "$D/.github"
+            cp -a "$D"/. .
+            git rm -qf -- *.zip
+            git config user.name "unzip-bot"; git config user.email "unzip@users.noreply.github.com"
+            git add -A
+            git commit -qm "Upload $Z" || true
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  # ১) OTA আপডেট: কোড পুশ করলেই ১-২ মিনিটে সবার অ্যাপে "নতুন আপডেট" পপআপ যাবে, APK লাগবে না
+  ota:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Version stamp
+        env:
+          SU: ${{ secrets.SUPA_URL }}
+          SK: ${{ secrets.SUPA_KEY }}
+        run: |
+          VER="1.2.${{ github.run_number }}"
+          echo "VER=$VER" >> $GITHUB_ENV
+          sed -i "s|const APP_VERSION = \"[^\"]*\";|const APP_VERSION = \"$VER\";|" www/js/app.js
+          sed -i "s|const OTA_URL = \"\";|const OTA_URL = \"https://raw.githubusercontent.com/${{ github.repository }}/ota/ota.json\";|" www/js/app.js
+          [ -n "$SU" ] && sed -i "s|const SUPA_URL = \"\";|const SUPA_URL = \"$SU\";|" www/js/app.js || true
+          [ -n "$SK" ] && sed -i "s|const SUPA_KEY = \"\";|const SUPA_KEY = \"$SK\";|" www/js/app.js || true
+      - run: npm install --no-audit --no-fund
+      - name: Bundle and publish
+        run: |
+          mkdir out
+          (cd www && zip -qr ../out/bundle-$VER.zip .)
+          NOTES="$(cat update-notes.txt 2>/dev/null || echo 'নতুন আপডেট')"
+          jq -n --arg v "$VER" --arg u "https://raw.githubusercontent.com/${{ github.repository }}/ota/bundle-$VER.zip" --arg n "$NOTES" '{version:$v,url:$u,notes:$n}' > out/ota.json
+          cd out
+          git init -q -b ota
+          git config user.name "ota-bot"; git config user.email "ota@users.noreply.github.com"
+          git add .; git commit -qm "OTA $VER"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ota
+  # ২) APK: শুধু প্রথমবার ইনস্টলের জন্য (বা নতুন নেটিভ ফিচার যোগ করলে)
+  apk:
+    needs: prepare
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Version stamp
+        env:
+          SU: ${{ secrets.SUPA_URL }}
+          SK: ${{ secrets.SUPA_KEY }}
+        run: |
+          VER="1.2.${{ github.run_number }}"
+          sed -i "s|const APP_VERSION = \"[^\"]*\";|const APP_VERSION = \"$VER\";|" www/js/app.js
+          sed -i "s|const OTA_URL = \"\";|const OTA_URL = \"https://raw.githubusercontent.com/${{ github.repository }}/ota/ota.json\";|" www/js/app.js
+          [ -n "$SU" ] && sed -i "s|const SUPA_URL = \"\";|const SUPA_URL = \"$SU\";|" www/js/app.js || true
+          [ -n "$SK" ] && sed -i "s|const SUPA_KEY = \"\";|const SUPA_KEY = \"$SK\";|" www/js/app.js || true
+      - run: npm install --no-audit --no-fund
+      - run: npx cap add android
+      - run: node scripts/fix-android.js
+      - name: App icon
+        continue-on-error: true
+        run: npx @capacitor/assets generate --android --iconBackgroundColor "#1d4ed8" --iconBackgroundColorDark "#1d4ed8"
+      - run: npx cap sync android
+      - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FuNPaY-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Direct download link
+        run: |
+          mkdir apkout && cp android/app/build/outputs/apk/debug/app-debug.apk apkout/FuNPaY.apk
+          cd apkout
+          git init -q -b apk
+          git config user.name "apk-bot"; git config user.email "apk@users.noreply.github.com"
+          git add .; git commit -qm "APK"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" apk
