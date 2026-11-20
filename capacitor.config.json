@@ -16,6 +16,10 @@
     "StatusBar": {
       "style": "DARK",
       "backgroundColor": "#e2136e"
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_funpay",
+      "iconColor": "#e2136e"
     }
   }
 }

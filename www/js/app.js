@@ -150,11 +150,15 @@ Object.assign(T.en, {noagn:"No agent with this number", nomrc:"No payment (merch
  snd:"Sender", rcvr:"Recipient", agl:"Agent", mrc:"Merchant", cust:"Customer", src:"Source", opr:"Operator", num2:"Number", copy:"Copy", disc:"Coupon discount", pay2:"Paid",
  stp:"Period", p1:"1 month", p3:"3 months", p6:"6 months", p12:"1 year", gen:"Generate statement", stt:"Account Statement", acn:"Account name", fromd:"From", tod:"To", tin:"Total cash in", tout:"Total cash out", tcnt:"Transactions", dtl:"Date", trn:"Details", amc:"Amount", nostm:"No transactions in this period", shimg:"Share as image", shfail:"Could not share", gend:"Generated",
  cpn:"Coupon", cpsel:"Choose a coupon", cpnone:"You have no coupons", cpmin:"Min.", cpexp:"Expires", cpoff:"Remove", cpok:"Coupon applied", cpbad:"This coupon can't be used now", cpcode:"Coupon code", cpadd:"Add", cpadded:"Coupon added", cpmy:"My coupons", cpna:"Not valid for this amount", cpsv:"You save", cpmax:"Max", cpexh:"You already have this coupon", cpwrong:"Invalid coupon code", rcn:"Receipt"});
+Object.assign(T.bn, {fail:"ব্যর্থ", nonf:"এখনো কোনো নোটিফিকেশন নেই", dbold:"ডাটাবেস আপডেট বাকি আছে, Supabase এ update-v2.13.sql চালান", newacc2:"এই নম্বরে অ্যাকাউন্ট নেই? নতুন অ্যাকাউন্ট খুলুন",
+ nf_send:"আপনি {w} কে {a} পাঠিয়েছেন", nf_recv:"{w} থেকে {a} পেয়েছেন", nf_cash:"ক্যাশ আউট সফল হয়েছে: {a}", nf_cashin:"{w} আপনার কাছে {a} ক্যাশ আউট করেছেন", nf_pay:"{w} কে {a} পেমেন্ট সফল হয়েছে", nf_add:"আপনার অ্যাকাউন্টে {a} যোগ হয়েছে", nf_svc:"{w} সফল হয়েছে: {a}"});
+Object.assign(T.en, {fail:"Failed", nonf:"No notifications yet", dbold:"Database update pending, run update-v2.13.sql in Supabase", newacc2:"No account for this number? Create one",
+ nf_send:"You sent {a} to {w}", nf_recv:"You received {a} from {w}", nf_cash:"Cash out successful: {a}", nf_cashin:"{w} cashed out {a} with you", nf_pay:"Payment of {a} to {w} was successful", nf_add:"{a} was added to your account", nf_svc:"{w} successful: {a}"});
 Object.assign(T.bn, {comm:"কমিশন", mwise:"মাস অনুযায়ী হিসাব", stpdf:"স্টেটমেন্ট PDF শেয়ার/সেভ"}); Object.assign(T.en, {comm:"Commission", mwise:"Month-wise summary", stpdf:"Share / save statement PDF"});
 /* সময় অনুযায়ী শুভেচ্ছা: সকাল ৫–১২, দুপুর ১২–৪, বিকাল ৪–৭, রাত্রি ৭–৫ */
 const greet = () => { const h = new Date().getHours(); return h >= 5 && h < 12 ? "Good morning" : h >= 12 && h < 16 ? "Good afternoon" : h >= 16 && h < 19 ? "Good evening" : "Good night"; }; /* শুভেচ্ছা সব সময় ইংরেজিতে */
 const SPECIAL = ["qrs", "bio", "net", "flt", "menu", "trd", "inf", "pph", "stm", "cpl"];
-const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", ft:[], fq:false, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null, cps:null, regPhone:""};
+const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", ft:[], fq:false, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null, cps:null, regPhone:"", mine:new Set(), noRpc:false};
 try {
   const d = JSON.parse(localStorage.getItem("fp2") || "{}");
   ["lang", "phone", "name"].forEach(k => { if (d[k] !== undefined) S[k] = d[k]; });
@@ -162,7 +166,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.12"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.13"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -337,6 +341,7 @@ function errMsg(e) {
   const sid = S.sheet && S.sheet.id;
   const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh"}[m];
   if (k) return t(k);
+  if (/could not find the function|schema cache|PGRST202/i.test(m)) return t("dbold");
   if (/invalid login/i.test(m)) return t("wp");
   if (/already registered|already been registered|saving new user/i.test(m)) return t("exists");
   console.log(m);
@@ -345,16 +350,54 @@ function errMsg(e) {
 async function loadAll(isFirst, quick) {
   const [p, x] = await Promise.all([api("/rest/v1/profiles?select=*&id=eq." + S.uid, quick ? {tries: 1} : {}), api("/rest/v1/transactions?select=*&order=id.desc&limit=60", quick ? {tries: 1} : {})]);
   if (!p.length) throw new Error("ERR");
-  const inc = x.filter(r => r.id > S.seen && r.to_id === S.uid && r.from_id && r.type !== "add");
+  const fresh = x.filter(r => r.id > S.seen && !S.mine.has(r.trx));
   S.me = p[0]; S.bal = Number(p[0].balance); S.name = p[0].name; S.tx = x;
   if (x.length) S.seen = Math.max(S.seen, x[0].id);
-  if (!isFirst && inc.length) {
-    const sum = inc.reduce((a, r) => a + Number(r.amount) + Number(r.comm), 0);
-    hap("MEDIUM"); toast("+" + money(sum) + " " + t("got") + " · " + (inc[0].from_name || inc[0].from_phone));
-  }
+  if (!isFirst && fresh.length) pushNotif(fresh);
+}
+
+/* ---------- নোটিফিকেশন: প্রতিটি লেনদেনের জন্য ---------- */
+const nrKey = () => "fpnr_" + (S.phone || (S.me && S.me.phone) || "");
+function nrGet() { try { const v = localStorage.getItem(nrKey()); return v === null ? null : (Number(v) || 0); } catch (e) { return 0; } }
+function nrSet(v) { try { localStorage.setItem(nrKey(), String(v)); } catch (e) {} }
+function unreadN() { const b = nrGet(); return b === null ? 0 : S.tx.filter(x => x.id > b && !S.mine.has(x.trx)).length; }
+const nbadge = (n) => n > 9 ? "9+" : String(n);
+function ntxt(x) {
+  const v = tv(x), out = x.from_id === S.uid;
+  let k = "nf_svc", w = t(x.type);
+  if (x.type === "send") { k = out ? "nf_send" : "nf_recv"; w = out ? (x.to_name || x.to_phone) : (x.from_name || x.from_phone); }
+  else if (x.type === "pay") { k = out ? "nf_pay" : "nf_recv"; w = out ? (x.to_name || x.to_phone) : (x.from_name || x.from_phone); }
+  else if (x.type === "cash") { k = out ? "nf_cash" : "nf_cashin"; w = out ? "" : (x.from_name || x.from_phone); }
+  else if (x.type === "add") k = "nf_add";
+  return t(k).replace("{w}", w || "").replace("{a}", money2(v.amt)).replace(/\s+:/, ":");
+}
+/* নতুন লেনদেন এলে: অ্যাপ খোলা থাকলে ভেতরে বার্তা, ব্যাকগ্রাউন্ডে থাকলে ফোনের নোটিফিকেশন */
+function pushNotif(list) {
+  const arr = list.slice(0, 3); if (!arr.length) return;
+  hap("MEDIUM");
+  if (document.hidden) {
+    const LN = cap().LocalNotifications;
+    if (LN) { try { Promise.resolve(LN.schedule({notifications: arr.map((x, i) => ({id: (Number(x.id) % 2000000000) || (1 + i), title: "FuNPaY · " + t(tv(x).key), body: ntxt(x), smallIcon: "ic_stat_funpay", iconColor: "#e2136e"}))})).catch(() => {}); } catch (e) {} }
+  } else toast(ntxt(arr[0]) + (list.length > 1 ? " (+" + (list.length - 1) + ")" : ""));
+}
+async function askNotifPerm() {
+  const LN = cap().LocalNotifications; if (!LN) return;
+  try { if (localStorage.getItem("fpnask") === "1") return; } catch (e) {}
+  try { const p = await LN.checkPermissions(); if (p.display !== "granted") await LN.requestPermissions(); localStorage.setItem("fpnask", "1"); } catch (e) {}
+}
+function markRead() {
+  if (!S.auth) return;
+  if (S.tx.length) nrSet(Math.max(nrGet() || 0, S.tx[0].id));
+  document.querySelectorAll(".bg,.bd").forEach(e => e.remove());
+  document.querySelectorAll(".nf.un").forEach(e => e.classList.remove("un"));
+}
+function nfRow(x, base) {
+  const v = tv(x), plain = SVC.includes(x.type) || x.type === "add", out = x.from_id === S.uid, nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone;
+  const un = base !== null && x.id > base && !S.mine.has(x.trx);
+  return `<div class="tr nf${un ? " un" : ""}" onclick="openTrx('${esc(x.trx)}')">${plain ? tile(x.type) : avatar(nm, ph)}<div class="m"><b>${t(v.key)}</b><span>${esc(ntxt(x))}</span></div><div class="r"><small>${fmt(x.created_at)}</small>${un ? '<i class="ud"></i>' : ""}</div></div>`;
 }
 let pollT;
-function startPoll() { clearInterval(pollT); pollT = setInterval(() => { if (S.auth && !document.hidden && !S.busy) refresh(); }, 12000); }
+function startPoll() { clearInterval(pollT); pollT = setInterval(() => { if (S.auth && !S.busy && !(S.sheet && S.sheet.busy)) refresh(); }, 8000); }
 async function refresh() {
   const b = S.bal, s = S.seen;
   try { await loadAll(false, true); } catch (e) { return; }
@@ -363,9 +406,10 @@ async function refresh() {
 async function enter() {
   const lp = S.lp; S.lp = ""; S.seen = 0;
   await loadAll(true);
+  if (nrGet() === null) nrSet(S.tx.length ? S.tx[0].id : 0);
   try { localStorage.setItem("fpreg", "1"); } catch (e) {}
   S.auth = true; S.fx = true; S.pin = ""; S.tab = "home"; S.view = "";
-  render(); startPoll(); setTimeout(checkUpdate, 1500);
+  render(); startPoll(); setTimeout(checkUpdate, 1500); setTimeout(askNotifPerm, 2600);
   if (lp) setTimeout(() => offerBio(lp), 1400);
 }
 function lock(auto) {
@@ -471,8 +515,8 @@ function pageHome() {
   ${S.tx.length ? S.tx.slice(0, 3).map((x, i) => row(x, i)).join("") : `<p class="em">${t("no")}</p>`}</div>`;
 }
 function pageInbox() {
-  const head = tbar(t("inbox")) + `<div class="seg"><button class="${S.seg === "t" ? "on" : ""}" onclick="S.seg='t';render()">${t("txs")}</button><button class="${S.seg === "n" ? "on" : ""}" onclick="S.seg='n';render()">${t("nt")}<i class="bd">3</i></button></div>`;
-  if (S.seg === "n") return head + [0, 1, 2].map(i => `<div class="nt">${banner(i)}<p>${t("n" + (i + 1))}</p><small>${t("new")}</small></div>`).join("");
+  const head = tbar(t("inbox")) + `<div class="seg"><button class="${S.seg === "t" ? "on" : ""}" onclick="S.seg='t';render()">${t("txs")}</button><button class="${S.seg === "n" ? "on" : ""}" onclick="S.seg='n';render()">${t("nt")}${unreadN() ? `<i class="bd">${nbadge(unreadN())}</i>` : ""}</button></div>`;
+  if (S.seg === "n") { const b = nrGet(); return head + (S.tx.length ? S.tx.slice(0, 40).map(x => nfRow(x, b)).join("") : `<p class="em">${t("nonf")}</p>`); }
   return head + `<div class="srch"><div>${ic("srch")}<input placeholder="${t("sq")}" value="${esc(S.q)}" id="sq" oninput="S.q=this.value;document.getElementById('lst').innerHTML=list()"></div><button class="fb${S.ft.length ? " on" : ""}" onclick="openFilter()">${ic("filt")}<span>${t("flt")}</span>${S.ft.length ? `<i>${S.ft.length}</i>` : ""}</button></div><div class="note">${t("last")}</div><div id="lst">${list()}</div>`;
 }
 function pageMine() {
@@ -562,6 +606,7 @@ function loginHtml() {
         <button type="button" class="bkfp" aria-label="${t("fpuse")}" onclick="bioTap()">${ic("fp")}</button></div></div>
       <div class="le"></div>
       <button class="btn pgbtn" id="pingo" onclick="pinGo()">${t("ok")}</button>
+      ${S.noRpc ? `<button class="lnk3" onclick="hap();S.regPhone=S.phone;S.phone='';S.pin='';S.view='reg';render()">${t("newacc2")}</button>` : ""}
     </div></div>`;
 }
 function bioTap() { if (bioOn()) bioUnlock(); else toast(t("bioh")); }
@@ -577,6 +622,8 @@ async function setPhone() {
     else { S.regPhone = v; S.view = "reg"; render(); }
   } catch (e) {
     S.busy = false; if (nb) nb.classList.remove("ld");
+    /* সার্ভারে phone_exists ফাংশন না থাকলে (update SQL চালানো হয়নি) আটকে না থেকে সরাসরি PIN পেজে যায় */
+    if (/could not find the function|schema cache|PGRST202|phone_exists/i.test(String((e && e.message) || ""))) { S.noRpc = true; S.phone = v; S.name = ""; S.view = ""; S.pin = ""; render(); return; }
     const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e); hap("HEAVY");
   }
 }
@@ -647,7 +694,7 @@ function render() {
   else {
     const pg = S.tab === "home" ? pageHome() : S.tab === "inbox" ? pageInbox() : pageMine();
     h = `<div class="pg${fx ? " in" : ""}">${pg}</div>`;
-    const nv = (k, lbl) => `<button class="${S.tab === k ? "on" : ""}" onclick="go('${k}')"><span class="ni">${ic(k)}${k === "inbox" ? '<span class="bg">3</span>' : ""}</span>${lbl}</button>`;
+    const nv = (k, lbl) => `<button class="${S.tab === k ? "on" : ""}" onclick="go('${k}')"><span class="ni">${ic(k)}${k === "inbox" && unreadN() ? `<span class="bg">${nbadge(unreadN())}</span>` : ""}</span>${lbl}</button>`;
     h += `<nav class="${fx ? "fx" : ""}">${nv("home", t("home"))}${nv("mine", t("mine"))}<button class="qrb" onclick="openQR('scan')"><span class="ni">${ic("qr")}</span>${t("qrs")}</button>${nv("inbox", t("inbox"))}</nav>`;
   }
   const ap = document.getElementById("app"), sc = ap.scrollTop, ob = document.querySelector(".ban"), bl = ob ? ob.scrollLeft : 0;
@@ -656,6 +703,7 @@ function render() {
   S.fx = false; S.hl = null;
   if (S.fq && S.auth) { S.fq = false; setTimeout(() => { const f = document.getElementById("sq"); if (f) { try { f.focus(); } catch (e) {} } }, 380); }
   sbar();
+  if (S.auth && S.tab === "inbox" && S.seg === "n" && unreadN()) setTimeout(() => { if (S.auth && S.tab === "inbox" && S.seg === "n") markRead(); }, 1600);
   if (!S.auth && CONFIGURED && S.phone && !S.view && !bioOn()) setTimeout(() => { const f = document.getElementById("pinin"); if (f && !S.busy) { try { f.focus(); } catch (e) {} } }, 400);
   if (!S.auth && CONFIGURED) { const f = document.getElementById(S.view === "reg" ? "rn" : "lp"); if (f && S.view) setTimeout(() => { try { f.focus(); } catch (e) {} }, 350); }
 }
@@ -725,10 +773,10 @@ function sheetHtml() {
     const cells = [`<div><span>${t("at")}</span><b>${fmt(s.at)}</b></div>`,
       `<div><span>${t("trx")}</span><b class="cpy"><em>${esc(s.trx)}</em><button class="eye" id="cpb" aria-label="${t("copy")}" onclick="copyTrx()">${ic("copy")}</button></b></div>`,
       `<div><span>${t("amtl")}</span><b>${money(s.amt)}</b></div>`,
-      s.disc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(s.disc)}</b></div>` : `<div><span>${t("feel")}</span><b>${money(s.fee || 0)}</b></div>`,
+      s.disc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(s.disc)}</b></div>` : s.fee ? `<div><span>${t("feel")}</span><b>${money(s.fee)}</b></div>` : "",
       `<div><span>${t("total")}</span><b class="pk">${money(s.total)}</b></div>`,
       `<div><span>${t("nbl")}</span><b class="nbv"><em id="nbv" data-v="${esc(money(s.nb))}">${hidden ? "৳ ••••" : esc(money(s.nb))}</em><button class="eye" id="nbe" aria-label="eye" onclick="toggleNb()">${ic(hidden ? "eyeo" : "eye")}</button></b></div>`];
-    return wrapPage(s, t(s.id), "closeS()", `<div class="pcard bkr"><div class="bkh"><div><b>${t(s.id)}</b><em>${t("done")}</em></div><i class="bkck"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>${who2}<div class="bkg">${cells.join("")}</div><button class="bks" onclick="shareRc()">${ic("shr")}<span>${t("share")}</span></button></div>`,
+    return wrapPage(s, t(s.id), "closeS()", `<div class="pcard bkr"><div class="bkh"><div><b>${t(s.id)}</b><em>${t("done")}</em></div><i class="bkck"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>${who2}<div class="bkg">${cells.filter(Boolean).map((c, i, a) => (a.length % 2 && i === a.length - 1) ? c.replace("<div>", '<div class="wide">') : c).join("")}</div><button class="bks" onclick="shareRc()">${ic("shr")}<span>${t("share")}</span></button></div>`,
       `<button class="bknx" onclick="closeS()"><span>${t("next")}</span>${NXT}</button>`);
   }
 
@@ -741,12 +789,12 @@ function sheetHtml() {
   if (s.step >= 3) {
     const amt = parseFloat(s.a), fee = feeOf(c, amt), dsc = s.id === "pay" ? cpDisc(s.cp, amt) : 0, tot = amt + (d < 0 ? fee - dsc : 0);
     if (s.step === 3) {
-      return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="bkt"><div><span>${t("amtl")}</span><b>${money(amt)}</b></div><div><span>${t("feel")}</span><b>${fee ? "+ " : ""}${money(fee)}</b></div>${dsc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(dsc)}</b></div>` : ""}<div><span>${t("total")}</span><b>${money(tot)}</b></div></div></div>
+      return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="bkt"><div><span>${t("amtl")}</span><b>${money(amt)}</b></div>${fee ? `<div><span>${t("feel")}</span><b>+ ${money(fee)}</b></div>` : ""}${dsc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(dsc)}</b></div>` : ""}<div><span>${t("total")}</span><b>${money(tot)}</b></div></div></div>
         <div class="pcard pinrow">${ic("lock")}<input id="spin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(s.pin)}" oninput="spIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();spGo()}"></div>
         <div class="err c" id="er" style="text-align:center;margin-top:10px">${esc(s.err)}</div>`, `<button class="btn" id="spgo" onclick="spGo()">${t("ok")}</button>`);
     }
     const rows = (!person && s.v ? `<div><span>${t(c.f)}</span><b>${esc(s.v)}</b></div>` : "") + (!person && s.ch ? `<div><span>${t("opr")}</span><b>${t(s.ch)}</b></div>` : "") + (person && s.id === "cash" ? `<div><span>${t("svc")}</span><b>${t("cash")}</b></div>` : "")
-      + `<div><span>${t("amtl")}</span><b>${money(amt)}</b></div><div><span>${t("feel")}</span><b>${money(fee)}</b></div>${dsc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(dsc)}</b></div>` : ""}`;
+      + `<div><span>${t("amtl")}</span><b>${money(amt)}</b></div>${fee ? `<div><span>${t("feel")}</span><b>${money(fee)}</b></div>` : ""}${dsc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(dsc)}</b></div>` : ""}`;
     return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard cfm">${who}<div class="cfa"><small>${t("total")}</small><b>${money(tot)}</b></div><div class="sm">${rows}</div></div>
       ${TEST_MODE && s.id === "cash" ? `<p class="tw" style="margin-top:8px">${t("cashw")}</p>` : ""}
       <div class="err c" style="text-align:center;margin-top:10px">${esc(s.err)}</div>`,
@@ -963,7 +1011,7 @@ function shareRc() {
   const c = cfg(s.id), person = PERSON.includes(s.id), rows = [[t("at"), fmt(s.at)], [t("trx"), s.trx]];
   if (!person && s.ch) rows.push([t("opr"), t(s.ch)]);
   if (!person && s.v) rows.push([t(c.f), s.v]);
-  rows.push([t("amtl"), money2(s.amt)], [t("feel"), money2(s.fee || 0)]);
+  rows.push([t("amtl"), money2(s.amt)]); if (s.fee) rows.push([t("feel"), money2(s.fee)]);
   if (s.disc) rows.push([t("disc"), "- " + money2(s.disc), "#12a15b"]);
   rows.push([t("total"), money2(s.total), "#e2136e"]);
   doShare({title: t(s.id), status: t("done"), amount: money2(s.total), who: person ? {name: s.rn, phone: s.v} : null, rows, foot: fmt(s.at)}, "FuNPaY-" + s.trx + ".png");
@@ -984,7 +1032,7 @@ async function loadCoupons() {
 }
 function cpHtml(s) {
   const amt = parseFloat(s.a) || 0, L = S.cps;
-  if (L === null) return `<div class="lb">${t("cpn")}</div><p class="cpe">${t("wait")}…</p>`;
+  if (L === null) return `<div class="lb">${t("cpn")}</div><p class="cpe"><i class="lgl"></i></p>`;
   if (!L.length) return `<div class="lb">${t("cpn")}</div><p class="cpe">${t("cpnone")}</p>`;
   const items = L.map(k => {
     const ok = !(amt < Number(k.min_amt || 0)), on = s.cp && s.cp.uc_id === k.uc_id, d = on ? cpDisc(k, amt) : 0;
@@ -1006,7 +1054,7 @@ function cpPick(id) {
 function openCoupons() { hap(); S.sheet = {id: "cpl", fresh: true, err: ""}; renderSheet(); loadCoupons().then(() => { if (S.sheet && S.sheet.id === "cpl") renderSheet(); }); }
 function cplHtml() {
   const s = S.sheet, L = S.cps || [];
-  const list = L.length ? L.map(k => `<div class="cpc ro"><i>${ic("tag")}</i><div><b>${esc(k.title)}</b><small>${esc(cpSub(k))}</small></div></div>`).join("") : `<p class="cpe">${S.cps === null ? t("wait") + "…" : t("cpnone")}</p>`;
+  const list = L.length ? L.map(k => `<div class="cpc ro"><i>${ic("tag")}</i><div><b>${esc(k.title)}</b><small>${esc(cpSub(k))}</small></div></div>`).join("") : `<p class="cpe">${S.cps === null ? '<i class="lgl"></i>' : t("cpnone")}</p>`;
   return `<div class="sh dlg${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div><h3 class="cph">${t("cpmy")}</h3><div class="cpl">${list}</div>
     <div class="cpadd"><input id="cpcode" placeholder="${t("cpcode")}" autocapitalize="characters" autocomplete="off" maxlength="20"><button class="btn" onclick="claimCoupon()">${t("cpadd")}</button></div><div class="err c" id="cper" style="text-align:center">${esc(s.err || "")}</div>
     <button class="btn l" onclick="closeS()">${t("close")}</button></div></div>`;
@@ -1035,7 +1083,7 @@ async function confirmTx() {
     if (e && e.message === "NET") { setTimeout(refresh, 1500); return fail(t("neterr") + " · " + t("trxchk")); }
     return fail(errMsg(e));
   }
-  s.busy = false;
+  s.busy = false; S.mine.add(trx);
   S.sheet = {id: s.id, done: true, total: d < 0 ? amt + fee - dsc : amt, amt, fee, disc: dsc, trx, v: s.v, rn: s.rn, ch: s.ch, at: new Date().toISOString(), fresh: false, fxs: true, nb: d < 0 ? S.bal - (amt + fee - dsc) : S.bal + amt};
   if (dsc && S.cps) S.cps = S.cps.filter(k => !s.cp || k.uc_id !== s.cp.uc_id);
   hap("MEDIUM"); renderSheet(); refresh();
@@ -1243,6 +1291,8 @@ function openTrx(trx) {
   const x = S.tx.find(r => r.trx === trx); if (!x) return;
   hap(); S.sheet = {id: "trd", x, fresh: true}; renderSheet();
 }
+const isFail = (x) => /fail|error|cancel/i.test(String((x && x.status) || ""));
+const stBadge = (x) => isFail(x) ? `<span class="stc bad">${ic("info")}${t("fail")}</span>` : `<span class="stc">${ic("ok2")}${t("okk")}</span>`;
 function trdRows(x) {
   const v = tv(x), out = x.from_id === S.uid, R = [], G = "#12a15b";
   R.push([t("svc"), esc(t(v.key))]);
@@ -1256,10 +1306,10 @@ function trdRows(x) {
     const cf = cfg(x.type); if (x.ref) R.push([t(cf && cf.f ? cf.f : "num2"), esc(x.ref), x.ref]);
   } else if (x.type === "add") R.push([t("src"), "FuNPaY"]);
   R.push([t("amtl"), money2(x.amount)]);
-  if (out) R.push([t("feel"), Number(x.fee) ? money2(x.fee) : t("nochg")]);
+  if (out && Number(x.fee)) R.push([t("feel"), money2(x.fee)]);
   else if (Number(x.comm)) R.push([t("comm"), money2(x.comm), G]);
   if (out && Number(x.disc)) R.push([t("disc"), "- " + money2(x.disc), G]);
-  R.push([t("trx"), esc(x.trx), null, x.trx], [t("at"), fmt(x.created_at)], [t("stat"), t("okk"), G]);
+  R.push([t("trx"), esc(x.trx), null, x.trx], [t("at"), fmt(x.created_at)]);
   return R;
 }
 function trdHtml() {
@@ -1269,14 +1319,14 @@ function trdHtml() {
   const cells = R.map(r => { const col = r[2] && r[2].charAt(0) === "#" ? r[2] : null, cp = col ? null : (r[2] || r[3]); return `<div><span>${r[0]}</span><b${col ? ` style="color:${col}"` : ""}><em>${r[1]}</em>${cp ? `<button class="cb2" aria-label="${t("copy")}" onclick="copyTxt('${esc(cp)}')">${ic("copy")}</button>` : ""}</b></div>`; });
   if (cells.length % 2) cells[cells.length - 1] = cells[cells.length - 1].replace("<div>", '<div class="wide">');
   return `<div class="sh dlg trdd${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div>
-    <div class="ok"><div class="tdh">${SVC.includes(x.type) || x.type === "add" ? tile(x.type) : avatar(nm, ph)}</div><h2>${t(v.key)}</h2><div class="amt ${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</div><span class="stc">${ic("ok2")}${t("okk")}</span></div>
+    <div class="ok"><div class="tdh">${SVC.includes(x.type) || x.type === "add" ? tile(x.type) : avatar(nm, ph)}</div><h2>${t(v.key)}</h2><div class="amt ${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</div>${stBadge(x)}</div>
     <div class="tgrid">${cells.join("")}</div><div class="rbt"><button class="btn l" onclick="shareTrx()">${ic("shr")}${t("share")}</button><button class="btn" onclick="closeS()">${t("ok")}</button></div></div></div>`;
 }
 function shareTrx() {
   const s = S.sheet; if (!s || !s.x) return; const x = s.x, v = tv(x), out = x.from_id === S.uid;
   const nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone, person = ["send", "pay", "cash"].includes(x.type);
   const rows = trdRows(x).map(r => [r[0], String(r[1]).replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'"), r[2] && r[2].charAt(0) === "#" ? r[2] : null]);
-  doShare({title: t(v.key), status: t("okk"), amount: (v.out ? "- " : "+ ") + money2(v.amt), who: person ? {name: nm, phone: ph} : null, rows, foot: fmt(x.created_at)}, "FuNPaY-" + x.trx + ".png");
+  doShare({title: t(v.key), status: t(isFail(x) ? "fail" : "okk"), amount: (v.out ? "- " : "+ ") + money2(v.amt), who: person ? {name: nm, phone: ph} : null, rows, foot: fmt(x.created_at)}, "FuNPaY-" + x.trx + ".png");
 }
 
 /* ---------- স্টেটমেন্ট: ১/৩/৬/১২ মাস বেছে রিসিট বানানো ---------- */
@@ -1445,5 +1495,46 @@ try {
   const SB = cap().StatusBar;
   if (SB) { SB.setStyle({style: "DARK"}); SB.setBackgroundColor({color: "#e2136e"}); }
 } catch (e) {}
+/* ---------- নেটিভ অ্যাপের মতো আচরণ: জুম, লং প্রেস মেনু, ছবি টানা, টেক্সট সিলেক্ট বন্ধ ---------- */
+["gesturestart", "gesturechange", "gestureend"].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
+document.addEventListener("contextmenu", e => { if (!(e.target && e.target.closest && e.target.closest("input,textarea"))) e.preventDefault(); });
+document.addEventListener("dragstart", e => e.preventDefault());
+document.addEventListener("touchmove", e => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, {passive: false});
+
+/* ---------- টেনে রিফ্রেশ: নিচে টানলে FuNPaY লোগো ঘুরে ঘুরে ডাটা নতুন হয় ---------- */
+(function () {
+  const ap = document.getElementById("app"), MAXP = 120, TH = 70;
+  let y0 = 0, x0 = 0, pull = 0, on = false, busy = false, el = null;
+  const node = () => { if (!el) { el = document.createElement("div"); el.id = "ptr"; el.innerHTML = '<i class="lgl"></i>'; document.body.appendChild(el); } return el; };
+  const place = (d, anim) => { const e = node(); e.style.transition = anim ? "transform .26s cubic-bezier(.2,.8,.2,1),opacity .2s" : "none"; e.style.transform = "translate(-50%," + (d - 54) + "px)"; e.style.opacity = d <= 0 ? 0 : Math.min(1, d / 36); if (!busy) e.firstChild.style.transform = "rotate(" + Math.round(d * 5) + "deg)"; };
+  ap.addEventListener("touchstart", (e) => {
+    on = false; pull = 0;
+    if (busy || !S.auth || S.sheet || S.upd || ap.scrollTop > 0 || e.touches.length !== 1) return;
+    y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; on = true;
+  }, {passive: true});
+  ap.addEventListener("touchmove", (e) => {
+    if (!on) return;
+    const dy = e.touches[0].clientY - y0, dx = e.touches[0].clientX - x0;
+    if (ap.scrollTop > 0) { on = false; pull = 0; place(0, true); return; }
+    if (dy <= 0) { if (pull > 0) { pull = 0; place(0, false); } return; }
+    if (pull === 0 && Math.abs(dx) > dy) { on = false; return; }
+    pull = Math.min(MAXP, dy * .5);
+    if (e.cancelable) e.preventDefault();
+    place(pull, false);
+  }, {passive: false});
+  const end = async () => {
+    if (!on) return; on = false;
+    if (pull < TH) { pull = 0; place(0, true); return; }
+    busy = true; pull = 0; hap("MEDIUM");
+    node().classList.add("spin"); place(TH * .75, true);
+    const t0 = Date.now();
+    try { await loadAll(false); } catch (e) { toast(t("neterr")); }
+    const w = 900 - (Date.now() - t0); if (w > 0) await new Promise(r => setTimeout(r, w));
+    if (S.auth && !S.sheet) render();
+    node().classList.remove("spin"); busy = false; place(0, true);
+  };
+  ap.addEventListener("touchend", end, {passive: true});
+  ap.addEventListener("touchcancel", end, {passive: true});
+})();
 window.addEventListener("online", () => { if (S.auth) refresh(); setTimeout(checkUpdate, 600); });
 setTimeout(checkUpdate, 2500);

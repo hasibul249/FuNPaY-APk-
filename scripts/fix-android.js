@@ -21,7 +21,7 @@ fs.writeFileSync(g, p);
 const m = "android/app/src/main/AndroidManifest.xml";
 if (fs.existsSync(m)) {
   let x = fs.readFileSync(m, "utf8");
-  ["android.permission.CAMERA", "android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT", "android.permission.VIBRATE"].forEach((perm) => {
+  ["android.permission.CAMERA", "android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT", "android.permission.VIBRATE", "android.permission.POST_NOTIFICATIONS"].forEach((perm) => {
     if (!x.includes(perm)) x = x.replace("</manifest>", `    <uses-permission android:name="${perm}" />\n</manifest>`);
   });
   fs.writeFileSync(m, x);
@@ -63,5 +63,13 @@ if (fs.existsSync(m)) {
   /* ডার্ক মোডেও একই (values-night থাকলে) */
   const sn = res + "/values-night/styles.xml";
   if (fs.existsSync(sn)) { let y = fs.readFileSync(sn, "utf8"); if (!y.includes("windowSplashScreenBackground")) { y = y.replace(/(<style name="AppTheme\.NoActionBarLaunch"[^>]*>)/, '$1\n        <item name="windowSplashScreenBackground">@color/fp_splash_bg</item>\n        <item name="windowSplashScreenAnimatedIcon">@drawable/fp_splash_icon</item>'); fs.writeFileSync(sn, y); } }
+})();
+/* ৭) নোটিফিকেশনের ছোট আইকন (স্ট্যাটাস বারে সাদা গোল ঘেরা ৳ ধাঁচের চিহ্ন) */
+(function () {
+  const res = "android/app/src/main/res";
+  if (!fs.existsSync(res)) return;
+  fs.mkdirSync(res + "/drawable", {recursive: true});
+  fs.writeFileSync(res + "/drawable/ic_stat_funpay.xml", '<?xml version="1.0" encoding="utf-8"?>\n<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24"><path android:fillColor="#FFFFFFFF" android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM12,20c-4.41,0 -8,-3.59 -8,-8s3.59,-8 8,-8 8,3.59 8,8 -3.59,8 -8,8z"/><path android:fillColor="#FFFFFFFF" android:pathData="M12,12m-4.5,0a4.5,4.5 0,1 1,9 0a4.5,4.5 0,1 1,-9 0"/></vector>\n');
+  console.log("নোটিফিকেশন আইকন বসানো হলো");
 })();
 console.log("android সেটিং ঠিক করা হয়েছে");

@@ -965,3 +965,66 @@ button.hold.hd svg.i{stroke:#7d0a3d}
 .mrow small{color:var(--mu)}
 .mrow .rd2{color:var(--red)}
 .mrow.mh{color:var(--mu);font-size:11px;padding-top:2px}.mrow.mh span,.mrow.mh small{color:var(--mu);font-weight:500;font-size:11px}
+
+/* =====================================================================
+   FuNPaY v2.13 - নেটিভ অ্যাপের মতো শান্ত নড়াচড়া, লোগো লোডার, টেনে রিফ্রেশ
+   ===================================================================== */
+/* ১) ওয়েবসাইটের মতো আচরণ বন্ধ: ফোকাস বর্ডার, ছবি টানা, লেখা নির্বাচন, টেক্সট ফোলা */
+*{outline:none}
+input,textarea{-webkit-user-select:text;user-select:text;-webkit-appearance:none;appearance:none}
+img,svg{-webkit-user-drag:none;user-drag:none}
+img{pointer-events:none}
+button,a,.it,.tr,.mr,.rr,.fc,.bn,.hb,.av{cursor:default}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+
+/* ২) অতিরিক্ত নাড়াচড়া বন্ধ: ট্যাব বদলালে শুধু হালকা ফেড, কোনো উঠে আসা/ভাসা/ছোট-বড় হওয়া নেই */
+.pg.in,.pg.in *{animation:none!important}
+.pg.in{animation:fade .14s ease both!important}
+nav,nav.fx{animation:none!important}
+nav button.on .ni{animation:none!important}
+.bn svg.bv,button.hold{animation:none!important}
+.tr.pop{animation:none!important;background:var(--pl2)}
+.dt.on{animation:none!important}
+.stp.go{animation:fade .16s ease both!important}
+.sh{animation-duration:.2s!important}
+.sh .box,.sh.dlg .box{animation-duration:.24s!important}
+.sh.re,.sh.re .box{animation:none!important}
+/* চাপ দিলে ছোট/বড় না হয়ে শুধু হালকা রং বদলায় (নেটিভ রিপলের মতো) */
+.it:active,.fc:active,.tri div:active,.mr:active,.rr:active,.tr:active,.btn:active,.bn:active,.opc:active,.qa button:active,.kp button:active,.pinc .kp button:active,.lwb:active,.more:active,.pill:active,.chip:active,.hb:active,.av:active{transform:none!important}
+.it:active,.fc:active,.tri div:active,.more:active,.hb:active,.av:active{opacity:.6}
+.btn:active,.bn:active{opacity:.85}
+.more svg{transition:none}
+
+/* ৩) লোগো লোডার: অ্যাপের যেকোনো জায়গায় লোড হলে FuNPaY লোগো ছোট করে ঘোরে */
+@keyframes lgspin{to{transform:rotate(360deg)}}
+.lgl{display:inline-block;width:30px;height:30px;background:url(../icons/logo-pink.png) center/contain no-repeat;animation:lgspin .9s linear infinite;vertical-align:middle}
+.cpe .lgl{display:block;margin:6px auto}
+/* বাটন লোড হচ্ছে: লেখা লুকিয়ে সাদা গোল ঘরে লোগো ঘোরে */
+.btn.ld,.nbar.ld{color:transparent!important;position:relative;opacity:1!important;pointer-events:none;animation:none!important}
+.btn.ld{background:linear-gradient(180deg,#ec2c80,#dc1068)!important}
+.nbar.ld{background:var(--lp,#e2136e)!important}
+.btn.ld>*,.nbar.ld>*{visibility:hidden}
+.btn.ld::after,.nbar.ld::after{content:"";position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;background:#fff url(../icons/logo-pink.png) center/26px no-repeat;animation:lgspin .9s linear infinite}
+.btn.l.ld::after{background-color:#fde7f1}
+button.hold.ld{opacity:1!important}
+button.hold.ld>*{visibility:hidden}
+button.hold.ld::after{content:"";position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;background:url(../icons/logo-pink.png) center/contain no-repeat;animation:lgspin .9s linear infinite}
+
+/* ৪) টেনে রিফ্রেশ */
+#ptr{position:fixed;left:50%;top:calc(var(--st) + 8px);z-index:50;width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 4px 14px rgba(120,20,70,.22);display:grid;place-items:center;opacity:0;pointer-events:none;transform:translate(-50%,-54px);will-change:transform}
+#ptr .lgl{width:32px;height:32px;animation:none}
+#ptr.spin .lgl{animation:lgspin .8s linear infinite;transform:none!important}
+
+/* ৫) নোটিফিকেশন তালিকা */
+.nf{transition:background .6s}
+.nf.un{background:var(--pl2)}
+.nf .m span{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4}
+.nf .m b{font-size:13px;color:var(--mu);font-weight:600}
+.nf .m span{color:#2b2530;font-size:13.5px;font-weight:500;margin-top:3px}
+.nf .r{align-self:flex-start;padding-top:2px}
+.ud{display:block;width:9px;height:9px;border-radius:50%;background:var(--p);margin:8px 0 0 auto}
+
+/* ৬) অবস্থা ব্যাজ (সফল / ব্যর্থ) আর লগইনের নতুন অ্যাকাউন্ট লিংক */
+.stc.bad{background:#fde8eb;color:var(--red)}
+.lnk3{margin-top:14px;background:none;border:0;color:var(--p);font-size:14px;font-weight:700;padding:8px 10px;cursor:default}
+.lnk3:active{opacity:.6}

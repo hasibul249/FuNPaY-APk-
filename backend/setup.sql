@@ -303,3 +303,7 @@ grant execute on function public.pay_merchant(text, numeric, bigint) to authenti
 -- সবাইকে দেওয়া:
 --   insert into public.user_coupons(user_id, coupon_id)
 --   select p.id, c.id from public.profiles p, public.coupons c where c.code = 'EID20' on conflict do nothing;
+
+-- v2.13
+alter table public.transactions add column if not exists status text not null default 'success';
+notify pgrst, 'reload schema';
