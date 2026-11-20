@@ -1,8 +1,8 @@
 // npx cap add android এর পর একবার চালান: node scripts/fix-android.js
-// ১) minSdkVersion কমপক্ষে 23 (QR স্ক্যানার)
-// ২) compileSdkVersion 35 + সতর্কতা বন্ধ (নতুন androidx লাইব্রেরি)
-// ৩) Gradle এর মেমরি বাড়ানো (বিল্ড মাঝপথে থেমে যাওয়া ঠেকায়)
-// ৪) ক্যামেরা ও ফিঙ্গারপ্রিন্টের permission AndroidManifest এ বসানো
+// 1) minSdkVersion কমপক্ষে 23 (QR স্ক্যানার)
+// 2) compileSdkVersion 35 + সতর্কতা বন্ধ (নতুন androidx লাইব্রেরি)
+// 3) Gradle এর মেমরি বাড়ানো (বিল্ড মাঝপথে থেমে যাওয়া ঠেকায়)
+// 4) ক্যামেরা ও ফিঙ্গারপ্রিন্টের permission AndroidManifest এ বসানো
 const fs = require("fs");
 const f = "android/variables.gradle";
 if (!fs.existsSync(f)) { console.log("android/variables.gradle পাওয়া যায়নি, আগে npx cap add android চালান"); process.exit(0); }
@@ -27,7 +27,7 @@ if (fs.existsSync(m)) {
   fs.writeFileSync(m, x);
 }
 
-/* ৫) টানলে স্ক্রিন বড়/নরম হওয়া (overscroll stretch) বন্ধ, যেন নেটিভ অ্যাপের মতো স্থির থাকে */
+/* 5) টানলে স্ক্রিন বড়/নরম হওয়া (overscroll stretch) বন্ধ, যেন নেটিভ অ্যাপের মতো স্থির থাকে */
 (function walk(d) {
   if (!fs.existsSync(d)) return;
   for (const n of fs.readdirSync(d)) {
@@ -44,7 +44,7 @@ if (fs.existsSync(m)) {
   }
 })("android/app/src/main/java");
 
-/* ৬) অ্যাপ খোলার সময় কালো/ধূসর স্ক্রিন বন্ধ: নেটিভ স্প্ল্যাশ পুরো গোলাপি, আইকন স্বচ্ছ, তারপর সরাসরি আমাদের অ্যানিমেশন */
+/* 6) অ্যাপ খোলার সময় কালো/ধূসর স্ক্রিন বন্ধ: নেটিভ স্প্ল্যাশ পুরো গোলাপি, আইকন স্বচ্ছ, তারপর সরাসরি আমাদের অ্যানিমেশন */
 (function () {
   const res = "android/app/src/main/res";
   if (!fs.existsSync(res)) return;
@@ -64,7 +64,7 @@ if (fs.existsSync(m)) {
   const sn = res + "/values-night/styles.xml";
   if (fs.existsSync(sn)) { let y = fs.readFileSync(sn, "utf8"); if (!y.includes("windowSplashScreenBackground")) { y = y.replace(/(<style name="AppTheme\.NoActionBarLaunch"[^>]*>)/, '$1\n        <item name="windowSplashScreenBackground">@color/fp_splash_bg</item>\n        <item name="windowSplashScreenAnimatedIcon">@drawable/fp_splash_icon</item>'); fs.writeFileSync(sn, y); } }
 })();
-/* ৭) নোটিফিকেশনের ছোট আইকন (স্ট্যাটাস বারে সাদা গোল ঘেরা ৳ ধাঁচের চিহ্ন) */
+/* 7) নোটিফিকেশনের ছোট আইকন (স্ট্যাটাস বারে সাদা গোল ঘেরা ৳ ধাঁচের চিহ্ন) */
 (function () {
   const res = "android/app/src/main/res";
   if (!fs.existsSync(res)) return;
@@ -73,3 +73,35 @@ if (fs.existsSync(m)) {
   console.log("নোটিফিকেশন আইকন বসানো হলো");
 })();
 console.log("android সেটিং ঠিক করা হয়েছে");
+
+/* 8) SMS User Consent (OTP কোড অটো বসানো): নেটিভ প্লাগইন ফাইল বসানো + MainActivity তে রেজিস্টার + Google Play Services লাইব্রেরি */
+(function () {
+  const root = "android/app/src/main/java";
+  if (!fs.existsSync(root) || !fs.existsSync("native/SmsConsentPlugin.java")) return;
+  let mainFile = null;
+  (function walk(d) {
+    for (const n of fs.readdirSync(d)) {
+      const q = d + "/" + n;
+      if (fs.statSync(q).isDirectory()) walk(q);
+      else if (n === "MainActivity.java") mainFile = q;
+    }
+  })(root);
+  if (!mainFile) { console.log("MainActivity.java পাওয়া যায়নি, SMS প্লাগইন বসানো হয়নি"); return; }
+  let c = fs.readFileSync(mainFile, "utf8");
+  const pkg = (/package\s+([\w.]+)\s*;/.exec(c) || [])[1] || "com.funpay.app";
+  const dir = mainFile.slice(0, mainFile.lastIndexOf("/"));
+  fs.writeFileSync(dir + "/SmsConsentPlugin.java", fs.readFileSync("native/SmsConsentPlugin.java", "utf8").replace(/__PKG__/g, pkg));
+  if (!c.includes("registerPlugin(SmsConsentPlugin.class)")) {
+    c = c.replace(/extends BridgeActivity\s*\{/, "extends BridgeActivity {\n    @Override\n    public void onCreate(android.os.Bundle savedInstanceState) {\n        registerPlugin(SmsConsentPlugin.class);\n        super.onCreate(savedInstanceState);\n    }\n");
+    fs.writeFileSync(mainFile, c);
+  }
+  const bg = "android/app/build.gradle";
+  if (fs.existsSync(bg)) {
+    let b = fs.readFileSync(bg, "utf8");
+    if (!b.includes("play-services-auth-api-phone")) {
+      b = b.replace(/dependencies\s*\{/, "dependencies {\n    implementation 'com.google.android.gms:play-services-auth-api-phone:18.1.0'");
+      fs.writeFileSync(bg, b);
+    }
+  }
+  console.log("SMS User Consent প্লাগইন বসানো হলো");
+})();

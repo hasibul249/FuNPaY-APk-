@@ -42,7 +42,7 @@ Object.assign(P, {
   trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'
 });
 
-/* সার্ভিস তালিকা: f=ফিল্ডের লেবেল, k=n(১১ ডিজিট নম্বর)/t(লেখা), ch=অপশন, fee=চার্জ, d=+১ হলে টাকা আসে */
+/* সার্ভিস তালিকা: f=ফিল্ডের লেবেল, k=n(11 ডিজিট নম্বর)/t(লেখা), ch=অপশন, fee=চার্জ, d=+1 হলে টাকা আসে */
 const SV = [
   {id:"send",f:"rn",k:"n"}, {id:"rech",f:"rn",k:"n",ch:["gp","robi","bl","airtel","tt"]},
   {id:"cash",f:"ag",k:"n",fee:.0185}, {id:"pay",f:"mn",k:"n"},
@@ -63,11 +63,11 @@ const T = {
   txs:"লেনদেনসমূহ",nt:"নোটিফিকেশন",sq:"TrxID বা নম্বর দিয়ে খুঁজুন",flt:"ফিল্টার",f0:"সব",f1:"ক্যাশ ইন",f2:"ক্যাশ আউট",last:"সব লেনদেন",
   none:"কিছু পাওয়া যায়নি",no:"এখনো কোনো লেনদেন নেই",
   amt:"টাকার পরিমাণ",next:"পরবর্তী",back:"পেছনে",cancel:"বাতিল",confirm:"নিশ্চিত করুন",pin:"আপনার PIN দিন",
-  pick:"একটি বেছে নিন",badn:"নম্বর ঠিক নয় (০১XXXXXXXXX)",badt:"তথ্য দিন",bada:"টাকার পরিমাণ দিন",low:"পর্যাপ্ত ব্যালেন্স নেই",wp:"PIN ভুল, আবার চেষ্টা করুন",
+  pick:"একটি বেছে নিন",badn:"নম্বর ঠিক নয় (01XXXXXXXXX)",badt:"তথ্য দিন",bada:"টাকার পরিমাণ দিন",low:"পর্যাপ্ত ব্যালেন্স নেই",wp:"PIN ভুল, আবার চেষ্টা করুন",
   done:"সফল হয়েছে!",trx:"ট্রানজেকশন আইডি",ok:"ঠিক আছে",sendto:"কাকে",svc:"সার্ভিস",amtl:"পরিমাণ",feel:"চার্জ",total:"মোট",
-  lp:"আপনার ৬ ডিজিট PIN দিন",tag:"আপনার টাকা, আপনার নিয়ন্ত্রণ",
-  o1:"প্রথম অ্যাড মানিতে ৫% ক্যাশব্যাক",o2:"রিচার্জে ১০ টাকা বোনাস",o3:"বন্ধুকে ইনভাইট করুন, ৫০ টাকা পান",g1:"এখনই নিন",g2:"রিচার্জ করুন",g3:"ইনভাইট",
-  n1:"অ্যাড মানিতে ক্যাশব্যাক চলছে!",n2:"রিচার্জে বিশেষ বোনাস",n3:"বন্ধু ইনভাইটে ৫০ টাকা",new:"নতুন",
+  lp:"আপনার 6 ডিজিট PIN দিন",tag:"আপনার টাকা, আপনার নিয়ন্ত্রণ",
+  o1:"প্রথম অ্যাড মানিতে 5% ক্যাশব্যাক",o2:"রিচার্জে 10 টাকা বোনাস",o3:"বন্ধুকে ইনভাইট করুন, 50 টাকা পান",g1:"এখনই নিন",g2:"রিচার্জ করুন",g3:"ইনভাইট",
+  n1:"অ্যাড মানিতে ক্যাশব্যাক চলছে!",n2:"রিচার্জে বিশেষ বোনাস",n3:"বন্ধু ইনভাইটে 50 টাকা",new:"নতুন",
   scn:"স্ক্যান করতে ফ্রেমে QR রাখুন, অথবা নম্বর দিন",myfav:"প্রিয় নম্বর",card2:"কার্ড যোগ করুন",bank2:"ব্যাংক একাউন্ট",cd2:"অ্যাড মানি ও পেমেন্টের জন্য",
   lang:"ভাষা: English",out:"লগআউট",acct:"আমার একাউন্ট",chk:"আপডেট চেক করুন",noup:"আপডেট সার্ভার সেট করা নেই",latest:"আপনি সর্বশেষ ভার্সনে আছেন",upfail:"ইন্টারনেট নেই বা চেক করা যায়নি",upn:"নতুন আপডেট এসেছে",upb:"আপডেট করুন",upl:"পরে",ver:"ভার্সন",num:"মোবাইল নম্বর",addn:"যোগ করুন"},
  en:{hi:"Welcome",nm:"Your Name",showb:"Check balance",
@@ -100,9 +100,9 @@ const SVC = ["rech", "bill", "bank", "insur", "edu"];
 Object.assign(T.bn, {recv:"মানি রিসিভ", cashin:"গ্রাহক ক্যাশ আউট", agent:"এজেন্ট", nouser:"এই নম্বরে কোনো FuNPaY অ্যাকাউন্ট নেই", noag:"এটি এজেন্ট নম্বর নয়", self:"নিজের নম্বরে হবে না",
  neterr:"ইন্টারনেট নেই, আবার চেষ্টা করুন", errg:"কিছু ভুল হয়েছে", exists:"এই নম্বরে আগেই অ্যাকাউন্ট খোলা আছে", soon:"এই সার্ভিস শীঘ্রই আসছে", myqr:"আমার QR", scanqr:"QR স্ক্যান করুন",
  scanh:"অন্যের QR স্ক্যান করে টাকা পাঠান বা এজেন্টের কাছে ক্যাশ আউট করুন", qrhint:"এই QR দেখালেই যে কেউ আপনাকে টাকা পাঠাতে পারবে", noscan:"স্ক্যানার শুধু অ্যাপের ভেতরে চলে", badqr:"এটি FuNPaY এর QR নয়",
- got:"পেয়েছেন", newacc:"নতুন অ্যাকাউন্ট", haveacc:"অ্যাকাউন্ট আছে? লগইন করুন", other:"অন্য নম্বর", pin4:"৬ ডিজিট PIN", reg:"অ্যাকাউন্ট খুলুন", setup:"ব্যাকএন্ড সেট করা নেই। README দেখে SUPA_URL আর SUPA_KEY বসান।",
- rcv:"প্রাপক", ep:"আপনার মোবাইল নম্বর", cont:"চালিয়ে যান", cobad:"ক্যাশ আউট সর্বনিম্ন ৫০ টাকা", addmax:"একবারে সর্বোচ্চ ৫,০০০ টাকা", badpin:"PIN ৬ ডিজিটের হতে হবে", back2:"স্বাগতম, আবার",
- conf1:"Supabase এ Confirm email বন্ধ করুন", lp:"আপনার ৬ ডিজিট PIN দিন", dm:"টেস্ট ভার্সন: এই ব্যালেন্স আসল টাকা নয়", cashw:"এটি টেস্ট ব্যালেন্স, আসল টাকা নয়। এজেন্টের কাছ থেকে আসল টাকা নেবেন না।", bioT:"ফিঙ্গারপ্রিন্ট / স্ক্রিন লক দিয়ে আনলক", bioD:"পরের বার PIN-এর বদলে আঙুলের ছাপ বা ফোনের লক দিয়ে অ্যাপ খুলতে পারবেন। PIN-ও কাজ করবে।", bioY:"চালু করুন", bioR:"FuNPaY আনলক করুন", bioOn:"আনলক চালু হয়েছে", on:"চালু", off:"বন্ধ", myqrs:"নিজের QR", rcvd:"প্রাপক"});
+ got:"পেয়েছেন", newacc:"নতুন অ্যাকাউন্ট", haveacc:"অ্যাকাউন্ট আছে? লগইন করুন", other:"অন্য নম্বর", pin4:"6 ডিজিট PIN", reg:"অ্যাকাউন্ট খুলুন", setup:"ব্যাকএন্ড সেট করা নেই। README দেখে SUPA_URL আর SUPA_KEY বসান।",
+ rcv:"প্রাপক", ep:"আপনার মোবাইল নম্বর", cont:"চালিয়ে যান", cobad:"ক্যাশ আউট সর্বনিম্ন 50 টাকা", addmax:"একবারে সর্বোচ্চ 5,000 টাকা", badpin:"PIN 6 ডিজিটের হতে হবে", back2:"স্বাগতম, আবার",
+ conf1:"Supabase এ Confirm email বন্ধ করুন", lp:"আপনার 6 ডিজিট PIN দিন", dm:"টেস্ট ভার্সন: এই ব্যালেন্স আসল টাকা নয়", cashw:"এটি টেস্ট ব্যালেন্স, আসল টাকা নয়। এজেন্টের কাছ থেকে আসল টাকা নেবেন না।", bioT:"ফিঙ্গারপ্রিন্ট / স্ক্রিন লক দিয়ে আনলক", bioD:"পরের বার PIN-এর বদলে আঙুলের ছাপ বা ফোনের লক দিয়ে অ্যাপ খুলতে পারবেন। PIN-ও কাজ করবে।", bioY:"চালু করুন", bioR:"FuNPaY আনলক করুন", bioOn:"আনলক চালু হয়েছে", on:"চালু", off:"বন্ধ", myqrs:"নিজের QR", rcvd:"প্রাপক"});
 Object.assign(T.en, {recv:"Money Received", cashin:"Customer Cash Out", agent:"Agent", nouser:"No FuNPaY account with this number", noag:"This is not an agent number", self:"You can't use your own number",
  neterr:"No internet, try again", errg:"Something went wrong", exists:"An account already exists for this number", soon:"This service is coming soon", myqr:"My QR", scanqr:"Scan QR",
  scanh:"Scan someone's QR to send money, or cash out at an agent", qrhint:"Show this QR so anyone can send you money", noscan:"The scanner only works inside the app", badqr:"This is not a FuNPaY QR",
@@ -110,14 +110,14 @@ Object.assign(T.en, {recv:"Money Received", cashin:"Customer Cash Out", agent:"A
  rcv:"Recipient", ep:"Your mobile number", cont:"Continue", cobad:"Minimum cash out is ৳50", addmax:"Max ৳5,000 at a time", badpin:"PIN must be 4 digits", back2:"Welcome back",
  conf1:"Turn off Confirm email in Supabase", lp:"Enter your 6-digit PIN", dm:"Test version: this balance is not real money", cashw:"This is a test balance, not real money. Do not take real cash from an agent.", bioT:"Unlock with fingerprint / screen lock", bioD:"Next time open the app with your fingerprint or phone lock instead of the PIN. The PIN still works.", bioY:"Turn on", bioR:"Unlock FuNPaY", bioOn:"Unlock enabled", on:"On", off:"Off", myqrs:"Your QR", rcvd:"Recipient"});
 
-Object.assign(T.bn, {lgreg:"লগ ইন / রেজিস্ট্রেশন", phh:"মোবাইল নম্বর দিয়ে লগ ইন / রেজিস্ট্রেশন করুন", cc:"দেশের কোড", bd:"বাংলাদেশ", mob:"মোবাইল নম্বর", terms:"আপনি নিয়ম ও শর্তসমূহে সম্মত আছেন", ft1:"নিরাপদ PIN", ft2:"ফিঙ্গারপ্রিন্ট", ft3:"QR পেমেন্ট", wel:"স্বাগতম", regh:"নতুন অ্যাকাউন্ট খুলুন", regs:"নাম, মোবাইল নম্বর আর ৬ ডিজিট PIN দিন"});
+Object.assign(T.bn, {lgreg:"লগ ইন / রেজিস্ট্রেশন", phh:"মোবাইল নম্বর দিয়ে লগ ইন / রেজিস্ট্রেশন করুন", cc:"দেশের কোড", bd:"বাংলাদেশ", mob:"মোবাইল নম্বর", terms:"আপনি নিয়ম ও শর্তসমূহে সম্মত আছেন", ft1:"নিরাপদ PIN", ft2:"ফিঙ্গারপ্রিন্ট", ft3:"QR পেমেন্ট", wel:"স্বাগতম", regh:"নতুন অ্যাকাউন্ট খুলুন", regs:"নাম, মোবাইল নম্বর আর 6 ডিজিট PIN দিন"});
 Object.assign(T.en, {lgreg:"Log in / Register", phh:"Log in / Register with your mobile number", cc:"Country code", bd:"Bangladesh", mob:"Mobile number", terms:"You agree to the terms and conditions", ft1:"Secure PIN", ft2:"Fingerprint", ft3:"QR payments", wel:"Welcome", regh:"Create a new account", regs:"Enter your name, mobile number and a 6-digit PIN"});
 Object.assign(T.bn, {rcnt:"সাম্প্রতিক", sc1:"স্ক্যান করতে ফ্রেমের ভেতরে QR কোড রাখুন", scn2:"নম্বর দিয়ে পাঠান", camno:"ক্যামেরার অনুমতি দরকার", camd:"QR স্ক্যান করতে FuNPaY কে ক্যামেরা ব্যবহারের অনুমতি দিন।", camb:"অনুমতি দিন", gscan:"অন্য স্ক্যানার দিয়ে খুলুন", sec1:"লেনদেনের ফিচার সেট করুন", sec2:"আপনার পছন্দ বেছে নিন", sec3:"অ্যাকাউন্ট ম্যানেজ করুন", at:"সময়", blc:"ব্যালেন্স", pr:"আমার প্রোফাইল", scn3:"স্ক্যান"});
 Object.assign(T.en, {rcnt:"Recent", sc1:"Place the QR code inside the frame", scn2:"Send using a number", camno:"Camera permission needed", camd:"Allow FuNPaY to use the camera to scan QR codes.", camb:"Allow", gscan:"Open another scanner", sec1:"Set up transaction features", sec2:"Choose your preference", sec3:"Manage account", at:"Time", blc:"Balance", pr:"My profile", scn3:"Scan"});
-Object.assign(T.bn, {bt1:"অ্যাড মানি অফার", bt2:"রিচার্জ অফার", bt3:"রেফার অফার", o1:"প্রথম অ্যাড মানিতে ৫% ক্যাশব্যাক", o2:"মোবাইল রিচার্জে ১০ টাকা বোনাস", o3:"বন্ধুকে ইনভাইট করুন, পান ৫০ টাকা", os1:"ব্যাংক বা কার্ড থেকে টাকা যোগ করুন", os2:"যেকোনো অপারেটরে, প্রতি রিচার্জে", os3:"বন্ধু প্রথম লেনদেন করলেই", g1:"অ্যাড মানি", g2:"রিচার্জ করুন", g3:"ইনভাইট"});
+Object.assign(T.bn, {bt1:"অ্যাড মানি অফার", bt2:"রিচার্জ অফার", bt3:"রেফার অফার", o1:"প্রথম অ্যাড মানিতে 5% ক্যাশব্যাক", o2:"মোবাইল রিচার্জে 10 টাকা বোনাস", o3:"বন্ধুকে ইনভাইট করুন, পান 50 টাকা", os1:"ব্যাংক বা কার্ড থেকে টাকা যোগ করুন", os2:"যেকোনো অপারেটরে, প্রতি রিচার্জে", os3:"বন্ধু প্রথম লেনদেন করলেই", g1:"অ্যাড মানি", g2:"রিচার্জ করুন", g3:"ইনভাইট"});
 Object.assign(T.en, {bt1:"ADD MONEY OFFER", bt2:"RECHARGE OFFER", bt3:"REFER OFFER", o1:"5% cashback on your first Add Money", o2:"৳10 bonus on every recharge", o3:"Invite a friend and get ৳50", os1:"Add money from a bank or card", os2:"On any operator, every recharge", os3:"When your friend makes a first transfer", g1:"Add Money", g2:"Recharge", g3:"Invite"});
 
-Object.assign(T.bn, {menu:"FuNPaY মেনু", stmt:"স্টেটমেন্ট", lim:"লিমিট", help:"গ্রাহক সেবা", about:"FuNPaY নিয়ে জানুন", refer:"রেফার করুন", lock:"অ্যাপ লক করুন", logout:"লগ আউট", recv:"মানি রিসিভ", oth:"অন্যান্য", ftt:"ফিল্টার করুন", close:"বন্ধ", apply:"প্রয়োগ করুন", reset:"রিসেট", detail:"লেনদেনের বিবরণ", stat:"অবস্থা", okk:"সফল", limt:"লেনদেনের লিমিট", l1:"সেন্ড মানি / পেমেন্ট", l1v:"প্রতিবার ১ – ১,০০,০০০ টাকা", l2:"ক্যাশ আউট", l2v:"প্রতিবার ৫০ – ৫০,০০০ টাকা, চার্জ ১.৮৫%", l3:"অ্যাড মানি", l3v:"প্রতিবার সর্বোচ্চ ৫,০০০ টাকা", l4:"সার্ভিস বিল", l4v:"প্রতিবার ১ – ১,০০,০০০ টাকা", abt:"FuNPaY একটি টেস্ট মোবাইল ওয়ালেট অ্যাপ। এখানকার সব টাকা নকল, আসল টাকা নয়।", hlp:"সাহায্য লাগলে অ্যাপের ডেভেলপারের সাথে যোগাযোগ করুন। শীঘ্রই লাইভ সাপোর্ট আসছে।", invite:"FuNPaY অ্যাপে আমার নম্বরে টাকা পাঠান: ", nt2:"নোটিফিকেশন", fnone:"সব দেখাচ্ছে"});
+Object.assign(T.bn, {menu:"FuNPaY মেনু", stmt:"স্টেটমেন্ট", lim:"লিমিট", help:"গ্রাহক সেবা", about:"FuNPaY নিয়ে জানুন", refer:"রেফার করুন", lock:"অ্যাপ লক করুন", logout:"লগ আউট", recv:"মানি রিসিভ", oth:"অন্যান্য", ftt:"ফিল্টার করুন", close:"বন্ধ", apply:"প্রয়োগ করুন", reset:"রিসেট", detail:"লেনদেনের বিবরণ", stat:"অবস্থা", okk:"সফল", limt:"লেনদেনের লিমিট", l1:"সেন্ড মানি / পেমেন্ট", l1v:"প্রতিবার 1 – 1,00,000 টাকা", l2:"ক্যাশ আউট", l2v:"প্রতিবার 50 – 50,000 টাকা, চার্জ 1.85%", l3:"অ্যাড মানি", l3v:"প্রতিবার সর্বোচ্চ 5,000 টাকা", l4:"সার্ভিস বিল", l4v:"প্রতিবার 1 – 1,00,000 টাকা", abt:"FuNPaY একটি টেস্ট মোবাইল ওয়ালেট অ্যাপ। এখানকার সব টাকা নকল, আসল টাকা নয়।", hlp:"সাহায্য লাগলে অ্যাপের ডেভেলপারের সাথে যোগাযোগ করুন। শীঘ্রই লাইভ সাপোর্ট আসছে।", invite:"FuNPaY অ্যাপে আমার নম্বরে টাকা পাঠান: ", nt2:"নোটিফিকেশন", fnone:"সব দেখাচ্ছে"});
 Object.assign(T.en, {menu:"FuNPaY Menu", stmt:"Statement", lim:"Limits", help:"Customer Service", about:"About FuNPaY", refer:"Refer a friend", lock:"Lock app", logout:"Log out", recv:"Money Received", oth:"Others", ftt:"Filter", close:"Close", apply:"Apply", reset:"Reset", detail:"Transaction details", stat:"Status", okk:"Successful", limt:"Transaction limits", l1:"Send Money / Payment", l1v:"৳1 – ৳1,00,000 per transaction", l2:"Cash Out", l2v:"৳50 – ৳50,000 per transaction, 1.85% fee", l3:"Add Money", l3v:"Up to ৳5,000 at a time", l4:"Service bills", l4v:"৳1 – ৳1,00,000 per transaction", abt:"FuNPaY is a test mobile wallet app. All money here is fake, not real.", hlp:"For help, contact the app developer. Live support is coming soon.", invite:"Send money to my number on the FuNPaY app: ", nt2:"Notifications", fnone:"Showing all"});
 const BART = [
   '<circle cx="32" cy="32" r="22"/><path d="M23 41L41 23"/><circle cx="24.5" cy="24.5" r="3.6"/><circle cx="39.5" cy="39.5" r="3.6"/>',
@@ -128,11 +128,11 @@ const BTX = [["bt1", "os1", "g1", "add"], ["bt2", "os2", "g2", "rech"], ["bt3", 
 const CHV = '<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>';
 const banner = (i, w) => `<div class="bn b${i}${w ? " w" : ""}" onclick="${BTX[i][3] ? `openS('${BTX[i][3]}')` : "hap();toast(t('soon'))"}"><div class="bt"><small>${t(BTX[i][0])}</small><b>${t("o" + (i + 1))}</b><span>${t(BTX[i][2])}${CHV}</span></div><svg class="bv" viewBox="0 0 64 64" aria-hidden="true">${BART[i]}</svg></div>`;
 
-Object.assign(T.bn, {regs:"মোবাইল নম্বর আর ৬ ডিজিট PIN দিন", neterr:"ইন্টারনেট সংযোগে সমস্যা, আবার চেষ্টা করুন", upfail:"আপডেট চেক করা যায়নি, আবার চেষ্টা করুন", sess:"সেশন শেষ হয়েছে, আবার লগইন করুন", offl:"ইন্টারনেট সংযোগ নেই", retry:"আবার চেষ্টা", ctest:"কানেকশন টেস্ট", wait:"অপেক্ষা করুন", avl:"উপলব্ধ ব্যালেন্স", dlfail:"আপডেট নামানো যায়নি", onlyapp:"আপডেট শুধু অ্যাপের ভেতরে হয়", trxchk:"লেনদেন হয়েছে কিনা ইনবক্সে দেখে নিন", noup:"আপডেট সার্ভার সেট করা নেই"});
+Object.assign(T.bn, {regs:"মোবাইল নম্বর আর 6 ডিজিট PIN দিন", neterr:"ইন্টারনেট সংযোগে সমস্যা, আবার চেষ্টা করুন", upfail:"আপডেট চেক করা যায়নি, আবার চেষ্টা করুন", sess:"সেশন শেষ হয়েছে, আবার লগইন করুন", offl:"ইন্টারনেট সংযোগ নেই", retry:"আবার চেষ্টা", ctest:"কানেকশন টেস্ট", wait:"অপেক্ষা করুন", avl:"উপলব্ধ ব্যালেন্স", dlfail:"আপডেট নামানো যায়নি", onlyapp:"আপডেট শুধু অ্যাপের ভেতরে হয়", trxchk:"লেনদেন হয়েছে কিনা ইনবক্সে দেখে নিন", noup:"আপডেট সার্ভার সেট করা নেই"});
 Object.assign(T.en, {regs:"Enter your mobile number and a 6-digit PIN", neterr:"Connection problem, please try again", upfail:"Could not check for updates, try again", sess:"Session expired, please log in again", offl:"No internet connection", retry:"Try again", ctest:"Connection test", wait:"Please wait", avl:"Available balance", dlfail:"Could not download the update", onlyapp:"Updates only work inside the app", trxchk:"check Inbox to see if it went through", badpin:"PIN must be 6 digits"});
 Object.assign(T.bn, {hold:"ট্যাপ করে ধরে রাখুন", holdh:"নিশ্চিত করতে নিচের বাটনটি ধরে রাখুন", share:"শেয়ার", copied:"কপি হয়েছে", chkn:"নম্বরটি সঠিক কিনা আরেকবার দেখে নিন", bioh:"আগে PIN দিয়ে লগইন করুন, তারপর ফিঙ্গারপ্রিন্ট চালু করতে পারবেন", upready:"আপডেট নামানো হয়েছে, চালু হচ্ছে…", nbl:"নতুন ব্যালেন্স"});
 Object.assign(T.en, {hold:"Tap and hold", holdh:"Press and hold the button below to confirm", share:"Share", copied:"Copied", chkn:"Please double-check the number", bioh:"Log in with your PIN first, then you can turn on fingerprint", upready:"Update downloaded, restarting…", nbl:"New balance"});
-Object.assign(T.bn, {nochg:"কোনো চার্জ নেই", accno:"অ্যাকাউন্ট নাম্বার", pinl:"PIN", pinph:"৬ ডিজিটের PIN দিন", gm:"শুভ সকাল", ga:"শুভ দুপুর", ge:"শুভ বিকাল", gn:"শুভ রাত্রি", fpuse:"ফিঙ্গারপ্রিন্ট দিয়ে আনলক", tapp:"PIN দিতে ঘরগুলোতে ট্যাপ করুন",
+Object.assign(T.bn, {nochg:"কোনো চার্জ নেই", accno:"অ্যাকাউন্ট নাম্বার", pinl:"PIN", pinph:"6 ডিজিটের PIN দিন", gm:"শুভ সকাল", ga:"শুভ দুপুর", ge:"শুভ বিকাল", gn:"শুভ রাত্রি", fpuse:"ফিঙ্গারপ্রিন্ট দিয়ে আনলক", tapp:"PIN দিতে ঘরগুলোতে ট্যাপ করুন",
  ph1:"প্রোফাইল ছবি", phc:"ক্যামেরা দিয়ে ছবি তুলুন", phg:"গ্যালারি থেকে বাছুন", phd:"ছবি সরান", phok:"প্রোফাইল ছবি বদলেছে", phrm:"প্রোফাইল ছবি সরানো হয়েছে",
  sname:"নাম বা নম্বর নিন", sag:"এজেন্টের নম্বর বা নাম", smr:"মার্চেন্টের নম্বর বা নাম", qrtap:"QR কোড স্ক্যান করতে ট্যাপ করুন", tnum:"নম্বর লিখুন", atm:"এটিএম",
  lagent:"শেষ করে করা এজেন্ট", lpay:"শেষ করে করা পেমেন্ট", noag2:"আপনার কোনো শেষ করে করা এজেন্ট নেই", nopay2:"আপনার কোনো শেষ করে করা পেমেন্ট নেই", nosend2:"এখনো কাউকে টাকা পাঠাননি। উপরে নম্বর লিখে শুরু করুন",
@@ -142,9 +142,9 @@ Object.assign(T.en, {nochg:"No charge", accno:"Account number", pinl:"PIN", pinp
  sname:"Enter name or number", sag:"Agent number or name", smr:"Merchant number or name", qrtap:"Tap to scan a QR code", tnum:"Enter number", atm:"ATM",
  lagent:"Recent agents", lpay:"Recent payments", noag2:"You have no recent agents", nopay2:"You have no recent payments", nosend2:"You haven't sent money to anyone yet. Enter a number above to start",
  go2:"Proceed", pickop:"Choose operator", cont2:"Continue with this number", lrcv:"Recipient", lag:"Agent", lmr:"Merchant", nomatch:"Nothing found"});
-Object.assign(T.bn, {noagn:"এই নম্বরে কোনো এজেন্ট নেই", nomrc:"এই নম্বরে কোনো পেমেন্ট অ্যাকাউন্ট (মার্চেন্ট) নেই", pin2:"PIN আবার দিন", pinmm:"দুটি PIN মিলছে না", nmreq:"আপনার নাম দিন", nmph:"যেমন: রহিম উদ্দিন", reg2:"এই নম্বরে এখনো অ্যাকাউন্ট নেই। নাম ও ৬ ডিজিট PIN দিয়ে নতুন অ্যাকাউন্ট খুলুন",
+Object.assign(T.bn, {noagn:"এই নম্বরে কোনো এজেন্ট নেই", nomrc:"এই নম্বরে কোনো পেমেন্ট অ্যাকাউন্ট (মার্চেন্ট) নেই", pin2:"PIN আবার দিন", pinmm:"দুটি PIN মিলছে না", nmreq:"আপনার নাম দিন", nmph:"যেমন: রহিম উদ্দিন", reg2:"এই নম্বরে এখনো অ্যাকাউন্ট নেই। নাম ও 6 ডিজিট PIN দিয়ে নতুন অ্যাকাউন্ট খুলুন",
  snd:"প্রেরক", rcvr:"প্রাপক", agl:"এজেন্ট", mrc:"মার্চেন্ট", cust:"গ্রাহক", src:"মাধ্যম", opr:"অপারেটর", num2:"নম্বর", copy:"কপি", disc:"কুপন ছাড়", pay2:"পরিশোধ",
- stp:"সময়কাল", p1:"১ মাস", p3:"৩ মাস", p6:"৬ মাস", p12:"১ বছর", gen:"স্টেটমেন্ট তৈরি করুন", stt:"অ্যাকাউন্ট স্টেটমেন্ট", acn:"অ্যাকাউন্টের নাম", fromd:"থেকে", tod:"পর্যন্ত", tin:"মোট ক্যাশ ইন", tout:"মোট ক্যাশ আউট", tcnt:"লেনদেন", dtl:"তারিখ", trn:"বিবরণ", amc:"টাকা", nostm:"এই সময়ে কোনো লেনদেন নেই", shimg:"ছবি শেয়ার করুন", shfail:"শেয়ার করা যায়নি", gend:"তৈরি হয়েছে",
+ stp:"সময়কাল", p1:"1 মাস", p3:"3 মাস", p6:"6 মাস", p12:"1 বছর", gen:"স্টেটমেন্ট তৈরি করুন", stt:"অ্যাকাউন্ট স্টেটমেন্ট", acn:"অ্যাকাউন্টের নাম", fromd:"থেকে", tod:"পর্যন্ত", tin:"মোট ক্যাশ ইন", tout:"মোট ক্যাশ আউট", tcnt:"লেনদেন", dtl:"তারিখ", trn:"বিবরণ", amc:"টাকা", nostm:"এই সময়ে কোনো লেনদেন নেই", shimg:"ছবি শেয়ার করুন", shfail:"শেয়ার করা যায়নি", gend:"তৈরি হয়েছে",
  cpn:"কুপন", cpsel:"কুপন বেছে নিন", cpnone:"আপনার কোনো কুপন নেই", cpmin:"সর্বনিম্ন", cpexp:"মেয়াদ", cpoff:"সরান", cpok:"কুপন প্রয়োগ হয়েছে", cpbad:"এই কুপন এখন ব্যবহার করা যাবে না", cpcode:"কুপন কোড", cpadd:"যোগ করুন", cpadded:"কুপন যোগ হয়েছে", cpmy:"আমার কুপন", cpna:"এই টাকায় চলবে না", cpsv:"পাবেন", cpmax:"সর্বোচ্চ", cpexh:"কুপন আগেই নেওয়া হয়েছে", cpwrong:"কুপন কোড ঠিক নয়", rcn:"রিসিট"});
 Object.assign(T.en, {noagn:"No agent with this number", nomrc:"No payment (merchant) account with this number", pin2:"Confirm PIN", pinmm:"The two PINs do not match", nmreq:"Enter your name", nmph:"e.g. Rahim Uddin", reg2:"There is no account with this number yet. Enter your name and a 6-digit PIN to create one",
  snd:"Sender", rcvr:"Recipient", agl:"Agent", mrc:"Merchant", cust:"Customer", src:"Source", opr:"Operator", num2:"Number", copy:"Copy", disc:"Coupon discount", pay2:"Paid",
@@ -155,10 +155,12 @@ Object.assign(T.bn, {fail:"ব্যর্থ", nonf:"এখনো কোনো 
 Object.assign(T.en, {fail:"Failed", nonf:"No notifications yet", dbold:"Database update pending, run update-v2.13.sql in Supabase", newacc2:"No account for this number? Create one",
  nf_send:"You sent {a} to {w}", nf_recv:"You received {a} from {w}", nf_cash:"Cash out successful: {a}", nf_cashin:"{w} cashed out {a} with you", nf_pay:"Payment of {a} to {w} was successful", nf_add:"{a} was added to your account", nf_svc:"{w} successful: {a}"});
 Object.assign(T.bn, {comm:"কমিশন", mwise:"মাস অনুযায়ী হিসাব", stpdf:"স্টেটমেন্ট PDF শেয়ার/সেভ"}); Object.assign(T.en, {comm:"Commission", mwise:"Month-wise summary", stpdf:"Share / save statement PDF"});
-/* সময় অনুযায়ী শুভেচ্ছা: সকাল ৫–১২, দুপুর ১২–৪, বিকাল ৪–৭, রাত্রি ৭–৫ */
+/* সময় অনুযায়ী শুভেচ্ছা: সকাল 5–12, দুপুর 12–4, বিকাল 4–7, রাত্রি 7–5 */
 const greet = () => { const h = new Date().getHours(); return h >= 5 && h < 12 ? "Good morning" : h >= 12 && h < 16 ? "Good afternoon" : h >= 16 && h < 19 ? "Good evening" : "Good night"; }; /* শুভেচ্ছা সব সময় ইংরেজিতে */
 const SPECIAL = ["qrs", "bio", "net", "flt", "menu", "trd", "inf", "pph", "stm", "cpl"];
-const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", ft:[], fq:false, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null, cps:null, regPhone:"", mine:new Set(), noRpc:false};
+Object.assign(T.bn, {otph:"কোড যাচাই", otps:"এই নম্বরে একটি 6 ডিজিটের কোড পাঠানো হয়েছে:", otpw:"SMS এলে Allow চাপুন, কোড নিজে বসে যাবে", otpr:"আবার কোড পাঠান", otpin:"আবার কোড পাঠান (সেকেন্ড: ", otpm:"কোড হাতে লিখুন", otpbad:"কোড ভুল হয়েছে", otpexp:"কোডের সময় শেষ, আবার কোড নিন", otpmany:"অনেকবার ভুল হয়েছে, নতুন কোড নিন", otpwait:"একটু পরে আবার চেষ্টা করুন", otplim:"অনেকবার চেষ্টা হয়েছে, পরে আবার চেষ্টা করুন", otpsms:"SMS পাঠানো যায়নি, আবার চেষ্টা করুন", otpchk:"যাচাই হচ্ছে…", otpsent:"নতুন কোড পাঠানো হয়েছে"});
+Object.assign(T.en, {otph:"Verify code", otps:"A 6-digit code was sent to this number:", otpw:"Tap Allow when the SMS arrives, the code fills in by itself", otpr:"Resend code", otpin:"Resend code (seconds: ", otpm:"Type the code", otpbad:"Wrong code", otpexp:"Code expired, get a new one", otpmany:"Too many wrong tries, get a new code", otpwait:"Please try again in a moment", otplim:"Too many attempts, try again later", otpsms:"Could not send the SMS, try again", otpchk:"Verifying…", otpsent:"New code sent"});
+const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", ft:[], fq:false, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null, cps:null, regPhone:"", mine:new Set(), noRpc:false, otpPhone:"", otpAt:0, otpManual:false, otpBusy:false};
 try {
   const d = JSON.parse(localStorage.getItem("fp2") || "{}");
   ["lang", "phone", "name"].forEach(k => { if (d[k] !== undefined) S[k] = d[k]; });
@@ -191,7 +193,7 @@ function netState(ok) {
   if (!e) { e = document.createElement("div"); e.id = "offbar"; document.body.appendChild(e); }
   e.textContent = t("offl"); void e.offsetWidth; e.classList.add("on");
 }
-/* tries: GET = ৩ বার, টাকার লেনদেন = ১ বার (দুবার টাকা যাওয়া ঠেকাতে কখনো নিজে নিজে রিট্রাই হয় না) */
+/* tries: GET = 3 বার, টাকার লেনদেন = 1 বার (দুবার টাকা যাওয়া ঠেকাতে কখনো নিজে নিজে রিট্রাই হয় না) */
 async function netFetch(url, o = {}, tries = 3, ms = 15000) {
   const nat = !!(cap().CapacitorHttp && cap().CapacitorHttp.request);
   const order = nat ? (PREF === "native" ? ["native", "web"] : ["web", "native"]) : ["web"];
@@ -280,7 +282,16 @@ async function checkUpdate(manual) {
 }
 const applyUpdate = () => checkUpdate(true);
 
-const t = (k) => T[S.lang][k] || k;
+/* বাংলা সংখ্যা (0-9) কোথাও থাকবে না: টাইপ/পেস্ট করলেও ইংরেজি 0-9 হয়ে যায় */
+const BND = "\u09e6\u09e7\u09e8\u09e9\u09ea\u09eb\u09ec\u09ed\u09ee\u09ef";
+const en = (x) => String(x == null ? "" : x).replace(/[\u09e6-\u09ef]/g, c => String(BND.indexOf(c)));
+/* শুধু ইংরেজি সংখ্যা, সর্বোচ্চ max টা (নম্বর 11, PIN 6) */
+const digs = (x, max) => en(x).replace(/\D/g, "").slice(0, max);
+function numIn(el) { const v = digs(el.value, 11); if (el.value !== v) el.value = v; }
+function pinOnly(el) { const v = digs(el.value, 6); if (el.value !== v) el.value = v; }
+const isPh = (x) => /^01\d{9}$/.test(String(x));
+const isPin = (x) => /^\d{6}$/.test(String(x));
+const t = (k) => en(T[S.lang][k] || k);
 const money = (n) => "৳ " + Number(n).toLocaleString("en-US", {maximumFractionDigits: 2});
 const TK = (x, y, s, c) => `<text x="${x}" y="${y}" font-size="${s}" font-weight="800" fill="${c}" text-anchor="middle" font-family="system-ui,'Noto Sans Bengali',sans-serif">৳</text>`;
 /* রঙিন সার্ভিস আইকন (বিকাশের মতো) */
@@ -304,7 +315,7 @@ const C = {
 };
 const cic = (k) => `<svg class="ci" viewBox="0 0 48 48" aria-hidden="true">${C[k]}</svg>`;
 const tile = (k) => `<div class="ic">${C[k] ? cic(k) : ic(k)}</div>`;
-const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"}[c]));
+const esc = (s) => en(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"}[c]));
 const USER_SVG = '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.8-3.8 4-5.6 7.5-5.6s6.7 1.8 7.5 5.6"/></svg>';
 const BKSP = '<svg class="i" viewBox="0 0 24 24"><path d="M21 5H9l-6 7 6 7h12zM15 9l-4 6M11 9l4 6"/></svg>';
 const first = (s) => { const a = Array.from(String(s || "").trim()); return a.length ? esc(a[0].toUpperCase()) : USER_SVG; };
@@ -339,7 +350,7 @@ async function refreshTok() { setSess(await api("/auth/v1/token?grant_type=refre
 function errMsg(e) {
   const m = (e && e.message) || "";
   const sid = S.sheet && S.sheet.id;
-  const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh"}[m];
+  const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh", OTPBAD:"otpbad", OTPEXP:"otpexp", OTPMANY:"otpmany", OTPWAIT:"otpwait", OTPLIM:"otplim", OTPSMS:"otpsms", BADPHONE:"badn"}[m];
   if (k) return t(k);
   if (/could not find the function|schema cache|PGRST202/i.test(m)) return t("dbold");
   if (/invalid login/i.test(m)) return t("wp");
@@ -569,32 +580,42 @@ const NXT = `<svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/
 const REG = () => { try { return localStorage.getItem("fpreg") === "1"; } catch (e) { return false; } };
 function loginHtml() {
   if (!CONFIGURED) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div><div class="lhero">${LOGOF("land")}<h1>FuNPaY</h1><p>${t("setup")}</p></div></div>`;
-  /* ১) স্বাগতম পেজ */
+  /* 1) স্বাগতম পেজ */
   if (S.view === "" && !S.phone) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div>
     <div class="ltop"><div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
     <div class="lhero">${LOGOF("land")}<h1>FuNPaY</h1><p>${t("tag")}</p></div>
     <div class="lpanel"><button class="lwb" onclick="hap();S.view='ph';render()">${t("lgreg")}</button></div></div>`;
-  /* ২) মোবাইল নম্বর পেজ */
+  /* 2) মোবাইল নম্বর পেজ */
   if (S.view === "ph" && !S.phone) return `<div class="fl light">${lgBar("S.view='';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
       <h2>${t("phh")}</h2>
       <label>${t("cc")}</label><div class="cfield"><i class="flag"></i>${t("bd")}</div>
-      <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="lp" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="this.value=this.value.replace(/\\D/g,'')"></div>
+      <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="lp" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="numIn(this)"></div>
       <div class="le"></div>
       <p class="terms">${t("terms")}</p>
       </div>
     <button class="nbar" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
-  /* ৩) নতুন অ্যাকাউন্ট (শুধু নম্বরে অ্যাকাউন্ট না থাকলে আসে) */
+  /* 2.5) OTP পেজ: SMS এ কোড যায়, Allow দিলে ঘরে নিজে বসে (ঘর readonly), অ্যান্ড্রয়েডের বাইরে বা না এলে হাতে লেখার পথ খোলে */
+  if (S.view === "otp") return `<div class="fl light">${lgBar("otpStop();S.view='ph';render()")}
+    <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
+      <h2>${t("otph")}</h2><p class="sub">${t("otps")} <b>+88 ${esc(S.otpPhone)}</b></p>
+      <div class="pfield"><input id="otpin" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" autocomplete="one-time-code" ${S.otpManual ? "" : "readonly"} oninput="otpTyped(this)"></div>
+      <div class="le"></div>
+      <p class="terms" id="otpwait">${S.otpManual ? "" : t("otpw")}</p>
+      <button class="lnk3" id="otpman" style="${S.otpManual ? "display:none" : ""}" onclick="otpManualOn()">${t("otpm")}</button>
+      <button class="lnk3" id="otprs" onclick="otpResend()"></button>
+    </div></div>`;
+  /* 3) নতুন অ্যাকাউন্ট (শুধু নম্বরে অ্যাকাউন্ট না থাকলে আসে) */
   if (S.view === "reg") return `<div class="fl light">${lgBar("S.view='ph';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
       <h2>${t("regh")}</h2><p class="sub">${t("reg2")}</p>
       <label>${t("mob")}</label><div class="pfield ro"><b>+88</b><input id="rp" inputmode="numeric" maxlength="11" value="${esc(S.regPhone)}" readonly></div>
       <label>${t("nm")}</label><div class="pfield"><input id="rn" maxlength="20" placeholder="${t("nmph")}" autocomplete="name"></div>
-      <label>${t("pin4")}</label><div class="pfield"><input id="rk" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" oninput="this.value=this.value.replace(/\\D/g,'')"></div>
-      <label>${t("pin2")}</label><div class="pfield"><input id="rk2" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" oninput="this.value=this.value.replace(/\\D/g,'')" onkeydown="if(event.key==='Enter')doReg()"></div>
+      <label>${t("pin4")}</label><div class="pfield"><input id="rk" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" oninput="pinOnly(this)"></div>
+      <label>${t("pin2")}</label><div class="pfield"><input id="rk2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" oninput="pinOnly(this)" onkeydown="if(event.key==='Enter')doReg()"></div>
       <div class="le"></div></div>
     <button class="nbar lb2" onclick="doReg()"><span>${t("reg")}</span>${NXT}</button></div>`;
-  /* ৪) PIN পেজ: উপরে লোগো অ্যানিমেশন (আগের মতোই), নিচে বিকাশের মতো নম্বর + PIN ঘর + ফিঙ্গারপ্রিন্ট আইকন, কিবোর্ড ফোনের নিজের */
+  /* 4) PIN পেজ: উপরে লোগো অ্যানিমেশন (আগের মতোই), নিচে বিকাশের মতো নম্বর + PIN ঘর + ফিঙ্গারপ্রিন্ট আইকন, কিবোর্ড ফোনের নিজের */
   return `<div class="fl pinp"><div class="orb o1"></div><div class="orb o2"></div>
     <div class="fbar pbar"><button class="fback" aria-label="${t("back")}" onclick="hap();S.phone='';S.pin='';S.view='ph';render()"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
     <div class="phead">${LOGOF("pin")}<b>${greet()}</b></div>
@@ -611,29 +632,85 @@ function loginHtml() {
 function bioTap() { if (bioOn()) bioUnlock(); else toast(t("bioh")); }
 async function setPhone() {
   if (S.busy) return;
-  const v = document.getElementById("lp").value.trim(), le = document.querySelector(".le"), nb = document.getElementById("phnext");
-  if (!/^01\d{9}$/.test(v)) { le.textContent = t("badn"); hap("HEAVY"); return; }
+  const v = digs(document.getElementById("lp").value, 11), le = document.querySelector(".le"), nb = document.getElementById("phnext");
+  if (!isPh(v)) { le.textContent = t("badn"); hap("HEAVY"); return; }
   S.busy = true; le.textContent = ""; if (nb) nb.classList.add("ld");
   try {
-    const r = await api("/rest/v1/rpc/phone_exists", {m: "POST", auth: false, b: {p_phone: v}});
-    S.busy = false;
-    if (r === true) { S.phone = v; S.name = ""; S.view = ""; S.pin = ""; render(); }
-    else { S.regPhone = v; S.view = "reg"; render(); }
+    /* অ্যাকাউন্ট থাকুক বা না থাকুক, সবার নম্বরেই কোড যায় (বাইরের কেউ আন্দাজ করতে পারে না) */
+    await api("/functions/v1/send-otp", {m: "POST", auth: false, tries: 1, b: {phone: v}});
+    S.busy = false; S.otpPhone = v; S.otpAt = Date.now(); S.otpManual = false; S.view = "otp"; render(); otpStart();
   } catch (e) {
     S.busy = false; if (nb) nb.classList.remove("ld");
-    /* সার্ভারে phone_exists ফাংশন না থাকলে (update SQL চালানো হয়নি) আটকে না থেকে সরাসরি PIN পেজে যায় */
-    if (/could not find the function|schema cache|PGRST202|phone_exists/i.test(String((e && e.message) || ""))) { S.noRpc = true; S.phone = v; S.name = ""; S.view = ""; S.pin = ""; render(); return; }
     const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e); hap("HEAVY");
   }
 }
+/* ---------- OTP: কোড শোনা, বসানো, যাচাই ---------- */
+let otpSeq = 0, otpTm = 0;
+const otpEl = (id) => document.getElementById(id);
+function otpNative() { try { return (window.Capacitor && Capacitor.isPluginAvailable && Capacitor.isPluginAvailable("SmsConsent") && cap().SmsConsent) || null; } catch (e) { return null; } }
+function otpStop() { otpSeq++; clearInterval(otpTm); const P = otpNative(); if (P) { try { Promise.resolve(P.stop()).catch(() => {}); } catch (e) {} } }
+function otpStart() {
+  clearInterval(otpTm); otpTm = setInterval(otpTick, 1000); otpTick();
+  const P = otpNative(), my = ++otpSeq;
+  if (!P) { otpManualOn(); return; }
+  Promise.resolve(P.start()).then((r) => {
+    if (my !== otpSeq || S.view !== "otp") return;
+    const m = /(?:^|\D)(\d{6})(?:\D|$)/.exec(String((r && r.message) || ""));
+    if (m) otpFill(m[1]); else otpManualOn();
+  }).catch(() => { if (my === otpSeq && S.view === "otp") otpManualOn(); });
+  /* 25 সেকেন্ডেও না এলে হাতে লেখার পথ খুলে দেওয়া (পপআপ না আসা ফোনের জন্য) */
+  setTimeout(() => { if (my === otpSeq && S.view === "otp" && !S.otpManual && !S.otpBusy) otpManualOn(); }, 25000);
+}
+function otpTick() {
+  if (S.view !== "otp") { clearInterval(otpTm); return; }
+  const b = otpEl("otprs"); if (!b) return;
+  const left = 60 - Math.floor((Date.now() - S.otpAt) / 1000);
+  if (left > 0) { b.disabled = true; b.style.opacity = ".5"; b.textContent = t("otpin") + left + ")"; }
+  else { b.disabled = false; b.style.opacity = ""; b.textContent = t("otpr"); }
+}
+function otpManualOn() {
+  S.otpManual = true;
+  const i = otpEl("otpin"); if (i) { i.removeAttribute("readonly"); try { i.focus(); } catch (e) {} }
+  const m = otpEl("otpman"); if (m) m.style.display = "none";
+  const w = otpEl("otpwait"); if (w) w.textContent = "";
+}
+function otpFill(code) { const i = otpEl("otpin"); if (i) i.value = code; otpVerify(code); }
+function otpTyped(el) { const v = digs(el.value, 6); if (el.value !== v) el.value = v; const le = document.querySelector(".le"); if (le) le.textContent = ""; if (v.length === 6) otpVerify(v); }
+async function otpVerify(code) {
+  if (S.otpBusy) return;
+  S.otpBusy = true;
+  const le = document.querySelector(".le"); if (le) le.textContent = t("otpchk");
+  try {
+    const r = await api("/functions/v1/verify-otp", {m: "POST", auth: false, tries: 1, b: {phone: S.otpPhone, code}});
+    otpStop(); S.otpBusy = false;
+    if (r && r.exists) { S.phone = S.otpPhone; S.name = ""; S.view = ""; S.pin = ""; render(); }
+    else { S.regPhone = S.otpPhone; S.view = "reg"; render(); }
+  } catch (e) {
+    S.otpBusy = false; hap("HEAVY");
+    const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e);
+    const i = otpEl("otpin"); if (i && S.otpManual) { i.value = ""; try { i.focus(); } catch (x) {} }
+  }
+}
+async function otpResend() {
+  if (S.busy || S.view !== "otp" || Date.now() - S.otpAt < 60000) return;
+  S.busy = true; const le = document.querySelector(".le"); if (le) le.textContent = "";
+  try {
+    await api("/functions/v1/send-otp", {m: "POST", auth: false, tries: 1, b: {phone: S.otpPhone}});
+    S.otpAt = Date.now(); const i = otpEl("otpin"); if (i && !S.otpManual) i.value = ""; if (le) le.textContent = t("otpsent");
+    otpStart();
+  } catch (e) { if (le) le.textContent = errMsg(e); hap("HEAVY"); }
+  S.busy = false; otpTick();
+}
 async function doReg() {
   if (S.busy) return;
-  const p = S.regPhone, nm = document.getElementById("rn").value.trim(), k = document.getElementById("rk").value.trim(), k2 = document.getElementById("rk2").value.trim(), le = document.querySelector(".le");
-  const bad = !/^01\d{9}$/.test(p) ? t("badn") : !nm ? t("nmreq") : !/^\d{6}$/.test(k) ? t("badpin") : k !== k2 ? t("pinmm") : "";
+  const p = S.regPhone, nm = document.getElementById("rn").value.trim(), k = digs(document.getElementById("rk").value, 6), k2 = digs(document.getElementById("rk2").value, 6), le = document.querySelector(".le");
+  const bad = !isPh(p) ? t("badn") : !nm ? t("nmreq") : !isPin(k) ? t("badpin") : k !== k2 ? t("pinmm") : "";
   if (bad) { le.textContent = bad; hap("HEAVY"); return; }
   S.busy = true; le.textContent = ""; document.querySelector(".lb2").classList.add("ld");
   try { await signUp(p, k, nm); S.phone = p; S.name = nm; S.lp = k; await enter(); }
-  catch (e) { const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e); const b2 = document.querySelector(".lb2"); if (b2) b2.classList.remove("ld"); hap("HEAVY"); }
+  catch (e) {
+    if (/NOTVERIFIED|saving new user/i.test(String((e && e.message) || ""))) { S.busy = false; S.view = "ph"; S.regPhone = ""; render(); toast(t("otpexp")); return; }
+    const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e); const b2 = document.querySelector(".lb2"); if (b2) b2.classList.remove("ld"); hap("HEAVY"); }
   S.busy = false;
 }
 async function key(d) {
@@ -654,13 +731,13 @@ async function key(d) {
 
 function pinIn(el) {
   if (S.busy) { el.value = S.pin; return; }
-  const v = el.value.replace(/\D/g, "").slice(0, 6); if (el.value !== v) el.value = v;
+  const v = digs(el.value, 6); if (el.value !== v) el.value = v;
   S.pin = v; hap();
   const le = document.querySelector(".le"); if (le) le.textContent = "";
 }
 async function pinGo() {
   if (S.busy) return;
-  const el = document.getElementById("pinin"), le = document.querySelector(".le"), pin = el ? el.value.replace(/\D/g, "") : S.pin;
+  const el = document.getElementById("pinin"), le = document.querySelector(".le"), pin = el ? digs(el.value, 6) : S.pin;
   S.pin = pin;
   if (pin.length !== 6) { if (le) le.textContent = t("badpin"); hap("HEAVY"); return; }
   const ds = document.querySelector(".bkp"), gb = document.getElementById("pingo");
@@ -678,7 +755,7 @@ function sbar() {
   try {
     const B = cap().StatusBar; if (!B) return;
     const scn = !!(S.sheet && S.sheet.id === "qrs" && S.sheet.tab === "scan");
-    const light = !S.auth && CONFIGURED && (S.view === "ph" || S.view === "reg") && !S.phone;
+    const light = !S.auth && CONFIGURED && (S.view === "ph" || S.view === "reg" || S.view === "otp") && !S.phone;
     const col = scn ? "#12050c" : light ? "#f7f5f7" : "#e2136e";
     Promise.resolve(B.setBackgroundColor({color: col})).catch(() => {});
     Promise.resolve(B.setStyle({style: light && !scn ? "LIGHT" : "DARK"})).catch(() => {});
@@ -721,10 +798,10 @@ function peek(b) {
 }
 
 function dot(e) { const st = e.children.length > 1 ? e.children[1].offsetLeft - e.children[0].offsetLeft : e.clientWidth, i = Math.round(e.scrollLeft / st); document.querySelectorAll(".dts i").forEach((d, j) => d.className = j === i ? "on" : ""); }
-/* ---------- লেনদেনের ফর্ম: ধাপ ১ = তথ্য, ধাপ ২ = যাচাই + PIN, শেষে সফল পেজ ---------- */
+/* ---------- লেনদেনের ফর্ম: ধাপ 1 = তথ্য, ধাপ 2 = যাচাই + PIN, শেষে সফল পেজ ---------- */
 function openS(id, pre, rn) {
   if (!WIRED.includes(id)) { hap(); toast(t("soon")); return; }
-  const c = cfg(id), s1 = !!(c.k || c.ch), jump = !!(pre && rn !== undefined && c.k === "n" && /^01\d{9}$/.test(pre));
+  const c = cfg(id), s1 = !!(c.k || c.ch), jump = !!(pre && rn !== undefined && c.k === "n" && isPh(pre));
   hap(); S.sheet = {id, step: jump || !s1 ? 2 : 1, s1, v: pre || "", ch: "", a: "", pin: "", err: "", done: false, fresh: true, fxs: false, rn: jump ? rn : "", busy: false, cp: null}; renderSheet();
   if (id === "pay") loadCoupons();
 }
@@ -750,7 +827,9 @@ function closeS() {
     if (done) { S.hl = done; render(); refresh(); }
   }, 240);
 }
-const sync = () => { const a = document.getElementById("f1"), b = document.getElementById("f2"); if (a) S.sheet.v = a.value.trim(); if (b) S.sheet.a = b.value; };
+/* সার্চ/নম্বর ঘর: ডিজিট দিয়ে শুরু হলে শুধু সংখ্যা, সর্বোচ্চ 11 টা (নাম লিখে খুঁজলে লেখাই থাকে) */
+const cleanQ = (x) => { const v = en(x).trim(); return /^[0-9]/.test(v) ? v.replace(/\D/g, "").slice(0, 11) : v; };
+const sync = () => { const a = document.getElementById("f1"), b = document.getElementById("f2"); if (a) S.sheet.v = cleanQ(a.value); if (b) S.sheet.a = b.value; };
 function pick(c) { hap(); sync(); S.sheet.ch = c; S.sheet.err = ""; renderSheet(); }
 function pickNum(p) { hap(); const a = document.getElementById("f1"); if (a) a.value = p; S.sheet.v = p; nextStep(); }
 function shakeBox() { const b = document.querySelector("#sheet .box"); if (!b) return; b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); hap("HEAVY"); }
@@ -784,7 +863,7 @@ function sheetHtml() {
   const who = person
     ? `<div class="rcp">${avatar(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${s.rn ? esc(s.v) : ""}</span></div><i class="vf">${tickSvg}</i></div>`
     : `<div class="rcp">${tile(s.id)}<div><b>${t(s.id)}</b><span>${[s.ch ? t(s.ch) : "", s.v ? esc(s.v) : ""].filter(Boolean).join(" · ")}</span></div></div>`;
-  /* ধাপ ৩: PIN · ধাপ ৪: যাচাই + নিচের বাটন ধরে রাখুন (বিকাশের মতো) */
+  /* ধাপ 3: PIN · ধাপ 4: যাচাই + নিচের বাটন ধরে রাখুন (বিকাশের মতো) */
   if (s.step >= 3) {
     const amt = parseFloat(s.a), fee = feeOf(c, amt), dsc = s.id === "pay" ? cpDisc(s.cp, amt) : 0, tot = amt + (d < 0 ? fee - dsc : 0);
     if (s.step === 3) {
@@ -799,7 +878,7 @@ function sheetHtml() {
       <div class="err c" style="text-align:center;margin-top:10px">${esc(s.err)}</div>`,
       `<div class="holdw"><button id="hold" class="hold" onpointerdown="holdStart(event)" onpointerup="holdEnd()" onpointerleave="holdEnd()" onpointercancel="holdEnd()" oncontextmenu="return false"><i><span class="hc">${ic("ok2")}<b>${t("hold")}</b></span></i>${ic("ok2")}<b>${t("hold")}</b></button></div>`);
   }
-  /* ধাপ ২: টাকার পরিমাণ */
+  /* ধাপ 2: টাকার পরিমাণ */
   if (s.step === 2) {
     const amt = parseFloat(s.a) || 0, fee = feeOf(c, amt);
     const chips = [500, 1000, 2000, 5000].map(n => `<button onclick="qAmt(${n})">৳${n.toLocaleString("en-US")}</button>`).join("");
@@ -811,11 +890,11 @@ function sheetHtml() {
       ${s.id === "pay" ? `<div class="pcard cpcard" id="cpbox">${cpHtml(s)}</div>` : ""}`,
       `<button class="btn" onclick="nextStep()">${t("go2")}${NXT}</button>`);
   }
-  /* ধাপ ১: কাকে / কোন সার্ভিস (বিকাশের মতো সার্চ + তালিকা) */
+  /* ধাপ 1: কাকে / কোন সার্ভিস (বিকাশের মতো সার্চ + তালিকা) */
   const foot = `<button class="btn" onclick="nextStep()">${t("next")}${NXT}</button>`;
   if (person) {
     const tabs = s.id === "cash" ? `<div class="seg2"><button class="on">${t("agent")}</button><button onclick="hap();toast(t('soon'))">${t("atm")}</button></div>` : "";
-    const search = `<div class="pcard srcc"><div class="fld sf">${ic("srch")}<input id="f1" placeholder="${t(s.id === "cash" ? "sag" : s.id === "pay" ? "smr" : "sname")}" value="${esc(s.v)}" autocomplete="off" oninput="srchIn(this)"></div><div class="err" id="er">${esc(s.err)}</div></div>`;
+    const search = `<div class="pcard srcc"><div class="fld sf">${ic("srch")}<input id="f1" maxlength="20" placeholder="${t(s.id === "cash" ? "sag" : s.id === "pay" ? "smr" : "sname")}" value="${esc(s.v)}" autocomplete="off" oninput="srchIn(this)"></div><div class="err" id="er">${esc(s.err)}</div></div>`;
     const qrb = s.id !== "send" ? `<button class="qrbtn" onclick="openQR('scan','${s.id}')">${ic("qr")}<span>${t("qrtap")}</span></button>` : "";
     const tl = (ico, lbl, js) => `<button class="tl" onclick="${js}"><span>${ic(ico)}</span><b>${lbl}</b></button>`;
     const tiles = s.id === "send" ? `<div class="tl3">${tl("srch", t("tnum"), "document.getElementById('f1').focus()")}${tl("qr", t("scanqr"), "openQR('scan','send')")}${tl("qr", t("myqr"), "openQR('my')")}</div>` : "";
@@ -826,7 +905,7 @@ function sheetHtml() {
     ? `<p class="lh">${t("pickop")}</p><div class="opg">${c.ch.map(x => `<button class="opc${s.ch === x ? " on" : ""}" onclick="pick('${x}')"><i style="background:${(OPC[x] || ["", "#e2136e"])[1]}">${(OPC[x] || [x[0].toUpperCase()])[0]}</i><span>${t(x)}</span></button>`).join("")}</div>`
     : `<div class="chs">${c.ch.map(x => `<button class="${s.ch === x ? "on" : ""}" onclick="pick('${x}')">${t(x)}</button>`).join("")}</div>`;
   const body = chs
-    + (c.k ? `<div class="lb" style="${c.ch ? "margin-top:14px" : ""}">${t(c.f)}</div><div class="fld">${c.k === "n" ? ic("srch") : ""}<input id="f1" ${c.k === "n" ? `inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" oninput="this.value=this.value.replace(/\\D/g,'')"` : `placeholder="${t(c.f)}"`} value="${esc(s.v)}"></div>` : "")
+    + (c.k ? `<div class="lb" style="${c.ch ? "margin-top:14px" : ""}">${t(c.f)}</div><div class="fld">${c.k === "n" ? ic("srch") : ""}<input id="f1" ${c.k === "n" ? `inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" oninput="numIn(this)"` : `placeholder="${t(c.f)}"`} value="${esc(s.v)}"></div>` : "")
     + `<div class="err" id="er">${esc(s.err)}</div>`;
   return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${body}</div>`, foot);
 }
@@ -851,14 +930,14 @@ const matchP = (f, q) => { const k = String(q || "").trim().toLowerCase(); retur
 function contactRows(s) {
   const q = (s.v || "").trim(), all = peopleFor(s.id), r = all.filter(f => matchP(f, q));
   let h = "";
-  if (/^01\d{9}$/.test(q) && !all.some(f => f[0] === q)) h += `<div class="rr" onclick="pickNum('${q}')">${avatar("", q)}<div><b>${esc(q)}</b><span>${t("cont2")}</span></div></div>`;
+  if (isPh(q) && !all.some(f => f[0] === q)) h += `<div class="rr" onclick="pickNum('${q}')">${avatar("", q)}<div><b>${esc(q)}</b><span>${t("cont2")}</span></div></div>`;
   h += r.map(f => `<div class="rr" onclick="pickNum('${esc(f[0])}')">${avatar(f[1], f[0])}<div><b>${esc(f[1] || f[0])}</b><span>${f[1] ? esc(f[0]) : ""}</span></div></div>`).join("");
   if (!h) h = `<p class="em">${t(q ? "nomatch" : s.id === "cash" ? "noag2" : s.id === "pay" ? "nopay2" : "nosend2")}</p>`;
   return h;
 }
 function srchIn(el) {
   const s = S.sheet; if (!s) return;
-  s.v = el.value.trim(); s.err = "";
+  { const v = cleanQ(el.value); if (el.value.trim() !== v) el.value = v; s.v = v; } s.err = "";
   const l = document.getElementById("clist"); if (l) l.innerHTML = contactRows(s);
   const e = document.getElementById("er"); if (e) e.textContent = "";
 }
@@ -868,9 +947,9 @@ async function nextStep() {
   const c = cfg(s.id), d = c.d || -1;
   let e = "";
   if (s.step === 1) {
-    if (PERSON.includes(s.id) && !/^01\d{9}$/.test(s.v)) { const m = peopleFor(s.id).filter(f => matchP(f, s.v)); if (s.v && m.length === 1) s.v = m[0][0]; }
+    if (PERSON.includes(s.id) && !isPh(s.v) && !/^[0-9]/.test(s.v)) { const m = peopleFor(s.id).filter(f => matchP(f, s.v)); if (s.v && m.length === 1) s.v = m[0][0]; }
     if (c.ch && !s.ch) e = t("pick");
-    else if (c.k === "n" && !/^01\d{9}$/.test(s.v)) e = t("badn");
+    else if (c.k === "n" && !isPh(s.v)) e = t("badn");
     else if (c.k === "t" && !s.v) e = t("badt");
     else if (PERSON.includes(s.id) && s.v === S.me.phone) e = t("self");
     if (!e && PERSON.includes(s.id)) {
@@ -902,7 +981,7 @@ function backStep() {
   s.err = ""; s.pin = ""; s.fxs = true; renderSheet();
 }
 function amtIn(el) {
-  let v = el.value.replace(/[^0-9.]/g, ""); const p = v.split(".");
+  let v = en(el.value).replace(/[^0-9.]/g, ""); const p = v.split(".");
   if (p.length > 1) v = p[0] + "." + p.slice(1).join("").slice(0, 2);
   v = v.replace(/^0+(?=\d)/, "").slice(0, 9);
   if (el.value !== v) el.value = v;
@@ -916,13 +995,13 @@ function amtIn(el) {
 function qAmt(n) { hap(); const f = document.getElementById("f2"); if (f) { f.value = String(n); amtIn(f); } }
 function spIn(el) {
   const s = S.sheet; if (!s || s.busy || s.step !== 3) { el.value = s ? s.pin : ""; return; }
-  const v = el.value.replace(/\D/g, "").slice(0, 6); if (el.value !== v) el.value = v;
+  const v = digs(el.value, 6); if (el.value !== v) el.value = v;
   s.pin = v; hap(); s.err = "";
   const er = document.getElementById("er"); if (er) er.textContent = "";
 }
 function spGo() {
   const s = S.sheet; if (!s || s.busy || s.step !== 3) return;
-  const f = document.getElementById("spin"); if (f) s.pin = f.value.replace(/\D/g, "").slice(0, 6);
+  const f = document.getElementById("spin"); if (f) s.pin = digs(f.value, 6);
   if (s.pin.length === 6) { verifyPin(); return; }
   s.err = t("badpin"); const er = document.getElementById("er"); if (er) er.textContent = s.err; shakeBox();
 }
@@ -1203,7 +1282,7 @@ async function offerBio(pin) {
 function bioHtml() {
   const s = S.sheet;
   return wrapSheet(s, `<div class="ok"><div class="tick">${ic("fp")}</div><h2>${t("bioT")}</h2><small>${t("bioD")}</small></div>`
-    + (s.pin ? "" : `<div class="lb">${t("pin")}</div><input id="f3" type="password" inputmode="numeric" maxlength="6"><div class="err">${esc(s.err)}</div>`)
+    + (s.pin ? "" : `<div class="lb">${t("pin")}</div><input id="f3" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" oninput="pinOnly(this)"><div class="err">${esc(s.err)}</div>`)
     + `<button class="btn" onclick="enableBio()">${t("bioY")}</button><button class="btn l" onclick="closeS()">${t("upl")}</button>`);
 }
 async function toggleBio() {
@@ -1217,9 +1296,9 @@ async function toggleBio() {
 async function enableBio() {
   const s = S.sheet, N = cap().NativeBiometric;
   if (!s || s.busy || !N) return;
-  const pin = s.pin || (document.getElementById("f3") || {}).value || "";
+  const pin = s.pin || digs((document.getElementById("f3") || {}).value, 6);
   const fail = (m) => { s.busy = false; setBusy(false); if (S.sheet !== s) return; s.err = m; renderSheet(); shakeBox(); };
-  if (!/^\d{6}$/.test(pin)) return fail(t("wp"));
+  if (!isPin(pin)) return fail(t("wp"));
   s.busy = true; setBusy(true);
   try {
     await signIn(S.me.phone, pin);
@@ -1328,7 +1407,7 @@ function shareTrx() {
   doShare({title: t(v.key), status: t(isFail(x) ? "fail" : "okk"), amount: (v.out ? "- " : "+ ") + money2(v.amt), who: person ? {name: nm, phone: ph} : null, rows, foot: fmt(x.created_at)}, "FuNPaY-" + x.trx + ".png");
 }
 
-/* ---------- স্টেটমেন্ট: ১/৩/৬/১২ মাস বেছে রিসিট বানানো ---------- */
+/* ---------- স্টেটমেন্ট: 1/3/6/12 মাস বেছে রিসিট বানানো ---------- */
 const STP = [1, 3, 6, 12];
 function openStmt() { hap(); S.sheet = {id: "stm", per: 3, data: null, busy: false, err: "", fresh: true}; renderSheet(); }
 function stmPer(n) { const s = S.sheet; if (!s || s.busy) return; hap(); s.per = n; s.data = null; s.err = ""; renderSheet(); }
@@ -1472,7 +1551,7 @@ setInterval(() => {
   const st = b.children[1].offsetLeft - b.children[0].offsetLeft, i = (Math.round(b.scrollLeft / st) + 1) % b.children.length;
   b.scrollTo({left: i * st, behavior: "smooth"});
 }, 5500);
-/* অ্যান্ড্রয়েড ব্যাক বাটন, স্ট্যাটাস বার, ব্যাকগ্রাউন্ডে ১ মিনিটের বেশি থাকলে অটো লক */
+/* অ্যান্ড্রয়েড ব্যাক বাটন, স্ট্যাটাস বার, ব্যাকগ্রাউন্ডে 1 মিনিটের বেশি থাকলে অটো লক */
 try {
   const A = cap().App;
   let bgAt = 0;

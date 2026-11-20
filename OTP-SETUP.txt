@@ -1,0 +1,34 @@
+FuNPaY OTP সেটআপ (BulkSMSBD + Supabase Edge Function)
+=====================================================
+
+যা যা বানানো আছে (এই zip এ)
+- backend/update-otp.sql               : ডাটাবেস টেবিল + নতুন অ্যাকাউন্ট আটকানোর নিয়ম
+- supabase/functions/send-otp/index.ts   : কোড বানিয়ে SMS পাঠায়
+- supabase/functions/verify-otp/index.ts : কোড মেলায়
+- native/SmsConsentPlugin.java + scripts/fix-android.js : Allow পপআপের নেটিভ অংশ (বিল্ডের সময় নিজে বসে)
+- www/js/app.js : নম্বর দিলে কোড পাঠানো, কোডের পেজ, অটো বসানো, অটো যাচাই
+
+আপনাকে যা করতে হবে (ক্রমে)
+1) BulkSMSBD অ্যাকাউন্টে নিন:
+   - API Key (ড্যাশবোর্ডের API অংশে)
+   - Sender ID (অনুমোদিত নাম বা নম্বর)
+   - IP Whitelist বন্ধ (Disabled) করুন: Phone Book > IP White List (OTP আসবে)। Supabase এর IP বদলায়, তাই এটা না করলে SMS যাবে না।
+   - ব্যালেন্সে কিছু টাকা রাখুন।
+2) Supabase > SQL Editor এ backend/update-otp.sql পুরোটা পেস্ট করে Run।
+3) Supabase > Edge Functions > Create a new function:
+   - নাম send-otp: supabase/functions/send-otp/index.ts এর কোড পেস্ট করে Deploy
+   - নাম verify-otp: supabase/functions/verify-otp/index.ts এর কোড পেস্ট করে Deploy
+   - দুটোরই সেটিংসে "Verify JWT" বন্ধ (OFF) করুন।
+4) Edge Functions > Secrets এ যোগ করুন:
+   - BULKSMSBD_API_KEY   = আপনার API Key
+   - BULKSMSBD_SENDER_ID = আপনার Sender ID
+   - OTP_PEPPER          = যেকোনো লম্বা এলোমেলো লেখা (ইচ্ছা হলে)
+5) কোড GitHub এ তুলুন। Actions এ APK বিল্ড শেষ হলে নতুন APK ইনস্টল করুন (Allow পপআপের নেটিভ অংশ শুধু নতুন APK তে থাকবে)।
+   পুরনো APK তে অ্যাপ OTA আপডেট পেলেও কোড হাতে লিখতে হবে, তবু কাজ করবে।
+
+পরীক্ষা: নম্বর দিন > SMS আসবে > Allow চাপুন > কোড বসে যাবে > নতুন নম্বর হলে রেজিস্ট্রেশন, পুরনো নম্বর হলে PIN পেজ।
+
+সতর্কতা
+- SMS না গেলে Supabase > Edge Functions > send-otp > Logs দেখুন, BulkSMSBD এর কোড লেখা থাকবে (1002 = Sender ID ভুল, 1007 = ব্যালেন্স কম, 1032 = IP Whitelist চালু)।
+- অ্যাডমিন হিসেবে Supabase ড্যাশবোর্ড থেকে হাতে ইউজার বানালে নিয়ম আটকাবে (নম্বর যাচাই লাগে)। দরকার হলে সাময়িক: drop trigger a_require_verified_phone on auth.users;
+- সীমা: একই নম্বরে 60 সেকেন্ডে 1 বার, 24 ঘণ্টায় 5 বার; একই IP থেকে ঘণ্টায় 15 বার (SMS খরচ ঠেকাতে)।

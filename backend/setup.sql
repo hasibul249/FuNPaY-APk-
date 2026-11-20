@@ -36,7 +36,7 @@ drop policy if exists "own tx" on public.transactions;
 create policy "own tx" on public.transactions for select using (auth.uid() = from_id or auth.uid() = to_id);
 -- insert/update/delete এর কোনো policy নেই, তাই অ্যাপ থেকে ব্যালেন্স বদলানো যায় না।
 
--- নতুন অ্যাকাউন্ট খুললে প্রোফাইল + ১৫০ টাকা বোনাস
+-- নতুন অ্যাকাউন্ট খুললে প্রোফাইল + 150 টাকা বোনাস
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
@@ -88,7 +88,7 @@ begin
   return t;
 end $$;
 
--- ক্যাশ আউট (শুধু এজেন্টের কাছে)। চার্জ ১.৮৫%, এজেন্ট কমিশন পায় চার্জের ৪০%
+-- ক্যাশ আউট (শুধু এজেন্টের কাছে)। চার্জ 1.85%, এজেন্ট কমিশন পায় চার্জের 40%
 create or replace function public.cash_out(p_agent text, p_amount numeric)
 returns text language plpgsql security definer set search_path = public as $$
 declare snd public.profiles; ag public.profiles; t text; amt numeric(14,2); f numeric(14,2); c numeric(14,2);
@@ -133,7 +133,7 @@ begin
   return t;
 end $$;
 
--- টেস্টের জন্য নকল টাকা যোগ (একবারে সর্বোচ্চ ৫০০০)
+-- টেস্টের জন্য নকল টাকা যোগ (একবারে সর্বোচ্চ 5000)
 create or replace function public.add_test_money(p_amount numeric)
 returns text language plpgsql security definer set search_path = public as $$
 declare me public.profiles; t text; amt numeric(14,2);
@@ -199,8 +199,8 @@ alter table public.user_coupons enable row level security;
 -- কোনো policy নেই: অ্যাপ সরাসরি পড়তে/বদলাতে পারে না, শুধু নিচের ফাংশন দিয়ে চলে
 
 insert into public.coupons(code, title, kind, val, max_disc, min_amt) values
-  ('WELCOME', 'প্রথম পেমেন্টে ১০ টাকা ছাড়', 'flat', 10, null, 50),
-  ('PAY5', '৫% ছাড় (সর্বোচ্চ ৫০ টাকা)', 'percent', 5, 50, 100)
+  ('WELCOME', 'প্রথম পেমেন্টে 10 টাকা ছাড়', 'flat', 10, null, 50),
+  ('PAY5', '5% ছাড় (সর্বোচ্চ 50 টাকা)', 'percent', 5, 50, 100)
 on conflict (code) do nothing;
 
 -- আগের সবাইকে WELCOME কুপন দেওয়া
@@ -208,7 +208,7 @@ insert into public.user_coupons(user_id, coupon_id)
 select p.id, c.id from public.profiles p, public.coupons c where c.code = 'WELCOME'
 on conflict do nothing;
 
--- নতুন অ্যাকাউন্টে ১৫০ টাকা + WELCOME কুপন
+-- নতুন অ্যাকাউন্টে 150 টাকা + WELCOME কুপন
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
@@ -296,7 +296,7 @@ grant execute on function public.pay_merchant(text, numeric, bigint) to authenti
 
 -- নতুন কুপন বানানো (উদাহরণ):
 --   insert into public.coupons(code, title, kind, val, max_disc, min_amt, expires_at)
---   values ('EID20', 'ঈদ অফার ২০ টাকা ছাড়', 'flat', 20, null, 200, '2027-01-31');
+--   values ('EID20', 'ঈদ অফার 20 টাকা ছাড়', 'flat', 20, null, 200, '2027-01-31');
 -- কোনো নম্বরকে সরাসরি কুপন দেওয়া:
 --   insert into public.user_coupons(user_id, coupon_id)
 --   select p.id, c.id from public.profiles p, public.coupons c where p.phone = '01XXXXXXXXX' and c.code = 'EID20';

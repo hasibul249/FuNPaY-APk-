@@ -1,8 +1,8 @@
 -- FuNPaY v2.13 আপডেট: Supabase > SQL Editor এ পুরোটা পেস্ট করে একবার Run দিন (আবার চালালেও সমস্যা নেই)
 -- লগইনে "Could not find the function public.phone_exists" এরর এটা চালালেই ঠিক হয়ে যাবে।
 -- এতে আছে: নম্বর যাচাই, কুপন সিস্টেম, লেনদেনের অবস্থা (সফল/ব্যর্থ) ঘর
--- ২) কুপন সিস্টেম (শুধু পেমেন্টে চলে)
--- ৩) ট্রানজেকশনে কুপন ছাড়ের ঘর
+-- 2) কুপন সিস্টেম (শুধু পেমেন্টে চলে)
+-- 3) ট্রানজেকশনে কুপন ছাড়ের ঘর
 
 create or replace function public.phone_exists(p_phone text) returns boolean
 language sql security definer set search_path = public as $$
@@ -37,8 +37,8 @@ alter table public.user_coupons enable row level security;
 -- কোনো policy নেই: অ্যাপ সরাসরি পড়তে/বদলাতে পারে না, শুধু নিচের ফাংশন দিয়ে চলে
 
 insert into public.coupons(code, title, kind, val, max_disc, min_amt) values
-  ('WELCOME', 'প্রথম পেমেন্টে ১০ টাকা ছাড়', 'flat', 10, null, 50),
-  ('PAY5', '৫% ছাড় (সর্বোচ্চ ৫০ টাকা)', 'percent', 5, 50, 100)
+  ('WELCOME', 'প্রথম পেমেন্টে 10 টাকা ছাড়', 'flat', 10, null, 50),
+  ('PAY5', '5% ছাড় (সর্বোচ্চ 50 টাকা)', 'percent', 5, 50, 100)
 on conflict (code) do nothing;
 
 -- আগের সবাইকে WELCOME কুপন দেওয়া
@@ -46,7 +46,7 @@ insert into public.user_coupons(user_id, coupon_id)
 select p.id, c.id from public.profiles p, public.coupons c where c.code = 'WELCOME'
 on conflict do nothing;
 
--- নতুন অ্যাকাউন্টে ১৫০ টাকা + WELCOME কুপন
+-- নতুন অ্যাকাউন্টে 150 টাকা + WELCOME কুপন
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
@@ -134,7 +134,7 @@ grant execute on function public.pay_merchant(text, numeric, bigint) to authenti
 
 -- নতুন কুপন বানানো (উদাহরণ):
 --   insert into public.coupons(code, title, kind, val, max_disc, min_amt, expires_at)
---   values ('EID20', 'ঈদ অফার ২০ টাকা ছাড়', 'flat', 20, null, 200, '2027-01-31');
+--   values ('EID20', 'ঈদ অফার 20 টাকা ছাড়', 'flat', 20, null, 200, '2027-01-31');
 -- কোনো নম্বরকে সরাসরি কুপন দেওয়া:
 --   insert into public.user_coupons(user_id, coupon_id)
 --   select p.id, c.id from public.profiles p, public.coupons c where p.phone = '01XXXXXXXXX' and c.code = 'EID20';

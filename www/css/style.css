@@ -466,7 +466,7 @@ html.camon .sh.scanx .box{background:transparent}
 /* =====================================================================
    FuNPaY v2.1 - স্থিতিশীলতা, কম অ্যানিমেশন, ছোট ও গোছানো সাইজ
    ===================================================================== */
-/* ১) ভারী blur বন্ধ (ফোনে ল্যাগের প্রধান কারণ ছিল), তার বদলে প্রায় অস্বচ্ছ সাদা */
+/* 1) ভারী blur বন্ধ (ফোনে ল্যাগের প্রধান কারণ ছিল), তার বদলে প্রায় অস্বচ্ছ সাদা */
 *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 html.scanning body:before,html.scanning .scene{display:none!important}
 :root{--gl:#fff;--gsh:0 3px 12px rgba(170,20,95,.08)}
@@ -483,11 +483,11 @@ nav{background:#fff;box-shadow:0 6px 18px rgba(150,20,90,.16)}
 #offbar,.toast{background:rgba(42,22,32,.96)}
 .sctabs{background:rgba(255,255,255,.22)}
 
-/* ২) লগইনের চৌকো বক্স ঠিক: .orb এর মূল স্টাইল হারিয়ে গিয়েছিল */
+/* 2) লগইনের চৌকো বক্স ঠিক: .orb এর মূল স্টাইল হারিয়ে গিয়েছিল */
 .orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none;z-index:0}
 .fl .o2{background:rgba(255,255,255,.06)}
 
-/* ৩) অ্যানিমেশন শান্ত ও ছোট */
+/* 3) অ্যানিমেশন শান্ত ও ছোট */
 .pg.in{animation:fade .16s ease both}
 nav button.on .ni{animation:navpop .26s var(--spring)}
 .sh{animation-duration:.2s}
@@ -498,7 +498,7 @@ nav button.on .ni{animation:navpop .26s var(--spring)}
 .tr.pop{animation:fade .3s ease both}
 .ok .tick:after{animation-iteration-count:1}
 
-/* ৪) সাইজ ছোট ও গোছানো */
+/* 4) সাইজ ছোট ও গোছানো */
 .hero{padding:calc(10px + var(--st)) 14px 58px}
 .scene{height:100px}
 .av{width:40px;height:40px;font-size:17px}
@@ -534,7 +534,7 @@ nav{height:60px;border-radius:22px}
 .pinc .kp button{width:58px;height:58px;font-size:21px}
 @media (max-height:700px){.kp{grid-template-columns:repeat(3,54px)}.kp button{width:54px;height:54px;font-size:20px}.pinc .kp{grid-template-columns:repeat(3,52px)}.pinc .kp button{width:52px;height:52px}}
 
-/* ৫) ধরে রাখুন বাটন (বিকাশ স্টাইল) */
+/* 5) ধরে রাখুন বাটন (বিকাশ স্টাইল) */
 .btn.hold{position:relative;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center}
 .btn.hold i{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.34);transition:width .12s linear}
 .btn.hold.hd i{width:100%;transition:width .7s linear}
@@ -969,7 +969,7 @@ button.hold.hd svg.i{stroke:#7d0a3d}
 /* =====================================================================
    FuNPaY v2.13 - নেটিভ অ্যাপের মতো শান্ত নড়াচড়া, লোগো লোডার, টেনে রিফ্রেশ
    ===================================================================== */
-/* ১) ওয়েবসাইটের মতো আচরণ বন্ধ: ফোকাস বর্ডার, ছবি টানা, লেখা নির্বাচন, টেক্সট ফোলা */
+/* 1) ওয়েবসাইটের মতো আচরণ বন্ধ: ফোকাস বর্ডার, ছবি টানা, লেখা নির্বাচন, টেক্সট ফোলা */
 *{outline:none}
 input,textarea{-webkit-user-select:text;user-select:text;-webkit-appearance:none;appearance:none}
 img,svg{-webkit-user-drag:none;user-drag:none}
@@ -977,10 +977,10 @@ img{pointer-events:none}
 button,a,.it,.tr,.mr,.rr,.fc,.bn,.hb,.av{cursor:default}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 
-/* ২) আগের "সব অ্যানিমেশন বন্ধ" নিয়ম v2.14 এ সরানো হয়েছে, নতুন অ্যানিমেশন ফাইলের শেষে */
+/* 2) আগের "সব অ্যানিমেশন বন্ধ" নিয়ম v2.14 এ সরানো হয়েছে, নতুন অ্যানিমেশন ফাইলের শেষে */
 .more svg{transition:transform .25s}
 
-/* ৩) লোগো লোডার: অ্যাপের যেকোনো জায়গায় লোড হলে FuNPaY লোগো ছোট করে ঘোরে */
+/* 3) লোগো লোডার: অ্যাপের যেকোনো জায়গায় লোড হলে FuNPaY লোগো ছোট করে ঘোরে */
 @keyframes lgspin{to{transform:rotate(360deg)}}
 .lgl{display:inline-block;width:30px;height:30px;background:url(../icons/logo-pink.png) center/contain no-repeat;animation:lgspin .9s linear infinite;vertical-align:middle}
 .cpe .lgl{display:block;margin:6px auto}
@@ -995,7 +995,7 @@ button.hold.ld{opacity:1!important}
 button.hold.ld>*{visibility:hidden}
 button.hold.ld::after{content:"";position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;background:url(../icons/logo-pink.png) center/contain no-repeat;animation:lgspin .9s linear infinite}
 
-/* ৫) নোটিফিকেশন তালিকা */
+/* 5) নোটিফিকেশন তালিকা */
 .nf{transition:background .6s}
 .nf.un{background:var(--pl2)}
 .nf .m span{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4}
@@ -1004,7 +1004,7 @@ button.hold.ld::after{content:"";position:absolute;left:50%;top:50%;width:34px;h
 .nf .r{align-self:flex-start;padding-top:2px}
 .ud{display:block;width:9px;height:9px;border-radius:50%;background:var(--p);margin:8px 0 0 auto}
 
-/* ৬) অবস্থা ব্যাজ (সফল / ব্যর্থ) আর লগইনের নতুন অ্যাকাউন্ট লিংক */
+/* 6) অবস্থা ব্যাজ (সফল / ব্যর্থ) আর লগইনের নতুন অ্যাকাউন্ট লিংক */
 .stc.bad{background:#fde8eb;color:var(--red)}
 .lnk3{margin-top:14px;background:none;border:0;color:var(--p);font-size:14px;font-weight:700;padding:8px 10px;cursor:default}
 .lnk3:active{opacity:.6}
@@ -1018,7 +1018,7 @@ button.hold.ld::after{content:"";position:absolute;left:50%;top:50%;width:34px;h
 @keyframes zoomin{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
 @keyframes fpglow{0%,100%{box-shadow:0 0 0 0 rgba(226,19,110,.30)}60%{box-shadow:0 0 0 10px rgba(226,19,110,0)}}
 
-/* ১) পেজ খুললে: একটার পর একটা নরম করে উঠে আসে */
+/* 1) পেজ খুললে: একটার পর একটা নরম করে উঠে আসে */
 .pg.in{animation:fade .25s ease both}
 .pg.in>*{animation:fup .5s var(--ease) both}
 .pg.in>*:nth-child(2){animation-delay:.06s}.pg.in>*:nth-child(3){animation-delay:.12s}
@@ -1035,7 +1035,7 @@ button.hold.ld::after{content:"";position:absolute;left:50%;top:50%;width:34px;h
 .pg.in .tri div:nth-child(1){animation-delay:.3s}.pg.in .tri div:nth-child(2){animation-delay:.38s}.pg.in .tri div:nth-child(3){animation-delay:.46s}
 .pg.in .fc{animation:zoomin .4s var(--spring) both;animation-delay:.28s}
 
-/* ২) চাপ দিলে নরম করে ছোট হয়ে ফিরে আসে */
+/* 2) চাপ দিলে নরম করে ছোট হয়ে ফিরে আসে */
 .it,.fc,.tri div,.mr,.rr,.opc,.hb,.av,.more,.pill,.chip,.lwb,.kp button{transition:transform .18s var(--ease),opacity .18s,background-color .2s,border-color .2s}
 .it:active,.fc:active,.tri div:active,.hb:active,.av:active,.opc:active{transform:scale(.93)}
 .mr:active,.tr:active,.rr:active{background:rgba(226,19,110,.07)}
@@ -1047,7 +1047,7 @@ nav button.on .ni{animation:navpop .45s var(--spring)}
 .sw b{transition:transform .25s var(--spring)}
 .seg button,.seg2 button{transition:color .2s,border-color .25s,background-color .2s}
 
-/* ৩) নিচ থেকে ওঠা পেজ/শিট আর ধাপ বদল */
+/* 3) নিচ থেকে ওঠা পেজ/শিট আর ধাপ বদল */
 .sh{animation-duration:.26s}
 .sh .box{animation-duration:.36s}
 .sh.dlg .box{animation-duration:.38s}
@@ -1063,7 +1063,7 @@ nav button.on .ni{animation:navpop .45s var(--spring)}
 .sh .pcard{animation:fup .45s var(--ease) both}
 .sh.re .pcard{animation:none}
 
-/* ৪) সুন্দর ইনপুট ঘর: গোল কোণা, নরম বর্ডার, ফোকাসে গোলাপি আভা */
+/* 4) সুন্দর ইনপুট ঘর: গোল কোণা, নরম বর্ডার, ফোকাসে গোলাপি আভা */
 .fld,.pcard>input{height:54px;border-radius:16px;background:#fff;border:1.5px solid #eadce4;box-shadow:0 2px 8px rgba(160,40,100,.05);transition:border-color .2s,box-shadow .25s,background .2s,transform .2s}
 .fld:focus-within{border-color:var(--p);background:#fff;box-shadow:0 0 0 4px rgba(226,19,110,.12),0 6px 16px rgba(226,19,110,.10)}
 .fld svg{transition:stroke .2s,color .2s}
@@ -1094,7 +1094,7 @@ nav button.on .ni{animation:navpop .45s var(--spring)}
 .bkfp.on{animation:fpglow 2.2s ease-out infinite;border-radius:50%}
 .psheet .pgbtn{border-radius:16px}
 
-/* ৫) পেমেন্ট কনফার্ম হোল্ড বাটন: উচ্চতা ছোট (লম্বা আগের মতোই), ভেতরের রং আরও গাঢ় */
+/* 5) পেমেন্ট কনফার্ম হোল্ড বাটন: উচ্চতা ছোট (লম্বা আগের মতোই), ভেতরের রং আরও গাঢ় */
 .holdw{padding:8px 18px 4px}
 button.hold{height:46px;border-radius:23px;border:1.5px solid var(--p);gap:8px;font-size:15px;box-shadow:0 5px 14px rgba(226,19,110,.18);animation:hpulse 2s ease-in-out infinite!important;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 button.hold i{background:linear-gradient(90deg,#d10f63,#a50a4c);overflow:hidden;transition:width .18s ease-out}
@@ -1110,7 +1110,7 @@ button.hold.ld{opacity:1!important;animation:none!important;background:#fff}
 button.hold.ld>*{visibility:hidden}
 button.hold.ld::after{width:30px;height:30px;margin:-15px 0 0 -15px}
 
-/* ৬) লোগো লোডার: যেকোনো জায়গায় লোড হলে আমাদের লোগো, টেনে রিফ্রেশে স্ক্রিনের ঠিক মাঝখানে */
+/* 6) লোগো লোডার: যেকোনো জায়গায় লোড হলে আমাদের লোগো, টেনে রিফ্রেশে স্ক্রিনের ঠিক মাঝখানে */
 .lgl{width:34px;height:34px}
 #ptrv{position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(255,244,249,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;pointer-events:none;z-index:55;transition:opacity .25s}
 #ptrv.on{opacity:1}

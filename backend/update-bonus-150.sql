@@ -1,5 +1,5 @@
 -- আগে setup.sql চালিয়ে থাকলে শুধু এই ফাইলটি Supabase SQL Editor এ একবার Run করুন।
--- এরপর থেকে নতুন অ্যাকাউন্টে ১৫০ টাকা বোনাস পাবে (পুরনো অ্যাকাউন্টের ব্যালেন্স বদলাবে না)।
+-- এরপর থেকে নতুন অ্যাকাউন্টে 150 টাকা বোনাস পাবে (পুরনো অ্যাকাউন্টের ব্যালেন্স বদলাবে না)।
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
