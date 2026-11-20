@@ -166,7 +166,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.13"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.14"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -227,7 +227,7 @@ async function netTest() {
 }
 function netHtml() {
   const s = S.sheet;
-  return wrapDlg(s, `<div class="ok"><div class="tick">${ic("bolt")}</div><h2>${t("ctest")}</h2></div><div class="nl">${s.lines.map(l => `<div><span>${esc(l[0])}</span><b class="${l[2]}">${esc(l[1])}</b></div>`).join("")}</div><button class="btn" onclick="netTest()">${t("retry")}</button><button class="btn l" onclick="closeS()">${t("ok")}</button>`);
+  return wrapDlg(s, `<div class="ok"><div class="tick">${ic("bolt")}</div><h2>${t("ctest")}</h2></div><div class="nl">${s.lines.map(l => `<div><span>${esc(l[0])}</span><b class="${l[2]}">${l[1] === "…" ? '<i class="lgl"></i>' : esc(l[1])}</b></div>`).join("")}</div><button class="btn" onclick="netTest()">${t("retry")}</button><button class="btn l" onclick="closeS()">${t("ok")}</button>`);
 }
 function toast(m) {
   document.querySelectorAll(".toast").forEach(e => e.remove());
@@ -417,7 +417,6 @@ function lock(auto) {
   if (OTA_PEND) { OTA_PEND = false; otaReload("p" + Date.now()); }
   S.auth = false; S.tok = ""; S.rt = ""; S.me = null; S.tx = []; S.sheet = null; S.upd = null; S.pin = ""; S.tab = "home";
   renderSheet(); render();
-  if (auto === true && bioOn()) setTimeout(bioUnlock, 350);
 }
 
 /* ---------- লেনদেনের তালিকা ---------- */
@@ -603,7 +602,7 @@ function loginHtml() {
       <div class="bkf"><label>${t("accno")}</label><div class="bkn">+88&nbsp;&nbsp;${esc(S.phone)}</div></div>
       <div class="bkf"><label>${t("pinl")}</label>
         <div class="bkp"><input id="pinin" class="pinin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(S.pin)}" oninput="pinIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();pinGo()}">
-        <button type="button" class="bkfp" aria-label="${t("fpuse")}" onclick="bioTap()">${ic("fp")}</button></div></div>
+        <button type="button" class="bkfp${bioOn() ? " on" : ""}" aria-label="${t("fpuse")}" onclick="bioTap()">${ic("fp")}</button></div></div>
       <div class="le"></div>
       <button class="btn pgbtn" id="pingo" onclick="pinGo()">${t("ok")}</button>
       ${S.noRpc ? `<button class="lnk3" onclick="hap();S.regPhone=S.phone;S.phone='';S.pin='';S.view='reg';render()">${t("newacc2")}</button>` : ""}
@@ -798,7 +797,7 @@ function sheetHtml() {
     return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard cfm">${who}<div class="cfa"><small>${t("total")}</small><b>${money(tot)}</b></div><div class="sm">${rows}</div></div>
       ${TEST_MODE && s.id === "cash" ? `<p class="tw" style="margin-top:8px">${t("cashw")}</p>` : ""}
       <div class="err c" style="text-align:center;margin-top:10px">${esc(s.err)}</div>`,
-      `<div class="holdw"><button id="hold" class="hold" onpointerdown="holdStart(event)" onpointerup="holdEnd()" onpointerleave="holdEnd()" onpointercancel="holdEnd()" oncontextmenu="return false"><i></i>${ic("ok2")}<b>${t("hold")}</b></button></div>`);
+      `<div class="holdw"><button id="hold" class="hold" onpointerdown="holdStart(event)" onpointerup="holdEnd()" onpointerleave="holdEnd()" onpointercancel="holdEnd()" oncontextmenu="return false"><i><span class="hc">${ic("ok2")}<b>${t("hold")}</b></span></i>${ic("ok2")}<b>${t("hold")}</b></button></div>`);
   }
   /* ধাপ ২: টাকার পরিমাণ */
   if (s.step === 2) {
@@ -938,7 +937,7 @@ async function verifyPin() {
 let holdT = 0;
 function holdStart() {
   const b = document.getElementById("hold"); if (!b || holdT || b.classList.contains("ld")) return;
-  hap(); b.classList.add("hd");
+  hap(); { const hc = b.querySelector(".hc"); if (hc) hc.style.width = b.clientWidth + "px"; } b.classList.add("hd");
   holdT = setTimeout(() => { holdT = 0; b.classList.remove("hd"); confirmTx(); }, 1000);
 }
 function holdEnd() {
@@ -1466,7 +1465,6 @@ fpSplash();
 /* নেটিভ স্প্ল্যাশ সঙ্গে সঙ্গে সরিয়ে আমাদের অ্যানিমেশন দেখানো (কালো/ফাঁকা স্ক্রিন নয়) */
 try { const SS = cap().SplashScreen; if (SS) requestAnimationFrame(() => Promise.resolve(SS.hide({fadeOutDuration: 120})).catch(() => {})); } catch (e) {}
 window.__fpready = true;
-if (bioOn()) setTimeout(bioUnlock, 500);
 /* ব্যানার নিজে নিজে ঘোরে */
 setInterval(() => {
   const b = document.querySelector(".ban");
@@ -1501,12 +1499,26 @@ document.addEventListener("contextmenu", e => { if (!(e.target && e.target.close
 document.addEventListener("dragstart", e => e.preventDefault());
 document.addEventListener("touchmove", e => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, {passive: false});
 
-/* ---------- টেনে রিফ্রেশ: নিচে টানলে FuNPaY লোগো ঘুরে ঘুরে ডাটা নতুন হয় ---------- */
+/* ---------- টেনে রিফ্রেশ: নিচে টানলে FuNPaY লোগো স্ক্রিনের ঠিক মাঝখানে এসে ঘোরে ---------- */
 (function () {
   const ap = document.getElementById("app"), MAXP = 120, TH = 70;
-  let y0 = 0, x0 = 0, pull = 0, on = false, busy = false, el = null;
-  const node = () => { if (!el) { el = document.createElement("div"); el.id = "ptr"; el.innerHTML = '<i class="lgl"></i>'; document.body.appendChild(el); } return el; };
-  const place = (d, anim) => { const e = node(); e.style.transition = anim ? "transform .26s cubic-bezier(.2,.8,.2,1),opacity .2s" : "none"; e.style.transform = "translate(-50%," + (d - 54) + "px)"; e.style.opacity = d <= 0 ? 0 : Math.min(1, d / 36); if (!busy) e.firstChild.style.transform = "rotate(" + Math.round(d * 5) + "deg)"; };
+  let y0 = 0, x0 = 0, pull = 0, on = false, busy = false, el = null, vl = null;
+  const node = () => {
+    if (!el) {
+      vl = document.createElement("div"); vl.id = "ptrv"; document.body.appendChild(vl);
+      el = document.createElement("div"); el.id = "ptr"; el.innerHTML = '<i class="lgl"></i>'; document.body.appendChild(el);
+    }
+    return el;
+  };
+  const place = (d, anim) => {
+    const e = node(), k = Math.max(0, Math.min(1, d / TH));
+    e.style.transition = anim ? "transform .3s cubic-bezier(.34,1.56,.64,1),opacity .22s" : "none";
+    e.style.transform = "translate(-50%,-50%) scale(" + (d <= 0 ? .4 : (.45 + .55 * k).toFixed(3)) + ")";
+    e.style.opacity = d <= 0 ? 0 : Math.min(1, d / 28);
+    vl.classList.toggle("on", d > 0 && (busy || k > .15));
+    vl.style.opacity = d <= 0 ? "" : String(Math.min(1, k) * .9);
+    if (!busy) e.firstChild.style.transform = "rotate(" + Math.round(d * 5) + "deg)";
+  };
   ap.addEventListener("touchstart", (e) => {
     on = false; pull = 0;
     if (busy || !S.auth || S.sheet || S.upd || ap.scrollTop > 0 || e.touches.length !== 1) return;
@@ -1526,12 +1538,12 @@ document.addEventListener("touchmove", e => { if (e.touches && e.touches.length 
     if (!on) return; on = false;
     if (pull < TH) { pull = 0; place(0, true); return; }
     busy = true; pull = 0; hap("MEDIUM");
-    node().classList.add("spin"); place(TH * .75, true);
+    node().classList.add("spin"); place(TH, true);
     const t0 = Date.now();
     try { await loadAll(false); } catch (e) { toast(t("neterr")); }
     const w = 900 - (Date.now() - t0); if (w > 0) await new Promise(r => setTimeout(r, w));
     if (S.auth && !S.sheet) render();
-    node().classList.remove("spin"); busy = false; place(0, true);
+    busy = false; node().classList.remove("spin"); place(0, true);
   };
   ap.addEventListener("touchend", end, {passive: true});
   ap.addEventListener("touchcancel", end, {passive: true});

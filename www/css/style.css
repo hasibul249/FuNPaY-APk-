@@ -977,23 +977,8 @@ img{pointer-events:none}
 button,a,.it,.tr,.mr,.rr,.fc,.bn,.hb,.av{cursor:default}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 
-/* ২) অতিরিক্ত নাড়াচড়া বন্ধ: ট্যাব বদলালে শুধু হালকা ফেড, কোনো উঠে আসা/ভাসা/ছোট-বড় হওয়া নেই */
-.pg.in,.pg.in *{animation:none!important}
-.pg.in{animation:fade .14s ease both!important}
-nav,nav.fx{animation:none!important}
-nav button.on .ni{animation:none!important}
-.bn svg.bv,button.hold{animation:none!important}
-.tr.pop{animation:none!important;background:var(--pl2)}
-.dt.on{animation:none!important}
-.stp.go{animation:fade .16s ease both!important}
-.sh{animation-duration:.2s!important}
-.sh .box,.sh.dlg .box{animation-duration:.24s!important}
-.sh.re,.sh.re .box{animation:none!important}
-/* চাপ দিলে ছোট/বড় না হয়ে শুধু হালকা রং বদলায় (নেটিভ রিপলের মতো) */
-.it:active,.fc:active,.tri div:active,.mr:active,.rr:active,.tr:active,.btn:active,.bn:active,.opc:active,.qa button:active,.kp button:active,.pinc .kp button:active,.lwb:active,.more:active,.pill:active,.chip:active,.hb:active,.av:active{transform:none!important}
-.it:active,.fc:active,.tri div:active,.more:active,.hb:active,.av:active{opacity:.6}
-.btn:active,.bn:active{opacity:.85}
-.more svg{transition:none}
+/* ২) আগের "সব অ্যানিমেশন বন্ধ" নিয়ম v2.14 এ সরানো হয়েছে, নতুন অ্যানিমেশন ফাইলের শেষে */
+.more svg{transition:transform .25s}
 
 /* ৩) লোগো লোডার: অ্যাপের যেকোনো জায়গায় লোড হলে FuNPaY লোগো ছোট করে ঘোরে */
 @keyframes lgspin{to{transform:rotate(360deg)}}
@@ -1010,11 +995,6 @@ button.hold.ld{opacity:1!important}
 button.hold.ld>*{visibility:hidden}
 button.hold.ld::after{content:"";position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;background:url(../icons/logo-pink.png) center/contain no-repeat;animation:lgspin .9s linear infinite}
 
-/* ৪) টেনে রিফ্রেশ */
-#ptr{position:fixed;left:50%;top:calc(var(--st) + 8px);z-index:50;width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 4px 14px rgba(120,20,70,.22);display:grid;place-items:center;opacity:0;pointer-events:none;transform:translate(-50%,-54px);will-change:transform}
-#ptr .lgl{width:32px;height:32px;animation:none}
-#ptr.spin .lgl{animation:lgspin .8s linear infinite;transform:none!important}
-
 /* ৫) নোটিফিকেশন তালিকা */
 .nf{transition:background .6s}
 .nf.un{background:var(--pl2)}
@@ -1028,3 +1008,117 @@ button.hold.ld::after{content:"";position:absolute;left:50%;top:50%;width:34px;h
 .stc.bad{background:#fde8eb;color:var(--red)}
 .lnk3{margin-top:14px;background:none;border:0;color:var(--p);font-size:14px;font-weight:700;padding:8px 10px;cursor:default}
 .lnk3:active{opacity:.6}
+
+/* =====================================================================
+   FuNPaY v2.14 - ভালো অ্যানিমেশন (বেশিও না, কমও না), সুন্দর ইনপুট ঘর,
+   মাঝখানে লোগো লোডার, ছোট হোল্ড বাটন
+   ===================================================================== */
+@keyframes fup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+@keyframes zoomin{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes fpglow{0%,100%{box-shadow:0 0 0 0 rgba(226,19,110,.30)}60%{box-shadow:0 0 0 10px rgba(226,19,110,0)}}
+
+/* ১) পেজ খুললে: একটার পর একটা নরম করে উঠে আসে */
+.pg.in{animation:fade .25s ease both}
+.pg.in>*{animation:fup .5s var(--ease) both}
+.pg.in>*:nth-child(2){animation-delay:.06s}.pg.in>*:nth-child(3){animation-delay:.12s}
+.pg.in>*:nth-child(4){animation-delay:.18s}.pg.in>*:nth-child(5){animation-delay:.24s}
+.pg.in>*:nth-child(n+6){animation-delay:.3s}
+.pg.in .it{animation:zoomin .45s var(--spring) both;animation-delay:calc(var(--i,0)*36ms + 100ms)}
+.pg.in .tr,.pg.in .mr,.pg.in .nf{animation:fin .42s var(--ease) both;animation-delay:.2s}
+.pg.in .tr:nth-child(2),.pg.in .mr:nth-child(3){animation-delay:.26s}
+.pg.in .tr:nth-child(3),.pg.in .mr:nth-child(4){animation-delay:.32s}
+.pg.in .tr:nth-child(4),.pg.in .mr:nth-child(5){animation-delay:.38s}
+.pg.in .tr:nth-child(5),.pg.in .mr:nth-child(6){animation-delay:.44s}
+.pg.in .tr:nth-child(n+6),.pg.in .mr:nth-child(n+7){animation-delay:.5s}
+.pg.in .tri div{animation:zoomin .45s var(--spring) both}
+.pg.in .tri div:nth-child(1){animation-delay:.3s}.pg.in .tri div:nth-child(2){animation-delay:.38s}.pg.in .tri div:nth-child(3){animation-delay:.46s}
+.pg.in .fc{animation:zoomin .4s var(--spring) both;animation-delay:.28s}
+
+/* ২) চাপ দিলে নরম করে ছোট হয়ে ফিরে আসে */
+.it,.fc,.tri div,.mr,.rr,.opc,.hb,.av,.more,.pill,.chip,.lwb,.kp button{transition:transform .18s var(--ease),opacity .18s,background-color .2s,border-color .2s}
+.it:active,.fc:active,.tri div:active,.hb:active,.av:active,.opc:active{transform:scale(.93)}
+.mr:active,.tr:active,.rr:active{background:rgba(226,19,110,.07)}
+.btn:active,.lwb:active{transform:scale(.97)}
+.btn,.nbar,.bknx{transition:transform .18s var(--ease),background-color .2s,opacity .2s}
+nav button .ni{transition:transform .25s var(--spring)}
+nav button:active .ni{transform:scale(.86)}
+nav button.on .ni{animation:navpop .45s var(--spring)}
+.sw b{transition:transform .25s var(--spring)}
+.seg button,.seg2 button{transition:color .2s,border-color .25s,background-color .2s}
+
+/* ৩) নিচ থেকে ওঠা পেজ/শিট আর ধাপ বদল */
+.sh{animation-duration:.26s}
+.sh .box{animation-duration:.36s}
+.sh.dlg .box{animation-duration:.38s}
+.stp.go{animation:stepin .34s var(--ease) both}
+.pinp .psheet{animation:fup .6s var(--ease) .12s both}
+.fl .fbody>*{animation:fup .5s var(--ease) both}
+.fl .fbody>*:nth-child(2){animation-delay:.05s}.fl .fbody>*:nth-child(3){animation-delay:.1s}
+.fl .fbody>*:nth-child(4){animation-delay:.15s}.fl .fbody>*:nth-child(5){animation-delay:.2s}
+.fl .fbody>*:nth-child(n+6){animation-delay:.25s}
+.lpanel{animation:fup .6s var(--ease) .25s both}
+.nbar{animation:fup .45s var(--ease) .2s both}
+.nbar.ld{animation:none}
+.sh .pcard{animation:fup .45s var(--ease) both}
+.sh.re .pcard{animation:none}
+
+/* ৪) সুন্দর ইনপুট ঘর: গোল কোণা, নরম বর্ডার, ফোকাসে গোলাপি আভা */
+.fld,.pcard>input{height:54px;border-radius:16px;background:#fff;border:1.5px solid #eadce4;box-shadow:0 2px 8px rgba(160,40,100,.05);transition:border-color .2s,box-shadow .25s,background .2s,transform .2s}
+.fld:focus-within{border-color:var(--p);background:#fff;box-shadow:0 0 0 4px rgba(226,19,110,.12),0 6px 16px rgba(226,19,110,.10)}
+.fld svg{transition:stroke .2s,color .2s}
+.fld:focus-within svg{color:var(--p);stroke:var(--p)}
+.fld.sf{height:48px;border-radius:14px}
+.fld.big{height:auto;border:0;border-bottom:2px solid var(--p);border-radius:0;background:transparent;box-shadow:none}
+.fld.big:focus-within{box-shadow:none}
+.srch div{height:48px;border-radius:16px;background:#fff;border:1.5px solid #eadce4;box-shadow:0 2px 8px rgba(160,40,100,.05);transition:border-color .2s,box-shadow .25s}
+.srch div:focus-within{border-color:var(--p);box-shadow:0 0 0 4px rgba(226,19,110,.12)}
+.srch button.fb{height:48px;border-radius:16px;border-width:1.5px}
+.lb{letter-spacing:.2px}
+.cpadd input{height:50px;border-radius:14px;border:1.5px solid #eadce4;background:#fff;padding:0 14px;outline:0;transition:border-color .2s,box-shadow .25s}
+.cpadd input:focus{border-color:var(--p);box-shadow:0 0 0 4px rgba(226,19,110,.12)}
+.pinrow{border-radius:16px!important}
+.pinrow:focus-within{box-shadow:0 0 0 4px rgba(226,19,110,.12)}
+/* লগইন পেজের ঘর: আন্ডারলাইনের বদলে নরম বক্স */
+.cfield{height:54px;border-radius:16px;background:#f4eff3;border:1.5px solid #eee3ea}
+.fl .pfield{border:1.5px solid #e6d9e1;border-radius:16px;background:#fff;padding:0 16px;box-shadow:0 2px 10px rgba(160,40,100,.06);transition:border-color .2s,box-shadow .25s}
+.fl .pfield:focus-within{border-color:var(--lp);box-shadow:0 0 0 4px rgba(226,19,110,.12),0 8px 20px rgba(226,19,110,.10)}
+.fl .pfield input{height:52px}
+.fl .pfield.ro{background:#f4eff3;box-shadow:none}
+.bkn{border:1.5px solid #eee3ea;border-radius:16px;background:#faf6f9;padding:14px 16px}
+.bkp{border:1.5px solid #e6d9e1;border-bottom-width:1.5px;border-radius:16px;background:#fff;padding:0 8px 0 16px;box-shadow:0 2px 10px rgba(160,40,100,.06);transition:border-color .2s,box-shadow .25s}
+.bkp:focus-within{border-color:var(--lp,#e2136e);box-shadow:0 0 0 4px rgba(226,19,110,.12),0 8px 20px rgba(226,19,110,.10)}
+.bkp input.pinin{height:52px}
+.bkfp{border-radius:14px;transition:background .2s,transform .2s var(--spring)}
+.bkfp:active{transform:scale(.88)}
+.bkfp.on{animation:fpglow 2.2s ease-out infinite;border-radius:50%}
+.psheet .pgbtn{border-radius:16px}
+
+/* ৫) পেমেন্ট কনফার্ম হোল্ড বাটন: উচ্চতা ছোট (লম্বা আগের মতোই), ভেতরের রং আরও গাঢ় */
+.holdw{padding:8px 18px 4px}
+button.hold{height:46px;border-radius:23px;border:1.5px solid var(--p);gap:8px;font-size:15px;box-shadow:0 5px 14px rgba(226,19,110,.18);animation:hpulse 2s ease-in-out infinite!important;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+button.hold i{background:linear-gradient(90deg,#d10f63,#a50a4c);overflow:hidden;transition:width .18s ease-out}
+button.hold.hd i{width:100%;transition:width 1s linear}
+button.hold.hd{animation:none!important;box-shadow:0 6px 18px rgba(165,10,76,.35);transform:scale(.985)}
+button.hold svg.i{width:24px;height:24px}
+button.hold .hc{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;white-space:nowrap}
+button.hold .hc svg.i{stroke:#fff;fill:none;stroke-width:2.2;width:24px;height:24px}
+button.hold .hc b{color:#fff;font-size:15px;font-weight:800}
+button.hold.hd b,button.hold.hd svg.i{color:var(--p);stroke:var(--p)}
+button.hold.hd .hc b{color:#fff}button.hold.hd .hc svg.i{stroke:#fff}
+button.hold.ld{opacity:1!important;animation:none!important;background:#fff}
+button.hold.ld>*{visibility:hidden}
+button.hold.ld::after{width:30px;height:30px;margin:-15px 0 0 -15px}
+
+/* ৬) লোগো লোডার: যেকোনো জায়গায় লোড হলে আমাদের লোগো, টেনে রিফ্রেশে স্ক্রিনের ঠিক মাঝখানে */
+.lgl{width:34px;height:34px}
+#ptrv{position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(255,244,249,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;pointer-events:none;z-index:55;transition:opacity .25s}
+#ptrv.on{opacity:1}
+#ptr{position:fixed;left:50%;top:50%;margin:0;z-index:60;width:68px;height:68px;border-radius:50%;background:#fff;box-shadow:0 12px 34px rgba(190,20,100,.30),0 0 0 6px rgba(226,19,110,.08);display:grid;place-items:center;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.4);will-change:transform,opacity}
+#ptr .lgl{width:46px;height:46px;animation:none}
+#ptr.spin .lgl{animation:lgspin .85s linear infinite;transform:none!important}
+.nl .lgl{width:22px;height:22px}
+@media(prefers-reduced-motion:reduce){.pg.in>*,.pg.in .it,.pg.in .tr,.pg.in .mr,.pg.in .tri div{animation-duration:.01s!important}}
+/* হোল্ড বাটন: গাঢ় রঙের ওপর সাদা লেখা ওপরের স্তরে থাকে */
+button.hold i{z-index:2;pointer-events:none}
+button.hold.hd>svg.i,button.hold.hd>b{transition:none}
