@@ -24,6 +24,10 @@ const P = {
 };
 P.fp = '<path d="M12 11v4M8.5 20c.5-2 .5-4 .5-6a3 3 0 016 0c0 3 .3 5 1 7M5 17c.3-1.5.5-3 .5-5a6.5 6.5 0 0113 0c0 1 0 2-.2 3M6.5 5.5A9 9 0 0121 12"/>';
 const ic = (k) => `<svg class="i" viewBox="0 0 24 24">${P[k]}</svg>`;
+Object.assign(P, {
+  back:'<path d="M15 5l-7 7 7 7"/>', bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  mine:'<path d="M4 8a2 2 0 012-2h11v3"/><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M16.5 14h1.6"/>'
+});
 
 /* সার্ভিস তালিকা: f=ফিল্ডের লেবেল, k=n(১১ ডিজিট নম্বর)/t(লেখা), ch=অপশন, fee=চার্জ, d=+১ হলে টাকা আসে */
 const SV = [
@@ -93,7 +97,14 @@ Object.assign(T.en, {recv:"Money Received", cashin:"Customer Cash Out", agent:"A
  rcv:"Recipient", ep:"Your mobile number", cont:"Continue", cobad:"Minimum cash out is ৳50", addmax:"Max ৳5,000 at a time", badpin:"PIN must be 4 digits", back2:"Welcome back",
  conf1:"Turn off Confirm email in Supabase", lp:"Enter your 6-digit PIN", dm:"Test version: this balance is not real money", cashw:"This is a test balance, not real money. Do not take real cash from an agent.", bioT:"Unlock with fingerprint / screen lock", bioD:"Next time open the app with your fingerprint or phone lock instead of the PIN. The PIN still works.", bioY:"Turn on", bioR:"Unlock FuNPaY", bioOn:"Unlock enabled", on:"On", off:"Off", myqrs:"Your QR", rcvd:"Recipient"});
 
-const BG = ["linear-gradient(135deg,#1d4ed8,#38bdf8)", "linear-gradient(135deg,#0f2f9e,#3b82f6)", "linear-gradient(135deg,#f97316,#fbbf24)"];
+Object.assign(T.bn, {lgreg:"লগ ইন / রেজিস্ট্রেশন", phh:"মোবাইল নম্বর দিয়ে লগ ইন / রেজিস্ট্রেশন করুন", cc:"দেশের কোড", bd:"বাংলাদেশ", mob:"মোবাইল নম্বর", terms:"আপনি নিয়ম ও শর্তসমূহে সম্মত আছেন", ft1:"নিরাপদ PIN", ft2:"ফিঙ্গারপ্রিন্ট", ft3:"QR পেমেন্ট", wel:"স্বাগতম", regh:"নতুন অ্যাকাউন্ট খুলুন", regs:"নাম, মোবাইল নম্বর আর ৬ ডিজিট PIN দিন"});
+Object.assign(T.en, {lgreg:"Log in / Register", phh:"Log in / Register with your mobile number", cc:"Country code", bd:"Bangladesh", mob:"Mobile number", terms:"You agree to the terms and conditions", ft1:"Secure PIN", ft2:"Fingerprint", ft3:"QR payments", wel:"Welcome", regh:"Create a new account", regs:"Enter your name, mobile number and a 6-digit PIN"});
+Object.assign(T.bn, {rcnt:"সাম্প্রতিক", sc1:"স্ক্যান করতে ফ্রেমের ভেতরে QR কোড রাখুন", scn2:"নম্বর দিয়ে পাঠান", camno:"ক্যামেরার অনুমতি দরকার", camd:"QR স্ক্যান করতে FuNPaY কে ক্যামেরা ব্যবহারের অনুমতি দিন।", camb:"অনুমতি দিন", gscan:"অন্য স্ক্যানার দিয়ে খুলুন", sec1:"লেনদেনের ফিচার সেট করুন", sec2:"আপনার পছন্দ বেছে নিন", sec3:"অ্যাকাউন্ট ম্যানেজ করুন", at:"সময়", blc:"ব্যালেন্স", pr:"আমার প্রোফাইল", scn3:"স্ক্যান"});
+Object.assign(T.en, {rcnt:"Recent", sc1:"Place the QR code inside the frame", scn2:"Send using a number", camno:"Camera permission needed", camd:"Allow FuNPaY to use the camera to scan QR codes.", camb:"Allow", gscan:"Open another scanner", sec1:"Set up transaction features", sec2:"Choose your preference", sec3:"Manage account", at:"Time", blc:"Balance", pr:"My profile", scn3:"Scan"});
+Object.assign(T.bn, {bt1:"অ্যাড মানি অফার", bt2:"রিচার্জ অফার", bt3:"রেফার অফার", o1:"প্রথম অ্যাড মানিতে ৫% ক্যাশব্যাক", o2:"মোবাইল রিচার্জে ১০ টাকা বোনাস", o3:"বন্ধুকে ইনভাইট করুন, পান ৫০ টাকা", os1:"ব্যাংক বা কার্ড থেকে টাকা যোগ করুন", os2:"যেকোনো অপারেটরে, প্রতি রিচার্জে", os3:"বন্ধু প্রথম লেনদেন করলেই", g1:"অ্যাড মানি", g2:"রিচার্জ করুন", g3:"ইনভাইট"});
+Object.assign(T.en, {bt1:"ADD MONEY OFFER", bt2:"RECHARGE OFFER", bt3:"REFER OFFER", o1:"5% cashback on your first Add Money", o2:"৳10 bonus on every recharge", o3:"Invite a friend and get ৳50", os1:"Add money from a bank or card", os2:"On any operator, every recharge", os3:"When your friend makes a first transfer", g1:"Add Money", g2:"Recharge", g3:"Invite"});
+
+const BG = ["linear-gradient(135deg,#e2136e,#ff6fa8)", "linear-gradient(135deg,#6a2fd8,#b184ff)", "linear-gradient(135deg,#f08a1c,#ffc56b)"];
 const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", fl:0, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null};
 try {
   const d = JSON.parse(localStorage.getItem("fp2") || "{}");
@@ -102,6 +113,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
+const APP_REL = "1.9"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -127,7 +139,28 @@ async function applyUpdate() {
 }
 const t = (k) => T[S.lang][k] || k;
 const money = (n) => "৳ " + Number(n).toLocaleString("en-US", {maximumFractionDigits: 2});
-const tile = (k) => `<div class="ic">${ic(k)}</div>`;
+const TK = (x, y, s, c) => `<text x="${x}" y="${y}" font-size="${s}" font-weight="800" fill="${c}" text-anchor="middle" font-family="system-ui,'Noto Sans Bengali',sans-serif">৳</text>`;
+/* রঙিন সার্ভিস আইকন (বিকাশের মতো) */
+const C = {
+  send:'<path d="M5 17h9M3 24h8M6 31h8" stroke="#f290b8" stroke-width="2.6" stroke-linecap="round"/><circle cx="29" cy="24" r="12" fill="#fff0f6" stroke="#e2136e" stroke-width="2.6"/>' + TK(29, 29.6, 16, "#e2136e"),
+  rech:'<rect x="14" y="6" width="20" height="36" rx="4.5" fill="#eafaf1" stroke="#1faa6b" stroke-width="2.6"/><path d="M21 37h6" stroke="#1faa6b" stroke-width="2.4" stroke-linecap="round"/><circle cx="24" cy="21" r="7.5" fill="#e2136e"/>' + TK(24, 25.8, 11, "#fff"),
+  cash:'<g transform="rotate(-14 24 21)"><rect x="6" y="10" width="36" height="20" rx="3.5" fill="#2fb7a8"/><rect x="9.5" y="13.5" width="29" height="13" rx="2" fill="none" stroke="#c9f2ec" stroke-width="1.6"/><circle cx="24" cy="20" r="4.6" fill="#c9f2ec"/></g><path d="M5 34c6 3.4 13 5 22 3.4l9-4.6c1.8-.9 2.4-2.8.9-3.9-1.2-.9-3-.5-4.4.3l-5.4 3" fill="none" stroke="#e2136e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  pay:'<path d="M11 17h26l2.2 23H8.8z" fill="#ffefd9" stroke="#f08a1c" stroke-width="2.6" stroke-linejoin="round"/><path d="M17.5 17v-3.5a6.5 6.5 0 0113 0V17" fill="none" stroke="#f08a1c" stroke-width="2.6" stroke-linecap="round"/>',
+  add:'<rect x="6" y="12" width="34" height="26" rx="5" fill="#f1e8fb" stroke="#7b4fb8" stroke-width="2.6"/><path d="M6 19h34" stroke="#7b4fb8" stroke-width="2.4"/><rect x="28" y="24" width="14" height="9" rx="3" fill="#fff" stroke="#7b4fb8" stroke-width="2.4"/><path d="M16 25v8M12 29h8" stroke="#e2136e" stroke-width="2.6" stroke-linecap="round"/>',
+  bill:'<path d="M24 6a12 12 0 00-6.5 22c1.4 1 2 2.2 2 3.7V33h9v-1.3c0-1.5.6-2.7 2-3.7A12 12 0 0024 6z" fill="#e5f6ee" stroke="#2f9e6f" stroke-width="2.6" stroke-linejoin="round"/><path d="M20 38h8M21.5 42h5" stroke="#2f9e6f" stroke-width="2.6" stroke-linecap="round"/><path d="M25.5 13l-4.5 8h5l-3.500 7" fill="none" stroke="#f0a020" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  save:'<path d="M24 12c-9 0-15 6-15 14 0 7 5 12 15 12s15-5 15-12c0-8-6-14-15-14z" fill="#fde7f1" stroke="#d6307d" stroke-width="2.6"/><path d="M19 12.500l5-5 5 5" fill="none" stroke="#d6307d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="26" r="7.500" fill="#d6307d"/>' + TK(24, 30.5, 11, "#fff"),
+  bank:'<circle cx="21" cy="24" r="12" fill="#fff0f6" stroke="#d6307d" stroke-width="2.6"/>' + TK(21, 29.4, 15, "#d6307d") + '<path d="M36 17l8 7-8 7z" fill="#f290b8" stroke="#f290b8" stroke-width="2" stroke-linejoin="round"/>',
+  loan:'<path d="M18 8h12l-3 6h-6z" fill="#e9b98a" stroke="#b9772e" stroke-width="2.4" stroke-linejoin="round"/><path d="M21 14C9 20 7 41 24 41s15-21 3-27z" fill="#f6dcc0" stroke="#b9772e" stroke-width="2.6" stroke-linejoin="round"/>' + TK(24, 35, 15, "#b9772e"),
+  insur:'<path d="M24 5l15 5.500v11c0 10-6.500 17-15 20.500C15.500 39.500 9 32.500 9 21.500v-11z" fill="#e6f0ff" stroke="#2f6fd0" stroke-width="2.6" stroke-linejoin="round"/><circle cx="24" cy="23" r="7.500" fill="#2f6fd0"/>' + TK(24, 27.8, 11, "#fff"),
+  edu:'<path d="M6 12c6-2 12-1 18 3 6-4 12-5 18-3v26c-6-2-12-1-18 3-6-4-12-5-18-3z" fill="#e9f5ee" stroke="#2f7d5b" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 15v26" stroke="#2f7d5b" stroke-width="2.4"/><path d="M11 20c3-.6 6 0 9 1.500M11 26c3-.6 6 0 9 1.500M28 21.500c3-1.500 6-2 9-1.500M28 27.500c3-1.500 6-2 9-1.500" stroke="#7fc3a0" stroke-width="2" stroke-linecap="round" fill="none"/>',
+  remit:'<circle cx="24" cy="25" r="16" fill="#e7f7ec" stroke="#2faa5f" stroke-width="2.6"/><path d="M8 25h32M24 9c-6 5-6 27 0 32M24 9c6 5 6 27 0 32" fill="none" stroke="#2faa5f" stroke-width="2"/><circle cx="36" cy="12" r="7" fill="#e2136e"/>' + TK(36, 16.5, 10, "#fff"),
+  qr:'<rect x="6" y="6" width="14" height="14" rx="3" fill="none" stroke="#e2136e" stroke-width="3"/><rect x="28" y="6" width="14" height="14" rx="3" fill="none" stroke="#e2136e" stroke-width="3"/><rect x="6" y="28" width="14" height="14" rx="3" fill="none" stroke="#e2136e" stroke-width="3"/><path d="M28 28h5v5h-5zM37 28h5M28 38h5M37 33v9" stroke="#e2136e" stroke-width="3" stroke-linecap="round"/>',
+  gift:'<rect x="8" y="22" width="32" height="19" rx="3" fill="#ffd9a6" stroke="#f08a1c" stroke-width="2.4"/><rect x="6" y="15" width="36" height="8" rx="3" fill="#ffecd0" stroke="#f08a1c" stroke-width="2.4"/><path d="M24 15v26" stroke="#f08a1c" stroke-width="2.4"/><path d="M24 15c-3-8-11-6-8-1.500 1.500 2 6 1.500 8 1.500zM24 15c3-8 11-6 8-1.500-1.500 2-6 1.500-8 1.500z" fill="#fff" stroke="#f08a1c" stroke-width="2.2" stroke-linejoin="round"/>',
+  cpn:'<circle cx="24" cy="24" r="16" fill="#d4f1ee" stroke="#2aa79b" stroke-width="2.6"/><path d="M17 31l14-14" stroke="#2aa79b" stroke-width="2.8" stroke-linecap="round"/><circle cx="18" cy="18" r="3" fill="#2aa79b"/><circle cx="30" cy="30" r="3" fill="#2aa79b"/>',
+  rwd:'<path d="M15 8h18v10c0 6-4 10-9 10s-9-4-9-10z" fill="#ffe27a" stroke="#c99a00" stroke-width="2.4" stroke-linejoin="round"/><path d="M15 12H8c0 6 3 9 7 9M33 12h7c0 6-3 9-7 9" fill="none" stroke="#c99a00" stroke-width="2.4"/><path d="M24 28v7M17 41h14M19 35h10" stroke="#c99a00" stroke-width="2.6" stroke-linecap="round"/>'
+};
+const cic = (k) => `<svg class="ci" viewBox="0 0 48 48" aria-hidden="true">${C[k]}</svg>`;
+const tile = (k) => `<div class="ic">${C[k] ? cic(k) : ic(k)}</div>`;
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"}[c]));
 const first = (s) => esc(Array.from(String(s || "F"))[0].toUpperCase());
 const fmt = (iso) => { const n = new Date(iso), p = (x) => String(x).padStart(2, "0"); return `${p(n.getDate())}/${p(n.getMonth() + 1)} ${p(n.getHours())}:${p(n.getMinutes())}`; };
@@ -190,7 +223,7 @@ async function enter() {
   if (lp) setTimeout(() => offerBio(lp), 1400);
 }
 function lock(auto) {
-  clearInterval(pollT);
+  clearInterval(pollT); stopScanner();
   S.auth = false; S.tok = ""; S.rt = ""; S.me = null; S.tx = []; S.sheet = null; S.upd = null; S.pin = ""; S.tab = "home";
   renderSheet(); render();
   if (auto === true && bioOn()) setTimeout(bioUnlock, 350);
@@ -207,9 +240,18 @@ function tv(x) {
   else who = out ? (x.to_name ? x.to_name + " · " : "") + x.to_phone : (x.from_name ? x.from_name + " · " : "") + x.from_phone;
   return {key, who, out, amt, icon: x.type === "add" ? "add" : (!out ? "cash" : x.type)};
 }
+const money2 = (n) => "৳" + Number(n).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const AVC = [["#f3e1ff", "#8a4fd0"], ["#dff5ea", "#1f9d63"], ["#ffe9d6", "#e07a1a"], ["#e0f0ff", "#2f6fd0"], ["#ffe1ee", "#d6307d"], ["#fff3c9", "#a87c00"]];
+function avatar(name, ph) {
+  let h = 0; for (const ch of String(ph || name || "F")) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const c = AVC[h % AVC.length];
+  return `<u class="av2" style="background:${c[0]};color:${c[1]}">${first(name || ph)}</u>`;
+}
 function row(x) {
-  const v = tv(x);
-  return `<div class="tr${S.hl === x.trx ? " pop" : ""}">${tile(v.icon)}<div class="m"><b>${t(v.key)}</b><span>${esc(v.who)}</span><small>TrxID: ${esc(x.trx)}</small></div><div class="r"><b class="${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money(v.amt)}</b><small>${fmt(x.created_at)}</small></div></div>`;
+  const v = tv(x), plain = SVC.includes(x.type) || x.type === "add";
+  const out = x.from_id === S.uid, nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone;
+  const lead = plain ? tile(x.type) : avatar(nm, ph);
+  return `<div class="tr${S.hl === x.trx ? " pop" : ""}">${lead}<div class="m"><b>${t(v.key)}</b><span>${esc(v.who)}</span><small>TrxID: ${esc(x.trx)}</small></div><div class="r"><b class="${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</b><small>${fmt(x.created_at)}</small></div></div>`;
 }
 function list() {
   const q = S.q.toLowerCase();
@@ -226,67 +268,107 @@ function recents() {
   return [...m].slice(0, 5);
 }
 function deco(i) {
-  let s = '<svg class="d" viewBox="0 0 100 100" preserveAspectRatio="xMaxYMid slice"><circle cx="85" cy="25" r="48" fill="#fff" opacity=".14"/><circle cx="95" cy="90" r="34" fill="#fff" opacity=".1"/>';
-  if (i === 0) s += '<circle cx="62" cy="52" r="24" fill="#fbbf24"/><circle cx="62" cy="52" r="18" fill="none" stroke="#b45309" stroke-width="2.5"/><text x="62" y="62" font-size="26" font-weight="900" fill="#b45309" text-anchor="middle">৳</text>';
-  if (i === 1) s += '<rect x="46" y="22" width="34" height="58" rx="7" fill="#fff"/><rect x="51" y="30" width="24" height="34" rx="3" fill="#3b82f6"/><circle cx="63" cy="72" r="3" fill="#1d4ed8"/>';
-  if (i === 2) s += '<rect x="42" y="42" width="40" height="34" rx="5" fill="#fff"/><rect x="38" y="34" width="48" height="12" rx="4" fill="#1d4ed8"/><path d="M62 34v42" stroke="#fbbf24" stroke-width="5"/><path d="M62 34c-8-14-20-4-8 0M62 34c8-14 20-4 8 0" fill="none" stroke="#fbbf24" stroke-width="4"/>';
+  const T3 = (x, y, z, c) => `<text x="${x}" y="${y}" font-size="${z}" font-weight="800" fill="${c}" text-anchor="middle" font-family="system-ui,'Noto Sans Bengali',sans-serif">`;
+  let s = '<svg class="d" viewBox="0 0 120 136" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><circle cx="96" cy="30" r="58" fill="#fff" opacity=".12"/><circle cx="118" cy="120" r="44" fill="#fff" opacity=".1"/>';
+  if (i === 0) s += '<ellipse cx="62" cy="108" rx="30" ry="9" fill="#b45309" opacity=".35"/><path d="M32 96v10c0 5 13 9 30 9s30-4 30-9V96z" fill="#e0a21a"/><ellipse cx="62" cy="96" rx="30" ry="9" fill="#fcd34d"/><path d="M36 82v10c0 5 12 8 26 8s26-3 26-8V82z" fill="#e0a21a"/><ellipse cx="62" cy="82" rx="26" ry="8" fill="#fcd34d"/><circle cx="72" cy="48" r="27" fill="#fff"/><circle cx="72" cy="48" r="23" fill="none" stroke="#e2136e" stroke-width="2" stroke-dasharray="3 3"/>' + T3(72, 57, 25, "#e2136e") + '৫%</text>';
+  if (i === 1) s += '<rect x="42" y="18" width="46" height="88" rx="9" fill="#fff"/><rect x="47" y="28" width="36" height="62" rx="4" fill="#efe6ff"/><circle cx="65" cy="98" r="3" fill="#cfc2f2"/><circle cx="65" cy="52" r="15" fill="#6a2fd8"/>' + T3(65, 58, 17, "#fff") + '৳</text><path d="M96 38a22 22 0 010 34M104 30a32 32 0 010 50" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".85"/><rect x="52" y="74" width="26" height="5" rx="2.5" fill="#cfc2f2"/>';
+  if (i === 2) s += '<rect x="36" y="64" width="62" height="44" rx="6" fill="#fff"/><rect x="30" y="50" width="74" height="18" rx="6" fill="#ffe4bd"/><rect x="62" y="50" width="10" height="58" fill="#e2136e"/><path d="M67 50c-6-20-26-18-18-5 3 5 14 5 18 5zM67 50c6-20 26-18 18-5-3 5-14 5-18 5z" fill="none" stroke="#e2136e" stroke-width="5" stroke-linejoin="round"/><path d="M104 30l3 7 7 3-7 3-3 7-3-7-7-3 7-3zM24 40l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>';
   return s + "</svg>";
 }
-const banner = (i, w) => `<div class="bn${w ? " w" : ""}" style="background:${BG[i]}">${deco(i)}<b>${t("o" + (i + 1))}</b><span>${t("g" + (i + 1))}</span></div>`;
-
+const BTX = [["bt1", "os1", "g1", "add"], ["bt2", "os2", "g2", "rech"], ["bt3", "os3", "g3", ""]];
+const banner = (i, w) => `<div class="bn${w ? " w" : ""}" style="background:${BG[i]}" onclick="${BTX[i][3] ? `openS('${BTX[i][3]}')` : "hap();toast(t('soon'))"}">${deco(i)}<small>${t(BTX[i][0])}</small><b>${t("o" + (i + 1))}</b><p>${t(BTX[i][1])}</p><span>${t(BTX[i][2])}</span></div>`;
 const agBadge = () => (S.me && S.me.role === "agent") ? `<em class="ag">${t("agent")}</em>` : "";
+const SCENE = '<svg class="scene" viewBox="0 0 400 150" preserveAspectRatio="xMidYMax slice" aria-hidden="true">'
+  + '<g fill="#fff" opacity=".22"><ellipse cx="318" cy="34" rx="30" ry="9"/><ellipse cx="338" cy="28" rx="20" ry="8"/><ellipse cx="70" cy="56" rx="26" ry="7"/><ellipse cx="88" cy="51" rx="16" ry="6"/></g>'
+  + '<path d="M0 98c60-22 110-20 170-6s130 8 230-14v72H0z" fill="#fff" opacity=".13"/>'
+  + '<path d="M0 118c70-18 120-12 190 2s140 6 210-12v42H0z" fill="#fff" opacity=".16"/>'
+  + '<g fill="#fff" opacity=".42"><path d="M58 114l9-8 9 8v8H58z"/><path d="M288 106l7-6 7 6v6h-14z"/><path d="M330 114l6-5 6 5v5h-12z"/></g>'
+  + '<g fill="#fff" opacity=".3"><circle cx="112" cy="108" r="6"/><circle cx="124" cy="110" r="5"/><circle cx="252" cy="106" r="6"/><circle cx="372" cy="106" r="5"/></g>'
+  + '<path d="M170 150c20-14 40-22 80-30s70-6 90-18" fill="none" stroke="#fff" stroke-width="10" opacity=".14" stroke-linecap="round"/>'
+  + '<path d="M0 136c80-10 150-4 220 4s130 0 180-10v20H0z" fill="#fff" opacity=".2"/></svg>';
 function hero() {
   const nm = S.me && S.me.name ? esc(S.me.name) : t("nm");
-  return `<div class="hero"><div class="top"><div class="av" onclick="go('mine')">${first(S.me && S.me.name)}</div>
-  <div class="who"><small>${t("hi")}, ${nm} ${agBadge()}</small><button class="bp" onclick="peek(this)"><u>৳</u><span>${t("showb")}</span></button></div>
-  <button class="hb" onclick="S.seg='t';go('inbox')">${ic("srch")}</button>
-  <button class="hb" onclick="S.seg='n';go('inbox')">${ic("bell")}<i></i></button></div></div>`;
+  return `<div class="hero">${SCENE}<div class="top"><div class="av" onclick="go('mine')">${first(S.me && S.me.name)}</div>
+  <div class="who"><small>${nm} ${agBadge()}</small><button class="bp" onclick="peek(this)"><u>৳</u><span>${t("showb")}</span></button></div>
+  <button class="hb" aria-label="${t("sq")}" onclick="S.seg='t';go('inbox')">${ic("srch")}</button>
+  <button class="hb" aria-label="${t("mine")}" onclick="go('mine')"><img src="icons/logo-pink.png" alt=""><em></em></button></div></div>`;
 }
+const tbar = (title) => `<div class="tbar"><span class="sp"></span><b>${title}</b><img src="icons/logo.png" alt=""></div>`;
 function pageHome() {
   const items = SV.slice(0, S.more ? 12 : 8).map(a => `<button class="it" onclick="openS('${a.id}')">${tile(a.id)}<span>${t(a.id)}</span></button>`).join("");
   const rc = recents();
-  return hero() + `<div class="card sv"><div class="grid">${items}</div>
+  return hero() + `<div class="wsheet"><div class="grid">${items}</div>
   <button class="more" onclick="S.more=!S.more;render()">${t(S.more ? "less" : "more")}${ic(S.more ? "cu" : "cd")}</button></div>
-  <div class="qb" onclick="openQR('my')"><div class="qi">${ic("qr")}</div><div><b>${t("myqr")}</b><small>${t("qrhint")}</small></div>${ic("ch")}</div>
-  <div class="ban" onscroll="dot(this)" ontouchstart="this.dataset.t=Date.now()">${banner(0)}${banner(1)}${banner(2)}</div><div class="dts"><i class="on"></i><i></i><i></i></div>
-  ${rc.length ? `<div class="ttl"><span>${t("fav")}</span></div><div class="fv">${rc.map(f => `<div class="fc" onclick="openS('send','${esc(f[0])}')"><u>${first(f[1])}</u>${esc(f[1])}</div>`).join("")}</div>` : ""}
-  <div class="ttl"><span>${t("rec")}</span><a onclick="S.seg='t';go('inbox')">${t("all")}</a></div>
-  ${S.tx.length ? S.tx.slice(0, 3).map(row).join("") : `<p class="em">${t("no")}</p>`}`;
+  <div class="sec nob"><div class="ban" onscroll="dot(this)" ontouchstart="this.dataset.t=Date.now()">${banner(0)}${banner(1)}${banner(2)}</div><div class="dts"><i class="on"></i><i></i><i></i></div></div>
+  <div class="sec"><div class="ttl"><span>${t("qf")}</span></div>
+  ${rc.length ? `<div class="fv">${rc.map(f => `<div class="fc" onclick="openS('send','${esc(f[0])}')"><u>${first(f[1])}</u>${esc(f[1])}</div>`).join("")}</div>` : ""}
+  <div class="tri"><div onclick="S.seg='n';go('inbox')">${cic("gift")}<span>${t("offers")}</span></div><div onclick="hap();toast(t('soon'))">${cic("cpn")}<span>${t("cp")}</span></div><div onclick="hap();toast(t('soon'))">${cic("rwd")}<span>${t("rw")}</span></div></div></div>
+  <div class="sec"><div class="ttl"><span>${t("rec")}</span><a onclick="S.seg='t';go('inbox')">${t("all")}</a></div>
+  ${S.tx.length ? S.tx.slice(0, 3).map(row).join("") : `<p class="em">${t("no")}</p>`}</div>`;
 }
 function pageInbox() {
-  const head = `<div class="page">${t("inbox")}</div><div class="seg"><button class="${S.seg === "t" ? "on" : ""}" onclick="S.seg='t';render()">${t("txs")}</button><button class="${S.seg === "n" ? "on" : ""}" onclick="S.seg='n';render()">${t("nt")} (3)</button></div>`;
+  const head = tbar(t("inbox")) + `<div class="seg"><button class="${S.seg === "t" ? "on" : ""}" onclick="S.seg='t';render()">${t("txs")}</button><button class="${S.seg === "n" ? "on" : ""}" onclick="S.seg='n';render()">${t("nt")}<i class="bd">3</i></button></div>`;
   if (S.seg === "n") return head + [0, 1, 2].map(i => `<div class="nt">${banner(i, true).replace(" w", "")}<p>${t("n" + (i + 1))}</p><small>${t("new")}</small></div>`).join("");
   return head + `<div class="srch"><div>${ic("srch")}<input placeholder="${t("sq")}" value="${esc(S.q)}" oninput="S.q=this.value;document.getElementById('lst').innerHTML=list()"></div><button onclick="S.fl=(S.fl+1)%3;render()">${t("flt")}: ${t("f" + S.fl)}</button></div><div class="note">${t("last")}</div><div id="lst">${list()}</div>`;
 }
-const chev = () => ic("ch").replace('class="i"', 'class="i c"');
 function pageMine() {
   const m = S.me || {};
-  return `<div class="hero" style="padding-bottom:64px"><div class="top"><div class="who" style="font-size:17px;font-weight:800">${t("acct")}</div></div></div>
-  <div class="card pf"><div class="big">${first(m.name)}</div><h3>${esc(m.name)}</h3><p>${esc(m.phone)}</p>${agBadge()}
-  <div class="bal2"><small>${t("showb")}</small><b>${money(S.bal)}</b></div></div>
-  <div class="card lst"><button class="rw" onclick="openQR('my')">${ic("qr")}<span>${t("myqr")}</span>${chev()}</button>
-  <button class="rw" onclick="openQR('scan')">${ic("srch")}<span>${t("scanqr")}</span>${chev()}</button>
-  <button class="rw" onclick="toggleBio()">${ic("fp")}<span>${t("bioT")}</span><small style="color:var(--mu)">${bioOn() ? t("on") : t("off")}</small></button>
-  <button class="rw" onclick="checkUpdate(true)">${ic("up")}<span>${t("chk")}</span><small style="color:var(--mu)">v${APP_VERSION}</small></button>
-  <button class="rw" onclick="lang()">${ic("lang")}<span>${t("lang")}</span>${chev()}</button>
-  <button class="rw" onclick="lock()">${ic("out")}<span>${t("out")}</span>${chev()}</button></div>
-  ${TEST_MODE ? `<p class="em" style="padding-top:16px">${t("dm")}</p>` : ""}`;
+  const R = (icon, label, js, right) => `<button class="mr" onclick="${js}">${ic(icon)}<span>${label}</span>${right || ""}</button>`;
+  const sw = `<i class="sw${bioOn() ? " on" : ""}"><b></b></i>`;
+  return tbar(t("pr"))
+    + `<div class="prof"><div class="big">${first(m.name)}</div><div class="pi2"><h3>${esc(m.name)} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p></div></div>`
+    + `<div class="balc"><span>${t("blc")}</span><b>${money(S.bal)}</b></div>`
+    + `<div class="msec"><h4>${t("sec1")}</h4>${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("fp", t("bioT"), "toggleBio()", sw)}</div>`
+    + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()")}</div>`
+    + `<div class="msec"><h4>${t("sec3")}</h4>${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL}</small>`)}${R("out", t("out"), "lock()")}</div>`
+    + (TEST_MODE ? `<p class="em">${t("dm")}</p>` : "");
 }
 
 /* ---------- লগইন / অ্যাকাউন্ট খোলা ---------- */
+const LOGO = '<img class="lglogo" src="icons/logo.png" alt="FuNPaY">';
+const lgBar = (backJs) => `<div class="fbar"><button class="fback" aria-label="${t("back")}" onclick="${backJs}"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="flang"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>`;
+const NXT = `<svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 function loginHtml() {
-  const logo = `<div class="lgb">F</div><h1>FuNPaY</h1>`;
-  if (!CONFIGURED) return `<div class="login">${logo}<p style="padding:0 10px">${t("setup")}</p></div>`;
-  if (S.view === "reg") return `<div class="login">${logo}<p>${t("newacc")}</p><div class="lf"><input id="rn" maxlength="20" placeholder="${t("nm")}"><input id="rp" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX"><input id="rk" type="password" inputmode="numeric" maxlength="6" placeholder="${t("pin4")}"><div class="le"></div><button class="lb2" onclick="doReg()">${t("reg")}</button></div><button class="chip" onclick="S.view='';render()">${t("haveacc")}</button></div>`;
-  if (!S.phone) return `<div class="login">${logo}<p>${t("tag")}</p><div class="lf"><input id="lp" inputmode="numeric" maxlength="11" placeholder="${t("ep")}"><div class="le"></div><button class="lb2" onclick="setPhone()">${t("cont")}</button></div><button class="chip" onclick="S.view='reg';render()">${t("newacc")}</button></div>`;
+  if (!CONFIGURED) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div><div class="lhero">${LOGO}<h1>FuNPaY</h1><p>${t("setup")}</p></div></div>`;
+  /* ১) স্বাগতম পেজ */
+  if (S.view === "" && !S.phone) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div>
+    <div class="ltop"><div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
+    <div class="lhero">${LOGO}<h1>FuNPaY</h1><p>${t("tag")}</p>
+      <div class="pills"><span>${t("ft1")}</span><span>${t("ft2")}</span><span>${t("ft3")}</span></div></div>
+    <div class="lpanel"><button class="lwb" onclick="hap();S.view='ph';render()">${t("lgreg")}</button>${TEST_MODE ? `<small>${t("dm")}</small>` : ""}</div></div>`;
+  /* ২) মোবাইল নম্বর পেজ */
+  if (S.view === "ph" && !S.phone) return `<div class="fl light">${lgBar("S.view='';render()")}
+    <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
+      <h2>${t("phh")}</h2>
+      <label>${t("cc")}</label><div class="cfield"><i class="flag"></i>${t("bd")}</div>
+      <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="lp" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="this.value=this.value.replace(/\\D/g,'')"></div>
+      <div class="le"></div>
+      <p class="terms">${t("terms")}</p>
+      <button class="lnk" onclick="S.view='reg';render()">${t("newacc")}</button></div>
+    <button class="nbar" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
+  /* ৩) নতুন অ্যাকাউন্ট */
+  if (S.view === "reg") return `<div class="fl light">${lgBar("S.view='ph';render()")}
+    <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
+      <h2>${t("regh")}</h2><p class="sub">${t("regs")}</p>
+      <label>${t("nm")}</label><div class="pfield"><input id="rn" maxlength="20" placeholder="${t("nm")}"></div>
+      <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="rp" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" oninput="this.value=this.value.replace(/\\D/g,'')"></div>
+      <label>${t("pin4")}</label><div class="pfield"><input id="rk" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" oninput="this.value=this.value.replace(/\\D/g,'')"></div>
+      <div class="le"></div>
+      <button class="lnk" onclick="S.view='ph';render()">${t("haveacc")}</button></div>
+    <button class="nbar lb2" onclick="doReg()"><span>${t("reg")}</span>${NXT}</button></div>`;
+  /* ৪) PIN পেজ */
   const dots = [0, 1, 2, 3, 4, 5].map(i => `<span class="dt${i < S.pin.length ? " on" : ""}"></span>`).join("");
   const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="key('${n}')">${n}</button>`).join("") + (bioOn() ? `<button onclick="bioUnlock()">${ic("fp")}</button>` : `<button class="z"></button>`) + `<button onclick="key('0')">0</button><button onclick="key('b')"><svg class="i" viewBox="0 0 24 24"><path d="M21 5H9l-6 7 6 7h12zM15 9l-4 6M11 9l4 6"/></svg></button>`;
-  return `<div class="login">${logo}<p>${esc(S.name || t("back2"))}</p><p style="margin-top:2px;opacity:.8">${esc(S.phone)}</p><p style="font-weight:600;margin-top:14px;opacity:1">${t("lp")}</p><div class="dots">${dots}</div><div class="le"></div><div class="kp">${keys}</div><div class="lrow"><button class="chip" onclick="S.phone='';S.name='';S.pin='';render()">${t("other")}</button><button class="chip" onclick="S.view='reg';render()">${t("newacc")}</button><button class="chip" onclick="lang()">${t("lang")}</button></div>${TEST_MODE ? `<p style="font-size:12px;opacity:.75">${t("dm")}</p>` : ""}</div>`;
+  return `<div class="fl pinp"><div class="orb o1"></div><div class="orb o2"></div>
+    <div class="phead">${LOGO}<b>${esc(S.name || t("back2"))}</b><span>+88 ${esc(S.phone)}</span></div>
+    <div class="psheet"><p class="pl">${t("lp")}</p><div class="dots">${dots}</div><div class="le"></div><div class="kp">${keys}</div>
+      <div class="lrow"><button class="chip" onclick="S.phone='';S.name='';S.pin='';S.view='ph';render()">${t("other")}</button><button class="chip" onclick="S.view='reg';render()">${t("newacc")}</button><button class="chip" onclick="lang()">${t("lang")}</button></div>
+      ${TEST_MODE ? `<small class="dm">${t("dm")}</small>` : ""}</div></div>`;
 }
 function setPhone() {
   const v = document.getElementById("lp").value.trim();
   if (!/^01\d{9}$/.test(v)) { document.querySelector(".le").textContent = t("badn"); hap("HEAVY"); return; }
-  S.phone = v; S.name = ""; render();
+  S.phone = v; S.name = ""; S.view = ""; render();
 }
 async function doReg() {
   if (S.busy) return;
@@ -314,6 +396,18 @@ async function key(d) {
   S.busy = false;
 }
 
+/* স্ট্যাটাস বারের রং: পেজ অনুযায়ী (OTA তেই কাজ করে) */
+function sbar() {
+  try {
+    const B = cap().StatusBar; if (!B) return;
+    const scn = !!(S.sheet && S.sheet.id === "qrs" && S.sheet.tab === "scan");
+    const light = !S.auth && CONFIGURED && (S.view === "ph" || S.view === "reg") && !S.phone;
+    const col = scn ? "#12050c" : light ? "#f7f5f7" : "#e2136e";
+    Promise.resolve(B.setBackgroundColor({color: col})).catch(() => {});
+    Promise.resolve(B.setStyle({style: light && !scn ? "LIGHT" : "DARK"})).catch(() => {});
+    const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", col);
+  } catch (e) {}
+}
 function render() {
   save();
   const fx = S.fx;
@@ -323,10 +417,12 @@ function render() {
     const pg = S.tab === "home" ? pageHome() : S.tab === "inbox" ? pageInbox() : pageMine();
     h = `<div class="pg${fx ? " in" : ""}">${pg}</div>`;
     const nv = (k, lbl) => `<button class="${S.tab === k ? "on" : ""}" onclick="go('${k}')"><span class="ni">${ic(k)}${k === "inbox" ? '<span class="bg">3</span>' : ""}</span>${lbl}</button>`;
-    h += `<nav class="${fx ? "fx" : ""}">${nv("home", t("home"))}${nv("mine", t("mine"))}<button class="qrb" onclick="openQR('my')">${ic("qr")}</button>${nv("inbox", t("inbox"))}</nav>`;
+    h += `<nav class="${fx ? "fx" : ""}">${nv("home", t("home"))}${nv("mine", t("mine"))}<button class="qrb" onclick="openQR('scan')"><span class="ni">${ic("qr")}</span>${t("qrs")}</button>${nv("inbox", t("inbox"))}</nav>`;
   }
   document.getElementById("app").innerHTML = h;
   S.fx = false; S.hl = null;
+  sbar();
+  if (!S.auth && CONFIGURED) { const f = document.getElementById(S.view === "reg" ? "rn" : "lp"); if (f && S.view) setTimeout(() => { try { f.focus(); } catch (e) {} }, 350); }
 }
 const go = (k) => {
   if (S.tab === k) { render(); window.scrollTo({top: 0, behavior: "smooth"}); return; }
@@ -336,67 +432,83 @@ const lang = () => { hap(); S.lang = S.lang === "bn" ? "en" : "bn"; render(); };
 let peekTimer;
 function peek(b) {
   hap();
-  const s = b.querySelector("span"), to = S.bal, t0 = performance.now();
+  const sp = b.querySelector("span");
   clearTimeout(peekTimer);
-  const step = (n) => { const p = Math.min(1, (n - t0) / 650), e = 1 - Math.pow(1 - p, 3); s.textContent = money(Math.round(to * e * 100) / 100); if (p < 1) requestAnimationFrame(step); };
-  requestAnimationFrame(step);
-  peekTimer = setTimeout(() => { if (s.isConnected) s.textContent = t("showb"); }, 4000);
+  sp.textContent = money(S.bal);
+  peekTimer = setTimeout(() => { if (sp.isConnected) sp.textContent = t("showb"); }, 4000);
 }
 
 function dot(e) { const i = Math.round(e.scrollLeft / (e.scrollWidth / 3)); document.querySelectorAll(".dts i").forEach((d, j) => d.className = j === i ? "on" : ""); }
-/* ---------- লেনদেনের ফর্ম: ধাপ ১ = তথ্য, ধাপ ২ = যাচাই + PIN ---------- */
+/* ---------- লেনদেনের ফর্ম: ধাপ ১ = তথ্য, ধাপ ২ = যাচাই + PIN, শেষে সফল পেজ ---------- */
 function openS(id, pre) {
   if (!WIRED.includes(id)) { hap(); toast(t("soon")); return; }
   hap(); S.sheet = {id, step:1, v:pre || "", ch:"", a:"", err:"", done:false, fresh:true, fxs:false, rn:"", busy:false}; renderSheet();
 }
 function mount() { let e = document.getElementById("sheet"); if (!e) { e = document.createElement("div"); e.id = "sheet"; document.body.appendChild(e); } return e; }
 function renderSheet() {
-  mount().innerHTML = S.upd ? updHtml() : S.sheet ? (S.sheet.id === "qrs" ? qrHtml() : S.sheet.id === "bio" ? bioHtml() : sheetHtml()) : "";
-  if (S.sheet) { S.sheet.fresh = false; S.sheet.fxs = false; }
+  const s = S.sheet;
+  mount().innerHTML = S.upd ? updHtml() : s ? (s.id === "qrs" ? qrHtml() : s.id === "bio" ? bioHtml() : sheetHtml()) : "";
+  if (s) { s.fresh = false; s.fxs = false; }
   if (S.upd) S.upd.fresh = false;
-  if (S.sheet && !S.sheet.done && S.sheet.step === 2 && S.sheet.id !== "qrs" && S.sheet.id !== "bio") { const f = document.getElementById("f3"); if (f) setTimeout(() => f.focus(), 80); }
+  if (s && !s.done && s.step === 2 && s.id !== "qrs" && s.id !== "bio") { const f = document.getElementById("f3"); if (f) setTimeout(() => f.focus(), 120); }
+  sbar();
 }
 function closeS() {
   const sh = document.querySelector("#sheet .sh");
   if (!sh || sh.classList.contains("out")) return;
+  stopScanner();
   sh.classList.remove("re"); sh.classList.add("out");
   setTimeout(() => {
     const done = S.sheet && S.sheet.done ? S.sheet.trx : null;
     S.sheet = null; S.upd = null; renderSheet();
     if (done) { S.hl = done; render(); refresh(); }
-  }, 230);
+  }, 240);
 }
 const sync = () => { const a = document.getElementById("f1"), b = document.getElementById("f2"); if (a) S.sheet.v = a.value.trim(); if (b) S.sheet.a = b.value; };
 function pick(c) { hap(); sync(); S.sheet.ch = c; S.sheet.err = ""; renderSheet(); }
+function pickNum(p) { hap(); const a = document.getElementById("f1"), b = document.getElementById("f2"); if (a) a.value = p; S.sheet.v = p; if (b) b.focus(); }
 function shakeBox() { const b = document.querySelector("#sheet .box"); if (!b) return; b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); hap("HEAVY"); }
 const setBusy = (on) => document.querySelectorAll("#sheet .btn:not(.l)").forEach(b => b.classList.toggle("ld", on));
-const wrapSheet = (s, inner) => `<div class="sh${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div><div class="stp${s.fxs ? " go" : ""}">${inner}</div></div></div>`;
+const wrapDlg = (s, inner) => `<div class="sh dlg${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div><div class="stp${s.fxs ? " go" : ""}">${inner}</div></div></div>`;
+const wrapSheet = wrapDlg;
+const wrapPage = (s, title, back, body, foot) => `<div class="sh pgx${s.fresh ? "" : " re"}"><div class="box"><div class="ph"><button class="pb" aria-label="${t("back")}" onclick="${back}">${ic("back")}</button><b>${title}</b><img src="icons/logo.png" alt=""></div><div class="pbody"><div class="stp${s.fxs ? " go" : ""}">${body}</div></div>${foot ? `<div class="pfoot">${foot}</div>` : ""}</div></div>`;
 const feeOf = (c, amt) => Math.round((c.fee || 0) * amt * 100) / 100;
 const tickSvg = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const PERSON = ["send", "pay", "cash"];
 function sheetHtml() {
   const s = S.sheet, c = cfg(s.id), d = c.d || -1;
   if (s.done) {
-    const cols = ["#fbbf24", "#3b82f6", "#12a15b", "#e5324b", "#a78bfa"];
-    const cf = Array.from({length: 18}, (_, i) => { const a = Math.random() * 6.283, r = 80 + Math.random() * 90; return `<i class="cf" style="--x:${(Math.cos(a) * r).toFixed(0)}px;--y:${(Math.sin(a) * r - 30).toFixed(0)}px;background:${cols[i % 5]};animation-delay:${(Math.random() * .2).toFixed(2)}s"></i>`; }).join("");
-    return wrapSheet(s, `<div class="ok"><div class="tick d">${tickSvg}</div>${cf}<h2>${t("done")}</h2><div class="amt">${money(s.total)}</div><small>${t(s.id)} · ${t("trx")}: ${esc(s.trx)}</small><button class="btn" onclick="closeS()">${t("ok")}</button></div>`);
+    const rows = [];
+    if (s.v) rows.push([t(s.id === "cash" ? "ag" : PERSON.includes(s.id) ? "sendto" : c.f), (s.rn ? esc(s.rn) + " · " : "") + esc(s.v)]);
+    if (s.ch) rows.push([t("svc"), t(s.ch)]);
+    rows.push([t("amtl"), money(s.amt)]);
+    if (s.fee) rows.push([t("feel"), money(s.fee)]);
+    rows.push([t("trx"), esc(s.trx)], [t("at"), fmt(s.at)]);
+    return wrapPage(s, t(s.id), "closeS()", `<div class="ok"><div class="tick d">${tickSvg}</div><h2>${t("done")}</h2><div class="amt">${money(s.total)}</div><div class="sv">${t(s.id)}</div></div><div class="pcard"><div class="dl">${rows.map(r => `<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join("")}</div></div>`, `<button class="btn" onclick="closeS()">${t("ok")}</button>`);
   }
-  const head = `<div class="bt">${tile(s.id)}<b>${t(s.id)}</b></div>`;
   if (s.step === 2) {
-    const amt = parseFloat(s.a), fee = feeOf(c, amt), tot = amt + (d < 0 ? fee : 0);
-    const who = s.rn ? `${esc(s.rn)} · ${esc(s.v)}` : esc(s.v);
-    return wrapSheet(s, head + `<div class="sm">${s.v ? `<div><span>${t(s.id === "cash" ? "ag" : "sendto")}</span><b>${who}</b></div>` : ""}${s.ch ? `<div><span>${t(s.id)}</span><b>${t(s.ch)}</b></div>` : ""}<div><span>${t("amtl")}</span><b>${money(amt)}</b></div>${fee ? `<div><span>${t("feel")}</span><b>${money(fee)}</b></div>` : ""}<div><span>${t("total")}</span><b>${money(tot)}</b></div></div>
-    ${TEST_MODE && s.id === "cash" ? `<p class="tw">${t("cashw")}</p>` : ""}<div class="lb">${t("pin")}</div><input id="f3" type="password" inputmode="numeric" maxlength="6"><div class="err">${esc(s.err)}</div>
-    <button class="btn" onclick="confirmTx()">${t("confirm")}</button><button class="btn l" onclick="backStep()">${t("back")}</button>`);
+    const amt = parseFloat(s.a), fee = feeOf(c, amt), tot = amt + (d < 0 ? fee : 0), person = PERSON.includes(s.id);
+    const who = person
+      ? `<div class="rcp">${avatar(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${esc(s.v)}</span></div></div>`
+      : `<div class="rcp">${tile(s.id)}<div><b>${t(s.id)}</b><span>${s.ch ? t(s.ch) : ""}</span></div></div>`;
+    const rows = (!person && s.v ? `<div><span>${t(c.f)}</span><b>${esc(s.v)}</b></div>` : "") + (person && s.id === "cash" ? `<div><span>${t("svc")}</span><b>${t("cash")}</b></div>` : "")
+      + `<div><span>${t("amtl")}</span><b>${money(amt)}</b></div>${fee ? `<div><span>${t("feel")}</span><b>${money(fee)}</b></div>` : ""}<div><span>${t("total")}</span><b>${money(tot)}</b></div>`;
+    return wrapPage(s, t(s.id), "backStep()", `<div class="pcard">${who}<div class="sm">${rows}</div></div>
+      ${TEST_MODE && s.id === "cash" ? `<p class="tw" style="margin-top:8px">${t("cashw")}</p>` : ""}
+      <div class="pcard"><div class="lb">${t("pin")}</div><div class="fld pin"><input id="f3" type="password" inputmode="numeric" maxlength="6" placeholder="••••••"></div><div class="err">${esc(s.err)}</div></div>`,
+      `<button class="btn" onclick="confirmTx()">${t("confirm")}</button>`);
   }
-  return wrapSheet(s, head
-    + (c.ch ? `<div class="chs">${c.ch.map(x => `<button class="${s.ch === x ? "on" : ""}" onclick="pick('${x}')">${t(x)}</button>`).join("")}</div>` : "")
-    + (c.k ? `<div class="lb">${t(c.f)}</div><input id="f1" ${c.k === "n" ? 'inputmode="numeric" maxlength="11"' : ""} value="${esc(s.v)}">` : "")
-    + `<div class="lb">${t("amt")}</div><input id="f2" inputmode="decimal" placeholder="৳ 0" value="${esc(s.a)}" oninput="this.value=this.value.replace(/[^0-9.]/g,'')"><div class="err">${esc(s.err)}</div>
-    <button class="btn" onclick="nextStep()">${t("next")}</button><button class="btn l" onclick="closeS()">${t("cancel")}</button>`);
+  const rc = PERSON.includes(s.id) ? recents() : [];
+  const first1 = (c.ch ? `<div class="chs">${c.ch.map(x => `<button class="${s.ch === x ? "on" : ""}" onclick="pick('${x}')">${t(x)}</button>`).join("")}</div>` : "")
+    + (c.k ? `<div class="lb" style="${c.ch ? "margin-top:14px" : ""}">${t(c.f)}</div><div class="fld">${c.k === "n" ? ic("srch") : ""}<input id="f1" ${c.k === "n" ? `inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" oninput="this.value=this.value.replace(/\\D/g,'')"` : `placeholder="${t(c.f)}"`} value="${esc(s.v)}"></div>` : "")
+    + (rc.length ? `<div class="rl"><p>${t("rcnt")}</p>${rc.map(f => `<div class="rr" onclick="pickNum('${esc(f[0])}')">${avatar(f[1], f[0])}<div><b>${esc(f[1])}</b><span>${esc(f[0])}</span></div></div>`).join("")}</div>` : "");
+  return wrapPage(s, t(s.id), "closeS()", (first1 ? `<div class="pcard">${first1}</div>` : "")
+    + `<div class="pcard"><div class="lb">${t("amt")}</div><div class="fld big"><u>৳</u><input id="f2" inputmode="decimal" placeholder="0" value="${esc(s.a)}" oninput="this.value=this.value.replace(/[^0-9.]/g,'')"></div><div class="err">${esc(s.err)}</div></div>`,
+    `<button class="btn" onclick="nextStep()">${t("next")}${NXT}</button>`);
 }
 function updHtml() {
   const u = S.upd;
-  return `<div class="sh${u.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div><div class="ok"><div class="tick">${ic("up")}</div><h2>${t("upn")}</h2><div class="amt" style="font-size:22px">v${esc(u.version)}</div><small>${esc(u.notes || "")}</small><button class="btn" onclick="applyUpdate()">${t("upb")}</button><button class="btn l" onclick="closeS()">${t("upl")}</button></div></div></div>`;
+  return `<div class="sh dlg${u.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div><div class="ok"><div class="tick">${ic("up")}</div><h2>${t("upn")}</h2><div class="amt" style="font-size:22px">v${esc(u.version)}</div><div class="sv">${esc(u.notes || "")}</div></div><button class="btn" onclick="applyUpdate()">${t("upb")}</button><button class="btn l" onclick="closeS()">${t("upl")}</button></div></div>`;
 }
 async function nextStep() {
   sync();
@@ -443,7 +555,7 @@ async function confirmTx() {
     else trx = await R("pay_service", {p_type: s.id, p_ref: s.v, p_amount: amt, p_ch: s.ch});
   } catch (e) { return fail(errMsg(e)); }
   s.busy = false;
-  S.sheet = {id: s.id, done: true, total: d < 0 ? amt + fee : amt, trx, fresh: false, fxs: true};
+  S.sheet = {id: s.id, done: true, total: d < 0 ? amt + fee : amt, amt, fee, trx, v: s.v, rn: s.rn, ch: s.ch, at: new Date().toISOString(), fresh: false, fxs: true};
   hap("MEDIUM"); renderSheet(); refresh();
 }
 document.addEventListener("keydown", (e) => {
@@ -459,17 +571,72 @@ function qrSvg(text) {
   for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) d += `M${c} ${r}h1v1h-1z`;
   return `<svg class="qrs" viewBox="-2 -2 ${n + 4} ${n + 4}" shape-rendering="crispEdges"><rect x="-2" y="-2" width="${n + 4}" height="${n + 4}" fill="#fff"/><path d="${d}" fill="#14182b"/></svg>`;
 }
-function openQR(tab) { hap(); S.sheet = {id: "qrs", tab: tab || "my", fresh: true, fxs: false}; renderSheet(); }
-function qTab(tb) { hap(); S.sheet.tab = tb; S.sheet.fxs = true; renderSheet(); }
+function openQR(tab) { hap(); S.sheet = {id: "qrs", tab: tab || "scan", fresh: true, fxs: false, torch: false, denied: false}; renderSheet(); if (S.sheet.tab === "scan") startScanner(); }
+function qTab(tb) { hap(); if (!S.sheet || S.sheet.tab === tb) return; stopScanner(); S.sheet.tab = tb; S.sheet.fxs = true; S.sheet.denied = false; S.sheet.torch = false; renderSheet(); if (tb === "scan") startScanner(); }
 function qrHtml() {
   const s = S.sheet, m = S.me || {};
-  const tabs = `<div class="seg" style="margin:0 0 14px;padding:0"><button class="${s.tab === "my" ? "on" : ""}" onclick="qTab('my')">${t("myqr")}</button><button class="${s.tab === "scan" ? "on" : ""}" onclick="qTab('scan')">${t("scanqr")}</button></div>`;
-  const body = s.tab === "my"
-    ? `<div class="qcard"><div class="qav">${first(m.name)}</div><b>${esc(m.name)}</b><span>${esc(m.phone)} ${agBadge()}</span><div class="qwrap">${qrSvg("funpay:" + m.phone)}</div><small>${t("qrhint")}</small></div>`
-    : `<div class="scan"><b></b></div><p style="text-align:center;color:var(--mu);font-size:13px;margin:10px 6px 4px">${t("scanh")}</p><button class="btn" onclick="scanQR()">${t("scanqr")}</button>`;
-  return wrapSheet(s, tabs + body + `<button class="btn l" onclick="closeS()">${t("cancel")}</button>`);
+  if (s.tab === "scan") return scanHtml(s);
+  return wrapPage(s, t("myqr"), "closeS()", `<div class="qpage"><div class="qcard"><div class="qav">${first(m.name)}</div><b>${esc(m.name)}</b><span>${esc(m.phone)} ${agBadge()}</span><div class="qwrap">${qrSvg("funpay:" + m.phone)}</div><small>${t("qrhint")}</small></div></div>`,
+    `<button class="btn" onclick="qTab('scan')">${ic("qr")}${t("scanqr")}</button>`);
 }
-async function scanQR() {
+/* ---------- স্ক্যানার: ক্যামেরা পেছনে, সুন্দর ফ্রেম সামনে ---------- */
+function scanHtml(s) {
+  const nat = !!(cap().BarcodeScanner && cap().BarcodeScanner.startScan);
+  return `<div class="sh scanx${s.fresh ? "" : " re"}"><div class="box">
+    <div class="sct"><button class="pb" aria-label="${t("back")}" onclick="closeS()">${ic("back")}</button><b>${t("scanqr")}</b><button class="pb tq${s.torch ? " on" : ""}" aria-label="Flash" onclick="toggleTorch()">${ic("bolt")}</button></div>
+    <div class="scm"><div class="scf" id="scf"><i class="k1"></i><i class="k2"></i><i class="k3"></i><i class="k4"></i><span class="sl"></span><div class="sck">${tickSvg}</div></div>
+      <p class="scp">${t(s.denied ? "camd" : nat ? "sc1" : "noscan")}</p>
+      ${s.denied ? `<button class="pill" onclick="askCam()">${t("camb")}</button><button class="pill ghost" onclick="scanQRGoogle()">${t("gscan")}</button>` : ""}</div>
+    <div class="scb"><div class="sctabs"><button class="on">${t("scn3")}</button><button onclick="qTab('my')">${t("myqr")}</button></div><button class="lnk2" onclick="manualSend()">${t("scn2")}</button></div></div></div>`;
+}
+let scanLis = null, scanOn = false, scanDone = false, scanBad = 0;
+async function stopScanner() {
+  document.documentElement.classList.remove("scanning", "camon");
+  const B = cap().BarcodeScanner, l = scanLis, was = scanOn;
+  scanLis = null; scanOn = false;
+  if (l) { try { await l.remove(); } catch (e) {} }
+  if (was && B) { try { await B.stopScan(); } catch (e) {} }
+}
+async function startScanner() {
+  const B = cap().BarcodeScanner, s = S.sheet;
+  if (!B || !B.startScan || !s || s.id !== "qrs" || s.tab !== "scan") return;
+  try {
+    let p = await B.checkPermissions();
+    if (p.camera !== "granted") p = await B.requestPermissions();
+    if (S.sheet !== s || s.tab !== "scan") return;
+    if (p.camera !== "granted") { s.denied = true; renderSheet(); return; }
+    scanDone = false;
+    document.documentElement.classList.add("scanning");
+    scanLis = await B.addListener("barcodesScanned", onScanned);
+    scanOn = true;
+    await B.startScan({formats: ["QR_CODE"]});
+    setTimeout(() => { if (scanOn) document.documentElement.classList.add("camon"); }, 250);
+  } catch (e) {
+    console.log(e); await stopScanner();
+    if (S.sheet === s && s.tab === "scan") { s.denied = true; renderSheet(); }
+  }
+}
+function onScanned(ev) {
+  const b = ev && ev.barcodes && ev.barcodes[0], v = b && (b.rawValue || b.displayValue), s = S.sheet;
+  if (!v || !s || s.id !== "qrs" || scanDone) return;
+  if (!/^funpay:01\d{9}$/i.test(String(v).trim())) { if (Date.now() - scanBad > 2200) { scanBad = Date.now(); toast(t("badqr")); hap("HEAVY"); } return; }
+  scanDone = true; hap("MEDIUM");
+  const f = document.getElementById("scf"); if (f) f.classList.add("hit");
+  setTimeout(async () => { await stopScanner(); if (S.sheet === s) { S.sheet = null; renderSheet(); } handleScan(v); }, 450);
+}
+async function toggleTorch() {
+  hap(); const B = cap().BarcodeScanner, s = S.sheet;
+  if (!B || !scanOn || !s) { toast(t("noscan")); return; }
+  try { if (s.torch) await B.disableTorch(); else await B.enableTorch(); s.torch = !s.torch; const b = document.querySelector(".tq"); if (b) b.classList.toggle("on", s.torch); }
+  catch (e) { toast(t("errg")); }
+}
+async function askCam() {
+  hap(); const B = cap().BarcodeScanner; if (!B) return;
+  try { const p = await B.requestPermissions(); if (p.camera === "granted" && S.sheet) { S.sheet.denied = false; renderSheet(); startScanner(); return; } } catch (e) {}
+  try { await B.openSettings(); } catch (e) {}
+}
+function manualSend() { stopScanner(); openS("send"); }
+async function scanQRGoogle() {
   hap();
   const B = cap().BarcodeScanner;
   if (!B) { toast(t("noscan")); return; }
@@ -552,13 +719,14 @@ setInterval(() => {
   if (!b || S.sheet || S.upd || (b.dataset.t && Date.now() - b.dataset.t < 6000)) return;
   const w = b.scrollWidth / 3, i = (Math.round(b.scrollLeft / w) + 1) % 3;
   b.scrollTo({left: i * w, behavior: "smooth"});
-}, 4200);
+}, 5500);
 /* অ্যান্ড্রয়েড ব্যাক বাটন, স্ট্যাটাস বার, ব্যাকগ্রাউন্ডে ১ মিনিটের বেশি থাকলে অটো লক */
 try {
   const A = cap().App;
   let bgAt = 0;
   if (A) {
     A.addListener("backButton", () => {
+      if (S.sheet && !S.sheet.done && S.sheet.step === 2 && !S.upd) { backStep(); return; }
       if (S.sheet || S.upd) { closeS(); return; }
       if (S.auth && S.tab !== "home") { go("home"); return; }
       A.exitApp();
@@ -570,5 +738,5 @@ try {
     });
   }
   const SB = cap().StatusBar;
-  if (SB) { SB.setStyle({style: "DARK"}); SB.setBackgroundColor({color: "#1d4ed8"}); }
+  if (SB) { SB.setStyle({style: "DARK"}); SB.setBackgroundColor({color: "#e2136e"}); }
 } catch (e) {}
