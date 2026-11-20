@@ -43,4 +43,25 @@ if (fs.existsSync(m)) {
     }
   }
 })("android/app/src/main/java");
+
+/* ৬) অ্যাপ খোলার সময় কালো/ধূসর স্ক্রিন বন্ধ: নেটিভ স্প্ল্যাশ পুরো গোলাপি, আইকন স্বচ্ছ, তারপর সরাসরি আমাদের অ্যানিমেশন */
+(function () {
+  const res = "android/app/src/main/res";
+  if (!fs.existsSync(res)) return;
+  fs.mkdirSync(res + "/values", {recursive: true}); fs.mkdirSync(res + "/drawable", {recursive: true});
+  fs.writeFileSync(res + "/drawable/fp_splash_icon.xml", '<?xml version="1.0" encoding="utf-8"?>\n<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><solid android:color="#00000000"/><size android:width="48dp" android:height="48dp"/></shape>\n');
+  fs.writeFileSync(res + "/values/fp_colors.xml", '<?xml version="1.0" encoding="utf-8"?>\n<resources><color name="fp_splash_bg">#c40f5e</color></resources>\n');
+  const st = res + "/values/styles.xml";
+  if (fs.existsSync(st)) {
+    let x = fs.readFileSync(st, "utf8");
+    if (!x.includes("windowSplashScreenBackground")) {
+      x = x.replace(/(<style name="AppTheme\.NoActionBarLaunch"[^>]*>)/, '$1\n        <item name="windowSplashScreenBackground">@color/fp_splash_bg</item>\n        <item name="windowSplashScreenAnimatedIcon">@drawable/fp_splash_icon</item>\n        <item name="windowSplashScreenAnimationDuration">0</item>\n        <item name="android:windowBackground">@color/fp_splash_bg</item>');
+      fs.writeFileSync(st, x);
+      console.log("styles.xml: স্প্ল্যাশ গোলাপি করা হলো");
+    }
+  }
+  /* ডার্ক মোডেও একই (values-night থাকলে) */
+  const sn = res + "/values-night/styles.xml";
+  if (fs.existsSync(sn)) { let y = fs.readFileSync(sn, "utf8"); if (!y.includes("windowSplashScreenBackground")) { y = y.replace(/(<style name="AppTheme\.NoActionBarLaunch"[^>]*>)/, '$1\n        <item name="windowSplashScreenBackground">@color/fp_splash_bg</item>\n        <item name="windowSplashScreenAnimatedIcon">@drawable/fp_splash_icon</item>'); fs.writeFileSync(sn, y); } }
+})();
 console.log("android সেটিং ঠিক করা হয়েছে");

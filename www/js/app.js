@@ -26,6 +26,9 @@ P.fp = '<path d="M12 11v4M8.5 20c.5-2 .5-4 .5-6a3 3 0 016 0c0 3 .3 5 1 7M5 17c.3
 P.eye = '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'; P.eyeo = '<path d="M3 3l18 18M10.6 6.2A9.6 9.6 0 0112 6c6 0 10 6 10 6a17 17 0 01-3.2 3.8M6.5 7.6C3.9 9.3 2 12 2 12s4 7 10 7c1.5 0 2.9-.4 4.1-1"/>';
 const ic = (k) => `<svg class="i" viewBox="0 0 24 24">${P[k]}</svg>`;
 Object.assign(P, {
+  filt:'<path d="M4 6h16M7 12h10M10 18h4"/>', stmt:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  lim:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', help:'<path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>', ref:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5M17 9v6M14 12h6"/>',
   back:'<path d="M15 5l-7 7 7 7"/>', bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
   mine:'<path d="M4 8a2 2 0 012-2h11v3"/><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M16.5 14h1.6"/>'
 });
@@ -105,6 +108,8 @@ Object.assign(T.en, {rcnt:"Recent", sc1:"Place the QR code inside the frame", sc
 Object.assign(T.bn, {bt1:"অ্যাড মানি অফার", bt2:"রিচার্জ অফার", bt3:"রেফার অফার", o1:"প্রথম অ্যাড মানিতে ৫% ক্যাশব্যাক", o2:"মোবাইল রিচার্জে ১০ টাকা বোনাস", o3:"বন্ধুকে ইনভাইট করুন, পান ৫০ টাকা", os1:"ব্যাংক বা কার্ড থেকে টাকা যোগ করুন", os2:"যেকোনো অপারেটরে, প্রতি রিচার্জে", os3:"বন্ধু প্রথম লেনদেন করলেই", g1:"অ্যাড মানি", g2:"রিচার্জ করুন", g3:"ইনভাইট"});
 Object.assign(T.en, {bt1:"ADD MONEY OFFER", bt2:"RECHARGE OFFER", bt3:"REFER OFFER", o1:"5% cashback on your first Add Money", o2:"৳10 bonus on every recharge", o3:"Invite a friend and get ৳50", os1:"Add money from a bank or card", os2:"On any operator, every recharge", os3:"When your friend makes a first transfer", g1:"Add Money", g2:"Recharge", g3:"Invite"});
 
+Object.assign(T.bn, {menu:"FuNPaY মেনু", stmt:"স্টেটমেন্ট", lim:"লিমিট", help:"গ্রাহক সেবা", about:"FuNPaY নিয়ে জানুন", refer:"রেফার করুন", lock:"অ্যাপ লক করুন", logout:"লগ আউট", recv:"মানি রিসিভ", oth:"অন্যান্য", ftt:"ফিল্টার করুন", close:"বন্ধ", apply:"প্রয়োগ করুন", reset:"রিসেট", detail:"লেনদেনের বিবরণ", stat:"অবস্থা", okk:"সফল", limt:"লেনদেনের লিমিট", l1:"সেন্ড মানি / পেমেন্ট", l1v:"প্রতিবার ১ – ১,০০,০০০ টাকা", l2:"ক্যাশ আউট", l2v:"প্রতিবার ৫০ – ৫০,০০০ টাকা, চার্জ ১.৮৫%", l3:"অ্যাড মানি", l3v:"প্রতিবার সর্বোচ্চ ৫,০০০ টাকা", l4:"সার্ভিস বিল", l4v:"প্রতিবার ১ – ১,০০,০০০ টাকা", abt:"FuNPaY একটি টেস্ট মোবাইল ওয়ালেট অ্যাপ। এখানকার সব টাকা নকল, আসল টাকা নয়।", hlp:"সাহায্য লাগলে অ্যাপের ডেভেলপারের সাথে যোগাযোগ করুন। শীঘ্রই লাইভ সাপোর্ট আসছে।", invite:"FuNPaY অ্যাপে আমার নম্বরে টাকা পাঠান: ", nt2:"নোটিফিকেশন", fnone:"সব দেখাচ্ছে"});
+Object.assign(T.en, {menu:"FuNPaY Menu", stmt:"Statement", lim:"Limits", help:"Customer Service", about:"About FuNPaY", refer:"Refer a friend", lock:"Lock app", logout:"Log out", recv:"Money Received", oth:"Others", ftt:"Filter", close:"Close", apply:"Apply", reset:"Reset", detail:"Transaction details", stat:"Status", okk:"Successful", limt:"Transaction limits", l1:"Send Money / Payment", l1v:"৳1 – ৳1,00,000 per transaction", l2:"Cash Out", l2v:"৳50 – ৳50,000 per transaction, 1.85% fee", l3:"Add Money", l3v:"Up to ৳5,000 at a time", l4:"Service bills", l4v:"৳1 – ৳1,00,000 per transaction", abt:"FuNPaY is a test mobile wallet app. All money here is fake, not real.", hlp:"For help, contact the app developer. Live support is coming soon.", invite:"Send money to my number on the FuNPaY app: ", nt2:"Notifications", fnone:"Showing all"});
 const BART = [
   '<circle cx="32" cy="32" r="22"/><path d="M23 41L41 23"/><circle cx="24.5" cy="24.5" r="3.6"/><circle cx="39.5" cy="39.5" r="3.6"/>',
   '<rect x="19" y="6" width="26" height="52" rx="6"/><path d="M28 50h8"/><path d="M34 15l-6 11h8l-6 12"/>',
@@ -118,7 +123,8 @@ Object.assign(T.bn, {regs:"মোবাইল নম্বর আর ৬ ডি�
 Object.assign(T.en, {regs:"Enter your mobile number and a 6-digit PIN", net:"Connection problem, please try again", upfail:"Could not check for updates, try again", sess:"Session expired, please log in again", offl:"No internet connection", retry:"Try again", ctest:"Connection test", wait:"Please wait", avl:"Available balance", dlfail:"Could not download the update", onlyapp:"Updates only work inside the app", trxchk:"check Inbox to see if it went through", badpin:"PIN must be 6 digits"});
 Object.assign(T.bn, {hold:"ট্যাপ করে ধরে রাখুন", holdh:"নিশ্চিত করতে নিচের বাটনটি ধরে রাখুন", share:"শেয়ার", copied:"কপি হয়েছে", chkn:"নম্বরটি সঠিক কিনা আরেকবার দেখে নিন", bioh:"আগে PIN দিয়ে লগইন করুন, তারপর ফিঙ্গারপ্রিন্ট চালু করতে পারবেন", upready:"আপডেট নামানো হয়েছে, চালু হচ্ছে…", nbl:"নতুন ব্যালেন্স"});
 Object.assign(T.en, {hold:"Tap and hold", holdh:"Press and hold the button below to confirm", share:"Share", copied:"Copied", chkn:"Please double-check the number", bioh:"Log in with your PIN first, then you can turn on fingerprint", upready:"Update downloaded, restarting…", nbl:"New balance"});
-const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", fl:0, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null};
+const SPECIAL = ["qrs", "bio", "net", "flt", "menu", "trd", "inf"];
+const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", ft:[], fq:false, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null};
 try {
   const d = JSON.parse(localStorage.getItem("fp2") || "{}");
   ["lang", "phone", "name"].forEach(k => { if (d[k] !== undefined) S[k] = d[k]; });
@@ -126,7 +132,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.2"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.5"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -357,16 +363,19 @@ function avatar(name, ph) {
   const c = AVC[h % AVC.length];
   return `<u class="av2" style="background:${c[0]};color:${c[1]}">${first(name)}</u>`;
 }
-function row(x) {
+function row(x, n) {
   const v = tv(x), plain = SVC.includes(x.type) || x.type === "add";
   const out = x.from_id === S.uid, nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone;
   const lead = plain ? tile(x.type) : avatar(nm, ph);
-  return `<div class="tr${S.hl === x.trx ? " pop" : ""}">${lead}<div class="m"><b>${t(v.key)}</b><span>${esc(v.who)}</span><small>TrxID: ${esc(x.trx)}</small></div><div class="r"><b class="${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</b><small>${fmt(x.created_at)}</small></div></div>`;
+  return `<div class="tr${S.hl === x.trx ? " pop" : ""}" style="--i:${Math.min(n || 0, 7)}" onclick="openTrx('${esc(x.trx)}')">${lead}<div class="m"><b>${t(v.key)}</b><span>${esc(v.who)}</span><small>TrxID: ${esc(x.trx)}</small></div><div class="r"><b class="${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</b><small>${fmt(x.created_at)}</small></div></div>`;
 }
+/* ফিল্টার গ্রুপ (বিকাশের মতো টিক দিয়ে বাছাই) */
+const FG = ["send", "recv", "rech", "cash", "pay", "bill", "add", "oth"];
+const fgrp = (k) => FG.includes(k) ? k : "oth";
 function list() {
   const q = S.q.toLowerCase();
-  const r = S.tx.filter(x => { const v = tv(x); return (!q || (x.trx + v.who).toLowerCase().includes(q)) && (S.fl === 0 || (S.fl === 1 ? !v.out : v.out)); });
-  return r.length ? r.map(row).join("") : `<p class="em">${t(S.tx.length ? "none" : "no")}</p>`;
+  const r = S.tx.filter(x => { const v = tv(x); return (!q || (x.trx + v.who).toLowerCase().includes(q)) && (!S.ft.length || S.ft.includes(fgrp(v.key))); });
+  return r.length ? r.map((x, i) => row(x, i)).join("") : `<p class="em">${t(S.tx.length ? "none" : "no")}</p>`;
 }
 function recents() {
   const m = new Map();
@@ -383,8 +392,8 @@ function hero() {
   const nm = S.me && S.me.name ? esc(S.me.name) : S.me ? "+88 " + esc(S.me.phone) : t("hi");
   return `<div class="hero">${SCENE}<div class="top"><div class="av" onclick="go('mine')">${first(S.me && S.me.name)}</div>
   <div class="who"><small>${nm} ${agBadge()}</small><button class="bp" onclick="peek(this)"><u>৳</u><span>${t("showb")}</span></button></div>
-  <button class="hb" aria-label="${t("sq")}" onclick="S.seg='t';go('inbox')">${ic("srch")}</button>
-  <button class="hb" aria-label="${t("mine")}" onclick="go('mine')"><img src="icons/logo-pink.png" alt=""><em></em></button></div></div>`;
+  <button class="hb" aria-label="${t("sq")}" onclick="openSearch()">${ic("srch")}</button>
+  <button class="hb" aria-label="${t("menu")}" onclick="openMenu()"><img src="icons/logo-pink.png" alt=""><em></em></button></div></div>`;
 }
 const tbar = (title) => `<div class="tbar"><span class="sp"></span><b>${title}</b><img src="icons/logo.png" alt=""></div>`;
 function pageHome() {
@@ -397,12 +406,12 @@ function pageHome() {
   ${rc.length ? `<div class="fv">${rc.map(f => `<div class="fc" onclick="openS('send','${esc(f[0])}')"><u>${first(f[1])}</u>${esc(f[1] || f[0])}</div>`).join("")}</div>` : ""}
   <div class="tri"><div onclick="S.seg='n';go('inbox')">${cic("gift")}<span>${t("offers")}</span></div><div onclick="hap();toast(t('soon'))">${cic("cpn")}<span>${t("cp")}</span></div><div onclick="hap();toast(t('soon'))">${cic("rwd")}<span>${t("rw")}</span></div></div></div>
   <div class="sec"><div class="ttl"><span>${t("rec")}</span><a onclick="S.seg='t';go('inbox')">${t("all")}</a></div>
-  ${S.tx.length ? S.tx.slice(0, 3).map(row).join("") : `<p class="em">${t("no")}</p>`}</div>`;
+  ${S.tx.length ? S.tx.slice(0, 3).map((x, i) => row(x, i)).join("") : `<p class="em">${t("no")}</p>`}</div>`;
 }
 function pageInbox() {
   const head = tbar(t("inbox")) + `<div class="seg"><button class="${S.seg === "t" ? "on" : ""}" onclick="S.seg='t';render()">${t("txs")}</button><button class="${S.seg === "n" ? "on" : ""}" onclick="S.seg='n';render()">${t("nt")}<i class="bd">3</i></button></div>`;
   if (S.seg === "n") return head + [0, 1, 2].map(i => `<div class="nt">${banner(i)}<p>${t("n" + (i + 1))}</p><small>${t("new")}</small></div>`).join("");
-  return head + `<div class="srch"><div>${ic("srch")}<input placeholder="${t("sq")}" value="${esc(S.q)}" oninput="S.q=this.value;document.getElementById('lst').innerHTML=list()"></div><button onclick="S.fl=(S.fl+1)%3;render()">${t("flt")}: ${t("f" + S.fl)}</button></div><div class="note">${t("last")}</div><div id="lst">${list()}</div>`;
+  return head + `<div class="srch"><div>${ic("srch")}<input placeholder="${t("sq")}" value="${esc(S.q)}" id="sq" oninput="S.q=this.value;document.getElementById('lst').innerHTML=list()"></div><button class="fb${S.ft.length ? " on" : ""}" onclick="openFilter()">${ic("filt")}<span>${t("flt")}</span>${S.ft.length ? `<i>${S.ft.length}</i>` : ""}</button></div><div class="note">${t("last")}</div><div id="lst">${list()}</div>`;
 }
 function pageMine() {
   const m = S.me || {};
@@ -411,9 +420,9 @@ function pageMine() {
   return tbar(t("pr"))
     + `<div class="prof"><div class="big">${first(m.name)}</div><div class="pi2"><h3>${esc(m.name || t("acct"))} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p></div></div>`
     + `<div class="balc"><span>${t("blc")}</span><b>${money(S.bal)}</b></div>`
-    + `<div class="msec"><h4>${t("sec1")}</h4>${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("fp", t("bioT"), "toggleBio()", sw)}</div>`
-    + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()")}</div>`
-    + `<div class="msec"><h4>${t("sec3")}</h4>${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("bolt", t("ctest"), "netTest()")}${R("out", t("out"), "lock()")}</div>`
+    + `<div class="msec"><h4>${t("sec1")}</h4>${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("stmt", t("stmt"), "openSearch()")}${R("fp", t("bioT"), "toggleBio()", sw)}${R("bell", t("nt2"), "S.seg='n';go('inbox')")}</div>`
+    + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()")}${R("lim", t("limt"), "openInfo('lim')")}</div>`
+    + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()")}${R("help", t("help"), "openInfo('help')")}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("bolt", t("ctest"), "netTest()")}${R("out", t("lock"), "lock()")}${R("out", t("logout"), "logout()")}</div>`
     + (TEST_MODE ? `<p class="em">${t("dm")}</p>` : "");
 }
 
@@ -445,10 +454,10 @@ function LOGOF(key) { const first = FPK !== key; FPK = key; return fpRing(first 
 function fpSplash() {
   if (document.getElementById("fpsplash")) return;
   const el = document.createElement("div"); el.id = "fpsplash";
-  const nm = [..."FuNPaY"].map((c, i) => `<span class="fpa-ch" style="animation-delay:${(2.3 + i * .08).toFixed(2)}s">${c}</span>`).join("");
-  el.innerHTML = `<div class="fps-orb fps-o1"></div><div class="fps-orb fps-o2"></div><div class="fps-lg">${fpRing(1)}</div><div class="fps-name">${nm}</div><div class="fps-tag">${t("tag")}</div><div class="fps-ld"><i></i><i></i><i></i></div>`;
+  const nm = [..."FuNPaY"].map((c, i) => `<span class="fpa-ch" style="animation-delay:${(1 + i * .06).toFixed(2)}s">${c}</span>`).join("");
+  el.innerHTML = `<div class="fps-orb fps-o1"></div><div class="fps-orb fps-o2"></div><div class="fps-lg">${fpRing(.45)}</div><div class="fps-name">${nm}</div><div class="fps-tag">${t("tag")}</div><div class="fps-ld"><i></i><i></i><i></i></div>`;
   const end = () => { if (!el.parentNode) return; el.classList.add("out"); setTimeout(() => el.remove(), 500); };
-  el.onclick = end; document.body.appendChild(el); setTimeout(end, 3900);
+  el.onclick = end; document.body.appendChild(el); setTimeout(end, 2300);
 }
 
 const lgBar = (backJs) => `<div class="fbar"><button class="fback" aria-label="${t("back")}" onclick="${backJs}"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="flang"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>`;
@@ -459,8 +468,7 @@ function loginHtml() {
   /* ১) স্বাগতম পেজ */
   if (S.view === "" && !S.phone) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div>
     <div class="ltop"><div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
-    <div class="lhero">${LOGOF("land")}<h1>FuNPaY</h1><p>${t("tag")}</p>
-      <div class="pills"><span>${t("ft1")}</span><span>${t("ft2")}</span><span>${t("ft3")}</span></div></div>
+    <div class="lhero">${LOGOF("land")}<h1>FuNPaY</h1><p>${t("tag")}</p></div>
     <div class="lpanel"><button class="lwb" onclick="hap();S.view='ph';render()">${t("lgreg")}</button></div></div>`;
   /* ২) মোবাইল নম্বর পেজ */
   if (S.view === "ph" && !S.phone) return `<div class="fl light">${lgBar("S.view='';render()")}
@@ -488,8 +496,7 @@ function loginHtml() {
   const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="key('${n}')">${n}</button>`).join("") + fpk + `<button onclick="key('0')">0</button><button onclick="key('b')">${BKSP}</button>`;
   return `<div class="fl pinp"><div class="orb o1"></div><div class="orb o2"></div>
     <div class="phead">${LOGOF("pin")}<b>${esc(S.name || t("back2"))}</b><span>+88 ${esc(S.phone)}</span></div>
-    <div class="psheet"><p class="pl">${t("lp")}</p><div class="dots">${dots}</div><div class="le"></div><div class="kp">${keys}</div>
-      <div class="lrow"><button class="chip" onclick="S.phone='';S.name='';S.pin='';S.view='ph';render()">${t("other")}</button><button class="chip" onclick="lang()">${t("lang")}</button></div></div></div>`;
+    <div class="psheet"><p class="pl">${t("lp")}</p><div class="dots">${dots}</div><div class="le"></div><div class="kp">${keys}</div></div></div>`;
 }
 function setPhone() {
   const v = document.getElementById("lp").value.trim();
@@ -545,8 +552,11 @@ function render() {
     const nv = (k, lbl) => `<button class="${S.tab === k ? "on" : ""}" onclick="go('${k}')"><span class="ni">${ic(k)}${k === "inbox" ? '<span class="bg">3</span>' : ""}</span>${lbl}</button>`;
     h += `<nav class="${fx ? "fx" : ""}">${nv("home", t("home"))}${nv("mine", t("mine"))}<button class="qrb" onclick="openQR('scan')"><span class="ni">${ic("qr")}</span>${t("qrs")}</button>${nv("inbox", t("inbox"))}</nav>`;
   }
-  const ap = document.getElementById("app"); ap.innerHTML = h; ap.className = S.auth ? "au" : "";
+  const ap = document.getElementById("app"), sc = ap.scrollTop, ob = document.querySelector(".ban"), bl = ob ? ob.scrollLeft : 0;
+  ap.innerHTML = h; ap.className = S.auth ? "au" : "";
+  if (!fx && S.auth) { ap.scrollTop = sc; const nb = document.querySelector(".ban"); if (nb && bl) { nb.style.scrollBehavior = "auto"; nb.scrollLeft = bl; nb.style.scrollBehavior = ""; dot(nb); } }
   S.fx = false; S.hl = null;
+  if (S.fq && S.auth) { S.fq = false; setTimeout(() => { const f = document.getElementById("sq"); if (f) { try { f.focus(); } catch (e) {} } }, 380); }
   sbar();
   if (!S.auth && CONFIGURED) { const f = document.getElementById(S.view === "reg" ? "rp" : "lp"); if (f && S.view) setTimeout(() => { try { f.focus(); } catch (e) {} }, 350); }
 }
@@ -574,10 +584,10 @@ function openS(id, pre, rn) {
 function mount() { let e = document.getElementById("sheet"); if (!e) { e = document.createElement("div"); e.id = "sheet"; document.body.appendChild(e); } return e; }
 function renderSheet() {
   const s = S.sheet;
-  mount().innerHTML = S.upd ? updHtml() : s ? (s.id === "qrs" ? qrHtml() : s.id === "bio" ? bioHtml() : s.id === "net" ? netHtml() : sheetHtml()) : "";
+  mount().innerHTML = S.upd ? updHtml() : s ? (s.id === "qrs" ? qrHtml() : s.id === "bio" ? bioHtml() : s.id === "net" ? netHtml() : s.id === "flt" ? fltHtml() : s.id === "menu" ? menuHtml() : s.id === "trd" ? trdHtml() : s.id === "inf" ? infHtml() : sheetHtml()) : "";
   if (s) { s.fresh = false; s.fxs = false; }
   if (S.upd) S.upd.fresh = false;
-  if (s && !s.done && s.step === 2 && !["qrs", "bio", "net"].includes(s.id)) { const f = document.getElementById("f2"); if (f) setTimeout(() => { try { f.focus(); } catch (e) {} }, 240); }
+  if (s && !s.done && s.step === 2 && !SPECIAL.includes(s.id)) { const f = document.getElementById("f2"); if (f) setTimeout(() => { try { f.focus(); } catch (e) {} }, 240); }
   sbar();
 }
 function closeS() {
@@ -773,7 +783,7 @@ async function confirmTx() {
 }
 
 document.addEventListener("keydown", (e) => {
-  if (e.key !== "Enter" || !S.sheet || S.sheet.done || ["qrs", "bio", "net"].includes(S.sheet.id)) return;
+  if (e.key !== "Enter" || !S.sheet || S.sheet.done || SPECIAL.includes(S.sheet.id)) return;
   S.sheet.step >= 3 ? 0 : nextStep();
 });
 
@@ -805,7 +815,7 @@ function scanHtml(s) {
 }
 let scanLis = null, scanOn = false, scanDone = false, scanBad = 0;
 async function stopScanner() {
-  document.documentElement.classList.remove("scanning", "camon");
+  document.documentElement.classList.remove("scanning", "camon", "barcode-scanner-active");
   const B = cap().BarcodeScanner, l = scanLis, was = scanOn;
   scanLis = null; scanOn = false;
   if (l) { try { await l.remove(); } catch (e) {} }
@@ -820,7 +830,7 @@ async function startScanner() {
     if (S.sheet !== s || s.tab !== "scan") return;
     if (p.camera !== "granted") { s.denied = true; renderSheet(); return; }
     scanDone = false;
-    document.documentElement.classList.add("scanning");
+    document.documentElement.classList.add("scanning", "barcode-scanner-active");
     scanLis = await B.addListener("barcodesScanned", onScanned);
     scanOn = true;
     await B.startScan({formats: ["QR_CODE"]});
@@ -924,9 +934,80 @@ async function bioUnlock() {
   S.busy = false;
 }
 
+/* ---------- বিকাশের মতো: সার্চ, ফিল্টার শিট, সাইড মেনু, লেনদেনের বিবরণ ---------- */
+function openSearch() { hap(); S.seg = "t"; S.fq = true; if (S.tab === "inbox") render(); else go("inbox"); }
+function openFilter() { hap(); S.sheet = {id: "flt", sel: S.ft.slice(), fresh: true}; renderSheet(); }
+const FICON = {send: () => tile("send"), recv: () => `<div class="ic">${ic("up")}</div>`, rech: () => tile("rech"), cash: () => tile("cash"), pay: () => tile("pay"), bill: () => tile("bill"), add: () => tile("add"), oth: () => `<div class="ic">${ic("card")}</div>`};
+function fltHtml() {
+  const s = S.sheet;
+  return `<div class="sh dlg flt${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div>
+    <div class="fth"><b>${t("ftt")}</b><button onclick="closeS()">${t("close")}</button></div>
+    <div class="fls">${FG.map(k => `<button class="fr${s.sel.includes(k) ? " on" : ""}" data-k="${k}" onclick="fltTog('${k}')">${FICON[k]()}<span>${t(k)}</span><i class="cb">${tickSvg}</i></button>`).join("")}</div>
+    <div class="fbt"><button class="btn l" onclick="fltReset()">${t("reset")}</button><button class="btn" onclick="fltApply()">${t("apply")}</button></div></div></div>`;
+}
+function fltTog(k) {
+  const s = S.sheet; if (!s) return; hap();
+  const i = s.sel.indexOf(k); if (i < 0) s.sel.push(k); else s.sel.splice(i, 1);
+  const b = document.querySelector('.fr[data-k="' + k + '"]'); if (b) b.classList.toggle("on", i < 0);
+}
+function fltReset() { const s = S.sheet; if (!s) return; hap(); s.sel = []; document.querySelectorAll(".fr").forEach(b => b.classList.remove("on")); }
+function fltApply() { const s = S.sheet; if (!s) return; S.ft = s.sel.slice(); closeS(); setTimeout(() => { if (S.tab === "inbox") render(); }, 250); }
+
+function openMenu() { hap(); S.sheet = {id: "menu", fresh: true}; renderSheet(); }
+const mact = (js) => { hap(); closeS(); setTimeout(() => { try { (new Function(js))(); } catch (e) {} }, 290); };
+function menuHtml() {
+  const s = S.sheet, m = S.me || {};
+  const it = (ico, lbl, js) => `<button class="dmi" onclick="mact(&quot;${js}&quot;)">${ic(ico)}<span>${lbl}</span></button>`;
+  return `<div class="sh drw${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box">
+    <div class="dhd"><b>${t("menu")}</b><div class="flang"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en'){lang();renderSheet()}">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn'){lang();renderSheet()}">বাং</button></div></div>
+    <div class="dpf"><div class="big">${first(m.name)}</div><div><b>${esc(m.name || t("acct"))}</b><span>+88 ${esc(m.phone || "")}</span></div></div>
+    <div class="dls">${it("home", t("home"), "go('home')")}${it("stmt", t("stmt"), "openSearch()")}${it("lim", t("lim"), "openInfo('lim')")}${it("qr", t("myqr"), "openQR('my')")}${it("help", t("help"), "openInfo('help')")}${it("info", t("about"), "openInfo('about')")}${it("ref", t("refer"), "inviteFriend()")}${it("out", t("logout"), "logout()")}</div>
+    <small class="dver">${t("ver")}: ${APP_REL} (${APP_VERSION})</small></div></div>`;
+}
+function openInfo(k) { hap(); S.sheet = {id: "inf", k, fresh: true}; renderSheet(); }
+function infHtml() {
+  const s = S.sheet; let body = "";
+  if (s.k === "lim") body = `<h3>${t("limt")}</h3><div class="lms">${[1, 2, 3, 4].map(n => `<div><span>${t("l" + n)}</span><b>${t("l" + n + "v")}</b></div>`).join("")}</div>`;
+  else body = `<h3>${t(s.k === "help" ? "help" : "about")}</h3><p class="ip">${t(s.k === "help" ? "hlp" : "abt")}</p>`;
+  return `<div class="sh dlg${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div>${body}<button class="btn" onclick="closeS()">${t("ok")}</button></div></div>`;
+}
+function inviteFriend() {
+  hap(); const txt = t("invite") + (S.me ? S.me.phone : "");
+  try { if (navigator.share) { navigator.share({text: txt}).catch(() => {}); return; } } catch (e) {}
+  try { navigator.clipboard.writeText(txt).then(() => toast(t("copied")), () => toast(t("copied"))); } catch (e) { toast(t("copied")); }
+}
+function openTrx(trx) {
+  const x = S.tx.find(r => r.trx === trx); if (!x) return;
+  hap(); S.sheet = {id: "trd", x, fresh: true}; renderSheet();
+}
+function trdHtml() {
+  const s = S.sheet, x = s.x, v = tv(x);
+  const out = x.from_id === S.uid, nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone;
+  const rows = [[t("svc"), t(v.key)], [t("sendto"), esc(v.who)], [t("amtl"), money2(x.amount)], [t("feel"), money2(x.fee || 0)], [t("trx"), esc(x.trx)], [t("at"), fmt(x.created_at)], [t("stat"), t("okk")]]
+    .map(r => `<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join("");
+  return `<div class="sh dlg${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div>
+    <div class="ok"><div class="tdh">${SVC.includes(x.type) || x.type === "add" ? tile(x.type) : avatar(nm, ph)}</div><h2>${t(v.key)}</h2><div class="amt ${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</div></div>
+    <div class="dl tdl">${rows}</div><div class="rbt"><button class="btn l" onclick="shareTrx()">${t("share")}</button><button class="btn" onclick="closeS()">${t("ok")}</button></div></div></div>`;
+}
+function shareTrx() {
+  const s = S.sheet; if (!s || !s.x) return; hap(); const x = s.x, v = tv(x);
+  const txt = "FuNPaY · " + t(v.key) + "\n" + t("amtl") + ": " + money2(x.amount) + "\n" + t("trx") + ": " + x.trx + "\n" + t("at") + ": " + fmt(x.created_at);
+  try { if (navigator.share) { navigator.share({text: txt}).catch(() => {}); return; } } catch (e) {}
+  try { navigator.clipboard.writeText(txt).then(() => toast(t("copied")), () => toast(t("copied"))); } catch (e) { toast(t("copied")); }
+}
+/* পুরোপুরি লগআউট: নম্বর, ফিঙ্গারপ্রিন্ট সব মুছে নতুন করে শুরু */
+function logout() {
+  hap();
+  try { ["fpreg", "fpbio", "fpbioask"].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  try { const N = cap().NativeBiometric; if (N) Promise.resolve(N.deleteCredentials({server: BIO_SERVER})).catch(() => {}); } catch (e) {}
+  S.phone = ""; S.name = ""; S.view = ""; lock();
+}
+
 if ("serviceWorker" in navigator && !window.Capacitor && location.protocol.indexOf("http") === 0) navigator.serviceWorker.register("sw.js").catch(() => {});
 render();
 fpSplash();
+/* নেটিভ স্প্ল্যাশ সঙ্গে সঙ্গে সরিয়ে আমাদের অ্যানিমেশন দেখানো (কালো/ফাঁকা স্ক্রিন নয়) */
+try { const SS = cap().SplashScreen; if (SS) requestAnimationFrame(() => Promise.resolve(SS.hide({fadeOutDuration: 120})).catch(() => {})); } catch (e) {}
 window.__fpready = true;
 if (bioOn()) setTimeout(bioUnlock, 500);
 /* ব্যানার নিজে নিজে ঘোরে */
