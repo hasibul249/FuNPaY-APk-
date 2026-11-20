@@ -1,4 +1,4 @@
-FuNPaY v1.9 - Android অ্যাপ (Capacitor + ফ্রি Supabase + ফ্রি GitHub)
+FuNPaY v2.0 - Android অ্যাপ (Capacitor + ফ্রি Supabase + ফ্রি GitHub)
 =====================================================================
 নতুন: পিসি লাগবে না, আপডেটে APK লাগবে না (OTA), ৬ ডিজিট PIN, ফিঙ্গারপ্রিন্ট/ফোনের স্ক্রিন লক দিয়ে আনলক।
 
@@ -21,9 +21,9 @@ OTA দিয়ে বদলানো যায়: দেখতে (ডিজ�
 --------------------------------------------
 ১) github.com এ Public repository বানান (যেমন funpay)।
 ২) repository পেজে Code > Codespaces > "Create codespace on main" (ফ্রি, ব্রাউজারেই চলে, ফোনেও)।
-৩) Codespace এর বাঁ পাশের ফাইল তালিকায় FuNPaY-App-v1.9.zip টেনে আনুন (বা Upload)। নিচের টার্মিনালে:
-     unzip FuNPaY-App-v1.9.zip
-     cp -r FuNPaY-App/. . && rm -rf FuNPaY-App FuNPaY-App-v1.9.zip
+৩) Codespace এর বাঁ পাশের ফাইল তালিকায় FuNPaY-App-v2.0.zip টেনে আনুন (বা Upload)। নিচের টার্মিনালে:
+     unzip FuNPaY-App-v2.0.zip
+     cp -r FuNPaY-App/. . && rm -rf FuNPaY-App FuNPaY-App-v2.0.zip
 ৪) www/js/app.js খুলে SUPA_URL ও SUPA_KEY বসান (ধাপ ১ এর ৪)।
 ৫) টার্মিনালে:  git add -A && git commit -m "first" && git push
 ৬) GitHub এ Actions ট্যাবে বিল্ড চলবে (APK ~৬ মিনিট, OTA ~১ মিনিট)।
@@ -32,7 +32,7 @@ OTA দিয়ে বদলানো যায়: দেখতে (ডিজ�
    (প্লে প্রোটেক্ট/অজানা সোর্স অনুমতি চাইলে দিন)
 (Claude Code ব্যবহার করলে সেখান থেকেও এই ফাইলগুলো রিপোতে পুশ করানো যায়।)
 
-আপডেট দেওয়া (সবচেয়ে সহজ): GitHub রিপোর Add file > Upload files এ FuNPaY-App-v1.9.zip ফেলে Commit করুন। বট নিজে আনজিপ করে OTA বানাবে।
+আপডেট দেওয়া (সবচেয়ে সহজ): GitHub রিপোর Add file > Upload files এ FuNPaY-App-v2.0.zip ফেলে Commit করুন। বট নিজে আনজিপ করে OTA বানাবে।
 অথবা GitHub এ (ব্রাউজারে ফাইল এডিট করে, বা Codespace থেকে) কোড বদলে commit করুন। আর কিছু করতে হবে না।
 
 ধাপ ৩) এজেন্ট বানানো
