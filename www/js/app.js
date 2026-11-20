@@ -22,8 +22,9 @@ const P = {
   lang:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18"/>',
   out:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>', card:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>'
 };
-P.fp = '<path d="M3 8V5.5A2.5 2.5 0 015.5 3H8M16 3h2.5A2.5 2.5 0 0121 5.5V8M21 16v2.5a2.5 2.5 0 01-2.5 2.5H16M8 21H5.5A2.5 2.5 0 013 18.5V16"/><path d="M8.3 9.7A4.7 4.7 0 0112 8a4.7 4.7 0 013.7 1.7M7.6 14c0-.9 0-1.6.1-2.2a4.4 4.4 0 018.6 0c.1.9.1 1.8 0 2.8M9.6 16.6c.5-1.1.7-2.3.7-3.7a1.7 1.7 0 013.4 0c0 1.5.3 2.8.9 4M12 13.2c0 1.4.2 2.6.6 3.6M7.8 16.4c.2-.5.3-.9.4-1.4"/>';
+P.fp = '<path fill="currentColor" stroke="none" d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.13-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .78.07 2.01.67 3.61.1.26-.03.55-.29.64-.26.1-.55-.04-.64-.29-.49-1.31-.73-2.61-.73-3.96 0-1.2.23-2.29.68-3.24 1.33-2.79 4.28-4.6 7.51-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/>';
 P.lock = '<rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 018 0v3" fill="none"/><circle cx="12" cy="16" r="1.5" fill="#fff" stroke="none"/>';
+P.ok2 = '<circle cx="12" cy="12" r="9.5"/><path d="M7.5 12.4l3 3 6-6.4"/>';
 P.copy = '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>';
 P.shr = '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>';
 P.eye = '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'; P.eyeo = '<path d="M3 3l18 18M10.6 6.2A9.6 9.6 0 0112 6c6 0 10 6 10 6a17 17 0 01-3.2 3.8M6.5 7.6C3.9 9.3 2 12 2 12s4 7 10 7c1.5 0 2.9-.4 4.1-1"/>';
@@ -141,10 +142,19 @@ Object.assign(T.en, {nochg:"No charge", accno:"Account number", pinl:"PIN", pinp
  sname:"Enter name or number", sag:"Agent number or name", smr:"Merchant number or name", qrtap:"Tap to scan a QR code", tnum:"Enter number", atm:"ATM",
  lagent:"Recent agents", lpay:"Recent payments", noag2:"You have no recent agents", nopay2:"You have no recent payments", nosend2:"You haven't sent money to anyone yet. Enter a number above to start",
  go2:"Proceed", pickop:"Choose operator", cont2:"Continue with this number", lrcv:"Recipient", lag:"Agent", lmr:"Merchant", nomatch:"Nothing found"});
+Object.assign(T.bn, {noagn:"এই নম্বরে কোনো এজেন্ট নেই", nomrc:"এই নম্বরে কোনো পেমেন্ট অ্যাকাউন্ট (মার্চেন্ট) নেই", pin2:"PIN আবার দিন", pinmm:"দুটি PIN মিলছে না", nmreq:"আপনার নাম দিন", nmph:"যেমন: রহিম উদ্দিন", reg2:"এই নম্বরে এখনো অ্যাকাউন্ট নেই। নাম ও ৬ ডিজিট PIN দিয়ে নতুন অ্যাকাউন্ট খুলুন",
+ snd:"প্রেরক", rcvr:"প্রাপক", agl:"এজেন্ট", mrc:"মার্চেন্ট", cust:"গ্রাহক", src:"মাধ্যম", opr:"অপারেটর", num2:"নম্বর", copy:"কপি", disc:"কুপন ছাড়", pay2:"পরিশোধ",
+ stp:"সময়কাল", p1:"১ মাস", p3:"৩ মাস", p6:"৬ মাস", p12:"১ বছর", gen:"স্টেটমেন্ট তৈরি করুন", stt:"অ্যাকাউন্ট স্টেটমেন্ট", acn:"অ্যাকাউন্টের নাম", fromd:"থেকে", tod:"পর্যন্ত", tin:"মোট ক্যাশ ইন", tout:"মোট ক্যাশ আউট", tcnt:"লেনদেন", dtl:"তারিখ", trn:"বিবরণ", amc:"টাকা", nostm:"এই সময়ে কোনো লেনদেন নেই", shimg:"ছবি শেয়ার করুন", shfail:"শেয়ার করা যায়নি", gend:"তৈরি হয়েছে",
+ cpn:"কুপন", cpsel:"কুপন বেছে নিন", cpnone:"আপনার কোনো কুপন নেই", cpmin:"সর্বনিম্ন", cpexp:"মেয়াদ", cpoff:"সরান", cpok:"কুপন প্রয়োগ হয়েছে", cpbad:"এই কুপন এখন ব্যবহার করা যাবে না", cpcode:"কুপন কোড", cpadd:"যোগ করুন", cpadded:"কুপন যোগ হয়েছে", cpmy:"আমার কুপন", cpna:"এই টাকায় চলবে না", cpsv:"পাবেন", cpmax:"সর্বোচ্চ", cpexh:"কুপন আগেই নেওয়া হয়েছে", cpwrong:"কুপন কোড ঠিক নয়", rcn:"রিসিট"});
+Object.assign(T.en, {noagn:"No agent with this number", nomrc:"No payment (merchant) account with this number", pin2:"Confirm PIN", pinmm:"The two PINs do not match", nmreq:"Enter your name", nmph:"e.g. Rahim Uddin", reg2:"There is no account with this number yet. Enter your name and a 6-digit PIN to create one",
+ snd:"Sender", rcvr:"Recipient", agl:"Agent", mrc:"Merchant", cust:"Customer", src:"Source", opr:"Operator", num2:"Number", copy:"Copy", disc:"Coupon discount", pay2:"Paid",
+ stp:"Period", p1:"1 month", p3:"3 months", p6:"6 months", p12:"1 year", gen:"Generate statement", stt:"Account Statement", acn:"Account name", fromd:"From", tod:"To", tin:"Total cash in", tout:"Total cash out", tcnt:"Transactions", dtl:"Date", trn:"Details", amc:"Amount", nostm:"No transactions in this period", shimg:"Share as image", shfail:"Could not share", gend:"Generated",
+ cpn:"Coupon", cpsel:"Choose a coupon", cpnone:"You have no coupons", cpmin:"Min.", cpexp:"Expires", cpoff:"Remove", cpok:"Coupon applied", cpbad:"This coupon can't be used now", cpcode:"Coupon code", cpadd:"Add", cpadded:"Coupon added", cpmy:"My coupons", cpna:"Not valid for this amount", cpsv:"You save", cpmax:"Max", cpexh:"You already have this coupon", cpwrong:"Invalid coupon code", rcn:"Receipt"});
+Object.assign(T.bn, {comm:"কমিশন", mwise:"মাস অনুযায়ী হিসাব", stpdf:"স্টেটমেন্ট PDF শেয়ার/সেভ"}); Object.assign(T.en, {comm:"Commission", mwise:"Month-wise summary", stpdf:"Share / save statement PDF"});
 /* সময় অনুযায়ী শুভেচ্ছা: সকাল ৫–১২, দুপুর ১২–৪, বিকাল ৪–৭, রাত্রি ৭–৫ */
 const greet = () => { const h = new Date().getHours(); return h >= 5 && h < 12 ? "Good morning" : h >= 12 && h < 16 ? "Good afternoon" : h >= 16 && h < 19 ? "Good evening" : "Good night"; }; /* শুভেচ্ছা সব সময় ইংরেজিতে */
-const SPECIAL = ["qrs", "bio", "net", "flt", "menu", "trd", "inf", "pph"];
-const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", ft:[], fq:false, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null};
+const SPECIAL = ["qrs", "bio", "net", "flt", "menu", "trd", "inf", "pph", "stm", "cpl"];
+const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", ft:[], fq:false, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null, cps:null, regPhone:""};
 try {
   const d = JSON.parse(localStorage.getItem("fp2") || "{}");
   ["lang", "phone", "name"].forEach(k => { if (d[k] !== undefined) S[k] = d[k]; });
@@ -152,7 +162,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.10"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.12"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -297,7 +307,7 @@ const first = (s) => { const a = Array.from(String(s || "").trim()); return a.le
 const fmt = (iso) => { const n = new Date(iso), p = (x) => String(x).padStart(2, "0"); return `${p(n.getDate())}/${p(n.getMonth() + 1)} ${p(n.getHours())}:${p(n.getMinutes())}`; };
 
 /* ---------- সার্ভারের সাথে যোগাযোগ ---------- */
-const MUT = /\/rpc\/(send_money|cash_out|add_test_money|pay_service)$/;
+const MUT = /\/rpc\/(send_money|cash_out|add_test_money|pay_service|pay_merchant|claim_coupon)$/;
 async function api(path, o = {}) {
   const BASE = String(SUPA_URL).replace(/[\s"']/g, "").replace(/\/+$/, ""), KEY = String(SUPA_KEY).replace(/[\s"']/g, "");
   const h = {apikey: KEY, "Content-Type": "application/json"};
@@ -316,15 +326,16 @@ const em = (p) => p + "@" + EMAIL_DOMAIN;
 const pw = (k) => k + "@FuNPaY";
 function setSess(j) { S.tok = j.access_token; S.rt = j.refresh_token; S.uid = j.user.id; }
 async function signIn(phone, pin) { setSess(await api("/auth/v1/token?grant_type=password", {m: "POST", auth: false, b: {email: em(phone), password: pw(pin)}})); }
-async function signUp(phone, pin) {
-  const j = await api("/auth/v1/signup", {m: "POST", auth: false, b: {email: em(phone), password: pw(pin), data: {phone}}});
+async function signUp(phone, pin, name) {
+  const j = await api("/auth/v1/signup", {m: "POST", auth: false, b: {email: em(phone), password: pw(pin), data: {phone, name: name || ""}}});
   if (!j.access_token) throw new Error("CONFIRM");
   setSess(j);
 }
 async function refreshTok() { setSess(await api("/auth/v1/token?grant_type=refresh_token", {m: "POST", auth: false, b: {refresh_token: S.rt}})); }
 function errMsg(e) {
   const m = (e && e.message) || "";
-  const k = {LOW:"low", NOUSER:"nouser", NOAGENT:"noag", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess"}[m];
+  const sid = S.sheet && S.sheet.id;
+  const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh"}[m];
   if (k) return t(k);
   if (/invalid login/i.test(m)) return t("wp");
   if (/already registered|already been registered|saving new user/i.test(m)) return t("exists");
@@ -367,7 +378,7 @@ function lock(auto) {
 
 /* ---------- লেনদেনের তালিকা ---------- */
 function tv(x) {
-  const out = x.from_id === S.uid, amt = out ? Number(x.amount) + Number(x.fee) : Number(x.amount) + Number(x.comm);
+  const out = x.from_id === S.uid, amt = out ? Number(x.amount) + Number(x.fee) - Number(x.disc || 0) : Number(x.amount) + Number(x.comm);
   let key = x.type, who = "";
   if (x.type === "send" || x.type === "pay") key = out ? x.type : "recv";
   else if (x.type === "cash") key = out ? "cash" : "cashin";
@@ -455,7 +466,7 @@ function pageHome() {
   <div class="sec nob"><div class="ban" onscroll="dot(this)" ontouchstart="this.dataset.t=Date.now()">${banner(0)}${banner(1)}${banner(2)}</div><div class="dts"><i class="on"></i><i></i><i></i></div></div>
   <div class="sec"><div class="ttl"><span>${t("qf")}</span></div>
   ${rc.length ? `<div class="fv">${rc.map(f => `<div class="fc" onclick="openS('send','${esc(f[0])}')"><u>${first(f[1])}</u>${esc(f[1] || f[0])}</div>`).join("")}</div>` : ""}
-  <div class="tri"><div onclick="S.seg='n';go('inbox')">${cic("gift")}<span>${t("offers")}</span></div><div onclick="hap();toast(t('soon'))">${cic("cpn")}<span>${t("cp")}</span></div><div onclick="hap();toast(t('soon'))">${cic("rwd")}<span>${t("rw")}</span></div></div></div>
+  <div class="tri"><div onclick="S.seg='n';go('inbox')">${cic("gift")}<span>${t("offers")}</span></div><div onclick="openCoupons()">${cic("cpn")}<span>${t("cp")}</span></div><div onclick="hap();toast(t('soon'))">${cic("rwd")}<span>${t("rw")}</span></div></div></div>
   <div class="sec"><div class="ttl"><span>${t("rec")}</span><a onclick="S.seg='t';go('inbox')">${t("all")}</a></div>
   ${S.tx.length ? S.tx.slice(0, 3).map((x, i) => row(x, i)).join("") : `<p class="em">${t("no")}</p>`}</div>`;
 }
@@ -470,8 +481,7 @@ function pageMine() {
   const sw = `<i class="sw${bioOn() ? " on" : ""}"><b></b></i>`;
   return tbar(t("pr"))
     + `<div class="prof"><div class="pavw" onclick="openPhoto()"><div class="big">${myAv(m.name)}</div><i class="cam">${ic("cam2")}</i></div><div class="pi2"><h3>${esc(m.name || t("acct"))} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p></div></div>`
-    + `<div class="balc"><span>${t("blc")}</span><b>${money(S.bal)}</b></div>`
-    + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()")}${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("stmt", t("stmt"), "openSearch()")}${R("fp", t("bioT"), "toggleBio()", sw)}${R("bell", t("nt2"), "S.seg='n';go('inbox')")}</div>`
+    + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()")}${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("stmt", t("stmt"), "openStmt()")}${R("fp", t("bioT"), "toggleBio()", sw)}${R("bell", t("nt2"), "S.seg='n';go('inbox')")}</div>`
     + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()")}${R("lim", t("limt"), "openInfo('lim')")}</div>`
     + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()")}${R("help", t("help"), "openInfo('help')")}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("bolt", t("ctest"), "netTest()")}${R("out", t("lock"), "lock()")}${R("out", t("logout"), "logout()")}</div>`
     + (TEST_MODE ? `<p class="em">${t("dm")}</p>` : "");
@@ -529,16 +539,17 @@ function loginHtml() {
       <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="lp" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="this.value=this.value.replace(/\\D/g,'')"></div>
       <div class="le"></div>
       <p class="terms">${t("terms")}</p>
-      ${REG() ? "" : `<button class="lnk" onclick="S.view='reg';render()">${t("newacc")}</button>`}</div>
-    <button class="nbar" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
-  /* ৩) নতুন অ্যাকাউন্ট */
+      </div>
+    <button class="nbar" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
+  /* ৩) নতুন অ্যাকাউন্ট (শুধু নম্বরে অ্যাকাউন্ট না থাকলে আসে) */
   if (S.view === "reg") return `<div class="fl light">${lgBar("S.view='ph';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
-      <h2>${t("regh")}</h2><p class="sub">${t("regs")}</p>
-      <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="rp" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" oninput="this.value=this.value.replace(/\\D/g,'')"></div>
+      <h2>${t("regh")}</h2><p class="sub">${t("reg2")}</p>
+      <label>${t("mob")}</label><div class="pfield ro"><b>+88</b><input id="rp" inputmode="numeric" maxlength="11" value="${esc(S.regPhone)}" readonly></div>
+      <label>${t("nm")}</label><div class="pfield"><input id="rn" maxlength="20" placeholder="${t("nmph")}" autocomplete="name"></div>
       <label>${t("pin4")}</label><div class="pfield"><input id="rk" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" oninput="this.value=this.value.replace(/\\D/g,'')"></div>
-      <div class="le"></div>
-      <button class="lnk" onclick="S.view='ph';render()">${t("haveacc")}</button></div>
+      <label>${t("pin2")}</label><div class="pfield"><input id="rk2" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" oninput="this.value=this.value.replace(/\\D/g,'')" onkeydown="if(event.key==='Enter')doReg()"></div>
+      <div class="le"></div></div>
     <button class="nbar lb2" onclick="doReg()"><span>${t("reg")}</span>${NXT}</button></div>`;
   /* ৪) PIN পেজ: উপরে লোগো অ্যানিমেশন (আগের মতোই), নিচে বিকাশের মতো নম্বর + PIN ঘর + ফিঙ্গারপ্রিন্ট আইকন, কিবোর্ড ফোনের নিজের */
   return `<div class="fl pinp"><div class="orb o1"></div><div class="orb o2"></div>
@@ -547,24 +558,35 @@ function loginHtml() {
     <div class="psheet bkl">
       <div class="bkf"><label>${t("accno")}</label><div class="bkn">+88&nbsp;&nbsp;${esc(S.phone)}</div></div>
       <div class="bkf"><label>${t("pinl")}</label>
-        <div class="bkp"><input id="pinin" class="pinin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(S.pin)}" oninput="pinIn(this)">
+        <div class="bkp"><input id="pinin" class="pinin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(S.pin)}" oninput="pinIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();pinGo()}">
         <button type="button" class="bkfp" aria-label="${t("fpuse")}" onclick="bioTap()">${ic("fp")}</button></div></div>
       <div class="le"></div>
+      <button class="btn pgbtn" id="pingo" onclick="pinGo()">${t("ok")}</button>
     </div></div>`;
 }
 function bioTap() { if (bioOn()) bioUnlock(); else toast(t("bioh")); }
-function setPhone() {
-  const v = document.getElementById("lp").value.trim();
-  if (!/^01\d{9}$/.test(v)) { document.querySelector(".le").textContent = t("badn"); hap("HEAVY"); return; }
-  S.phone = v; S.name = ""; S.view = ""; render();
+async function setPhone() {
+  if (S.busy) return;
+  const v = document.getElementById("lp").value.trim(), le = document.querySelector(".le"), nb = document.getElementById("phnext");
+  if (!/^01\d{9}$/.test(v)) { le.textContent = t("badn"); hap("HEAVY"); return; }
+  S.busy = true; le.textContent = ""; if (nb) nb.classList.add("ld");
+  try {
+    const r = await api("/rest/v1/rpc/phone_exists", {m: "POST", auth: false, b: {p_phone: v}});
+    S.busy = false;
+    if (r === true) { S.phone = v; S.name = ""; S.view = ""; S.pin = ""; render(); }
+    else { S.regPhone = v; S.view = "reg"; render(); }
+  } catch (e) {
+    S.busy = false; if (nb) nb.classList.remove("ld");
+    const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e); hap("HEAVY");
+  }
 }
 async function doReg() {
   if (S.busy) return;
-  const p = document.getElementById("rp").value.trim(), k = document.getElementById("rk").value.trim(), le = document.querySelector(".le");
-  const bad = !/^01\d{9}$/.test(p) ? t("badn") : !/^\d{6}$/.test(k) ? t("badpin") : "";
+  const p = S.regPhone, nm = document.getElementById("rn").value.trim(), k = document.getElementById("rk").value.trim(), k2 = document.getElementById("rk2").value.trim(), le = document.querySelector(".le");
+  const bad = !/^01\d{9}$/.test(p) ? t("badn") : !nm ? t("nmreq") : !/^\d{6}$/.test(k) ? t("badpin") : k !== k2 ? t("pinmm") : "";
   if (bad) { le.textContent = bad; hap("HEAVY"); return; }
   S.busy = true; le.textContent = ""; document.querySelector(".lb2").classList.add("ld");
-  try { await signUp(p, k); S.phone = p; S.name = ""; S.lp = k; await enter(); }
+  try { await signUp(p, k, nm); S.phone = p; S.name = nm; S.lp = k; await enter(); }
   catch (e) { const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e); const b2 = document.querySelector(".lb2"); if (b2) b2.classList.remove("ld"); hap("HEAVY"); }
   S.busy = false;
 }
@@ -584,19 +606,23 @@ async function key(d) {
   S.busy = false;
 }
 
-async function pinIn(el) {
+function pinIn(el) {
   if (S.busy) { el.value = S.pin; return; }
   const v = el.value.replace(/\D/g, "").slice(0, 6); if (el.value !== v) el.value = v;
-  const grew = v.length > S.pin.length; S.pin = v; hap();
-  pinFill(".dt", v, grew ? v[v.length - 1] : "b");
-  if (v.length < 6) return;
-  try { el.blur(); } catch (e) {}
-  const ds = document.querySelector(".dots,.bkp"), le = document.querySelector(".le"), pin = S.pin;
-  S.busy = true; if (le) le.textContent = "";
+  S.pin = v; hap();
+  const le = document.querySelector(".le"); if (le) le.textContent = "";
+}
+async function pinGo() {
+  if (S.busy) return;
+  const el = document.getElementById("pinin"), le = document.querySelector(".le"), pin = el ? el.value.replace(/\D/g, "") : S.pin;
+  S.pin = pin;
+  if (pin.length !== 6) { if (le) le.textContent = t("badpin"); hap("HEAVY"); return; }
+  const ds = document.querySelector(".bkp"), gb = document.getElementById("pingo");
+  S.busy = true; if (le) le.textContent = ""; if (gb) gb.classList.add("ld");
   try { await signIn(S.phone, pin); S.lp = pin; await enter(); }
   catch (e) {
-    hap("HEAVY"); S.pin = ""; if (ds) ds.classList.add("shake"); if (le) le.textContent = errMsg(e);
-    setTimeout(() => { if (ds) ds.classList.remove("shake"); pinFill(".dt", "", ""); const f = document.getElementById("pinin"); if (f) { f.value = ""; try { f.focus(); } catch (x) {} } }, 450);
+    hap("HEAVY"); S.pin = ""; if (ds) ds.classList.add("shake"); if (le) le.textContent = errMsg(e); if (gb) gb.classList.remove("ld");
+    setTimeout(() => { if (ds) ds.classList.remove("shake"); const f = document.getElementById("pinin"); if (f) { f.value = ""; try { f.focus(); } catch (x) {} } }, 450);
   }
   S.busy = false;
 }
@@ -631,7 +657,7 @@ function render() {
   if (S.fq && S.auth) { S.fq = false; setTimeout(() => { const f = document.getElementById("sq"); if (f) { try { f.focus(); } catch (e) {} } }, 380); }
   sbar();
   if (!S.auth && CONFIGURED && S.phone && !S.view && !bioOn()) setTimeout(() => { const f = document.getElementById("pinin"); if (f && !S.busy) { try { f.focus(); } catch (e) {} } }, 400);
-  if (!S.auth && CONFIGURED) { const f = document.getElementById(S.view === "reg" ? "rp" : "lp"); if (f && S.view) setTimeout(() => { try { f.focus(); } catch (e) {} }, 350); }
+  if (!S.auth && CONFIGURED) { const f = document.getElementById(S.view === "reg" ? "rn" : "lp"); if (f && S.view) setTimeout(() => { try { f.focus(); } catch (e) {} }, 350); }
 }
 const go = (k) => {
   if (S.tab === k) { render(); document.getElementById("app").scrollTo({top: 0, behavior: "smooth"}); return; }
@@ -652,12 +678,13 @@ function dot(e) { const st = e.children.length > 1 ? e.children[1].offsetLeft - 
 function openS(id, pre, rn) {
   if (!WIRED.includes(id)) { hap(); toast(t("soon")); return; }
   const c = cfg(id), s1 = !!(c.k || c.ch), jump = !!(pre && rn !== undefined && c.k === "n" && /^01\d{9}$/.test(pre));
-  hap(); S.sheet = {id, step: jump || !s1 ? 2 : 1, s1, v: pre || "", ch: "", a: "", pin: "", err: "", done: false, fresh: true, fxs: false, rn: jump ? rn : "", busy: false}; renderSheet();
+  hap(); S.sheet = {id, step: jump || !s1 ? 2 : 1, s1, v: pre || "", ch: "", a: "", pin: "", err: "", done: false, fresh: true, fxs: false, rn: jump ? rn : "", busy: false, cp: null}; renderSheet();
+  if (id === "pay") loadCoupons();
 }
 function mount() { let e = document.getElementById("sheet"); if (!e) { e = document.createElement("div"); e.id = "sheet"; document.body.appendChild(e); } return e; }
 function renderSheet() {
   const s = S.sheet;
-  mount().innerHTML = S.upd ? updHtml() : s ? (s.id === "qrs" ? qrHtml() : s.id === "bio" ? bioHtml() : s.id === "net" ? netHtml() : s.id === "flt" ? fltHtml() : s.id === "menu" ? menuHtml() : s.id === "trd" ? trdHtml() : s.id === "inf" ? infHtml() : s.id === "pph" ? pphHtml() : sheetHtml()) : "";
+  mount().innerHTML = S.upd ? updHtml() : s ? (s.id === "qrs" ? qrHtml() : s.id === "bio" ? bioHtml() : s.id === "net" ? netHtml() : s.id === "flt" ? fltHtml() : s.id === "menu" ? menuHtml() : s.id === "trd" ? trdHtml() : s.id === "inf" ? infHtml() : s.id === "pph" ? pphHtml() : s.id === "stm" ? stmHtml() : s.id === "cpl" ? cplHtml() : sheetHtml()) : "";
   if (s) { s.fresh = false; s.fxs = false; }
   if (S.upd) S.upd.fresh = false;
   if (s && !s.done && s.step === 2 && !SPECIAL.includes(s.id)) { const f = document.getElementById("f2"); if (f) setTimeout(() => { try { f.focus(); } catch (e) {} }, 240); }
@@ -695,35 +722,35 @@ function sheetHtml() {
       ? `<div class="rcp">${avatar(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${s.rn ? num : ""}</span></div></div>`
       : `<div class="rcp">${tile(s.id)}<div><b>${t(s.id)}</b><span>${[s.ch ? t(s.ch) : "", num].filter(Boolean).join(" · ")}</span></div></div>`;
     const hidden = S.hideNb;
-    const ref = !person && s.v ? `<div><span>${t(c.f)}</span><b>${esc(s.v)}</b></div>` : "<div></div>";
-    const grid = `<div><span>${t("at")}</span><b>${fmt(s.at)}</b></div>`
-      + `<div><span>${t("trx")}</span><b class="cpy">${esc(s.trx)}<button class="eye" aria-label="${t("copied")}" onclick="copyTrx()">${ic("copy")}</button></b></div>`
-      + `<div><span>${t("total")}</span><b>${money(s.total)}</b><small>${s.fee ? "+ " + money(s.fee) + " " + t("feel") : t("nochg")}</small></div>`
-      + `<div><span>${t("nbl")}</span><b class="nbv"><em id="nbv" data-v="${esc(money(s.nb))}">${hidden ? "৳ ••••" : esc(money(s.nb))}</em><button class="eye" aria-label="eye" onclick="toggleNb()">${ic(hidden ? "eyeo" : "eye")}</button></b></div>`
-      + ref;
-    return wrapPage(s, t(s.id), "closeS()", `<div class="pcard bkr"><div class="bkh"><div><b>${t(s.id)}</b><em>${t("done")}</em></div><i class="bkck"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>${who2}<div class="bkg">${grid}</div><button class="bks" onclick="shareRc()">${ic("shr")}<span>${t("share")}</span></button></div>`,
+    const cells = [`<div><span>${t("at")}</span><b>${fmt(s.at)}</b></div>`,
+      `<div><span>${t("trx")}</span><b class="cpy"><em>${esc(s.trx)}</em><button class="eye" id="cpb" aria-label="${t("copy")}" onclick="copyTrx()">${ic("copy")}</button></b></div>`,
+      `<div><span>${t("amtl")}</span><b>${money(s.amt)}</b></div>`,
+      s.disc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(s.disc)}</b></div>` : `<div><span>${t("feel")}</span><b>${money(s.fee || 0)}</b></div>`,
+      `<div><span>${t("total")}</span><b class="pk">${money(s.total)}</b></div>`,
+      `<div><span>${t("nbl")}</span><b class="nbv"><em id="nbv" data-v="${esc(money(s.nb))}">${hidden ? "৳ ••••" : esc(money(s.nb))}</em><button class="eye" id="nbe" aria-label="eye" onclick="toggleNb()">${ic(hidden ? "eyeo" : "eye")}</button></b></div>`];
+    return wrapPage(s, t(s.id), "closeS()", `<div class="pcard bkr"><div class="bkh"><div><b>${t(s.id)}</b><em>${t("done")}</em></div><i class="bkck"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>${who2}<div class="bkg">${cells.join("")}</div><button class="bks" onclick="shareRc()">${ic("shr")}<span>${t("share")}</span></button></div>`,
       `<button class="bknx" onclick="closeS()"><span>${t("next")}</span>${NXT}</button>`);
   }
 
   const tot3 = s.s1 ? 4 : 3, cur = s.s1 ? s.step : s.step - 1;
-  const prog = `<div class="prg"><i style="width:${Math.round(cur / tot3 * 100)}%"></i></div>`;
+  const prog = "";
   const who = person
     ? `<div class="rcp">${avatar(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${s.rn ? esc(s.v) : ""}</span></div><i class="vf">${tickSvg}</i></div>`
     : `<div class="rcp">${tile(s.id)}<div><b>${t(s.id)}</b><span>${[s.ch ? t(s.ch) : "", s.v ? esc(s.v) : ""].filter(Boolean).join(" · ")}</span></div></div>`;
   /* ধাপ ৩: PIN · ধাপ ৪: যাচাই + নিচের বাটন ধরে রাখুন (বিকাশের মতো) */
   if (s.step >= 3) {
-    const amt = parseFloat(s.a), fee = feeOf(c, amt), tot = amt + (d < 0 ? fee : 0);
+    const amt = parseFloat(s.a), fee = feeOf(c, amt), dsc = s.id === "pay" ? cpDisc(s.cp, amt) : 0, tot = amt + (d < 0 ? fee - dsc : 0);
     if (s.step === 3) {
-      return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="bkt"><div><span>${t("amtl")}</span><b>${money(amt)}</b></div><div><span>${t("feel")}</span><b>${fee ? "+ " : ""}${money(fee)}</b></div><div><span>${t("total")}</span><b>${money(tot)}</b></div></div></div>
-        <div class="pcard pinrow">${ic("lock")}<input id="spin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(s.pin)}" oninput="spIn(this)"><button type="button" class="pgo" aria-label="${t("next")}" onclick="spGo()">${NXT}</button></div>
-        <div class="err c" id="er" style="text-align:center;margin-top:10px">${esc(s.err)}</div>`, "");
+      return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="bkt"><div><span>${t("amtl")}</span><b>${money(amt)}</b></div><div><span>${t("feel")}</span><b>${fee ? "+ " : ""}${money(fee)}</b></div>${dsc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(dsc)}</b></div>` : ""}<div><span>${t("total")}</span><b>${money(tot)}</b></div></div></div>
+        <div class="pcard pinrow">${ic("lock")}<input id="spin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(s.pin)}" oninput="spIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();spGo()}"></div>
+        <div class="err c" id="er" style="text-align:center;margin-top:10px">${esc(s.err)}</div>`, `<button class="btn" id="spgo" onclick="spGo()">${t("ok")}</button>`);
     }
-    const rows = (!person && s.v ? `<div><span>${t(c.f)}</span><b>${esc(s.v)}</b></div>` : "") + (person && s.id === "cash" ? `<div><span>${t("svc")}</span><b>${t("cash")}</b></div>` : "")
-      + `<div><span>${t("amtl")}</span><b>${money(amt)}</b></div><div><span>${t("feel")}</span><b>${money(fee)}</b></div><div><span>${t("total")}</span><b>${money(tot)}</b></div>`;
-    return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="sm">${rows}</div></div>
+    const rows = (!person && s.v ? `<div><span>${t(c.f)}</span><b>${esc(s.v)}</b></div>` : "") + (!person && s.ch ? `<div><span>${t("opr")}</span><b>${t(s.ch)}</b></div>` : "") + (person && s.id === "cash" ? `<div><span>${t("svc")}</span><b>${t("cash")}</b></div>` : "")
+      + `<div><span>${t("amtl")}</span><b>${money(amt)}</b></div><div><span>${t("feel")}</span><b>${money(fee)}</b></div>${dsc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(dsc)}</b></div>` : ""}`;
+    return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard cfm">${who}<div class="cfa"><small>${t("total")}</small><b>${money(tot)}</b></div><div class="sm">${rows}</div></div>
       ${TEST_MODE && s.id === "cash" ? `<p class="tw" style="margin-top:8px">${t("cashw")}</p>` : ""}
       <div class="err c" style="text-align:center;margin-top:10px">${esc(s.err)}</div>`,
-      `<div class="holdw"><p>${t("holdh")}</p><button id="hold" class="hold" onpointerdown="holdStart(event)" onpointerup="holdEnd()" onpointerleave="holdEnd()" onpointercancel="holdEnd()" oncontextmenu="return false"><i></i>${ic("fp")}<b>${t("hold")}</b></button></div>`);
+      `<div class="holdw"><button id="hold" class="hold" onpointerdown="holdStart(event)" onpointerup="holdEnd()" onpointerleave="holdEnd()" onpointercancel="holdEnd()" oncontextmenu="return false"><i></i>${ic("ok2")}<b>${t("hold")}</b></button></div>`);
   }
   /* ধাপ ২: টাকার পরিমাণ */
   if (s.step === 2) {
@@ -733,7 +760,8 @@ function sheetHtml() {
       ${s.id === "send" && s.v && !recents().some(f => f[0] === s.v) ? `<p class="tw" style="margin:8px 12px 0">${t("chkn")}</p>` : ""}
       <div class="pcard"><div class="lb">${t("amt")}</div><div class="fld big"><u>৳</u><input id="f2" inputmode="decimal" placeholder="0" value="${esc(s.a)}" oninput="amtIn(this)"></div>
       ${d < 0 ? `<div class="avl">${t("avl")}: <b>${money(S.bal)}</b></div>` : ""}<div class="fee" id="fl">${c.fee ? t("feel") + ": " + money(fee) : ""}</div>
-      <div class="qa">${chips}</div><div class="err" id="er">${esc(s.err)}</div></div>`,
+      <div class="qa">${chips}</div><div class="err" id="er">${esc(s.err)}</div></div>
+      ${s.id === "pay" ? `<div class="pcard cpcard" id="cpbox">${cpHtml(s)}</div>` : ""}`,
       `<button class="btn" onclick="nextStep()">${t("go2")}${NXT}</button>`);
   }
   /* ধাপ ১: কাকে / কোন সার্ভিস (বিকাশের মতো সার্চ + তালিকা) */
@@ -802,7 +830,7 @@ async function nextStep() {
       s.busy = true; setBusy(true);
       try {
         const r = await api("/rest/v1/rpc/lookup_phone", {m: "POST", b: {p_phone: s.v}});
-        if (!r.length) e = t("nouser"); else if (s.id === "cash" && r[0].prole !== "agent") e = t("noag"); else s.rn = r[0].pname || "";
+        if (!r.length) e = t(s.id === "cash" ? "noagn" : s.id === "pay" ? "nomrc" : "nouser"); else if (s.id === "cash" && r[0].prole !== "agent") e = t("noagn"); else s.rn = r[0].pname || "";
       } catch (x) { e = errMsg(x); }
       s.busy = false;
       if (S.sheet !== s) return;
@@ -812,7 +840,7 @@ async function nextStep() {
     if (!(amt > 0)) e = t("bada");
     else if (s.id === "cash" && amt < 50) e = t("cobad");
     else if (s.id === "add" && amt > 5000) e = t("addmax");
-    else if (d < 0 && amt + feeOf(c, amt) > S.bal) e = t("low");
+    else if (d < 0 && amt + feeOf(c, amt) - (s.id === "pay" ? cpDisc(s.cp, amt) : 0) > S.bal) e = t("low");
     else s.a = String(Math.round(amt * 100) / 100);
   }
   s.err = e;
@@ -836,6 +864,7 @@ function amtIn(el) {
   const c = cfg(s.id), a = document.getElementById("fl"), er = document.getElementById("er");
   if (a && c.fee) a.textContent = t("feel") + ": " + money(feeOf(c, parseFloat(v) || 0));
   if (er) er.textContent = "";
+  if (s.id === "pay") { const a2 = parseFloat(v) || 0; if (s.cp && !cpDisc(s.cp, a2)) s.cp = null; cpRefresh(); }
 }
 function qAmt(n) { hap(); const f = document.getElementById("f2"); if (f) { f.value = String(n); amtIn(f); } }
 function spIn(el) {
@@ -843,16 +872,16 @@ function spIn(el) {
   const v = el.value.replace(/\D/g, "").slice(0, 6); if (el.value !== v) el.value = v;
   s.pin = v; hap(); s.err = "";
   const er = document.getElementById("er"); if (er) er.textContent = "";
-  if (v.length === 6) { try { el.blur(); } catch (e) {} setTimeout(verifyPin, 120); }
 }
 function spGo() {
   const s = S.sheet; if (!s || s.busy || s.step !== 3) return;
+  const f = document.getElementById("spin"); if (f) s.pin = f.value.replace(/\D/g, "").slice(0, 6);
   if (s.pin.length === 6) { verifyPin(); return; }
-  s.err = t("badpin"); renderSheet(); shakeBox();
+  s.err = t("badpin"); const er = document.getElementById("er"); if (er) er.textContent = s.err; shakeBox();
 }
 async function verifyPin() {
   const s = S.sheet; if (!s || s.busy || s.step !== 3 || s.pin.length !== 6) return;
-  const pin = s.pin; s.busy = true;
+  const pin = s.pin; s.busy = true; { const gb = document.getElementById("spgo"); if (gb) gb.classList.add("ld"); }
   const fail = (m) => { s.busy = false; if (S.sheet !== s) return; s.pin = ""; s.err = m; renderSheet(); shakeBox(); };
   try { await signIn(S.me.phone, pin); } catch (e) { return fail(errMsg(e)); }
   s.busy = false; if (S.sheet !== s) return;
@@ -873,27 +902,132 @@ function holdEnd() {
 function toggleNb() {
   hap(); S.hideNb = !S.hideNb;
   const e = document.getElementById("nbv"); if (e) e.textContent = S.hideNb ? "৳ ••••" : e.dataset.v;
-  const b = document.querySelector(".eye"); if (b) b.innerHTML = ic(S.hideNb ? "eyeo" : "eye");
+  const b = document.getElementById("nbe"); if (b) b.innerHTML = ic(S.hideNb ? "eyeo" : "eye");
 }
-function copyTrx() {
-  const s = S.sheet; if (!s || !s.trx) return; hap();
-  try { navigator.clipboard.writeText(s.trx).then(() => toast(t("copied")), () => toast(t("copied"))); } catch (e) { toast(t("copied")); }
+function copyTxt(v) {
+  hap(); v = String(v == null ? "" : v);
+  const ok = () => toast(t("copied"));
+  try { navigator.clipboard.writeText(v).then(ok, () => { fbCopy(v); ok(); }); } catch (e) { fbCopy(v); ok(); }
 }
+function fbCopy(v) { try { const a = document.createElement("textarea"); a.value = v; a.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(a); a.select(); document.execCommand("copy"); a.remove(); } catch (e) {} }
+function copyTrx() { const s = S.sheet; if (s && s.trx) copyTxt(s.trx); }
+
+/* ---------- রিসিট ছবি (ব্যালেন্স কখনো থাকে না) আর শেয়ার ---------- */
+const CF = (w, z) => w + " " + z + "px system-ui,'Noto Sans Bengali','Segoe UI',sans-serif";
+function rrect(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+function fitTxt(g, txt, max) { txt = String(txt); if (g.measureText(txt).width <= max) return txt; while (txt.length > 1 && g.measureText(txt + "…").width > max) txt = txt.slice(0, -1); return txt + "…"; }
+function rcBlob(o) {
+  const W = 720, pad = 44, rowH = 78, headH = 250, whoH = o.who ? 150 : 40, cardH = whoH + o.rows.length * rowH + 40, H = headH + cardH + 150;
+  const c = document.createElement("canvas"); c.width = W; c.height = H; const g = c.getContext("2d");
+  g.fillStyle = "#f6eef3"; g.fillRect(0, 0, W, H);
+  const gr = g.createLinearGradient(0, 0, W, headH); gr.addColorStop(0, "#e2136e"); gr.addColorStop(1, "#f0549a"); g.fillStyle = gr; g.fillRect(0, 0, W, headH);
+  g.textBaseline = "alphabetic"; g.fillStyle = "#fff"; g.textAlign = "left"; g.font = CF(800, 38); g.fillText("FuNPaY", pad, 72);
+  g.font = CF(600, 27); g.globalAlpha = .92; g.fillText(o.title, pad, 118); g.globalAlpha = 1;
+  g.textAlign = "right"; g.font = CF(700, 26); g.fillText(o.status || "", W - pad, 72);
+  g.textAlign = "center"; g.font = CF(800, 70); g.fillText(o.amount, W / 2, 205);
+  const cy = headH - 34; g.fillStyle = "#fff"; g.shadowColor = "rgba(120,20,70,.14)"; g.shadowBlur = 26; g.shadowOffsetY = 8; rrect(g, 28, cy, W - 56, cardH + 34, 28); g.fill(); g.shadowColor = "transparent"; g.shadowBlur = 0; g.shadowOffsetY = 0;
+  let y = cy + 34;
+  if (o.who) {
+    g.fillStyle = "#fde7f1"; g.beginPath(); g.arc(pad + 38, y + 56, 38, 0, 7); g.fill();
+    g.fillStyle = "#d6307d"; g.textAlign = "center"; g.font = CF(800, 34); g.fillText(Array.from(String(o.who.name || o.who.phone || "F"))[0].toUpperCase(), pad + 38, y + 68);
+    g.textAlign = "left"; g.fillStyle = "#2b2530"; g.font = CF(700, 32); g.fillText(fitTxt(g, o.who.name || o.who.phone || "", W - pad * 2 - 110), pad + 96, y + 52);
+    if (o.who.name && o.who.phone) { g.fillStyle = "#8b8590"; g.font = CF(500, 26); g.fillText(o.who.phone, pad + 96, y + 90); }
+    y += 128; g.strokeStyle = "#f0e3ea"; g.lineWidth = 2; g.beginPath(); g.moveTo(pad, y); g.lineTo(W - pad, y); g.stroke();
+  } else y += 10;
+  o.rows.forEach((r) => {
+    g.textAlign = "left"; g.fillStyle = "#8b8590"; g.font = CF(500, 26); g.fillText(r[0], pad, y + 48);
+    g.textAlign = "right"; g.fillStyle = r[2] || "#2b2530"; g.font = CF(700, 28); g.fillText(fitTxt(g, r[1], W - pad * 2 - 230), W - pad, y + 48);
+    y += rowH; g.strokeStyle = "#f4ecf1"; g.lineWidth = 2; g.beginPath(); g.moveTo(pad, y); g.lineTo(W - pad, y); g.stroke();
+  });
+  g.textAlign = "center"; g.fillStyle = "#a79ba3"; g.font = CF(500, 23); g.fillText("FuNPaY · " + (o.foot || ""), W / 2, H - 70);
+  return new Promise((res) => { try { c.toBlob((b) => res(b), "image/png"); } catch (e) { res(null); } });
+}
+async function shareImage(blob, name, title, mime) {
+  mime = mime || "image/png";
+  if (!blob) return false;
+  try {
+    const Sh = cap().Share, Fs = cap().Filesystem;
+    if (Sh && Fs) {
+      const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); });
+      const w = await Fs.writeFile({path: name, data: b64, directory: "CACHE"});
+      await Sh.share({title, dialogTitle: title, files: [w.uri]}); return true;
+    }
+  } catch (e) { if (/cancel|dismiss/i.test(String((e && (e.message || e.name)) || e))) return true; }
+  try { const f = new File([blob], name, {type: mime}); if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title}); return true; } } catch (e) { if (e && e.name === "AbortError") return true; }
+  try { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); return true; } catch (e) {}
+  return false;
+}
+async function doShare(o, name) { hap(); const ok = await shareImage(await rcBlob(o), name, o.title); if (!ok) toast(t("shfail")); }
 function shareRc() {
-  const s = S.sheet; if (!s || !s.done) return; hap();
-  const txt = "FuNPaY · " + t(s.id) + "\n" + t("amtl") + ": " + money(s.amt) + "\n" + t("feel") + ": " + money(s.fee || 0) + "\n" + t("trx") + ": " + s.trx + "\n" + t("at") + ": " + fmt(s.at);
-  try { if (navigator.share) { navigator.share({text: txt}).catch(() => {}); return; } } catch (e) {}
-  try { navigator.clipboard.writeText(txt).then(() => toast(t("copied")), () => toast(t("copied"))); } catch (e) { toast(t("copied")); }
+  const s = S.sheet; if (!s || !s.done) return;
+  const c = cfg(s.id), person = PERSON.includes(s.id), rows = [[t("at"), fmt(s.at)], [t("trx"), s.trx]];
+  if (!person && s.ch) rows.push([t("opr"), t(s.ch)]);
+  if (!person && s.v) rows.push([t(c.f), s.v]);
+  rows.push([t("amtl"), money2(s.amt)], [t("feel"), money2(s.fee || 0)]);
+  if (s.disc) rows.push([t("disc"), "- " + money2(s.disc), "#12a15b"]);
+  rows.push([t("total"), money2(s.total), "#e2136e"]);
+  doShare({title: t(s.id), status: t("done"), amount: money2(s.total), who: person ? {name: s.rn, phone: s.v} : null, rows, foot: fmt(s.at)}, "FuNPaY-" + s.trx + ".png");
 }
+
+/* ---------- কুপন (শুধু পেমেন্টে) ---------- */
+const cpDisc = (cp, amt) => {
+  if (!cp || !(amt > 0) || amt < Number(cp.min_amt || 0)) return 0;
+  let d = cp.kind === "percent" ? Math.round(amt * Number(cp.val)) / 100 : Number(cp.val);
+  if (cp.max_disc) d = Math.min(d, Number(cp.max_disc));
+  return Math.min(Math.round(d * 100) / 100, amt);
+};
+const cpTag = (cp) => cp.kind === "percent" ? Number(cp.val) + "% " + t("cpn") : "৳" + Number(cp.val) + " " + t("cpn");
+const cpSub = (cp) => [cp.kind === "percent" && cp.max_disc ? t("cpmax") + " ৳" + Number(cp.max_disc) : "", Number(cp.min_amt) > 0 ? t("cpmin") + " ৳" + Number(cp.min_amt) : "", cp.expires_at ? t("cpexp") + " " + fmt(cp.expires_at).split(" ")[0] : ""].filter(Boolean).join(" · ");
+async function loadCoupons() {
+  try { const r = await api("/rest/v1/rpc/my_coupons", {m: "POST", b: {}}); S.cps = Array.isArray(r) ? r : []; } catch (e) { if (S.cps === null) S.cps = []; }
+  cpRefresh();
+}
+function cpHtml(s) {
+  const amt = parseFloat(s.a) || 0, L = S.cps;
+  if (L === null) return `<div class="lb">${t("cpn")}</div><p class="cpe">${t("wait")}…</p>`;
+  if (!L.length) return `<div class="lb">${t("cpn")}</div><p class="cpe">${t("cpnone")}</p>`;
+  const items = L.map(k => {
+    const ok = !(amt < Number(k.min_amt || 0)), on = s.cp && s.cp.uc_id === k.uc_id, d = on ? cpDisc(k, amt) : 0;
+    return `<button class="cpc${on ? " on" : ""}${ok ? "" : " na"}" onclick="cpPick(${Number(k.uc_id)})"><i>${ic("tag")}</i><div><b>${esc(k.title)}</b><small>${esc(on && d ? t("cpsv") + " ৳" + d : ok ? cpSub(k) : t("cpna") + " · " + cpSub(k))}</small></div><em class="rd"></em></button>`;
+  }).join("");
+  return `<div class="lb">${t("cpsel")}</div><div class="cpl">${items}</div>`;
+}
+function cpRefresh() { const e = document.getElementById("cpbox"); if (e && S.sheet && S.sheet.id === "pay" && !S.sheet.done) e.innerHTML = cpHtml(S.sheet); }
+function cpPick(id) {
+  const s = S.sheet; if (!s || !S.cps) return; hap();
+  const k = S.cps.find(x => x.uc_id === id); if (!k) return;
+  const a = document.getElementById("f2"); if (a) s.a = a.value;
+  const amt = parseFloat(s.a) || 0;
+  if (s.cp && s.cp.uc_id === id) s.cp = null;
+  else if (amt < Number(k.min_amt || 0)) { toast(t("cpna") + " (" + t("cpmin") + " ৳" + Number(k.min_amt) + ")"); return; }
+  else { s.cp = k; toast(t("cpok")); }
+  cpRefresh();
+}
+function openCoupons() { hap(); S.sheet = {id: "cpl", fresh: true, err: ""}; renderSheet(); loadCoupons().then(() => { if (S.sheet && S.sheet.id === "cpl") renderSheet(); }); }
+function cplHtml() {
+  const s = S.sheet, L = S.cps || [];
+  const list = L.length ? L.map(k => `<div class="cpc ro"><i>${ic("tag")}</i><div><b>${esc(k.title)}</b><small>${esc(cpSub(k))}</small></div></div>`).join("") : `<p class="cpe">${S.cps === null ? t("wait") + "…" : t("cpnone")}</p>`;
+  return `<div class="sh dlg${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div><h3 class="cph">${t("cpmy")}</h3><div class="cpl">${list}</div>
+    <div class="cpadd"><input id="cpcode" placeholder="${t("cpcode")}" autocapitalize="characters" autocomplete="off" maxlength="20"><button class="btn" onclick="claimCoupon()">${t("cpadd")}</button></div><div class="err c" id="cper" style="text-align:center">${esc(s.err || "")}</div>
+    <button class="btn l" onclick="closeS()">${t("close")}</button></div></div>`;
+}
+async function claimCoupon() {
+  const s = S.sheet, f = document.getElementById("cpcode"); if (!s || s.id !== "cpl" || !f) return;
+  const code = f.value.trim().toUpperCase(); if (!code) return;
+  try { await api("/rest/v1/rpc/claim_coupon", {m: "POST", b: {p_code: code}}); toast(t("cpadded")); s.err = ""; await loadCoupons(); if (S.sheet === s) renderSheet(); }
+  catch (e) { hap("HEAVY"); const er = document.getElementById("cper"); if (er) er.textContent = errMsg(e); }
+}
+
 async function confirmTx() {
   const s = S.sheet; if (!s || s.busy || s.step !== 4) return;
-  const c = cfg(s.id), d = c.d || -1, amt = parseFloat(s.a), fee = feeOf(c, amt), pin = s.pin || "";
+  const c = cfg(s.id), d = c.d || -1, amt = parseFloat(s.a), fee = feeOf(c, amt), pin = s.pin || "", dsc = s.id === "pay" ? cpDisc(s.cp, amt) : 0;
   const fail = (m) => { s.busy = false; if (S.sheet !== s) return; s.pin = ""; s.err = m; renderSheet(); shakeBox(); };
   s.busy = true; { const hb = document.getElementById("hold"); if (hb) hb.classList.add("ld"); }
   const R = (fn, b) => api("/rest/v1/rpc/" + fn, {m: "POST", b});
   let trx;
   try {
-    if (s.id === "send" || s.id === "pay") trx = await R("send_money", {p_to: s.v, p_amount: amt, p_type: s.id});
+    if (s.id === "send") trx = await R("send_money", {p_to: s.v, p_amount: amt, p_type: s.id});
+    else if (s.id === "pay") trx = await R("pay_merchant", {p_to: s.v, p_amount: amt, p_uc: s.cp ? s.cp.uc_id : null});
     else if (s.id === "cash") trx = await R("cash_out", {p_agent: s.v, p_amount: amt});
     else if (s.id === "add") trx = await R("add_test_money", {p_amount: amt});
     else trx = await R("pay_service", {p_type: s.id, p_ref: s.v, p_amount: amt, p_ch: s.ch});
@@ -902,7 +1036,8 @@ async function confirmTx() {
     return fail(errMsg(e));
   }
   s.busy = false;
-  S.sheet = {id: s.id, done: true, total: d < 0 ? amt + fee : amt, amt, fee, trx, v: s.v, rn: s.rn, ch: s.ch, at: new Date().toISOString(), fresh: false, fxs: true, nb: d < 0 ? S.bal - (amt + fee) : S.bal + amt};
+  S.sheet = {id: s.id, done: true, total: d < 0 ? amt + fee - dsc : amt, amt, fee, disc: dsc, trx, v: s.v, rn: s.rn, ch: s.ch, at: new Date().toISOString(), fresh: false, fxs: true, nb: d < 0 ? S.bal - (amt + fee - dsc) : S.bal + amt};
+  if (dsc && S.cps) S.cps = S.cps.filter(k => !s.cp || k.uc_id !== s.cp.uc_id);
   hap("MEDIUM"); renderSheet(); refresh();
 }
 
@@ -1000,9 +1135,9 @@ async function handleScan(v) {
   if (m[1] === S.me.phone) { toast(t("self")); return; }
   try {
     const r = await api("/rest/v1/rpc/lookup_phone", {m: "POST", b: {p_phone: m[1]}});
-    if (!r.length) { toast(t("nouser")); return; }
+    if (!r.length) { toast(t(S.scanFor === "cash" ? "noagn" : S.scanFor === "pay" ? "nomrc" : "nouser")); return; }
     const ag = r[0].prole === "agent", want = S.scanFor || "";
-    if (want === "cash" && !ag) { toast(t("noag")); hap("HEAVY"); return; }
+    if (want === "cash" && !ag) { toast(t("noagn")); hap("HEAVY"); return; }
     S.scanFor = "";
     openS(want === "pay" ? "pay" : want === "send" ? "send" : ag ? "cash" : "send", m[1], r[0].pname || "");
   } catch (e) { toast(errMsg(e)); }
@@ -1089,7 +1224,7 @@ function menuHtml() {
   return `<div class="sh drw${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box">
     <div class="dhd"><b>${t("menu")}</b><div class="flang"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en'){lang();renderSheet()}">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn'){lang();renderSheet()}">বাং</button></div></div>
     <div class="dpf"><div class="big" onclick="mact(&quot;openPhoto()&quot;)">${myAv(m.name)}</div><div><b>${esc(m.name || t("acct"))}</b><span>+88 ${esc(m.phone || "")}</span></div></div>
-    <div class="dls">${it("home", t("home"), "go('home')")}${it("stmt", t("stmt"), "openSearch()")}${it("lim", t("lim"), "openInfo('lim')")}${it("qr", t("myqr"), "openQR('my')")}${it("help", t("help"), "openInfo('help')")}${it("info", t("about"), "openInfo('about')")}${it("ref", t("refer"), "inviteFriend()")}${it("out", t("logout"), "logout()")}</div>
+    <div class="dls">${it("home", t("home"), "go('home')")}${it("stmt", t("stmt"), "openStmt()")}${it("lim", t("lim"), "openInfo('lim')")}${it("qr", t("myqr"), "openQR('my')")}${it("help", t("help"), "openInfo('help')")}${it("info", t("about"), "openInfo('about')")}${it("ref", t("refer"), "inviteFriend()")}${it("out", t("logout"), "logout()")}</div>
     <small class="dver">${t("ver")}: ${APP_REL} (${APP_VERSION})</small></div></div>`;
 }
 function openInfo(k) { hap(); S.sheet = {id: "inf", k, fresh: true}; renderSheet(); }
@@ -1108,20 +1243,155 @@ function openTrx(trx) {
   const x = S.tx.find(r => r.trx === trx); if (!x) return;
   hap(); S.sheet = {id: "trd", x, fresh: true}; renderSheet();
 }
+function trdRows(x) {
+  const v = tv(x), out = x.from_id === S.uid, R = [], G = "#12a15b";
+  R.push([t("svc"), esc(t(v.key))]);
+  if (["send", "pay", "cash"].includes(x.type)) {
+    const nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone;
+    const lbl = x.type === "cash" ? t(out ? "agl" : "cust") : x.type === "pay" ? t(out ? "mrc" : "snd") : t(out ? "rcvr" : "snd");
+    R.push([lbl, esc(nm || ph || "")]);
+    if (ph) R.push([t("num2"), esc(ph), ph]);
+  } else if (SVC.includes(x.type)) {
+    if (x.ch) R.push([t("opr"), esc(t(x.ch))]);
+    const cf = cfg(x.type); if (x.ref) R.push([t(cf && cf.f ? cf.f : "num2"), esc(x.ref), x.ref]);
+  } else if (x.type === "add") R.push([t("src"), "FuNPaY"]);
+  R.push([t("amtl"), money2(x.amount)]);
+  if (out) R.push([t("feel"), Number(x.fee) ? money2(x.fee) : t("nochg")]);
+  else if (Number(x.comm)) R.push([t("comm"), money2(x.comm), G]);
+  if (out && Number(x.disc)) R.push([t("disc"), "- " + money2(x.disc), G]);
+  R.push([t("trx"), esc(x.trx), null, x.trx], [t("at"), fmt(x.created_at)], [t("stat"), t("okk"), G]);
+  return R;
+}
 function trdHtml() {
   const s = S.sheet, x = s.x, v = tv(x);
   const out = x.from_id === S.uid, nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone;
-  const rows = [[t("svc"), t(v.key)], [t("sendto"), esc(v.who)], [t("amtl"), money2(x.amount)], [t("feel"), money2(x.fee || 0)], [t("trx"), esc(x.trx)], [t("at"), fmt(x.created_at)], [t("stat"), t("okk")]]
-    .map(r => `<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join("");
-  return `<div class="sh dlg${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div>
-    <div class="ok"><div class="tdh">${SVC.includes(x.type) || x.type === "add" ? tile(x.type) : avatar(nm, ph)}</div><h2>${t(v.key)}</h2><div class="amt ${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</div></div>
-    <div class="dl tdl">${rows}</div><div class="rbt"><button class="btn l" onclick="shareTrx()">${t("share")}</button><button class="btn" onclick="closeS()">${t("ok")}</button></div></div></div>`;
+  const R = trdRows(x).filter(r => r[0] !== t("svc"));
+  const cells = R.map(r => { const col = r[2] && r[2].charAt(0) === "#" ? r[2] : null, cp = col ? null : (r[2] || r[3]); return `<div><span>${r[0]}</span><b${col ? ` style="color:${col}"` : ""}><em>${r[1]}</em>${cp ? `<button class="cb2" aria-label="${t("copy")}" onclick="copyTxt('${esc(cp)}')">${ic("copy")}</button>` : ""}</b></div>`; });
+  if (cells.length % 2) cells[cells.length - 1] = cells[cells.length - 1].replace("<div>", '<div class="wide">');
+  return `<div class="sh dlg trdd${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div>
+    <div class="ok"><div class="tdh">${SVC.includes(x.type) || x.type === "add" ? tile(x.type) : avatar(nm, ph)}</div><h2>${t(v.key)}</h2><div class="amt ${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</div><span class="stc">${ic("ok2")}${t("okk")}</span></div>
+    <div class="tgrid">${cells.join("")}</div><div class="rbt"><button class="btn l" onclick="shareTrx()">${ic("shr")}${t("share")}</button><button class="btn" onclick="closeS()">${t("ok")}</button></div></div></div>`;
 }
 function shareTrx() {
-  const s = S.sheet; if (!s || !s.x) return; hap(); const x = s.x, v = tv(x);
-  const txt = "FuNPaY · " + t(v.key) + "\n" + t("amtl") + ": " + money2(x.amount) + "\n" + t("trx") + ": " + x.trx + "\n" + t("at") + ": " + fmt(x.created_at);
-  try { if (navigator.share) { navigator.share({text: txt}).catch(() => {}); return; } } catch (e) {}
-  try { navigator.clipboard.writeText(txt).then(() => toast(t("copied")), () => toast(t("copied"))); } catch (e) { toast(t("copied")); }
+  const s = S.sheet; if (!s || !s.x) return; const x = s.x, v = tv(x), out = x.from_id === S.uid;
+  const nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone, person = ["send", "pay", "cash"].includes(x.type);
+  const rows = trdRows(x).map(r => [r[0], String(r[1]).replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'"), r[2] && r[2].charAt(0) === "#" ? r[2] : null]);
+  doShare({title: t(v.key), status: t("okk"), amount: (v.out ? "- " : "+ ") + money2(v.amt), who: person ? {name: nm, phone: ph} : null, rows, foot: fmt(x.created_at)}, "FuNPaY-" + x.trx + ".png");
+}
+
+/* ---------- স্টেটমেন্ট: ১/৩/৬/১২ মাস বেছে রিসিট বানানো ---------- */
+const STP = [1, 3, 6, 12];
+function openStmt() { hap(); S.sheet = {id: "stm", per: 3, data: null, busy: false, err: "", fresh: true}; renderSheet(); }
+function stmPer(n) { const s = S.sheet; if (!s || s.busy) return; hap(); s.per = n; s.data = null; s.err = ""; renderSheet(); }
+const dstr = (d) => { const p = (x) => String(x).padStart(2, "0"); return p(d.getDate()) + "/" + p(d.getMonth() + 1) + "/" + d.getFullYear(); };
+const MBN = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"], MEN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function months(x) {
+  const m = new Map();
+  x.forEach((r) => {
+    const d = new Date(r.created_at), k = d.getFullYear() * 100 + d.getMonth(), v = tv(r);
+    if (!m.has(k)) m.set(k, {k, lbl: (S.lang === "bn" ? MBN : MEN)[d.getMonth()] + " " + d.getFullYear(), ci: 0, co: 0, n: 0});
+    const o = m.get(k); o.n++; if (v.out) o.co += v.amt; else o.ci += v.amt;
+  });
+  return [...m.values()].sort((a, b) => b.k - a.k);
+}
+async function stmGen() {
+  const s = S.sheet; if (!s || s.busy) return; hap();
+  s.busy = true; s.err = ""; renderSheet();
+  const to = new Date(), from = new Date(to); from.setMonth(from.getMonth() - s.per);
+  try {
+    const x = await api("/rest/v1/transactions?select=*&created_at=gte." + encodeURIComponent(from.toISOString()) + "&order=id.desc&limit=1000");
+    let ci = 0, co = 0; x.forEach((r) => { const v = tv(r); if (v.out) co += v.amt; else ci += v.amt; });
+    s.data = {x, from, to, ci, co, mo: months(x)};
+  } catch (e) { s.err = errMsg(e); }
+  s.busy = false; if (S.sheet === s) renderSheet();
+}
+function stmHtml() {
+  const s = S.sheet, m = S.me || {}, d = s.data;
+  const chips = STP.map(n => `<button class="${s.per === n ? "on" : ""}" onclick="stmPer(${n})">${t("p" + n)}</button>`).join("");
+  const head = `<div class="pcard stmh"><div class="rcp">${avatar(m.name, m.phone)}<div><b>${esc(m.name || t("acct"))}</b><span>+88 ${esc(m.phone || "")}</span></div></div></div>
+    <div class="pcard"><div class="lb">${t("stp")}</div><div class="stpc">${chips}</div><div class="err" style="text-align:center">${esc(s.err)}</div></div>`;
+  let body = head;
+  if (d) {
+    const mrows = d.mo.map(o => `<div class="mrow"><b>${o.lbl}</b><span class="gr">+${money2(o.ci)}</span><span class="rd2">-${money2(o.co)}</span><small>${o.n}</small></div>`).join("");
+    body += `<div class="pcard stms"><div class="sdt">${dstr(d.from)} – ${dstr(d.to)}</div><div class="bkt"><div><span>${t("tin")}</span><b class="gr">${money2(d.ci)}</b></div><div><span>${t("tout")}</span><b>${money2(d.co)}</b></div><div><span>${t("tcnt")}</span><b>${d.x.length}</b></div></div></div>`
+      + (d.x.length ? `<div class="pcard"><div class="lb">${t("mwise")}</div><div class="mtab"><div class="mrow mh"><b></b><span>${t("tin")}</span><span>${t("tout")}</span><small>${t("tcnt")}</small></div>${mrows}</div></div>` : `<p class="em">${t("nostm")}</p>`);
+  }
+  const foot = d && d.x.length ? `<button class="btn${s.busy ? " ld" : ""}" onclick="stmShare()">${ic("shr")}${t("stpdf")}</button>` : `<button class="btn${s.busy ? " ld" : ""}" onclick="stmGen()">${t("gen")}</button>`;
+  return wrapPage(s, t("stmt"), "closeS()", body, foot);
+}
+/* PDF: প্রতিটি পাতা ছবি (JPEG) হিসেবে বসিয়ে সাধারণ PDF ফাইল */
+function stmPages(d) {
+  const m = S.me || {}, W = 720, H = 1018, pad = 40, pages = [];
+  let c, g, y, pn = 0;
+  const newPage = () => {
+    c = document.createElement("canvas"); c.width = W; c.height = H; g = c.getContext("2d"); pages.push(c); pn++;
+    g.fillStyle = "#fff"; g.fillRect(0, 0, W, H);
+    g.textAlign = "center"; g.fillStyle = "#a79ba3"; g.font = CF(500, 20); g.fillText("FuNPaY · " + m.name + " · " + (S.lang === "bn" ? "পাতা " : "Page ") + pn, W / 2, H - 24);
+    if (pn === 1) {
+      const gr = g.createLinearGradient(0, 0, W, 150); gr.addColorStop(0, "#e2136e"); gr.addColorStop(1, "#f0549a"); g.fillStyle = gr; g.fillRect(0, 0, W, 130);
+      g.fillStyle = "#fff"; g.textAlign = "left"; g.font = CF(800, 38); g.fillText("FuNPaY", pad, 62); g.font = CF(600, 26); g.fillText(t("stt"), pad, 104);
+      g.fillStyle = "#2b2530"; g.font = CF(700, 29); g.fillText(t("acn") + ": " + (m.name || ""), pad, 182);
+      g.fillStyle = "#6f6973"; g.font = CF(500, 24); g.fillText("+88 " + (m.phone || "") + "   ·   " + dstr(d.from) + " – " + dstr(d.to), pad, 220);
+      y = 262;
+    } else y = 50;
+  };
+  const line = () => { g.strokeStyle = "#f0e7ed"; g.lineWidth = 2; g.beginPath(); g.moveTo(pad, y); g.lineTo(W - pad, y); g.stroke(); };
+  newPage();
+  // সারাংশ
+  g.fillStyle = "#faf5f8"; rrect(g, pad, y, W - pad * 2, 96, 16); g.fill();
+  [[t("tin"), money2(d.ci), "#12a15b"], [t("tout"), money2(d.co), "#e2136e"], [t("tcnt"), String(d.x.length), "#2b2530"]].forEach((r, i) => {
+    const cx = pad + 20 + i * ((W - pad * 2 - 20) / 3); g.textAlign = "left"; g.fillStyle = "#8b8590"; g.font = CF(500, 20); g.fillText(r[0], cx, y + 36); g.fillStyle = r[2]; g.font = CF(800, 25); g.fillText(r[1], cx, y + 72);
+  });
+  y += 130;
+  // মাস অনুযায়ী
+  g.textAlign = "left"; g.fillStyle = "#2b2530"; g.font = CF(800, 25); g.fillText(t("mwise"), pad, y); y += 14;
+  g.fillStyle = "#f6eef3"; g.fillRect(pad, y, W - pad * 2, 40); g.fillStyle = "#8b8590"; g.font = CF(600, 19); g.textAlign = "left"; g.fillText("", pad + 12, y + 27);
+  g.textAlign = "right"; g.fillText(t("tin"), 400, y + 27); g.fillText(t("tout"), 590, y + 27); g.fillText(t("tcnt"), W - pad - 8, y + 27); y += 40;
+  d.mo.forEach((o) => {
+    if (y > H - 110) newPage();
+    g.textAlign = "left"; g.fillStyle = "#2b2530"; g.font = CF(700, 22); g.fillText(o.lbl, pad + 12, y + 33);
+    g.textAlign = "right"; g.font = CF(700, 21); g.fillStyle = "#12a15b"; g.fillText(money2(o.ci), 400, y + 33); g.fillStyle = "#e2136e"; g.fillText(money2(o.co), 590, y + 33); g.fillStyle = "#6f6973"; g.fillText(String(o.n), W - pad - 8, y + 33);
+    y += 48; line();
+  });
+  y += 44;
+  if (y > H - 160) newPage();
+  g.textAlign = "left"; g.fillStyle = "#2b2530"; g.font = CF(800, 25); g.fillText(t("trn"), pad, y); y += 14;
+  g.fillStyle = "#f6eef3"; g.fillRect(pad, y, W - pad * 2, 40); g.fillStyle = "#8b8590"; g.font = CF(600, 19); g.fillText(t("dtl") + " / " + t("trn"), pad + 12, y + 27); g.textAlign = "right"; g.fillText(t("amc"), W - pad - 8, y + 27); y += 48;
+  d.x.forEach((r) => {
+    if (y > H - 100) { newPage(); }
+    const v = tv(r);
+    g.textAlign = "left"; g.fillStyle = "#2b2530"; g.font = CF(700, 22); g.fillText(fitTxt(g, t(v.key) + (v.who ? " · " + v.who : ""), W - pad * 2 - 230), pad + 12, y + 26);
+    g.fillStyle = "#8b8590"; g.font = CF(500, 18); g.fillText(r.trx + "  ·  " + fmt(r.created_at), pad + 12, y + 54);
+    g.textAlign = "right"; g.fillStyle = v.out ? "#e2136e" : "#12a15b"; g.font = CF(800, 23); g.fillText((v.out ? "- " : "+ ") + money2(v.amt), W - pad - 8, y + 36);
+    y += 72; line();
+  });
+  return pages;
+}
+function pdfBlob(cs) {
+  const enc = new TextEncoder(), parts = [], offs = []; let off = 0;
+  const push = (x) => { const b = typeof x === "string" ? enc.encode(x) : x; parts.push(b); off += b.length; };
+  const n = cs.length; let kids = ""; for (let i = 0; i < n; i++) kids += (3 + i * 3) + " 0 R ";
+  push("%PDF-1.4\n");
+  offs[1] = off; push("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+  offs[2] = off; push("2 0 obj\n<< /Type /Pages /Kids [" + kids + "] /Count " + n + " >>\nendobj\n");
+  cs.forEach((c, i) => {
+    const id = 3 + i * 3, b64 = c.toDataURL("image/jpeg", .9).split(",")[1], bin = atob(b64), jb = new Uint8Array(bin.length);
+    for (let k = 0; k < bin.length; k++) jb[k] = bin.charCodeAt(k);
+    const ct = "q 595 0 0 842 0 0 cm /Im0 Do Q";
+    offs[id] = off; push(id + " 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 " + (id + 2) + " 0 R >> >> /Contents " + (id + 1) + " 0 R >>\nendobj\n");
+    offs[id + 1] = off; push((id + 1) + " 0 obj\n<< /Length " + ct.length + " >>\nstream\n" + ct + "\nendstream\nendobj\n");
+    offs[id + 2] = off; push((id + 2) + " 0 obj\n<< /Type /XObject /Subtype /Image /Width " + c.width + " /Height " + c.height + " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " + jb.length + " >>\nstream\n"); push(jb); push("\nendstream\nendobj\n");
+  });
+  const total = 3 + n * 3, xr = off; let x = "xref\n0 " + total + "\n0000000000 65535 f \n";
+  for (let i = 1; i < total; i++) x += String(offs[i]).padStart(10, "0") + " 00000 n \n";
+  push(x + "trailer\n<< /Size " + total + " /Root 1 0 R >>\nstartxref\n" + xr + "\n%%EOF");
+  return new Blob(parts, {type: "application/pdf"});
+}
+async function stmShare() {
+  const s = S.sheet; if (!s || !s.data) return; hap();
+  let ok = false;
+  try { ok = await shareImage(pdfBlob(stmPages(s.data)), "FuNPaY-statement-" + Date.now() + ".pdf", t("stt"), "application/pdf"); } catch (e) { console.log(e); }
+  if (!ok) toast(t("shfail"));
 }
 /* পুরোপুরি লগআউট: নম্বর, ফিঙ্গারপ্রিন্ট সব মুছে নতুন করে শুরু */
 function logout() {
@@ -1131,6 +1401,16 @@ function logout() {
   S.phone = ""; S.name = ""; S.view = ""; lock();
 }
 
+/* কিবোর্ডের উচ্চতা মনে রেখে PIN শিট সব সময় কিবোর্ডের জায়গার ওপরেই রাখা (কিবোর্ড আসার আগে নিচে নেমে থাকবে না) */
+let KBMAX = window.innerHeight;
+function kbSync() {
+  const h = window.innerHeight; if (h > KBMAX) KBMAX = h;
+  const d = KBMAX - h, up = d > 120; let sv = 0;
+  if (up) { try { localStorage.setItem("fpkb", String(d)); } catch (e) {} }
+  try { sv = Number(localStorage.getItem("fpkb")) || 0; } catch (e) {}
+  document.documentElement.style.setProperty("--kb", (up ? 0 : (sv > 120 ? sv : Math.round(KBMAX * .4))) + "px");
+}
+window.addEventListener("resize", kbSync); kbSync();
 render();
 fpSplash();
 /* নেটিভ স্প্ল্যাশ সঙ্গে সঙ্গে সরিয়ে আমাদের অ্যানিমেশন দেখানো (কালো/ফাঁকা স্ক্রিন নয়) */
