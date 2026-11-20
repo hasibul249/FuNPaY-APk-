@@ -51,6 +51,7 @@ jobs:
           VER="1.2.${{ github.run_number }}"
           echo "VER=$VER" >> $GITHUB_ENV
           sed -i "s|const APP_VERSION = \"[^\"]*\";|const APP_VERSION = \"$VER\";|" www/js/app.js
+          sed -i "s|name=\"fp-build\" content=\"[^\"]*\"|name=\"fp-build\" content=\"$VER\"|" www/index.html
           sed -i "s|const OTA_URL = \"\";|const OTA_URL = \"https://raw.githubusercontent.com/${{ github.repository }}/ota/ota.json\";|" www/js/app.js
           [ -n "$SU" ] && sed -i "s|const SUPA_URL = \"\";|const SUPA_URL = \"$SU\";|" www/js/app.js || true
           [ -n "$SK" ] && sed -i "s|const SUPA_KEY = \"\";|const SUPA_KEY = \"$SK\";|" www/js/app.js || true
@@ -58,14 +59,17 @@ jobs:
       - name: Bundle and publish
         run: |
           mkdir out
-          (cd www && zip -qr ../out/bundle-$VER.zip .)
           NOTES="$(cat update-notes.txt 2>/dev/null || echo 'নতুন আপডেট')"
-          jq -n --arg v "$VER" --arg u "https://raw.githubusercontent.com/${{ github.repository }}/ota/bundle-$VER.zip" --arg n "$NOTES" '{version:$v,url:$u,notes:$n}' > out/ota.json
+          jq -n --arg v "$VER" --rawfile js www/js/app.js --rawfile css www/css/style.css '{version:$v,js:$js,css:$css}' > out/app-$VER.json
+          jq -n --arg v "$VER" --arg u "https://raw.githubusercontent.com/${{ github.repository }}/ota/app-$VER.json" --arg n "$NOTES" '{version:$v,pkg:$u,notes:$n}' > out/ota.json
           cd out
           git init -q -b ota
           git config user.name "ota-bot"; git config user.email "ota@users.noreply.github.com"
           git add .; git commit -qm "OTA $VER"
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ota
+          # jsDelivr এর পুরনো ক্যাশ ফেলে দেওয়া (ব্যর্থ হলেও সমস্যা নেই)
+          curl -fsS "https://purge.jsdelivr.net/gh/${{ github.repository }}@ota/ota.json" || true
+          curl -fsS "https://purge.jsdelivr.net/gh/${{ github.repository }}@ota/app-$VER.json" || true
   # ২) APK: শুধু প্রথমবার ইনস্টলের জন্য (বা নতুন নেটিভ ফিচার যোগ করলে)
   apk:
     needs: prepare
@@ -89,6 +93,7 @@ jobs:
         run: |
           VER="1.2.${{ github.run_number }}"
           sed -i "s|const APP_VERSION = \"[^\"]*\";|const APP_VERSION = \"$VER\";|" www/js/app.js
+          sed -i "s|name=\"fp-build\" content=\"[^\"]*\"|name=\"fp-build\" content=\"$VER\"|" www/index.html
           sed -i "s|const OTA_URL = \"\";|const OTA_URL = \"https://raw.githubusercontent.com/${{ github.repository }}/ota/ota.json\";|" www/js/app.js
           [ -n "$SU" ] && sed -i "s|const SUPA_URL = \"\";|const SUPA_URL = \"$SU\";|" www/js/app.js || true
           [ -n "$SK" ] && sed -i "s|const SUPA_KEY = \"\";|const SUPA_KEY = \"$SK\";|" www/js/app.js || true
@@ -99,7 +104,14 @@ jobs:
         continue-on-error: true
         run: npx @capacitor/assets generate --android --iconBackgroundColor "#1d4ed8" --iconBackgroundColorDark "#1d4ed8"
       - run: npx cap sync android
-      - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - name: Build APK (নেটওয়ার্ক ফসকালে ৩ বার চেষ্টা)
+        run: |
+          cd android && chmod +x gradlew
+          for i in 1 2 3; do
+            ./gradlew assembleDebug --refresh-dependencies --no-daemon && exit 0
+            echo "চেষ্টা $i ব্যর্থ, ৩০ সেকেন্ড পরে আবার"; sleep 30
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         with:
           name: FuNPaY-APK
