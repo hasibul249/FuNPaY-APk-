@@ -115,6 +115,8 @@ const banner = (i, w) => `<div class="bn b${i}${w ? " w" : ""}" onclick="${BTX[i
 
 Object.assign(T.bn, {regs:"মোবাইল নম্বর আর ৬ ডিজিট PIN দিন", net:"ইন্টারনেট সংযোগে সমস্যা, আবার চেষ্টা করুন", upfail:"আপডেট চেক করা যায়নি, আবার চেষ্টা করুন", sess:"সেশন শেষ হয়েছে, আবার লগইন করুন", offl:"ইন্টারনেট সংযোগ নেই", retry:"আবার চেষ্টা", ctest:"কানেকশন টেস্ট", wait:"অপেক্ষা করুন", avl:"উপলব্ধ ব্যালেন্স", dlfail:"আপডেট নামানো যায়নি", onlyapp:"আপডেট শুধু অ্যাপের ভেতরে হয়", trxchk:"লেনদেন হয়েছে কিনা ইনবক্সে দেখে নিন", noup:"আপডেট সার্ভার সেট করা নেই"});
 Object.assign(T.en, {regs:"Enter your mobile number and a 6-digit PIN", net:"Connection problem, please try again", upfail:"Could not check for updates, try again", sess:"Session expired, please log in again", offl:"No internet connection", retry:"Try again", ctest:"Connection test", wait:"Please wait", avl:"Available balance", dlfail:"Could not download the update", onlyapp:"Updates only work inside the app", trxchk:"check Inbox to see if it went through", badpin:"PIN must be 6 digits"});
+Object.assign(T.bn, {hold:"নিশ্চিত করতে ধরে রাখুন", holdh:"বাটনটি চেপে ধরে রাখুন"});
+Object.assign(T.en, {hold:"Hold to confirm", holdh:"Press and hold the button"});
 const S = {lang:"bn", auth:false, busy:false, view:"", phone:"", name:"", me:null, uid:"", tok:"", rt:"", bal:0, tx:[], seen:0, tab:"home", seg:"t", q:"", fl:0, more:false, pin:"", sheet:null, fx:false, hl:null, upd:null};
 try {
   const d = JSON.parse(localStorage.getItem("fp2") || "{}");
@@ -123,7 +125,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.0"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.1"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -402,7 +404,7 @@ function loginHtml() {
     <div class="ltop"><div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
     <div class="lhero">${LOGO}<h1>FuNPaY</h1><p>${t("tag")}</p>
       <div class="pills"><span>${t("ft1")}</span><span>${t("ft2")}</span><span>${t("ft3")}</span></div></div>
-    <div class="lpanel"><button class="lwb" onclick="hap();S.view='ph';render()">${t("lgreg")}</button>${TEST_MODE ? `<small>${t("dm")}</small>` : ""}</div></div>`;
+    <div class="lpanel"><button class="lwb" onclick="hap();S.view='ph';render()">${t("lgreg")}</button></div></div>`;
   /* ২) মোবাইল নম্বর পেজ */
   if (S.view === "ph" && !S.phone) return `<div class="fl light">${lgBar("S.view='';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
@@ -428,8 +430,7 @@ function loginHtml() {
   return `<div class="fl pinp"><div class="orb o1"></div><div class="orb o2"></div>
     <div class="phead">${LOGO}<b>${esc(S.name || t("back2"))}</b><span>+88 ${esc(S.phone)}</span></div>
     <div class="psheet"><p class="pl">${t("lp")}</p><div class="dots">${dots}</div><div class="le"></div><div class="kp">${keys}</div>
-      <div class="lrow"><button class="chip" onclick="S.phone='';S.name='';S.pin='';S.view='ph';render()">${t("other")}</button><button class="chip" onclick="S.view='reg';render()">${t("newacc")}</button><button class="chip" onclick="lang()">${t("lang")}</button></div>
-      ${TEST_MODE ? `<small class="dm">${t("dm")}</small>` : ""}</div></div>`;
+      <div class="lrow"><button class="chip" onclick="S.phone='';S.name='';S.pin='';S.view='ph';render()">${t("other")}</button><button class="chip" onclick="S.view='reg';render()">${t("newacc")}</button><button class="chip" onclick="lang()">${t("lang")}</button></div></div></div>`;
 }
 function setPhone() {
   const v = document.getElementById("lp").value.trim();
@@ -554,22 +555,26 @@ function sheetHtml() {
     rows.push([t("trx"), esc(s.trx)], [t("at"), fmt(s.at)]);
     return wrapPage(s, t(s.id), "closeS()", `<div class="ok"><div class="tick d">${tickSvg}</div><h2>${t("done")}</h2><div class="amt">${money(s.total)}</div><div class="sv">${t(s.id)}</div></div><div class="pcard"><div class="dl">${rows.map(r => `<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join("")}</div></div>`, `<button class="btn" onclick="closeS()">${t("ok")}</button>`);
   }
-  const tot3 = s.s1 ? 3 : 2, cur = s.s1 ? s.step : s.step - 1;
+  const tot3 = s.s1 ? 4 : 3, cur = s.s1 ? s.step : s.step - 1;
   const prog = `<div class="prg"><i style="width:${Math.round(cur / tot3 * 100)}%"></i></div>`;
   const who = person
     ? `<div class="rcp">${avatar(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${s.rn ? esc(s.v) : ""}</span></div><i class="vf">${tickSvg}</i></div>`
     : `<div class="rcp">${tile(s.id)}<div><b>${t(s.id)}</b><span>${[s.ch ? t(s.ch) : "", s.v ? esc(s.v) : ""].filter(Boolean).join(" · ")}</span></div></div>`;
-  /* ধাপ ৩: যাচাই + PIN */
-  if (s.step === 3) {
+  /* ধাপ ৩: যাচাই (ধরে রাখুন) · ধাপ ৪: PIN */
+  if (s.step >= 3) {
     const amt = parseFloat(s.a), fee = feeOf(c, amt), tot = amt + (d < 0 ? fee : 0);
     const rows = (!person && s.v ? `<div><span>${t(c.f)}</span><b>${esc(s.v)}</b></div>` : "") + (person && s.id === "cash" ? `<div><span>${t("svc")}</span><b>${t("cash")}</b></div>` : "")
       + `<div><span>${t("amtl")}</span><b>${money(amt)}</b></div>${fee ? `<div><span>${t("feel")}</span><b>${money(fee)}</b></div>` : ""}<div><span>${t("total")}</span><b>${money(tot)}</b></div>`;
+    if (s.step === 3) {
+      return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="sm">${rows}</div></div>
+        ${TEST_MODE && s.id === "cash" ? `<p class="tw" style="margin-top:8px">${t("cashw")}</p>` : ""}
+        <p class="hint">${t("holdh")}</p>`,
+        `<button id="hold" class="btn hold" onpointerdown="holdStart(event)" onpointerup="holdEnd()" onpointerleave="holdEnd()" onpointercancel="holdEnd()" oncontextmenu="return false"><i></i><span>${t("hold")}</span></button>`);
+    }
     const dots = [0, 1, 2, 3, 4, 5].map(i => `<span class="dt${i < s.pin.length ? " on" : ""}"></span>`).join("");
     const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="spKey('${n}')">${n}</button>`).join("") + `<button class="z"></button><button onclick="spKey('0')">0</button><button onclick="spKey('b')">${BKSP}</button>`;
-    return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="sm">${rows}</div></div>
-      ${TEST_MODE && s.id === "cash" ? `<p class="tw" style="margin-top:8px">${t("cashw")}</p>` : ""}
-      <div class="pcard pinc"><div class="lb c">${t("pin")}</div><div class="dots">${dots}</div><div class="err c">${esc(s.err)}</div><div class="kp">${keys}</div></div>`,
-      `<button id="cfb" class="btn${s.pin.length === 6 ? "" : " dis"}" onclick="confirmTx()">${t("confirm")}</button>`);
+    return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="sm one"><div><span>${t("total")}</span><b>${money(tot)}</b></div></div></div>
+      <div class="pcard pinc"><div class="lb c">${t("pin")}</div><div class="dots">${dots}</div><div class="err c">${esc(s.err)}</div><div class="kp">${keys}</div></div>`, "");
   }
   /* ধাপ ২: টাকার পরিমাণ */
   if (s.step === 2) {
@@ -629,7 +634,7 @@ async function nextStep() {
 function backStep() {
   const s = S.sheet; if (!s) return;
   hap();
-  if (s.step === 3) s.step = 2; else if (s.step === 2 && s.s1) s.step = 1; else { closeS(); return; }
+  if (s.step === 4) s.step = 3; else if (s.step === 3) s.step = 2; else if (s.step === 2 && s.s1) s.step = 1; else { closeS(); return; }
   s.err = ""; s.pin = ""; s.fxs = true; renderSheet();
 }
 function amtIn(el) {
@@ -645,16 +650,32 @@ function amtIn(el) {
 }
 function qAmt(n) { hap(); const f = document.getElementById("f2"); if (f) { f.value = String(n); amtIn(f); } }
 function spKey(d) {
-  const s = S.sheet; if (!s || s.busy || s.step !== 3) return;
+  const s = S.sheet; if (!s || s.busy || s.step !== 4) return;
   hap();
   if (d === "b") s.pin = s.pin.slice(0, -1); else if (s.pin.length < 6) s.pin += d;
   document.querySelectorAll("#sheet .dt").forEach((x, i) => x.classList.toggle("on", i < s.pin.length));
-  const b = document.getElementById("cfb"); if (b) b.classList.toggle("dis", s.pin.length !== 6);
+  if (s.pin.length === 6) setTimeout(confirmTx, 120);
+}
+let holdT = 0;
+function holdStart() {
+  const b = document.getElementById("hold"); if (!b || holdT) return;
+  hap(); b.classList.add("hd");
+  holdT = setTimeout(() => { holdT = 0; b.classList.remove("hd"); toPin(); }, 700);
+}
+function holdEnd() {
+  if (!holdT) return;
+  clearTimeout(holdT); holdT = 0;
+  const b = document.getElementById("hold"); if (b) b.classList.remove("hd");
+  toast(t("holdh"));
+}
+function toPin() {
+  const s = S.sheet; if (!s || s.step !== 3) return;
+  hap("MEDIUM"); s.step = 4; s.fxs = true; s.pin = ""; s.err = ""; renderSheet();
 }
 async function confirmTx() {
-  const s = S.sheet; if (!s || s.busy || s.step !== 3) return;
+  const s = S.sheet; if (!s || s.busy || s.step !== 4) return;
   const c = cfg(s.id), d = c.d || -1, amt = parseFloat(s.a), fee = feeOf(c, amt), pin = s.pin || "";
-  const fail = (m, clr) => { s.busy = false; if (S.sheet !== s) return; if (clr) s.pin = ""; s.err = m; renderSheet(); shakeBox(); };
+  const fail = (m) => { s.busy = false; if (S.sheet !== s) return; s.pin = ""; s.err = m; renderSheet(); shakeBox(); };
   if (!/^\d{6}$/.test(pin)) return fail(t("badpin"));
   s.busy = true; setBusy(true);
   try { await signIn(S.me.phone, pin); } catch (e) { return fail(errMsg(e), !!(e && /invalid login/i.test(e.message))); }
@@ -676,7 +697,7 @@ async function confirmTx() {
 
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Enter" || !S.sheet || S.sheet.done || ["qrs", "bio", "net"].includes(S.sheet.id)) return;
-  S.sheet.step === 3 ? confirmTx() : nextStep();
+  S.sheet.step === 4 ? confirmTx() : S.sheet.step === 3 ? toPin() : nextStep();
 });
 
 /* ---------- নিজের QR ও স্ক্যান ---------- */

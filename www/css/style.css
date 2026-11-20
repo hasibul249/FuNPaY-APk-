@@ -461,3 +461,86 @@ html.camon .sh.scanx .box{background:transparent}
 .pinc .dt.on{background:var(--p);border-color:var(--p)}
 .pinc .kp svg{stroke:var(--p)}
 .qa{gap:6px}.qa button{padding:0 11px;font-size:12.5px}
+
+
+/* =====================================================================
+   FuNPaY v2.1 - স্থিতিশীলতা, কম অ্যানিমেশন, ছোট ও গোছানো সাইজ
+   ===================================================================== */
+/* ১) ভারী blur বন্ধ (ফোনে ল্যাগের প্রধান কারণ ছিল), তার বদলে প্রায় অস্বচ্ছ সাদা */
+*{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+:root{--gl:#fff;--gsh:0 3px 12px rgba(170,20,95,.08)}
+.wsheet,.sec,.pcard,.msec,.prof,.balc,.nt,.pg>.seg,.pg>.srch,.pg>.note,.pg>#lst{background:#fff;border:1px solid rgba(160,60,110,.06);box-shadow:var(--gsh)}
+.fc,.ic,.more,.chs button,.srch div,.qa button,.kp button{background:#fff}
+.pinc .kp button{background:#f8eef3}
+.ic{box-shadow:none;background:#f6f1f5}
+nav{background:#fff;box-shadow:0 6px 18px rgba(150,20,90,.16)}
+.tbar,.ph{background:linear-gradient(180deg,#e2136e,#ea2f82);box-shadow:0 4px 12px rgba(190,20,100,.16)}
+.sh{background:rgba(48,8,30,.5)}
+.sh.dlg .box{background:#fff}
+.pfoot{background:#fff}
+.lpanel{background:rgba(110,10,58,.45)}
+#offbar,.toast{background:rgba(42,22,32,.96)}
+.sctabs{background:rgba(255,255,255,.22)}
+
+/* ২) লগইনের চৌকো বক্স ঠিক: .orb এর মূল স্টাইল হারিয়ে গিয়েছিল */
+.orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none;z-index:0}
+.fl .o2{background:rgba(255,255,255,.06)}
+
+/* ৩) অ্যানিমেশন শান্ত ও ছোট */
+.pg.in{animation:fade .16s ease both}
+.pg.in .it,.pg.in .tr,.pg.in .tri div,.pg.in .fc{animation:none!important}
+nav.fx{animation:none}
+nav button.on .ni{animation:navpop .26s var(--spring)}
+.bn svg.bv{animation:none!important}
+.sh{animation-duration:.2s}
+.sh .box{animation-duration:.26s;will-change:transform}
+.sh.dlg .box{animation-duration:.28s}
+.stp.go{animation:stepin2 .2s var(--ease) both}
+@keyframes stepin2{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+.dt.on{animation:none}
+.tr.pop{animation:fade .3s ease both}
+.ok .tick:after{animation-iteration-count:1}
+
+/* ৪) সাইজ ছোট ও গোছানো */
+.hero{padding:calc(10px + var(--st)) 14px 58px}
+.scene{height:100px}
+.av{width:40px;height:40px;font-size:17px}
+.hb{width:38px;height:38px}.hb img{width:23px}
+.bp{height:28px;font-size:12px;min-width:116px}
+.wsheet{margin:-30px 10px 0;padding:10px 4px 2px}
+.it{gap:5px;font-size:11px;padding:6px 2px 4px}
+.it span{min-height:26px}
+.ic{width:42px;height:42px}.ic>svg.ci{width:26px;height:26px}.ic>svg.i{width:20px;height:20px}
+.more{height:30px;font-size:12px;margin:2px auto 8px;padding:0 14px}
+.ttl{padding:10px 14px 8px;font-size:14px}
+.bn{height:112px;border-radius:16px}
+.bn .bt{padding:12px 4px 12px 14px}
+.bn .bt b{font-size:15px}
+.bn .bt span{padding:5px 6px 5px 12px;font-size:12px;margin-top:6px}
+.bn svg.bv{width:68px;height:68px;padding:16px;margin-right:14px}
+.fc{height:38px;font-size:12.5px}.fc u{width:28px;height:28px}
+.tri div{height:74px;font-size:12.5px;padding:10px}
+nav{height:60px;border-radius:22px}
+#app.au{padding-bottom:calc(84px + var(--sb))}
+.btn{height:48px;border-radius:14px;font-size:15px}
+.ph{height:calc(52px + var(--st))}
+.pcard{margin:8px 12px 0}
+.fl h1{font-size:30px}
+.lglogo{width:96px}
+.lwb{height:50px;font-size:16px}
+.pinp .phead{padding:calc(18px + var(--st)) 20px 14px}
+.pinp .lglogo{width:64px}
+.psheet{padding-top:16px}
+.kp{grid-template-columns:repeat(3,60px);gap:10px 18px}
+.kp button{width:60px;height:60px;font-size:22px}
+.pinc .kp{grid-template-columns:repeat(3,58px);gap:8px 20px}
+.pinc .kp button{width:58px;height:58px;font-size:21px}
+@media (max-height:700px){.kp{grid-template-columns:repeat(3,54px)}.kp button{width:54px;height:54px;font-size:20px}.pinc .kp{grid-template-columns:repeat(3,52px)}.pinc .kp button{width:52px;height:52px}}
+
+/* ৫) ধরে রাখুন বাটন (বিকাশ স্টাইল) */
+.btn.hold{position:relative;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center}
+.btn.hold i{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.34);transition:width .12s linear}
+.btn.hold.hd i{width:100%;transition:width .7s linear}
+.btn.hold span{position:relative}
+.hint{text-align:center;color:var(--mu);font-size:12.5px;margin:12px 16px 0}
+.sm.one{margin-top:8px}

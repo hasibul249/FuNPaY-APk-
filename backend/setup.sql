@@ -36,7 +36,7 @@ drop policy if exists "own tx" on public.transactions;
 create policy "own tx" on public.transactions for select using (auth.uid() = from_id or auth.uid() = to_id);
 -- insert/update/delete এর কোনো policy নেই, তাই অ্যাপ থেকে ব্যালেন্স বদলানো যায় না।
 
--- নতুন অ্যাকাউন্ট খুললে প্রোফাইল + ৫০০০ টেস্ট টাকা
+-- নতুন অ্যাকাউন্ট খুললে প্রোফাইল + ১৫০ টাকা বোনাস
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
@@ -44,7 +44,7 @@ begin
   values (new.id,
           coalesce(new.raw_user_meta_data->>'phone', ''),
           left(coalesce(new.raw_user_meta_data->>'name', ''), 20),
-          5000);
+          150);
   return new;
 end $$;
 drop trigger if exists on_auth_user_created on auth.users;
