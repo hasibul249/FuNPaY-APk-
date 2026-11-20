@@ -544,3 +544,66 @@ nav{height:60px;border-radius:22px}
 .btn.hold span{position:relative}
 .hint{text-align:center;color:var(--mu);font-size:12.5px;margin:12px 16px 0}
 .sm.one{margin-top:8px}
+
+/* =====================================================================
+   FuNPaY v2.2 - নেটিভ অ্যাপের মতো স্থির স্ক্রল, বিকাশ স্টাইল ধাপ/রিসিট, PIN পেজ
+   ===================================================================== */
+/* স্ক্রল ভেতরের কন্টেইনারে: টানলে স্ক্রিন বড়/নরম হবে না, ওয়েবসাইটের মতো লাগবে না */
+html,body{height:100%;width:100%;overflow:hidden;overscroll-behavior:none;position:fixed;inset:0}
+body{display:block}
+#app{position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;width:100%;max-width:430px;min-height:0;height:auto;overflow-y:auto;overflow-x:hidden;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+.fl{min-height:100%}
+
+/* লগইন PIN পেজ: ওপরে লোগো মাঝখানে, নিচে PIN আর কিপ্যাড */
+.pinp .phead{flex:1;justify-content:center;padding:calc(20px + var(--st)) 20px 16px}
+.pinp .phead b{font-size:20px}
+.psheet{flex:none;padding:20px 18px calc(18px + var(--sb))}
+.psheet .pl{font-size:15px}
+.dots{margin:18px 0 4px;gap:14px}
+.kp{grid-template-columns:repeat(3,66px);gap:12px 22px;margin-top:6px}
+.kp button{width:66px;height:66px;font-size:24px}
+.kp .fpk{background:#fde7f1}
+.kp .fpk svg{width:30px;height:30px}
+.kp .fpk.dim{opacity:.45}
+.psheet .lrow{margin-top:14px}
+@media (max-height:720px){.kp{grid-template-columns:repeat(3,56px);gap:8px 20px}.kp button{width:56px;height:56px;font-size:21px}.pinp .lglogo{width:56px}}
+
+/* ফর্ম ঘর: স্পষ্ট ও গোছানো */
+.fld{height:54px;border-radius:14px;border:1.5px solid #e6dce3;background:#fff}
+.fld.big{height:auto;border:0;border-bottom:2px solid var(--p);border-radius:0;background:transparent;padding:6px 0;justify-content:center;box-shadow:none}
+.fld.big:focus-within{box-shadow:none}
+.fld.big input{font-size:34px;font-weight:800;text-align:center;width:60%}
+.fld.big u{font-size:28px;font-weight:800;color:var(--p);text-decoration:none}
+.avl{text-align:center}
+.qa{justify-content:center}
+.pcard .err.c{color:#d92d4f}
+
+/* নিচে ধরে রাখুন বাটন (বিকাশ স্টাইল): সাদা ভেতর, গোলাপি বর্ডার, আঙুলের চিহ্ন, ধীরে ধীরে ভরে */
+.holdw{padding:8px 16px 4px}
+.holdw p{text-align:center;font-size:12.5px;color:var(--mu);margin:0 0 10px}
+button.hold{position:relative;width:100%;height:58px;border-radius:29px;border:2px solid var(--p);background:#fff;color:var(--p);overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;font-size:16px;font-weight:800;touch-action:none;box-shadow:0 6px 16px rgba(226,19,110,.16);animation:hpulse 2s ease-in-out infinite}
+button.hold i{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(226,19,110,.24);transition:width .15s linear;font-style:normal}
+button.hold.hd i{width:100%;transition:width 1s linear}
+button.hold.hd{animation:none}
+button.hold.ld{opacity:.6;pointer-events:none}
+button.hold svg,button.hold b{position:relative;z-index:1}
+button.hold svg.i{width:26px;height:26px;stroke:var(--p)}
+@keyframes hpulse{0%,100%{box-shadow:0 6px 16px rgba(226,19,110,.16),0 0 0 0 rgba(226,19,110,.28)}60%{box-shadow:0 6px 16px rgba(226,19,110,.16),0 0 0 9px rgba(226,19,110,0)}}
+
+/* সফল পেজ / রিসিট */
+.rct{padding:6px 0 10px}
+.rct .ok{padding:14px 0 4px}
+.rct .ok .tick{width:78px;height:78px}
+.rct .ok h2{font-size:19px;margin-top:12px}
+.rct .ok .sv{font-size:13px;color:var(--mu);margin-top:2px}
+.rct .ok .amt{font-size:32px;font-weight:800;color:var(--p);margin-top:6px}
+.rcc{margin-top:14px;border-radius:18px;position:relative}
+.rcc .rcp{padding:2px 0 8px;border-bottom:1px dashed #e7e1e8;margin-bottom:2px}
+.rcc .dl div{padding:9px 0;font-size:13.5px}
+.nbv{display:inline-flex;align-items:center;gap:6px}
+.nbv em{font-style:normal}
+.eye{border:0;background:none;color:var(--mu);width:28px;height:28px;display:grid;place-items:center;border-radius:50%;cursor:pointer}
+.eye svg.i{width:19px;height:19px}
+.rbt{display:flex;gap:10px;padding:8px 16px 2px}
+.rbt .btn{flex:1;margin:0}
+.rbt .btn.l{border:1.5px solid var(--p);color:var(--p);background:#fff}

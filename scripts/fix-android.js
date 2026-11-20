@@ -26,4 +26,21 @@ if (fs.existsSync(m)) {
   });
   fs.writeFileSync(m, x);
 }
+
+/* ৫) টানলে স্ক্রিন বড়/নরম হওয়া (overscroll stretch) বন্ধ, যেন নেটিভ অ্যাপের মতো স্থির থাকে */
+(function walk(d) {
+  if (!fs.existsSync(d)) return;
+  for (const n of fs.readdirSync(d)) {
+    const q = d + "/" + n;
+    if (fs.statSync(q).isDirectory()) walk(q);
+    else if (n === "MainActivity.java") {
+      let c = fs.readFileSync(q, "utf8");
+      if (!c.includes("OVER_SCROLL_NEVER") && /extends BridgeActivity\s*\{\s*\}/.test(c)) {
+        c = c.replace(/extends BridgeActivity\s*\{\s*\}/, "extends BridgeActivity {\n    @Override\n    public void onStart() {\n        super.onStart();\n        try { getBridge().getWebView().setOverScrollMode(android.view.View.OVER_SCROLL_NEVER); } catch (Exception e) {}\n    }\n}");
+        fs.writeFileSync(q, c);
+        console.log("MainActivity: overscroll বন্ধ");
+      }
+    }
+  }
+})("android/app/src/main/java");
 console.log("android সেটিং ঠিক করা হয়েছে");
