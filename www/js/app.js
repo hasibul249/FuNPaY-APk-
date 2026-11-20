@@ -418,16 +418,48 @@ function pageMine() {
 }
 
 /* ---------- লগইন / অ্যাকাউন্ট খোলা ---------- */
-const LOGO = '<img class="lglogo" src="icons/logo.png" alt="FuNPaY">';
+/* ---------- অ্যানিমেটেড রিং লোগো (FuNPaY) ---------- */
+function fpRing(k) {
+  const live = k > 0, K = live ? k : 1; let d = "", r = "";
+  for (let i = 0; i < 14; i++) {
+    const a = i * 2 * Math.PI / 14, x = 100 + 64 * Math.cos(a), y = 100 + 64 * Math.sin(a);
+    const sx = Math.round(Math.cos(i * 2.4 + 1) * 150), sy = Math.round(Math.sin(i * 3.1 + 2) * 150);
+    d += `<circle class="fpa-dt" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7.5" fill="${i % 2 ? "#ffd54a" : "#fff"}" style="--x:${sx}px;--y:${sy}px;animation-delay:${(i * .06 * K).toFixed(2)}s"/>`;
+  }
+  for (let i = 0; i < 12; i++) {
+    const a = i * Math.PI / 6 + .26, c = Math.cos(a), s = Math.sin(a);
+    r += `<line class="fpa-ry" x1="${(100 + 80 * c).toFixed(1)}" y1="${(100 + 80 * s).toFixed(1)}" x2="${(100 + 93 * c).toFixed(1)}" y2="${(100 + 93 * s).toFixed(1)}" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>`;
+  }
+  return `<svg class="lglogo fpa${live ? "" : " fpa-s"}" viewBox="0 0 200 200" style="--k:${K}" role="img" aria-label="FuNPaY"><circle class="fpa-rp" cx="100" cy="100" r="64" fill="none" stroke="#fff" stroke-width="3"/><circle class="fpa-rg" cx="100" cy="100" r="64" fill="none" stroke="#fff" stroke-width="4"/>${r}<g class="fpa-spin">${d}</g><g class="fpa-ct"><circle cx="100" cy="100" r="42" fill="#fff"/><text class="fpa-tk" x="100" y="104">৳</text></g></svg>`;
+}
+/* PIN ঘর: চিকন লম্বা বক্স, টাইপ করলে সংখ্যা একটু দেখায়, তারপর • হয়ে যায় */
+function pinFill(sel, pin, d) {
+  const b = [...document.querySelectorAll(sel)];
+  b.forEach((x, i) => { x.classList.toggle("on", i < pin.length); x.classList.toggle("cur", i === pin.length); x.textContent = i < pin.length ? "•" : ""; });
+  if (d && d !== "b" && pin.length && b[pin.length - 1]) { const x = b[pin.length - 1]; x.textContent = d; setTimeout(() => { if (x.classList.contains("on")) x.textContent = "•"; }, 350); }
+}
+const pinBox = (i, n) => `<span class="dt${i < n ? " on" : ""}${i === n ? " cur" : ""}">${i < n ? "•" : ""}</span>`;
+let FPK = "";
+function LOGOF(key) { const first = FPK !== key; FPK = key; return fpRing(first ? .6 : 0); }
+/* অ্যাপ খোলার স্প্ল্যাশ অ্যানিমেশন */
+function fpSplash() {
+  if (document.getElementById("fpsplash")) return;
+  const el = document.createElement("div"); el.id = "fpsplash";
+  const nm = [..."FuNPaY"].map((c, i) => `<span class="fpa-ch" style="animation-delay:${(2.3 + i * .08).toFixed(2)}s">${c}</span>`).join("");
+  el.innerHTML = `<div class="fps-orb fps-o1"></div><div class="fps-orb fps-o2"></div><div class="fps-lg">${fpRing(1)}</div><div class="fps-name">${nm}</div><div class="fps-tag">${t("tag")}</div><div class="fps-ld"><i></i><i></i><i></i></div>`;
+  const end = () => { if (!el.parentNode) return; el.classList.add("out"); setTimeout(() => el.remove(), 500); };
+  el.onclick = end; document.body.appendChild(el); setTimeout(end, 3900);
+}
+
 const lgBar = (backJs) => `<div class="fbar"><button class="fback" aria-label="${t("back")}" onclick="${backJs}"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="flang"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>`;
 const NXT = `<svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 const REG = () => { try { return localStorage.getItem("fpreg") === "1"; } catch (e) { return false; } };
 function loginHtml() {
-  if (!CONFIGURED) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div><div class="lhero">${LOGO}<h1>FuNPaY</h1><p>${t("setup")}</p></div></div>`;
+  if (!CONFIGURED) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div><div class="lhero">${LOGOF("land")}<h1>FuNPaY</h1><p>${t("setup")}</p></div></div>`;
   /* ১) স্বাগতম পেজ */
   if (S.view === "" && !S.phone) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div>
     <div class="ltop"><div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
-    <div class="lhero">${LOGO}<h1>FuNPaY</h1><p>${t("tag")}</p>
+    <div class="lhero">${LOGOF("land")}<h1>FuNPaY</h1><p>${t("tag")}</p>
       <div class="pills"><span>${t("ft1")}</span><span>${t("ft2")}</span><span>${t("ft3")}</span></div></div>
     <div class="lpanel"><button class="lwb" onclick="hap();S.view='ph';render()">${t("lgreg")}</button></div></div>`;
   /* ২) মোবাইল নম্বর পেজ */
@@ -450,12 +482,12 @@ function loginHtml() {
       <button class="lnk" onclick="S.view='ph';render()">${t("haveacc")}</button></div>
     <button class="nbar lb2" onclick="doReg()"><span>${t("reg")}</span>${NXT}</button></div>`;
   /* ৪) PIN পেজ: মাঝখানে লোগো-নাম-নম্বর, নিচে PIN + কিপ্যাডের পাশেই ফিঙ্গারপ্রিন্ট */
-  const dots = [0, 1, 2, 3, 4, 5].map(i => `<span class="dt${i < S.pin.length ? " on" : ""}"></span>`).join("");
+  const dots = [0, 1, 2, 3, 4, 5].map(i => pinBox(i, S.pin.length)).join("");
   const fpk = bioOn() ? `<button class="fpk" aria-label="Fingerprint" onclick="bioUnlock()">${ic("fp")}</button>`
     : (cap().NativeBiometric ? `<button class="fpk dim" aria-label="Fingerprint" onclick="hap();toast(t('bioh'))">${ic("fp")}</button>` : `<button class="z"></button>`);
   const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="key('${n}')">${n}</button>`).join("") + fpk + `<button onclick="key('0')">0</button><button onclick="key('b')">${BKSP}</button>`;
   return `<div class="fl pinp"><div class="orb o1"></div><div class="orb o2"></div>
-    <div class="phead">${LOGO}<b>${esc(S.name || t("back2"))}</b><span>+88 ${esc(S.phone)}</span></div>
+    <div class="phead">${LOGOF("pin")}<b>${esc(S.name || t("back2"))}</b><span>+88 ${esc(S.phone)}</span></div>
     <div class="psheet"><p class="pl">${t("lp")}</p><div class="dots">${dots}</div><div class="le"></div><div class="kp">${keys}</div>
       <div class="lrow"><button class="chip" onclick="S.phone='';S.name='';S.pin='';S.view='ph';render()">${t("other")}</button><button class="chip" onclick="lang()">${t("lang")}</button></div></div></div>`;
 }
@@ -478,14 +510,14 @@ async function key(d) {
   if (S.busy) return;
   hap();
   if (d === "b") S.pin = S.pin.slice(0, -1); else if (S.pin.length < 6) S.pin += d;
-  document.querySelectorAll(".dt").forEach((x, i) => x.classList.toggle("on", i < S.pin.length));
+  pinFill(".dt", S.pin, d);
   if (S.pin.length < 6) return;
   const ds = document.querySelector(".dots"), le = document.querySelector(".le"), pin = S.pin;
   S.busy = true; le.textContent = "";
   try { await signIn(S.phone, pin); S.lp = pin; await enter(); }
   catch (e) {
     hap("HEAVY"); S.pin = ""; ds.classList.add("shake"); le.textContent = errMsg(e);
-    setTimeout(() => { ds.classList.remove("shake"); document.querySelectorAll(".dt").forEach(x => x.classList.remove("on")); }, 450);
+    setTimeout(() => { ds.classList.remove("shake"); pinFill(".dt", "", ""); }, 450);
   }
   S.busy = false;
 }
@@ -595,7 +627,7 @@ function sheetHtml() {
   if (s.step >= 3) {
     const amt = parseFloat(s.a), fee = feeOf(c, amt), tot = amt + (d < 0 ? fee : 0);
     if (s.step === 3) {
-      const dots = [0, 1, 2, 3, 4, 5].map(i => `<span class="dt${i < s.pin.length ? " on" : ""}"></span>`).join("");
+      const dots = [0, 1, 2, 3, 4, 5].map(i => pinBox(i, s.pin.length)).join("");
       const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="spKey('${n}')">${n}</button>`).join("") + `<button class="z"></button><button onclick="spKey('0')">0</button><button onclick="spKey('b')">${BKSP}</button>`;
       return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard">${who}<div class="sm one"><div><span>${t("total")}</span><b>${money(tot)}</b></div></div></div>
         <div class="pcard pinc"><div class="lb c">${t("pin")}</div><div class="dots">${dots}</div><div class="err c">${esc(s.err)}</div><div class="kp">${keys}</div></div>`, "");
@@ -685,7 +717,7 @@ function spKey(d) {
   const s = S.sheet; if (!s || s.busy || s.step !== 3) return;
   hap();
   if (d === "b") s.pin = s.pin.slice(0, -1); else if (s.pin.length < 6) s.pin += d;
-  document.querySelectorAll("#sheet .dt").forEach((x, i) => x.classList.toggle("on", i < s.pin.length));
+  pinFill("#sheet .dt", s.pin, d);
   if (s.pin.length === 6) setTimeout(verifyPin, 120);
 }
 async function verifyPin() {
@@ -894,6 +926,7 @@ async function bioUnlock() {
 
 if ("serviceWorker" in navigator && !window.Capacitor && location.protocol.indexOf("http") === 0) navigator.serviceWorker.register("sw.js").catch(() => {});
 render();
+fpSplash();
 window.__fpready = true;
 if (bioOn()) setTimeout(bioUnlock, 500);
 /* ব্যানার নিজে নিজে ঘোরে */

@@ -3,13 +3,13 @@
   "appName": "FuNPaY",
   "webDir": "www",
   "android": {
-    "backgroundColor": "#b0235a"
+    "backgroundColor": "#c40f5e"
   },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 900,
       "launchAutoHide": true,
-      "backgroundColor": "#b0235a",
+      "backgroundColor": "#c40f5e",
       "showSpinner": false
     },
     "StatusBar": {
