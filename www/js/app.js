@@ -193,7 +193,10 @@ function toast(m) {
   const e = document.createElement("div"); e.className = "toast"; e.textContent = m; document.body.appendChild(e);
   setTimeout(() => { e.classList.add("o"); setTimeout(() => e.remove(), 260); }, 2500);
 }
-const mirrors = (u) => { const m = /raw\.githubusercontent\.com\/([^/]+\/[^/]+)\/ota\/(.+)$/.exec(u.url || ""); return m ? [u.url, "https://cdn.jsdelivr.net/gh/" + m[1] + "@ota/" + m[2]] : [u.url]; };
+const mirrors = (u) => {
+  const m = /raw\.githubusercontent\.com\/([^/]+\/[^/]+)\/ota\/(.+)$/.exec(u.url || "");
+  return m ? [u.url, "https://github.com/" + m[1] + "/raw/ota/" + m[2], u.url + "?t=" + Date.now(), "https://cdn.jsdelivr.net/gh/" + m[1] + "@ota/" + m[2]] : [u.url];
+};
 async function checkUpdate(manual) {
   if (manual === true) hap();
   if (!OTA_URL) { if (manual === true) toast(t("noup")); return; }
@@ -209,13 +212,14 @@ async function applyUpdate() {
   const U = cap().CapacitorUpdater, u = S.upd, b = document.querySelector("#sheet .btn");
   if (!U || !u) { toast(t("onlyapp")); return; }
   if (b) b.classList.add("ld");
-  let last = "";
+  const errs = [];
   for (const url of mirrors(u)) {
     try { const bd = await U.download({url, version: u.version}); await U.set({id: bd.id}); return; }
-    catch (e) { last = String((e && (e.message || e.errorMessage)) || e); console.log("OTA", url, last); }
+    catch (e) { const m = String((e && (e.message || e.errorMessage)) || e); errs.push(m); console.log("OTA", url, m); }
   }
   if (b) b.classList.remove("ld");
-  toast(t("dlfail") + " (" + last.slice(0, 70) + ")");
+  /* প্রথম লিংকের আসল কারণটাই দেখান (শেষের জেএসডেলিভার সাধারণত নতুন ফাইলে ব্যর্থ হয়) */
+  toast(t("dlfail") + " (" + (errs[0] || "").slice(0, 90) + ")");
 }
 
 const t = (k) => T[S.lang][k] || k;
