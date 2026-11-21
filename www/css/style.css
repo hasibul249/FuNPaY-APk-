@@ -1384,3 +1384,187 @@ button.hold.hd>svg.i,button.hold.hd>b{transition:none}
 #kyc .kbar i.kmind{display:block;height:100%;width:40%;border-radius:8px;background:linear-gradient(90deg,#ff5fa8,#e2136e);animation:kmind 1.2s ease-in-out infinite}
 @keyframes kmind{0%{margin-left:-40%}100%{margin-left:100%}}
 #kyc .kbtm .klk{display:block;margin:8px auto 0}
+
+/* ========== v2.21 ফেজ A: কোড যাচাই পাতা + নতুন অ্যাকাউন্ট পাতা ========== */
+/* ৬ ঘর: কার্সর এখন ঘরের ভেতরে ঠিক মাঝে (আগে ৬ নম্বর ঘরে অঙ্ক উপরে উঠে যেত) */
+.otpb{gap:10px;margin:24px 0 2px}
+.otpb i{position:relative;overflow:visible;height:58px;max-width:56px;border-radius:15px;transition:border-color .22s,box-shadow .25s,background-color .25s,color .25s,transform .25s var(--spring)}
+.otpb i.a:after{content:"";position:absolute;left:50%;top:50%;width:2px;height:26px;margin:-13px 0 0 -1px;background:var(--lp);border-radius:2px;animation:otpc 1s steps(1) infinite}
+.otpb i.a{transform:translateY(-2px)}
+.otpb i.pp{animation:otppop .34s var(--spring)}
+@keyframes otppop{0%{transform:scale(.8)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+.otpb.chk i{border-color:#e2136e88;background:#fff7fb;animation:otpwave 1.05s ease-in-out infinite}
+.otpb.chk i:nth-child(2){animation-delay:.07s}.otpb.chk i:nth-child(3){animation-delay:.14s}.otpb.chk i:nth-child(4){animation-delay:.21s}.otpb.chk i:nth-child(5){animation-delay:.28s}.otpb.chk i:nth-child(6){animation-delay:.35s}
+@keyframes otpwave{0%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.otpb.ok i{border-color:#2cc47c;background:#ecfaf3;color:#0f8a52;box-shadow:0 4px 14px rgba(44,196,124,.2);animation:otpok .5s var(--spring) both}
+.otpb.ok i:nth-child(2){animation-delay:.05s}.otpb.ok i:nth-child(3){animation-delay:.1s}.otpb.ok i:nth-child(4){animation-delay:.15s}.otpb.ok i:nth-child(5){animation-delay:.2s}.otpb.ok i:nth-child(6){animation-delay:.25s}
+@keyframes otpok{0%{transform:scale(1)}50%{transform:scale(1.14)}100%{transform:scale(1)}}
+.otpb.bad i{border-color:#ef5a73;background:#fff1f3;color:#c9243f;box-shadow:none}
+.otpb.shk{animation:otps .42s}
+/* অবস্থার লাইন: যাচাই হচ্ছে / যাচাই হয়েছে / ভুল */
+.otst{display:flex;align-items:center;gap:9px;min-height:30px;margin-top:16px;font-size:14.5px;font-weight:700;letter-spacing:.1px;color:var(--lp)}
+.otst:not(:empty){animation:fup .3s var(--ease) both}
+.otst.ok,.otst.info{color:#12a15b}.otst.err{color:#d92d4f}
+.otst svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.otst.ok svg path{stroke-dasharray:24;stroke-dashoffset:24;animation:draw .45s .05s ease forwards}
+.otsp{width:17px;height:17px;border-radius:50%;border:2.5px solid #e2136e33;border-top-color:var(--lp);animation:lgspin .75s linear infinite;flex:none}
+/* নিচের দুই বাটন এক লাইনে, সমান মাপের */
+.otpact{display:flex;gap:10px;margin-top:14px}
+.otpact .otpp,.otpact .otprs{flex:1;margin:0;height:48px;padding:0 12px;border-radius:24px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;white-space:nowrap;cursor:pointer;transition:transform .18s var(--ease),background-color .2s,color .2s,border-color .2s,opacity .2s}
+.otpact .otpp{border:1.5px solid var(--lp);background:#fff;color:var(--lp)}
+.otpact .otpp svg{width:18px;height:18px;flex:none}
+.otpact .otpp:active,.otpact .otprs:active{transform:scale(.96)}
+.otprs{border:1.5px solid #ebe2e8;background:#f1ecf0;color:#9a8f98}
+.otprs:disabled{opacity:1;cursor:default}
+.otprs.rdy{border-color:#f3b9d3;background:#fde7f1;color:var(--lp);animation:otrdy .5s var(--spring) both}
+.otprs.ld2{opacity:.6;pointer-events:none}
+@keyframes otrdy{0%{transform:scale(.94)}100%{transform:scale(1)}}
+.otrg{width:19px;height:19px;flex:none}
+.otrg .bg{fill:none;stroke:#e1d6dd;stroke-width:3}
+.otrg .fg{fill:none;stroke:#e2136e;stroke-width:3;stroke-linecap:round;stroke-dasharray:56.5;stroke-dashoffset:0;transform:rotate(-90deg);transform-origin:12px 12px;transition:stroke-dashoffset 1s linear}
+.otprs.rdy .otrg .bg{stroke:#f3b9d3}
+.otpv .otpw{text-align:left;margin-top:14px!important}
+.otpv .lnk3{margin-top:8px}
+
+/* নতুন অ্যাকাউন্ট পাতা */
+.regv .fbody{padding-bottom:26px}
+.regv .rgf label{margin:15px 0 7px}
+.regv .rgf:first-of-type label{margin-top:20px}
+.regv .rgf{animation:fup .5s var(--ease) both}
+.regv .rgf:nth-of-type(1){animation-delay:.08s}.regv .rgf:nth-of-type(2){animation-delay:.14s}.regv .rgf:nth-of-type(3){animation-delay:.2s}.regv .rgf:nth-of-type(4){animation-delay:.26s}
+.regv .pfield{gap:10px;padding:0 6px 0 14px;border-radius:16px}
+.regv .pfield .rgi{display:grid;place-items:center;color:#c2a9b8;flex:none;transition:color .25s}
+.regv .pfield .rgi svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.regv .pfield .rgi svg [fill="currentColor"]{fill:currentColor}
+.regv .pfield:focus-within .rgi{color:var(--lp)}
+.regv .pfield.ro{padding-right:14px}
+.regv .pfield .rgv{display:grid;place-items:center;color:#12a15b;flex:none}
+.regv .pfield .rgv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.regv .pfield input[type=password]{letter-spacing:5px;font-size:20px}
+.regv .pfield input[type=text]#rk,.regv .pfield input[type=text]#rk2{letter-spacing:5px;font-size:20px;font-weight:600}
+.regv .pfield input::placeholder{letter-spacing:3px}
+.eyeb{width:42px;height:42px;border:0;background:none;border-radius:50%;display:grid;place-items:center;color:#a8939f;flex:none;cursor:pointer;transition:background-color .2s,color .2s,transform .18s var(--spring)}
+.eyeb:active{background:#e2136e1a;transform:scale(.88)}
+.eyeb.on{color:var(--lp)}
+.eyeb span{display:grid;place-items:center}
+.eyeb svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.eyeb .e2{display:none}.eyeb.on .e2{display:grid;animation:zoomin .22s var(--ease)}.eyeb.on .e1{display:none}
+.eyeb .e1{animation:zoomin .22s var(--ease)}
+.regv .rgm{display:none;color:#12a15b;flex:none}
+.regv .rgm svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.regv .pfield.okf{border-color:#2cc47c;box-shadow:0 0 0 4px rgba(44,196,124,.13)}
+.regv .pfield.okf .rgm{display:grid;animation:pop .35s var(--spring)}
+.regv .pfield.badf{border-color:#ef5a73;box-shadow:0 0 0 4px rgba(239,90,115,.1)}
+.rgh{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12.5px;line-height:1.4;color:#8a8490}
+.rgh svg{width:15px;height:15px;flex:none;color:#c2a9b8}
+.regv .le{margin-top:12px}
+.shk2{animation:shk2 .4s}
+@keyframes shk2{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* ===== v2.21-B + v2.21-C : ক্যামেরা, NID স্ক্যান, মুখ যাচাই ===== */
+#kyc .kn{background:radial-gradient(120% 70% at 50% 18%,#3b0f28 0%,#1c0714 55%,#0e040a 100%)}
+#kyc .kbg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#kyc .kbg .b1,#kyc .kbg .b2{position:absolute;width:72vmin;height:72vmin;border-radius:50%;filter:blur(46px)}
+#kyc .kbg .b1{left:-26vmin;top:-22vmin;background:#e2136e;opacity:.38}
+#kyc .kbg .b2{right:-30vmin;bottom:-24vmin;background:#ffb800;opacity:.16}
+#kyc .kwm{position:absolute;width:70px;height:70px;opacity:.16;animation:kwmf 5s ease-in-out infinite}
+#kyc .kwm.w1{left:12px;top:calc(120px + var(--st));transform:rotate(-14deg)}
+#kyc .kwm.w2{right:12px;top:calc(120px + var(--st));transform:rotate(14deg);animation-delay:-1.2s}
+#kyc .kwm.w3{left:12px;bottom:190px;transform:rotate(12deg);animation-delay:-2.4s}
+#kyc .kwm.w4{right:12px;bottom:190px;transform:rotate(-12deg);animation-delay:-3.6s}
+#kyc .klg{position:absolute;left:0;right:0;top:calc(64px + var(--st));display:flex;align-items:center;justify-content:center;gap:9px;z-index:2;color:#fff;font-weight:800;font-size:15px;letter-spacing:.4px;pointer-events:none}
+#kyc .klg img{width:34px;height:34px;border-radius:11px;background:#fff;padding:3px;box-shadow:0 4px 16px rgba(226,19,110,.5)}
+#kyc .kwr{position:absolute;left:50%;top:44%;width:min(88%,380px);aspect-ratio:1.586;transform:translate(-50%,-50%);z-index:1}
+#kyc .kwin{position:absolute;inset:0;border-radius:18px;overflow:hidden;background:#0a0307;box-shadow:0 0 0 1px #ffffff1f,0 20px 56px rgba(226,19,110,.3)}
+#kyc .kwin video,#kyc .kwin .kpvi{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0a0307}
+#kyc .kwr.pv .kwin .kpvi{object-fit:contain}
+#kyc .kn .kfr{left:0;top:0;width:100%;height:100%;aspect-ratio:auto;transform:none;box-shadow:none;border-radius:18px}
+#kyc .kn .kfr i{animation:kcorner 1.8s ease-in-out infinite}
+#kyc .kn .kfr.dn i{animation:none}
+#kyc .kn .kchk{top:44%}
+#kyc .kbt .krow{display:flex;gap:12px}
+/* অনুমতি কার্ড */
+#kyc .kperm{position:absolute;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;padding:26px;background:rgba(14,4,10,.82);animation:kfade .25s both}
+#kyc .kpi.cam{background:#fde7f1;color:var(--p)}#kyc .kpi.cam svg{width:30px;height:30px}
+/* মুখ: ডিম্বাকৃতি ঘর + ৪ ভাগের রিং */
+#kyc .kwr.ov{top:42%;width:min(68%,290px);aspect-ratio:.78}
+#kyc .kwr.ov .kwin{inset:3.2%;border-radius:50%;box-shadow:0 0 0 1px #ffffff22,0 0 60px rgba(226,19,110,.35)}
+#kyc .krg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+#kyc .krt{fill:none;stroke:#ffffff33;stroke-width:3;stroke-linecap:round}
+#kyc .krf{fill:none;stroke:#ff5fa8;stroke-width:3.8;stroke-linecap:round;stroke-dasharray:0 100;transition:stroke-dasharray .12s linear}
+#kyc .kra.on{filter:drop-shadow(0 0 8px #ff5fa8) drop-shadow(0 0 16px #ff5fa8aa)}
+#kyc .kra.on .krt{stroke:#ff5fa8;stroke-width:4.6;animation:krp .9s ease-in-out infinite}
+#kyc .kra.dn2{filter:drop-shadow(0 0 7px #2ed47a)}
+#kyc .kra.dn2 .krt,#kyc .kra.dn2 .krf{stroke:#2ed47a;stroke-width:4.2}
+#kyc .kra.dn2 .krf{stroke-dasharray:100 0!important}
+#kyc .kwr.ov.burst::after{content:"";position:absolute;inset:-1%;border-radius:50%;border:4px solid #2ed47a;animation:kbur .75s ease-out forwards;pointer-events:none}
+#kyc .kwr.ov.blk .kwin{animation:kblk 1.1s ease-in-out infinite}
+#kyc .kn .kov u{box-shadow:none;border:4px solid transparent;animation:none}
+#kyc .kn .kov u.dn{border-color:#2ed47a;box-shadow:0 0 30px #2ed47a88}
+/* নিচের পপ-আপ কার্ড: কোন দিকে ঘুরতে হবে */
+#kyc .kdir{display:flex;align-items:center;gap:14px;background:#fff;color:#2a262b;border-radius:22px;padding:13px 16px;margin:0 2px 12px;box-shadow:0 16px 40px rgba(0,0,0,.45);text-align:left}
+#kyc .kdir.pop{animation:kdup .45s cubic-bezier(.2,.9,.3,1.3) both}
+#kyc .kdi{width:52px;height:52px;border-radius:50%;background:var(--p);display:grid;place-items:center;flex:none;box-shadow:0 6px 18px rgba(226,19,110,.5)}
+#kyc .kdi svg{width:27px;height:27px}
+#kyc .kdi.right svg{animation:kdr .9s ease-in-out infinite}#kyc .kdi.left svg{animation:kdl .9s ease-in-out infinite}
+#kyc .kdi.up svg{animation:kdu .9s ease-in-out infinite}#kyc .kdi.down svg{animation:kdd .9s ease-in-out infinite}
+#kyc .kdi.blink svg{animation:kdb 1s ease-in-out infinite}
+#kyc .kdt2{flex:1;min-width:0}
+#kyc .kdir .kfm{display:block;color:#2a262b;font-size:15px;font-weight:800;line-height:1.35}
+#kyc .kdots{display:flex;gap:6px;margin-top:9px}
+#kyc .kdots i{flex:1;height:6px;border-radius:3px;background:#eadfe6;transition:background .3s}
+#kyc .kdots i.on{background:var(--p);animation:krp .9s ease-in-out infinite}
+#kyc .kdots i.dn2{background:#12a15b}
+@keyframes kwmf{50%{opacity:.26;translate:0 -6px}}
+@keyframes kcorner{50%{border-color:#ff9fc9}}
+@keyframes krp{50%{stroke-opacity:.45;opacity:.75}}
+@keyframes kbur{from{transform:scale(1);opacity:1}to{transform:scale(1.22);opacity:0}}
+@keyframes kblk{50%{transform:scale(.97);filter:brightness(1.25)}}
+@keyframes kdup{from{opacity:0;transform:translateY(24px) scale(.92)}to{opacity:1;transform:none}}
+@keyframes kdr{50%{transform:translateX(6px)}}@keyframes kdl{50%{transform:translateX(-6px)}}
+@keyframes kdu{50%{transform:translateY(-6px)}}@keyframes kdd{50%{transform:translateY(6px)}}
+@keyframes kdb{40%,60%{transform:scaleY(.15)}}
+
+/* ===== v2.22: ছবির ফলাফল, আপলোড অবস্থা, নিশ্চিত তথ্য ===== */
+@keyframes krin{from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes kri{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+@keyframes krtk{0%{transform:scale(0)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+#kyc .krep{background:rgba(255,255,255,.97);border-radius:20px;padding:12px 12px 10px;margin:0 0 12px;text-align:left;color:#2a262b;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:krin .45s cubic-bezier(.2,.9,.3,1.1) both}
+#kyc .krep .rh{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+#kyc .krep .rc{width:34px;height:34px;border-radius:50%;background:#12a15b;display:grid;place-items:center;flex:none;color:#fff;font-style:normal;font-weight:900;font-size:18px;animation:krtk .5s .15s both}
+#kyc .krep.w .rc{background:#e8a20c}
+#kyc .krep .rc svg{width:18px;height:18px}
+#kyc .krep .rh b{display:block;font-size:15.5px;font-weight:800;line-height:1.2}
+#kyc .krep .rh small{display:block;font-size:12px;color:var(--mu);margin-top:2px}
+#kyc .krep .rg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#kyc .krep .ri{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:11px;background:#eefaf3;font-size:12px;font-weight:700;color:#0e7a44;opacity:0;animation:kri .35s calc(.25s + var(--n) * .07s) both}
+#kyc .krep .ri i{width:18px;height:18px;border-radius:50%;background:#12a15b;display:grid;place-items:center;flex:none;font-style:normal;font-size:11px;font-weight:900;color:#fff}
+#kyc .krep .ri i svg{width:11px;height:11px}
+#kyc .krep .ri.mid{background:#fff6e0;color:#9a6a00}
+#kyc .krep .ri.mid i{background:#e8a20c}
+#kyc .krep .ri.bd{background:#ffeef0;color:#c4232c}
+#kyc .krep .ri.bd i{background:#e5484d}
+#kyc .krep .ri span{min-width:0;line-height:1.2}
+#kyc .kupl{display:none;margin:14px auto 0;max-width:300px;text-align:left}
+#kyc .kupl.on{display:block}
+#kyc .kupl .u{display:flex;align-items:center;gap:10px;padding:7px 2px;font-size:14px;font-weight:600;color:#a39ca8;transition:color .3s}
+#kyc .kupl .u i{width:22px;height:22px;border-radius:50%;border:2px solid #ddd6de;display:grid;place-items:center;flex:none;transition:all .3s}
+#kyc .kupl .u i svg{width:13px;height:13px}
+#kyc .kupl .u.ac{color:#2a262b}
+#kyc .kupl .u.ac i{border-color:var(--p);border-top-color:transparent;animation:kspin .8s linear infinite}
+#kyc .kupl .u.dn{color:#12a15b}
+#kyc .kupl .u.dn i{background:#12a15b;border-color:#12a15b;animation:krtk .4s both}
+@keyframes kspin{to{transform:rotate(360deg)}}
+#kyc .kdone.sm{justify-content:flex-start;overflow-y:auto;padding-top:14px}
+#kyc .ksm{width:100%;max-width:340px;margin-top:8px;background:#fff;border-radius:20px;padding:12px;box-shadow:0 6px 20px rgba(170,20,95,.09);animation:krin .5s .2s both;text-align:left}
+#kyc .ksm .kths{display:flex;gap:8px;margin-bottom:10px}
+#kyc .ksm .kth{flex:1;aspect-ratio:1.5;border-radius:10px;overflow:hidden;background:#f2eef3}
+#kyc .ksm .kth img{width:100%;height:100%;object-fit:cover}
+#kyc .ksm .r{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:13px}
+#kyc .ksm .r i{width:20px;height:20px;border-radius:50%;background:#12a15b;display:grid;place-items:center;flex:none}
+#kyc .ksm .r i svg{width:12px;height:12px}
+#kyc .ksm .r b{font-weight:700;color:#2a262b;flex:1}
+#kyc .ksm .r small{color:var(--mu);font-weight:700}
+#kyc .kf.lk{background:#f3fbf6}
+#kyc .kf.lk input{color:#0e7a44;font-weight:800}
+#kyc .klk2{display:block;font-size:11.5px;font-weight:700;color:#12a15b;margin-top:1px}
