@@ -2157,3 +2157,233 @@ nav .ni .bg{top:-4px;right:-8px;min-width:19px;height:19px;border-radius:10px;fo
 #fpsplash .fpa-spin{animation:fpa-sn 7s linear infinite}
 #fpsplash .fpa-ry{animation:fps-ray 2.2s ease-in-out .3s infinite}
 @keyframes fps-ray{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.9)}}
+
+/* =====================================================================
+   v2.32 — ভাগ ১ (এই ব্লক সবার শেষে, তাই আগের নিয়ম বদলে দেয়)
+   ===================================================================== */
+
+/* ---- ১) লগইন: লোগো + Good night এর ঠিক নিচেই ফর্ম ---- */
+.fl.pinp{justify-content:flex-start}
+.fl.pinp .phead{flex:none!important;padding:calc(70px + var(--st)) 20px 18px!important;justify-content:flex-start}
+.fl.pinp .phead .lglogo.fpa{width:clamp(84px,14dvh,108px)}
+.fl.pinp .phead b{margin-top:6px;font-size:21px}
+.fl.pinp .psheet.bkl{flex:none;margin:0 16px;border-radius:24px;padding:16px 16px 16px;box-shadow:0 16px 36px rgba(60,0,30,.28);animation:fup .5s var(--ease) .08s both}
+html.pinkb .fl.pinp .psheet.bkl{padding-bottom:16px}
+.fl.pinp .psheet .bkf{margin-bottom:0}
+.fl.pinp .psheet .bkf+.bkf{margin-top:14px}
+.fl.pinp .psheet .bkf label{margin-bottom:7px;display:block;line-height:1.3}
+.fl.pinp .bkn{padding:12px 16px;border-radius:14px;font-size:17px;border-width:1px}
+/* PIN ঘর: চিকন */
+.fl.pinp .bkp{min-height:0!important;height:48px;padding:0 6px 0 14px!important;border:1px solid #e8d7e1;border-radius:14px;box-shadow:none;background:#fff;gap:6px}
+.fl.pinp .bkp:focus-within{border-color:#e2136e;box-shadow:0 0 0 3px rgba(226,19,110,.10)}
+.fl.pinp .bkp input.pinin{height:44px!important;font-size:18px!important}
+.fl.pinp .bkfp{width:36px;height:36px;border-radius:11px;border-width:1px}
+.fl.pinp .bkfp svg{width:23px;height:23px}
+.fl.pinp .psheet.bkl .le{min-height:16px;margin-top:6px}
+.fl.pinp .pgbtn{margin-top:6px}
+@media (max-height:640px){.fl.pinp .phead{padding-top:calc(52px + var(--st))!important}}
+
+/* ---- ২) ফিঙ্গারপ্রিন্ট সুইচ: স্মুথ স্লাইড ---- */
+.sw{transition:background-color .3s cubic-bezier(.4,0,.2,1)!important}
+.sw b{transition:transform .3s cubic-bezier(.4,0,.2,1)!important;will-change:transform}
+
+/* ---- ৩) আমার QR: নিচে ফাঁকা নেই ---- */
+.pgx:has(.qpage) .stp{flex:1 0 auto;display:flex;flex-direction:column;min-height:100%}
+.qpage{flex:1 0 auto}
+.qcard{padding-top:26px}
+.qcard b{font-size:20px}
+.qcard small{font-size:12.5px;line-height:1.5;padding:0 8px}
+
+/* ---- ৪) কনফার্ম পেজ: ছোট ✕, লেখার সোজাসুজি; ২ সেকেন্ড হোল্ড ---- */
+.c4h{align-items:center!important;padding:calc(14px + var(--st)) 16px 4px 18px!important}
+.c4h b.c4t{line-height:1.25!important;font-size:18px}
+.c4x{width:30px!important;height:30px!important;box-shadow:none!important;background:#fff;border:1px solid #f0dfe8;align-self:center}
+.c4x svg{width:14px!important;height:14px!important;stroke-width:2.8!important}
+.lgh.hd .r1{transition:stroke-dashoffset 2s linear!important}
+.lgh .r1{transition:stroke-dashoffset .3s ease-out}
+.c4g>div:not(.c4tot),.c4n{animation:fade .28s ease both!important}
+
+/* ---- ৫) সফল পেজ: চোখ ঘরের ডান কিনারায়, মাঝখানে, বড় ---- */
+.bkg .nbc{position:relative}
+.bkg .nbc .nbv{padding-right:44px}
+.bkg .nbc .nbv .eye{position:absolute!important;right:8px;top:50%;margin:0!important;transform:translateY(-50%);width:40px;height:40px;display:grid;place-items:center;border-radius:50%}
+.bkg .nbc .nbv .eye svg{width:24px!important;height:24px!important}
+.bkg .nbc .nbv .eye:active{background:#fde7f1}
+
+/* ---- ৬) পেজ বদল: লাফানো বন্ধ — শুধু স্লাইড, ঝাপসা/অন্ধকার ব্যাকড্রপ নেই ---- */
+.sh.pgx{background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;animation:none!important}
+.sh.pgx .box{animation:pgSlideIn .3s cubic-bezier(.2,.8,.2,1) both!important;will-change:transform;box-shadow:-10px 0 28px rgba(60,0,30,.14)}
+.sh.pgx.re,.sh.pgx.re .box{animation:none!important}
+.sh.pgx.out{animation:none!important}
+.sh.pgx.out .box{animation:pgSlideOut .22s cubic-bezier(.4,0,1,1) both!important}
+@keyframes pgSlideIn{from{transform:translate3d(100%,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes pgSlideOut{from{transform:translate3d(0,0,0)}to{transform:translate3d(100%,0,0)}}
+.sh.dlg{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.sh.dlg .box{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:#fff!important}
+.stp.go{animation:fade .18s ease both!important}
+/* ট্যাব বদল: শুধু ফেড, নিচের বার নড়ে না */
+.pg.in{animation:fade .18s ease both!important}
+.pg.in .it,.pg.in .tr,.pg.in .tri div,.pg.in .fc,.pg.in .mr,.pg.in>*{animation:none!important}
+nav.fx{animation:none!important}
+.hero,.wsheet,nav{backface-visibility:hidden}
+
+/* ---- ৭) রিফ্রেশ: বিকাশের মতো ছোট গোল, ওপর থেকে নামে ---- */
+#ptrv{display:none!important}
+#ptr{position:fixed!important;left:50%!important;top:calc(var(--st,0px) + 66px)!important;margin:0!important;width:40px!important;height:40px!important;border-radius:50%!important;background:#fff!important;box-shadow:0 4px 14px rgba(120,10,60,.28)!important;display:grid;place-items:center;opacity:0;pointer-events:none;z-index:60!important;will-change:transform,opacity;transform:translate3d(-50%,-60px,0) scale(.6)}
+#ptr .lgl{width:26px!important;height:26px!important}
+
+/* ---- ৮) লোডিং লোগো (নেটওয়ার্ক ধীর হলে) ---- */
+#fpld{position:fixed;inset:0;z-index:99;display:grid;place-items:center;background:rgba(0,0,0,.42);opacity:0;pointer-events:none;transition:opacity .2s ease}
+#fpld.on{opacity:1;pointer-events:auto}
+#fpld .ldb{width:88px;height:88px;border-radius:20px;background:#fff;display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:ldpulse 1.1s ease-in-out infinite}
+#fpld .ldb img{width:54px;height:54px;object-fit:contain}
+@keyframes ldpulse{0%,100%{transform:scale(1)}50%{transform:scale(.93)}}
+
+/* ---- ৯) ব্যালেন্স দেখুন: স্পিনার → সংখ্যা গুনে ওঠে → আস্তে মিলিয়ে যায় ---- */
+.bp span{font-variant-numeric:tabular-nums}
+.bp.pk-ld span{position:relative;color:transparent}
+.bp.pk-ld span::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid rgba(226,19,110,.22);border-top-color:#e2136e;animation:lgspin .7s linear infinite}
+.bp.pk-ld u{animation:ldpulse .7s ease-in-out infinite}
+.bp span.pk-n{font-weight:800;color:#e2136e;animation:fade .2s ease both}
+.bp span.pk-o{opacity:0;transition:opacity .22s ease}
+
+/* =====================================================================
+   v2.33 — ভাগ ২ (এই ব্লক সবার শেষে)
+   ===================================================================== */
+/* ফোনের কিবোর্ডের ওপরের বার (নাম্বার/পরিমাণ ঘর) */
+#kbar{position:fixed;left:0;right:0;bottom:0;z-index:96;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#9e9a9f;color:#fff;font-weight:700;font-size:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;transform:translate3d(0,110%,0);opacity:0;pointer-events:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),opacity .15s ease,background-color .2s ease;will-change:transform}
+#kbar.show{transform:translate3d(0,0,0);opacity:1;pointer-events:auto}
+#kbar.on{background:linear-gradient(90deg,#e2136e,#f0549a)}
+#kbar svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+html.phkb .pgx .pfoot,html.phkb .v3fab{display:none!important}
+html.phkb .pgx .pbody{padding-bottom:64px}
+html.pinkb .v3fab{display:none!important}
+/* স্ট্যাক পেজ */
+.v3p .box,.v3s1 .box{position:relative}
+.v3p .pbody,.v3s1 .pbody{background:#fff}
+.v3s{padding:12px 16px 4px;background:#fff}
+.v3s .fld.sf{height:48px;border-radius:12px;background:#f6f6f7;border:1px solid #e3e1e4}
+.v3s .err{min-height:0}
+.v3s1 .pbody .stp>.pcard.v3l{margin:0;padding:0 16px;background:#fff;box-shadow:none;border-radius:0;border:0}
+.v3s1 .pfoot{display:none}
+.v3s1.v3g .pfoot{display:block}
+.qrbtn.v3q{width:calc(100% - 32px);margin:10px 16px 4px;height:48px;border-radius:10px;font-size:15px}
+.v3tr{display:flex;gap:10px;overflow-x:auto;padding:14px 16px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:#fff;border-bottom:1px solid #f1edf1}
+.v3tr::-webkit-scrollbar{display:none}
+.v3t{flex:none;width:92px;min-height:96px;border:1px solid #f0e8ee;border-radius:12px;background:#fff;padding:10px 8px 8px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.v3t:active{background:#fdf0f6}
+.v3t span svg{width:30px;height:30px;fill:none;stroke:#e2136e;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.v3t b{font-size:12.5px;font-weight:600;color:#2b2428;text-align:left;line-height:1.3}
+.v3h{font-size:12.5px;color:var(--mu);font-weight:700;padding:14px 0 4px;margin:0}
+.v3s1 .v3h{padding-left:0}
+.v3rr{border-top:0!important;padding:9px 0!important;gap:14px}
+.v3rr b{font-size:14.5px;font-weight:600}
+.v3cb{width:22px;height:22px;border:2px solid #cfc6cb;border-radius:4px;margin-left:auto;display:grid;place-items:center;flex:none;transition:background-color .15s,border-color .15s}
+.v3cb svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:3.2;opacity:0;transition:opacity .15s}
+.v3cb.on{background:#e2136e;border-color:#e2136e}
+.v3cb.on svg{opacity:1}
+.v3fab{position:absolute;right:16px;bottom:calc(20px + var(--sb,0px));z-index:3;height:44px;padding:0 18px;border:0;border-radius:24px;background:linear-gradient(180deg,#ec2c80,#dc1068);color:#fff;font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:6px;font-family:inherit;box-shadow:0 6px 18px rgba(226,19,110,.38);cursor:pointer}
+.v3fab svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round}
+.v3fab:active{transform:scale(.97)}
+.v3pm{margin:14px 0;padding:16px;border-radius:12px;background:#fdf0f6;text-align:center}
+.v3pm p{margin:0 0 10px;font-size:13.5px;color:#5a4a53}
+.v3pm small{display:block;margin-top:4px;color:#a08a96;font-size:11px}
+.v3pm button{height:40px;padding:0 22px;border:0;border-radius:10px;background:#e2136e;color:#fff;font-weight:700;font-family:inherit;font-size:14px}
+.v3sk i{display:block;height:44px;margin:12px 0;border-radius:10px;background:linear-gradient(90deg,#f3eef1 25%,#faf7f9 50%,#f3eef1 75%);background-size:200% 100%;animation:v3sh 1.2s linear infinite}
+@keyframes v3sh{to{background-position:-200% 0}}
+.v3pre{margin:0;padding:12px 16px;font-size:13px;color:#5a4a53;background:#fdf6f9}
+.v3cl .v3h,.v3cl .v3list{padding-left:16px;padding-right:16px}
+.v3cl .v3list{padding-bottom:70px}
+.v3bar{width:100%;height:52px;border:0;background:#9e9a9f;color:#fff;font-weight:700;font-size:16px;font-family:inherit;display:flex;align-items:center;justify-content:space-between;padding:0 20px;transition:background-color .2s}
+.v3bar.on{background:linear-gradient(90deg,#e2136e,#f0549a)}
+.v3bar svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.pgx .pfoot:has(.v3bar){padding:0;background:transparent;box-shadow:none}
+/* প্রিয় নাম্বার */
+.v3fv .pbody{background:#fff;padding-bottom:90px}
+.v3fx{padding:0}
+.v3fs{display:block;padding:10px 16px;font-size:11.5px;color:var(--mu);background:#fbf7f9;border-bottom:1px solid #f1edf1}
+.v3fu{text-align:center;padding:18px 16px 16px;border-bottom:8px solid #f6f1f4}
+.v3fu span{font-size:12.5px;color:var(--mu)}
+.v3fu b{display:block;font-size:26px;color:#e2136e;font-weight:800;margin:4px 0 6px}
+.v3fu p{margin:0;font-size:12.5px;color:#4a3d44;font-weight:600}
+.v3fu i{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;border:1.3px solid #e2136e;color:#e2136e;font-style:italic;font-size:10px;font-weight:700;vertical-align:middle;margin-left:4px;cursor:pointer}
+.v3fh{display:flex;justify-content:space-between;padding:12px 16px 6px;font-size:12.5px;color:var(--mu);font-weight:700}
+.v3fh em{font-style:normal}
+.v3fr{display:flex;align-items:center;gap:14px;padding:11px 16px;border-top:1px solid #f4eff2}
+.v3fr b,.v3pw b{display:block;font-size:14.5px;font-weight:600}
+.v3fr span,.v3pw span{display:block;font-size:12.5px;color:var(--mu);margin-top:1px}
+.v3fr>div{flex:1;min-width:0}
+.v3rm{border:0;background:none;color:#e0182d;font-weight:600;font-size:13.5px;font-family:inherit;padding:8px 2px}
+/* PIN পেজ */
+.v3pc{padding:0}
+.v3pw{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid #f1edf1;background:#fff}
+.v3fi{width:44px;height:44px;border-radius:50%;background:#fdf0f6;display:grid;place-items:center;flex:none}
+.v3fi svg{width:24px;height:24px;stroke:#e2136e;fill:none}
+.v3sm{display:flex;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #f1edf1;font-size:13.5px}
+.v3sm b{color:#e2136e;font-size:16px}
+.v3nl{margin:0;padding:16px 16px 4px;font-size:12.5px;color:var(--mu);font-weight:600}
+.v3nt{margin:0;padding:0 16px 14px;font-size:13.5px;line-height:1.55;color:#4a3d44}
+.v3pr{display:flex;align-items:center;gap:10px;margin:0;padding:0 12px 0 16px;height:54px;border-top:1px solid #f1edf1;border-bottom:1px solid #f1edf1;background:#fff}
+.v3pr>svg{width:20px;height:20px;color:#e2136e;flex:none}
+.v3pr input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:16px;font-family:inherit;text-align:center;letter-spacing:2px}
+.v3pr input::placeholder{letter-spacing:0;color:#a89aa2}
+.v3pr .fpb{width:40px;height:40px;border:0;background:none;display:grid;place-items:center;flex:none}
+.v3pr .fpb svg{width:30px;height:30px;stroke:#e2136e;fill:none}
+.v3pc .err{text-align:center;padding:8px 16px 0;min-height:22px}
+/* রিকোয়েস্ট মানি */
+.v3ac{padding:0 0 20px}
+.v3cd{background:#fff;border-top:1px solid #f1edf1;border-bottom:1px solid #f1edf1}
+.v3cd .fld.big{border:0;background:transparent}
+.v3nf input{width:100%;height:50px;border:0;outline:0;padding:0 16px;font-size:15px;font-family:inherit;background:transparent}
+.v3tabs{display:flex;border-bottom:1px solid #eee7ec;background:#fff;position:sticky;top:0;z-index:2}
+.v3tabs button{flex:1;height:46px;border:0;background:none;font-family:inherit;font-size:13.5px;color:var(--mu);font-weight:600;border-bottom:2.5px solid transparent;transition:color .2s,border-color .2s}
+.v3tabs button.on{color:#e2136e;border-bottom-color:#e2136e}
+.v3em{text-align:center;padding:64px 40px;color:var(--mu);font-size:13.5px;line-height:1.6}
+.v3em svg{width:84px;height:84px;fill:none;stroke:#e2136e;stroke-width:1.1;opacity:.75;margin-bottom:10px}
+.v3rl{padding:8px 0}
+.v3rq{padding:12px 16px;border-bottom:1px solid #f4eff2}
+.v3rh{display:flex;align-items:center;gap:12px}
+.v3rh>div{flex:1;min-width:0}
+.v3rh b{display:block;font-size:14.5px;font-weight:600}
+.v3rh span{display:block;font-size:12.5px;color:var(--mu)}
+.v3rh em{font-style:normal;font-weight:800;color:#e2136e;font-size:15px}
+.v3rq p{margin:8px 0 0;font-size:13px;color:#4a3d44}
+.v3rf{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px}
+.v3rf small{font-size:11.5px;color:var(--mu)}
+.v3rf u{text-decoration:none;font-weight:700}
+.v3rf u.s-pending{color:#d98a00}.v3rf u.s-paid{color:#1a9d5c}.v3rf u.s-declined,.v3rf u.s-cancelled{color:#c0182b}
+.v3rf span{display:flex;gap:8px}
+.v3b1,.v3b2{height:34px;padding:0 16px;border-radius:9px;font-weight:700;font-size:13px;font-family:inherit}
+.v3b1{border:1px solid #e2136e;background:#fff;color:#e2136e}
+.v3b2{border:0;background:#e2136e;color:#fff}
+.v3dn{text-align:center;padding:70px 28px}
+.v3ok{width:84px;height:84px;border-radius:50%;background:#e8f7ef;display:inline-grid;place-items:center;margin-bottom:16px}
+.v3ok svg{width:44px;height:44px;fill:none;stroke:#1a9d5c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.v3dn h3{margin:0 0 6px;font-size:19px;color:#1a9d5c}
+.v3dn p{margin:0 0 6px;font-size:15px;font-weight:600}
+.v3dn small{color:var(--mu);font-size:12.5px}
+/* টাচ/ফেস আইডি পেজ */
+.v3bp .pbody{background:#fff}
+.v3bh{text-align:center;padding:16px 20px 22px;border-bottom:6px solid #f4f1f3}
+.v3fa{width:150px;height:150px;display:block;margin:0 auto 10px}
+.v3bh b{display:block;font-size:17px;font-weight:700;margin-bottom:4px}
+.v3bh p{margin:0;font-size:14px;color:var(--mu)}
+.v3sel{margin:0;padding:14px 16px 8px;font-size:13px;color:var(--mu)}
+.v3opt{display:flex;align-items:center;gap:10px;margin:0 16px 14px;padding:14px 14px 14px 16px;border:1.5px solid #e8e2e6;border-radius:12px;cursor:pointer;transition:border-color .2s,background-color .2s}
+.v3opt>div{flex:1}
+.v3opt b{display:block;font-size:15px;font-weight:600;margin-bottom:6px}
+.v3opt span{display:block;font-size:14px;color:#4a3d44;line-height:1.4}
+.v3opt u{display:inline-block;margin-top:6px;font-size:13.5px;color:#e2136e;text-decoration:none;font-weight:500}
+.v3opt.on{border-color:#e2136e}
+.v3rd{width:26px;height:26px;border-radius:50%;background:#e2136e;display:grid;place-items:center;flex:none;transform:scale(0);transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.v3rd svg{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.v3opt.on .v3rd{transform:scale(1)}
+.v3nb{margin:6px 16px 20px;padding:14px 16px;border-radius:8px;background:#f5f5f6;font-size:14px;line-height:1.5;color:#2b2428;animation:fade .2s ease both}
+/* স্মুথ: নতুন স্তরে GPU, ঝাপসা নেই */
+#sheet2 .sh.pgx{z-index:10}
+#sheet2 .sh.pgx .box{will-change:transform}
+.v3s1 .sh,.v3s1{backface-visibility:hidden}
+.rr.v3rr:active{background:#fdf0f6}
+
+.v3cd .fld.big{display:flex;justify-content:center;align-items:center;gap:6px;padding:12px 16px}
+.v3cd .fld.big u{position:static;text-decoration:none}

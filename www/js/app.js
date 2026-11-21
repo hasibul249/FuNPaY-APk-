@@ -99,13 +99,13 @@ const SVC = ["rech", "bill", "bank", "insur", "edu"];
 
 Object.assign(T.bn, {recv:"মানি রিসিভ", cashin:"গ্রাহক ক্যাশ আউট", agent:"এজেন্ট", nouser:"এই নম্বরে কোনো FuNPaY অ্যাকাউন্ট নেই", noag:"এটি এজেন্ট নম্বর নয়", self:"নিজের নম্বরে হবে না",
  neterr:"ইন্টারনেট নেই, আবার চেষ্টা করুন", errg:"কিছু ভুল হয়েছে", exists:"এই নম্বরে আগেই অ্যাকাউন্ট খোলা আছে", soon:"এই সার্ভিস শীঘ্রই আসছে", myqr:"আমার QR", scanqr:"QR স্ক্যান করুন",
- scanh:"অন্যের QR স্ক্যান করে টাকা পাঠান বা এজেন্টের কাছে ক্যাশ আউট করুন", qrhint:"এই QR দেখালেই যে কেউ আপনাকে টাকা পাঠাতে পারবে", noscan:"স্ক্যানার শুধু অ্যাপের ভেতরে চলে", badqr:"এটি FuNPaY এর QR নয়",
+ scanh:"অন্যের QR স্ক্যান করে টাকা পাঠান বা এজেন্টের কাছে ক্যাশ আউট করুন", qrhint:"এই QR কোড স্ক্যান করার মাধ্যমে অন্যরা আপনাকে পেমেন্ট করতে পারবে।", noscan:"স্ক্যানার শুধু অ্যাপের ভেতরে চলে", badqr:"এটি FuNPaY এর QR নয়",
  got:"পেয়েছেন", newacc:"নতুন অ্যাকাউন্ট", haveacc:"অ্যাকাউন্ট আছে? লগইন করুন", other:"অন্য নম্বর", pin4:"6 ডিজিট PIN", reg:"অ্যাকাউন্ট খুলুন", setup:"ব্যাকএন্ড সেট করা নেই। README দেখে SUPA_URL আর SUPA_KEY বসান।",
  rcv:"প্রাপক", ep:"আপনার মোবাইল নম্বর", cont:"চালিয়ে যান", cobad:"ক্যাশ আউট সর্বনিম্ন 50 টাকা", addmax:"একবারে সর্বোচ্চ 5,000 টাকা", badpin:"PIN 6 ডিজিটের হতে হবে", back2:"স্বাগতম, আবার",
  conf1:"Supabase এ Confirm email বন্ধ করুন", lp:"আপনার 6 ডিজিট PIN দিন", dm:"", cashw:"", bioT:"ফিঙ্গারপ্রিন্ট / স্ক্রিন লক দিয়ে আনলক", bioD:"পরের বার PIN-এর বদলে আঙুলের ছাপ বা ফোনের লক দিয়ে অ্যাপ খুলতে পারবেন। PIN-ও কাজ করবে।", bioY:"চালু করুন", bioR:"FuNPaY আনলক করুন", bioOn:"আনলক চালু হয়েছে", on:"চালু", off:"বন্ধ", myqrs:"নিজের QR", rcvd:"প্রাপক"});
 Object.assign(T.en, {recv:"Money Received", cashin:"Customer Cash Out", agent:"Agent", nouser:"No FuNPaY account with this number", noag:"This is not an agent number", self:"You can't use your own number",
  neterr:"No internet, try again", errg:"Something went wrong", exists:"An account already exists for this number", soon:"This service is coming soon", myqr:"My QR", scanqr:"Scan QR",
- scanh:"Scan someone's QR to send money, or cash out at an agent", qrhint:"Show this QR so anyone can send you money", noscan:"The scanner only works inside the app", badqr:"This is not a FuNPaY QR",
+ scanh:"Scan someone's QR to send money, or cash out at an agent", qrhint:"Others can pay you by scanning this QR code.", noscan:"The scanner only works inside the app", badqr:"This is not a FuNPaY QR",
  got:"received", newacc:"New account", haveacc:"Have an account? Log in", other:"Other number", pin4:"6-digit PIN", reg:"Create account", setup:"Backend is not set up. Follow the README and fill in SUPA_URL and SUPA_KEY.",
  rcv:"Recipient", ep:"Your mobile number", cont:"Continue", cobad:"Minimum cash out is ৳50", addmax:"Max ৳5,000 at a time", badpin:"PIN must be 4 digits", back2:"Welcome back",
  conf1:"Turn off Confirm email in Supabase", lp:"Enter your 6-digit PIN", dm:"", cashw:"", bioT:"Unlock with fingerprint / screen lock", bioD:"Next time open the app with your fingerprint or phone lock instead of the PIN. The PIN still works.", bioY:"Turn on", bioR:"Unlock FuNPaY", bioOn:"Unlock enabled", on:"On", off:"Off", myqrs:"Your QR", rcvd:"Recipient"});
@@ -168,7 +168,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.24"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.33"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -324,6 +324,11 @@ const fmt = (iso) => { const n = new Date(iso), p = (x) => String(x).padStart(2,
 /* ---------- সার্ভারের সাথে যোগাযোগ ---------- */
 const MUT = /\/rpc\/(send_money|cash_out|add_test_money|pay_service|pay_merchant|claim_coupon)$/;
 async function api(path, o = {}) {
+  const bgq = (o.m || "GET") === "GET" || o.bg;
+  if (!bgq) ldOn();
+  try { return await api0(path, o); } finally { if (!bgq) ldOff(); }
+}
+async function api0(path, o = {}) {
   const BASE = String(SUPA_URL).replace(/[\s"']/g, "").replace(/\/+$/, ""), KEY = String(SUPA_KEY).replace(/[\s"']/g, "");
   const h = {apikey: KEY, "Content-Type": "application/json"};
   if (o.auth !== false && S.tok) h.Authorization = "Bearer " + S.tok;
@@ -331,7 +336,7 @@ async function api(path, o = {}) {
   const r = await netFetch(BASE + path, {method: o.m || "GET", headers: h, body: o.b ? JSON.stringify(o.b) : undefined}, tries);
   let j = null; try { j = await r.json(); } catch (e) {}
   if (r.status === 401 && o.auth !== false && S.rt && !o.retry) {
-    try { await refreshTok(); return api(path, Object.assign({}, o, {retry: true})); }
+    try { await refreshTok(); return api0(path, Object.assign({}, o, {retry: true})); }
     catch (e) { if (e && e.message === "NET") throw e; lock(true); toast(t("sess")); throw new Error("SESS"); }
   }
   if (!r.ok) throw new Error((j && (j.message || j.msg || j.error_description || j.error)) || "ERR");
@@ -445,7 +450,7 @@ async function enter() {
   try { localStorage.setItem("fpreg", "1"); } catch (e) {}
   S.auth = true; S.fx = true; S.pin = ""; S.tab = "home"; S.view = "";
   render(); startPoll(); setTimeout(checkUpdate, 1500); setTimeout(askNotifPerm, 2600);
-  if (lp) setTimeout(() => offerBio(lp), 1400);
+  setTimeout(() => offerBio(lp || ""), 1400);
 }
 function lock(auto) {
   clearInterval(pollT); stopScanner(); kycClose(true);
@@ -893,10 +898,22 @@ const lang = () => { hap(); S.lang = S.lang === "bn" ? "en" : "bn"; render(); };
 let peekTimer;
 function peek(b) {
   hap();
-  const sp = b.querySelector("span");
-  clearTimeout(peekTimer);
-  sp.textContent = money(S.bal);
-  peekTimer = setTimeout(() => { if (sp.isConnected) sp.textContent = t("showb"); }, 4000);
+  const sp = b.querySelector("span"); if (!sp || b.dataset.busy) return;
+  clearTimeout(peekTimer); b.dataset.busy = "1"; b.classList.add("pk-ld"); sp.className = ""; sp.textContent = "";
+  setTimeout(() => {
+    if (!sp.isConnected) return;
+    b.classList.remove("pk-ld"); sp.classList.add("pk-n");
+    const to = Number(S.bal) || 0, t0 = performance.now(), D = 700;
+    const step = (now) => {
+      if (!sp.isConnected) return;
+      const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3);
+      sp.textContent = money(Math.round(to * e * 100) / 100);
+      if (k < 1) { requestAnimationFrame(step); return; }
+      sp.textContent = money(to); delete b.dataset.busy;
+      peekTimer = setTimeout(() => { if (!sp.isConnected) return; sp.classList.add("pk-o"); setTimeout(() => { if (!sp.isConnected) return; sp.className = ""; sp.textContent = t("showb"); }, 240); }, 4000);
+    };
+    requestAnimationFrame(step);
+  }, 520);
 }
 
 function dot(e) { const st = e.children.length > 1 ? e.children[1].offsetLeft - e.children[0].offsetLeft : e.clientWidth, i = Math.round(e.scrollLeft / st); document.querySelectorAll(".dts i").forEach((d, j) => d.className = j === i ? "on" : ""); }
@@ -1120,13 +1137,12 @@ let holdT = 0;
 function holdStart() {
   const b = document.getElementById("hold"); if (!b || holdT || b.classList.contains("ld")) return;
   hap(); { const hc = b.querySelector(".hc"); if (hc) hc.style.width = b.clientWidth + "px"; } b.classList.add("hd");
-  holdT = setTimeout(() => { holdT = 0; b.classList.remove("hd"); confirmTx(); }, 1000);
+  holdT = setTimeout(() => { holdT = 0; b.classList.remove("hd"); confirmTx(); }, 2000);
 }
 function holdEnd() {
   if (!holdT) return;
   clearTimeout(holdT); holdT = 0;
   const b = document.getElementById("hold"); if (b) b.classList.remove("hd");
-  toast(t("holdh"));
 }
 function toggleNb() {
   hap(); S.hideNb = !S.hideNb;
@@ -1388,6 +1404,7 @@ async function offerBio(pin) {
 }
 function bioHtml() {
   const s = S.sheet;
+  if (s.off) return wrapSheet(s, `<div class="ok"><div class="tick">${ic("fp")}</div><h2>${t("bioOffT")}</h2><small>${t("bioOffD")}</small></div><div class="lb">${t("pin")}</div><input id="f3" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" oninput="pinOnly(this)"><div class="err">${esc(s.err)}</div><button class="btn" onclick="disableBio()">${t("bioOffY")}</button><button class="btn l" onclick="closeS()">${t("upl")}</button>`);
   return wrapSheet(s, `<div class="ok"><div class="tick">${ic("fp")}</div><h2>${t("bioT")}</h2><small>${t("bioD")}</small></div>`
     + (s.pin ? "" : `<div class="lb">${t("pin")}</div><input id="f3" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" oninput="pinOnly(this)"><div class="err">${esc(s.err)}</div>`)
     + `<button class="btn" onclick="enableBio()">${t("bioY")}</button><button class="btn l" onclick="closeS()">${t("upl")}</button>`);
@@ -1396,7 +1413,7 @@ async function toggleBio() {
   hap();
   const N = cap().NativeBiometric;
   if (!N) { toast(t("noscan")); return; }
-  if (bioOn()) { try { await N.deleteCredentials({server: BIO_SERVER}); } catch (e) {} localStorage.removeItem("fpbio"); render(); return; }
+  if (bioOn()) { S.sheet = {id: "bio", off: true, pin: "", fresh: true, err: ""}; renderSheet(); return; }
   try { const a = await N.isAvailable({useFallback: true}); if (!a.isAvailable) { toast(t("errg")); return; } } catch (e) { toast(t("errg")); return; }
   S.sheet = {id: "bio", pin: "", fresh: true, err: ""}; renderSheet();
 }
@@ -1416,7 +1433,7 @@ async function enableBio() {
   } catch (e) { return fail(errMsg(e)); }
   s.busy = false; toast(t("bioOn"));
   if (wasOut) { S.sheet = null; renderSheet(); try { await enter(); } catch (e) { S.tok = ""; S.rt = ""; render(); toast(errMsg(e)); } return; }
-  closeS(); if (S.tab === "mine") render();
+  closeS(); setTimeout(() => swFlip(true), 300);
 }
 async function bioUnlock() {
   const N = cap().NativeBiometric;
@@ -2669,6 +2686,7 @@ try {
   let bgAt = 0;
   if (A) {
     A.addListener("backButton", () => {
+      if (S.subs && S.subs.length) { subBack(); return; }
       if (K.open) { if (["front", "back", "info", "face", "match", "pin"].includes(K.step)) kBack(); else A.exitApp(); return; }
       if (S.sheet && !S.sheet.done && (S.sheet.step || 1) > 1 && !S.upd) { backStep(); return; }
       if (S.sheet || S.upd) { closeS(); return; }
@@ -2697,20 +2715,15 @@ document.addEventListener("touchmove", e => { if (e.touches && e.touches.length 
   const ap = document.getElementById("app"), MAXP = 120, TH = 70;
   let y0 = 0, x0 = 0, pull = 0, on = false, busy = false, el = null, vl = null;
   const node = () => {
-    if (!el) {
-      vl = document.createElement("div"); vl.id = "ptrv"; document.body.appendChild(vl);
-      el = document.createElement("div"); el.id = "ptr"; el.innerHTML = '<i class="lgl"></i>'; document.body.appendChild(el);
-    }
+    if (!el) { el = document.createElement("div"); el.id = "ptr"; el.innerHTML = '<i class="lgl"></i>'; document.body.appendChild(el); }
     return el;
   };
   const place = (d, anim) => {
     const e = node(), k = Math.max(0, Math.min(1, d / TH));
-    e.style.transition = anim ? "transform .3s cubic-bezier(.34,1.56,.64,1),opacity .22s" : "none";
-    e.style.transform = "translate(-50%,-50%) scale(" + (d <= 0 ? .4 : (.45 + .55 * k).toFixed(3)) + ")";
-    e.style.opacity = d <= 0 ? 0 : Math.min(1, d / 28);
-    vl.classList.toggle("on", d > 0 && (busy || k > .15));
-    vl.style.opacity = d <= 0 ? "" : String(Math.min(1, k) * .9);
-    if (!busy) e.firstChild.style.transform = "rotate(" + Math.round(d * 5) + "deg)";
+    e.style.transition = anim ? "transform .34s cubic-bezier(.2,.8,.2,1),opacity .2s" : "none";
+    e.style.transform = "translate3d(-50%," + (d <= 0 ? -60 : Math.round(-60 + 60 * k + Math.max(0, d - TH) * .4)) + "px,0) scale(" + (d <= 0 ? .6 : (.6 + .4 * k).toFixed(3)) + ")";
+    e.style.opacity = d <= 0 ? 0 : Math.min(1, d / 24);
+    if (!busy) e.firstChild.style.transform = "rotate(" + Math.round(d * 6) + "deg)";
   };
   ap.addEventListener("touchstart", (e) => {
     on = false; pull = 0;
@@ -2994,7 +3007,7 @@ function scanHtml(s) {
    শুধু লেখার ঘরে (নাম, নোট, সার্চ ইত্যাদি) ফোনের কিবোর্ড ওঠে। কিপ্যাডে কোনো অ্যানিমেশন নেই, যাতে ফোন ল্যাগ না করে। */
 (function () {
   let kp = null, bar = null, cur = null, hideT = 0, mq = 0;
-  const SEL = 'input[type="password"][inputmode="numeric"],input[data-kp="1"],input[inputmode="decimal"],input[inputmode="numeric"]:not(#rp)';
+  const SEL = 'input[type="password"][inputmode="numeric"],input[data-kp="1"]'; /* v2.33: শুধু PIN এ অ্যাপের কিপ্যাড; নাম্বার/পরিমাণে ফোনের কিবোর্ড */
   const isPin = (e) => e && e.tagName === "INPUT" && e.getAttribute("data-kp") === "1";
   const fix = (root) => {
     (root || document).querySelectorAll(SEL).forEach((e) => {
@@ -3044,19 +3057,51 @@ function scanHtml(s) {
     else if (v.length < mx) v += k; else return;
     e.value = v; e.dispatchEvent(new Event("input", {bubbles: true})); upd();
   };
-  const go = () => {
-    const e = cur; if (!e || !kp) return;
-    if (!ready(e)) return;
+  const go = (el) => {
+    const e = el || cur; if (!e) return;
+    if (!el && !kp) return;
+    if (el ? !readyP(e) : !ready(e)) return;
     hap("MEDIUM");
     if (e.id === "otpin") return;
     if (e.id === "rk") { const n = document.getElementById("rk2"); if (n) { n.focus(); return; } }
     if (/Enter/.test(e.getAttribute("onkeydown") || "")) { e.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", bubbles: true, cancelable: true})); return; }
     const b = (e.closest(".sh,.kw,#app") || document).querySelector(".pfoot .btn,.kbtn,.btn"); if (b) b.click();
   };
+  /* ---- v2.33: ফোনের কিবোর্ডের ঠিক ওপরে "পরবর্তী/এগিয়ে যান" বার (নাম্বার ও পরিমাণের ঘরে) ---- */
+  let fb = null, fbc = null, fbT = 0;
+  const isPhoneK = (e) => e && e.tagName === "INPUT" && !isPin(e) && e.id !== "otpin" && e.id !== "rp" && !e.readOnly && (/^(numeric|decimal)$/.test(e.getAttribute("inputmode") || "") || e.type === "tel");
+  const footBtn = (e) => (e.closest(".sh,.kw,#app") || document).querySelector(".pfoot .btn,.kbtn,.btn");
+  const readyP = (e) => {
+    if (e.getAttribute("inputmode") === "decimal") return (parseFloat(e.value) || 0) > 0;
+    const need = e.id === "lp" ? 11 : Math.min(e.maxLength > 0 ? e.maxLength : 10, 10);
+    return digs(e.value, 20).length >= need;
+  };
+  const kbo = () => { const v = window.visualViewport; return v ? Math.max(0, Math.round(window.innerHeight - v.height - v.offsetTop)) : 0; };
+  const mkb = () => {
+    if (fb) return fb;
+    fb = document.createElement("div"); fb.id = "kbar"; fb.innerHTML = "<span></span>" + ARW;
+    fb.addEventListener("pointerdown", (ev) => { ev.preventDefault(); if (fbc) go(fbc); });
+    document.body.appendChild(fb); return fb;
+  };
+  const updB = () => {
+    if (!fb || !fbc) return;
+    const b = footBtn(fbc), lbl = b ? (b.textContent || "").trim() : "";
+    fb.firstChild.textContent = lbl || t("cont");
+    fb.classList.toggle("on", readyP(fbc)); fb.style.bottom = kbo() + "px";
+  };
+  const showB = (e) => {
+    if (!footBtn(e)) return hideB();
+    clearTimeout(fbT); fbc = e; mkb(); updB();
+    requestAnimationFrame(() => { fb.classList.add("show"); document.documentElement.classList.add("phkb"); });
+  };
+  const hideB = () => { if (fb) fb.classList.remove("show"); document.documentElement.classList.remove("phkb"); fbc = null; };
+  try { if (window.visualViewport) { window.visualViewport.addEventListener("resize", updB); window.visualViewport.addEventListener("scroll", updB); } } catch (e) {}
+  document.addEventListener("input", (ev) => { if (ev.target === fbc) updB(); });
   const hide = () => { if (kp) kp.classList.remove("show"); document.documentElement.classList.remove("pinkb"); cur = null; };
   document.addEventListener("focusin", (ev) => {
     fix(ev.target.parentNode || document);
-    if (!isPin(ev.target)) return;
+    if (!isPin(ev.target)) { if (isPhoneK(ev.target)) showB(ev.target); else { clearTimeout(fbT); fbT = setTimeout(hideB, 120); } return; }
+    hideB();
     clearTimeout(hideT); cur = ev.target; mk(); upd();
     requestAnimationFrame(() => {
       kp.classList.add("show"); document.documentElement.classList.add("pinkb");
@@ -3065,6 +3110,7 @@ function scanHtml(s) {
     });
   });
   document.addEventListener("focusout", (ev) => {
+    if (fbc && ev.target === fbc) { clearTimeout(fbT); fbT = setTimeout(() => { if (!isPhoneK(document.activeElement)) hideB(); }, 160); }
     clearTimeout(hideT);
     const r = ev.relatedTarget; /* বাটন (যেমন ৳500 চিপ) চাপলে কিপ্যাড নামে না */
     if (r && r.tagName !== "INPUT" && r.closest && r.closest("#sheet,#app")) return;
@@ -3075,7 +3121,7 @@ function scanHtml(s) {
   try {
     new MutationObserver(() => {
       if (mq) return;
-      mq = requestAnimationFrame(() => { mq = 0; fix(); if (cur && !document.contains(cur)) hide(); });
+      mq = requestAnimationFrame(() => { mq = 0; fix(); if (cur && !document.contains(cur)) hide(); if (fbc && !document.contains(fbc)) hideB(); });
     }).observe(document.documentElement, {childList: true, subtree: true});
   } catch (e) {}
   fix();
@@ -3294,8 +3340,8 @@ function bkStep4(s) {
     <div class="c4f"><div id="lgh" class="lgh" onpointerdown="lgStart(event)" onpointerup="lgEnd()" onpointerleave="lgEnd()" onpointercancel="lgEnd()" oncontextmenu="return false"><svg viewBox="0 0 100 100"><circle class="r0" cx="50" cy="50" r="46"/><circle class="r1" cx="50" cy="50" r="46"/></svg><img src="icons/logo.png" alt=""></div><p>${S.lang === "en" ? "Tap and hold to confirm the payment" : t(s.id) + " " + t("g_hold")}</p></div></div></div>`;
 }
 let lgT = 0;
-function lgStart(e) { const b = document.getElementById("lgh"); if (!b || lgT || b.classList.contains("ld")) return; if (e && e.preventDefault) e.preventDefault(); hap(); b.classList.add("hd"); lgT = setTimeout(() => { lgT = 0; b.classList.remove("hd"); b.classList.add("ld"); hap("MEDIUM"); confirmTx(); }, 1000); }
-function lgEnd() { if (!lgT) return; clearTimeout(lgT); lgT = 0; const b = document.getElementById("lgh"); if (b) b.classList.remove("hd"); toast(t("holdh")); }
+function lgStart(e) { const b = document.getElementById("lgh"); if (!b || lgT || b.classList.contains("ld")) return; if (e && e.preventDefault) e.preventDefault(); hap(); b.classList.add("hd"); lgT = setTimeout(() => { lgT = 0; b.classList.remove("hd"); b.classList.add("ld"); hap("MEDIUM"); confirmTx(); }, 2000); }
+function lgEnd() { if (!lgT) return; clearTimeout(lgT); lgT = 0; const b = document.getElementById("lgh"); if (b) b.classList.remove("hd"); }
 
 /* ---------- রাউটার: সেন্ড/পেমেন্ট/ক্যাশ আউটের ধাপ ৩-৪ বিকাশ স্টাইল, সেন্ডের ধাপ ১-২ নতুন ---------- */
 function sheetHtml() {
@@ -3675,3 +3721,407 @@ function kSumHtml() {
   const sc = m.pct !== null && m.pct !== undefined && !m.auto ? `<div class="kxcs">${chip(t("k_fmatch") + " " + m.pct + "%")}</div>` : "";
   return `<div class="kxs"><div class="kx3s">${m.th.map(th).join("")}</div>${sc}<div class="kxth"><img src="icons/logo.png" alt=""><b>${t("k_thx")}</b></div></div>`;
 }
+
+
+/* =====================================================================
+   v2.32 — ভাগ ১: লগইন লেআউট, আমার QR, কনফার্ম (২ সেকেন্ড হোল্ড), সফল পেজ, স্মুথ অ্যানিমেশন,
+   রিফ্রেশ (ছোট গোল), লোডিং লোগো, ব্যালেন্স অ্যানিমেশন, ফিঙ্গারপ্রিন্ট সুইচ (অন/অফ এ PIN)
+   ===================================================================== */
+Object.assign(T.bn, {bioOffT: "ফিঙ্গারপ্রিন্ট বন্ধ করুন", bioOffD: "বন্ধ করতে আপনার PIN দিন", bioOffY: "বন্ধ করুন"});
+Object.assign(T.en, {bioOffT: "Turn off fingerprint", bioOffD: "Enter your PIN to turn it off", bioOffY: "Turn off"});
+/* লোডিং লোগো: নেটওয়ার্ক ধীর হলে (০.৬৫ সেকেন্ডের বেশি লাগলে) মাঝখানে লোগো */
+let LDN = 0, LDT = 0, LDF = 0;
+function ldOn() { LDN++; if (LDN === 1) { clearTimeout(LDT); LDT = setTimeout(() => { if (LDN > 0) ldShow(); }, 650); } }
+function ldOff() { LDN = Math.max(0, LDN - 1); if (LDN === 0) { clearTimeout(LDT); ldHide(); } }
+function ldShow() {
+  let e = document.getElementById("fpld");
+  if (!e) { e = document.createElement("div"); e.id = "fpld"; e.innerHTML = '<div class="ldb"><img src="icons/logo-pink.png" alt=""></div>'; document.body.appendChild(e); }
+  void e.offsetWidth; e.classList.add("on");
+  clearTimeout(LDF); LDF = setTimeout(() => { LDN = 0; ldHide(); }, 25000);
+}
+function ldHide() { clearTimeout(LDF); const e = document.getElementById("fpld"); if (e) e.classList.remove("on"); }
+/* সুইচ: আগে পুরোনো সুইচটাই স্লাইড করে, তারপর পেজ আপডেট (লাফায় না) */
+function swFlip(on) {
+  const sw = document.querySelector(".sw");
+  if (sw) { sw.classList.toggle("on", on); setTimeout(() => { if (S.auth && S.tab === "mine" && !S.sheet) render(); }, 380); }
+  else if (S.auth && S.tab === "mine") render();
+}
+async function disableBio() {
+  const s = S.sheet; if (!s || s.busy) return;
+  const ph = S.auth && S.me ? S.me.phone : S.phone, N = cap().NativeBiometric;
+  const pin = digs((document.getElementById("f3") || {}).value, 6);
+  const fail = (m) => { s.busy = false; setBusy(false); if (S.sheet !== s) return; s.err = m; renderSheet(); shakeBox(); };
+  if (!isPin(pin)) return fail(t("wp"));
+  s.busy = true; setBusy(true);
+  try { await signIn(ph, pin); } catch (e) { return fail(errMsg(e)); }
+  try { if (N) await N.deleteCredentials({server: BIO_SERVER}); } catch (e) {}
+  try { localStorage.removeItem("fpbio"); } catch (e) {}
+  s.busy = false; setBusy(false); closeS(); setTimeout(() => swFlip(false), 300);
+}
+/* আমার QR: প্রোফাইল (H) নেই, নিচে ফাঁকা নেই */
+function qrHtml() {
+  const s = S.sheet, m = S.me || {};
+  if (s.tab === "scan") return scanHtml(s);
+  return wrapPage(s, t("myqr"), "closeS()", `<div class="qpage"><div class="qdeco" aria-hidden="true"><i class="d1"></i><i class="d2"></i><i class="d3"></i>${[1, 2, 3, 4, 5, 6].map(n => `<img class="qwm q${n}" src="icons/logo.png" alt="">`).join("")}</div><div class="qcard"><b>${esc(m.name || t("acct"))}</b><span>${esc(m.phone)} ${agBadge()}</span><div class="qwrap">${qrSvg("funpay:" + m.phone)}</div><small>${t("qrhint")}</small></div><div class="qfoot"><img src="icons/logo.png" alt=""><b>FuNPaY</b><span>${t("tag")}</span></div></div>`,
+    `<button class="btn" onclick="qTab('scan')">${ic("qr")}${t("scanqr")}</button>`);
+}
+
+
+/* =====================================================================
+   v2.33 — ভাগ ২: কিবোর্ড নিয়ম (উপরে IIFE তে), সেন্ড মানি ধাপ ১ (টাইল/সাম্প্রতিক/সব কন্টাক্টস),
+   কন্টাক্ট লোড, প্রিয় নাম্বার (PIN সহ), রিকোয়েস্ট মানি, লম্বা QR বাটন, টাচ/ফেস আইডি সেটআপ পেজ,
+   SMS লগইনের পর ফিঙ্গার সেট এ PIN।   (SQL: backend/update-v2.33.sql)
+   নতুন পেজগুলো আলাদা স্তরে (#sheet2) স্ট্যাক হয়, তাই পেছনের পেজ নড়ে না, শুধু স্মুথ স্লাইড।
+   ===================================================================== */
+Object.assign(T.bn, {
+  sname: "নাম বা নাম্বার দিন", v_recent: "সাম্প্রতিক", v_all: "সব কন্টাক্টস", v_cont: "কন্টাক্টস", v_add: "যোগ করুন",
+  v_used: "আপনি ব্যবহার করেছেন", v_lim: "সর্বোচ্চ ফ্রি সেন্ড মানি লিমিট", v_myfav: "আমার প্রিয় নাম্বারসমূহ", v_rm: "বাদ দিন",
+  v_chgfree: "চার্জ ফ্রি মাসিক লেনদেনের লিমিট", v_cfmT: "প্রিয় নাম্বার নিশ্চিত করুন", v_note: "নোট",
+  v_noteAdd: "প্রিয় নাম্বার যোগ করতে পিন নাম্বার দিন এবং ২৫,০০০ টাকা পর্যন্ত সেন্ড মানি করুন চার্জ ফ্রি।",
+  v_noteRm: "প্রিয় নাম্বার বাদ দিতে পিন নাম্বার দিন।", v_info: "প্রিয় নাম্বারে প্রতি মাসে ২৫,০০০ টাকা পর্যন্ত সেন্ড মানি চার্জ ফ্রি।",
+  v_nofav: "আপনার কোনো প্রিয় নাম্বার নেই", v_already: "এই নাম্বার আগেই প্রিয় তালিকায় আছে",
+  v_perm: "কন্টাক্ট দেখতে অনুমতি দিন", v_permb: "অনুমতি দিন", v_retry: "আবার চেষ্টা করুন", v_load: "লোড হচ্ছে…",
+  v_rq: "রিকোয়েস্ট মানি", v_rqs: "রিকোয়েস্টসমূহ", v_grpT: "গ্রুপ", v_selc: "অনুগ্রহ করে কন্টাক্টস সিলেক্ট করুন",
+  v_rqIn: "রিসিভ করা রিকোয়েস্ট", v_rqOut: "সেন্ড করা রিকোয়েস্ট",
+  v_rqNoIn: "সম্প্রতি আপনি কোনো রিকোয়েস্ট মানি গ্রহণ করেননি।", v_rqNoOut: "সম্প্রতি আপনি কোনো রিকোয়েস্ট মানি করেননি।",
+  v_pay: "পে করুন", v_decl: "বাতিল", v_cancel: "বাতিল করুন", v_pend: "অপেক্ষমাণ", v_paid: "পরিশোধিত", v_dcl: "বাতিল হয়েছে",
+  v_rqfrom: "যার কাছে চাইবেন", v_rqNote: "রিকোয়েস্ট পাঠাতে পিন নাম্বার দিন।", v_rqDone: "রিকোয়েস্ট পাঠানো হয়েছে",
+  v_rqDoneS: "প্রাপক অ্যাপে রিকোয়েস্টটি দেখতে পাবেন।", v_rqerr: "রিকোয়েস্ট সুবিধা এখনো চালু হয়নি। অ্যাডমিন update-v2.33.sql চালিয়ে নিন।",
+  v_amtl: "পরিমাণ", v_people: "জন",
+  v_bioT: "টাচ/ফেস আইডি", v_bioH: "টাচ/ফেস আইডি চালু করুন", v_bioS: "চালু করতে পছন্দের অপশন সিলেক্ট করুন", v_sel: "সিলেক্ট করুন",
+  v_bioLT: "লগইন ও লেনদেন", v_bioLTd: "দ্রুত লগইন ও লেনদেন করতে ব্যবহার করুন", v_bioLim: "প্রযোজ্য সেবা ও লিমিট",
+  v_bioL: "শুধু লগইন", v_bioLd: "দ্রুত লগইন করতে ব্যবহার করুন", v_bioN: "লেনদেন নিশ্চিত করতে ট্যাপ করে ধরে রাখার প্রয়োজন নেই",
+  v_bioLimT: "লগইন ও লেনদেন বাছলে সেন্ড মানি, পেমেন্ট ও ক্যাশ আউট ফিঙ্গারপ্রিন্ট দিয়েই নিশ্চিত হবে।",
+  v_bioTx: "ফিঙ্গারপ্রিন্ট দিয়ে নিশ্চিত করতে ট্যাপ করুন", v_bioTxF: "ফিঙ্গারপ্রিন্ট মেলেনি, এবার ধরে রাখুন"
+});
+Object.assign(T.en, {
+  v_recent: "Recent", v_all: "All contacts", v_cont: "Contacts", v_add: "Add",
+  v_used: "You have used", v_lim: "Max free Send Money limit", v_myfav: "My favorite numbers", v_rm: "Remove",
+  v_chgfree: "Charge-free monthly transaction limit", v_cfmT: "Confirm favorite number", v_note: "Note",
+  v_noteAdd: "Enter your PIN to add a favorite number, and send up to ৳25,000 with no charge.",
+  v_noteRm: "Enter your PIN to remove this favorite number.", v_info: "Send Money to favorite numbers is charge-free up to ৳25,000 per month.",
+  v_nofav: "You have no favorite numbers", v_already: "This number is already a favorite",
+  v_perm: "Allow access to see your contacts", v_permb: "Allow", v_retry: "Try again", v_load: "Loading…",
+  v_rq: "Request Money", v_rqs: "Requests", v_grpT: "Group", v_selc: "Please select contacts",
+  v_rqIn: "Received requests", v_rqOut: "Sent requests",
+  v_rqNoIn: "You have not received any money request recently.", v_rqNoOut: "You have not sent any money request recently.",
+  v_pay: "Pay", v_decl: "Decline", v_cancel: "Cancel", v_pend: "Pending", v_paid: "Paid", v_dcl: "Cancelled",
+  v_rqfrom: "Request from", v_rqNote: "Enter your PIN to send the request.", v_rqDone: "Request sent",
+  v_rqDoneS: "The other person will see it in the app.", v_rqerr: "Request Money is not set up yet. Run update-v2.33.sql.",
+  v_amtl: "Amount", v_people: "people",
+  v_bioT: "Touch/Face ID", v_bioH: "Turn on Touch/Face ID", v_bioS: "Choose how you want to use it", v_sel: "Select",
+  v_bioLT: "Login & transactions", v_bioLTd: "Use for quick login and transactions", v_bioLim: "Applicable services & limits",
+  v_bioL: "Login only", v_bioLd: "Use for quick login", v_bioN: "No need to tap and hold to confirm transactions",
+  v_bioLimT: "With Login & transactions, Send Money, Payment and Cash Out are confirmed with your fingerprint.",
+  v_bioTx: "Tap to confirm with fingerprint", v_bioTxF: "Fingerprint did not match, press and hold now"
+});
+
+const PLUS = '<svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>';
+const IC_FAVT = '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2.2"/><path d="M12 8l1.2 2.4 2.6.4-1.9 1.8.5 2.6-2.4-1.3-2.4 1.3.5-2.6-1.9-1.8 2.6-.4z"/><path d="M3 8h2M3 12h2M3 16h2"/></svg>';
+const IC_REQ = '<svg class="i" viewBox="0 0 24 24"><path d="M6 3.5h9l3.5 3.5v13.5H6z"/><path d="M15 3.5V7h3.5M9 11h6M9 14.5h4"/></svg>';
+const IC_AUTO = '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg>';
+const FP_ART = '<svg class="v3fa" viewBox="0 0 160 160"><circle cx="80" cy="80" r="76" fill="#fbe6f0"/><rect x="50" y="20" width="60" height="118" rx="11" fill="#fff" stroke="#3a2a33" stroke-width="3"/><rect x="71" y="25" width="18" height="4" rx="2" fill="#3a2a33"/><g fill="none" stroke="#e2136e" stroke-width="3" stroke-linecap="round"><path d="M62 74c0-11 8-19 18-19s18 8 18 19"/><path d="M68 78c0-7 5-12 12-12s12 5 12 12v6"/><path d="M74 82c0-4 3-6 6-6s6 2 6 6v12"/><path d="M80 84v16"/><path d="M68 92c1 8 4 14 8 18"/><path d="M92 88c0 10-3 18-8 24"/></g></svg>';
+const FAV_LIM = 25000;
+S.subs = S.subs || []; S.cst = S.cst || ""; S.cerr = ""; S.cmap = S.cmap || new Map(); S.rq = S.rq || [];
+
+/* ---------- স্ট্যাক পেজ (আলাদা স্তর #sheet2) ---------- */
+function m2() { let e = document.getElementById("sheet2"); if (!e) { e = document.createElement("div"); e.id = "sheet2"; e.style.cssText = "position:absolute;width:0;height:0"; document.body.appendChild(e); } return e; }
+const SUBR = {};
+const subTop = () => S.subs[S.subs.length - 1];
+function subDraw(s) { s.el.innerHTML = SUBR[s.id](s); s.fresh = false; }
+function subOpen(o) {
+  hap(); o.fresh = true; o.el = document.createElement("div"); m2().appendChild(o.el); S.subs.push(o); subDraw(o);
+  if (o.focus) setTimeout(() => { if (subTop() === o) { const f = document.getElementById(o.focus); if (f) { try { f.focus(); } catch (e) {} } } }, 330);
+  return o;
+}
+function subBack(n) {
+  const s = subTop(); if (!s || s.closing) return; hap(); n = n || 1;
+  for (let i = 1; i < n; i++) { const k = S.subs.length - 2; if (k >= 0) { S.subs[k].el.remove(); S.subs.splice(k, 1); } }
+  s.closing = true; try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
+  const sh = s.el.querySelector(".sh"); if (sh) sh.classList.add("out");
+  setTimeout(() => { s.el.remove(); const i = S.subs.indexOf(s); if (i >= 0) S.subs.splice(i, 1); }, 230);
+}
+function subShell(s, title, body, foot, cls) {
+  return `<div class="sh pgx v3p${cls ? " " + cls : ""}${s.fresh ? "" : " re"}"><div class="box"><div class="ph"><button class="pb" aria-label="${t("back")}" onclick="subBack()">${ic("back")}</button><b>${title}</b><img src="icons/logo.png" alt=""></div><div class="pbody">${body}</div>${foot ? `<div class="pfoot">${foot}</div>` : ""}</div></div>`;
+}
+function v3shake(s) { const b = s.el.querySelector(".box"); if (!b) return; b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); hap("HEAVY"); }
+function subQ(el) { const s = subTop(); if (!s) return; s.q = el.value; const l = s.el.querySelector(".v3list"); if (l) l.innerHTML = s.list(s); }
+
+/* ---------- কন্টাক্ট লোড (অনুমতি চেয়ে, দুই ধরনের প্লাগইন ফরম্যাটই পড়ে) ---------- */
+const cName = (ph) => S.cmap.get(ph) || "";
+async function loadContacts(force) {
+  if (S.cst === "loading" || (S.cst === "ok" && !force)) return;
+  const C = cap().Contacts;
+  if (!C || !C.getContacts) { S.cst = "none"; cstRefresh(); return; }
+  S.cst = "loading"; S.cerr = ""; cstRefresh();
+  try {
+    let p = {}; try { p = await C.checkPermissions(); } catch (e) {}
+    let g = p.contacts || p.readContacts;
+    if (g !== "granted") { try { p = await C.requestPermissions(); } catch (e) { p = {}; } g = p.contacts || p.readContacts; }
+    if (g !== "granted") { S.cst = "denied"; cstRefresh(); return; }
+    let r; try { r = await C.getContacts({projection: {name: true, phones: true}}); } catch (e1) { r = await C.getContacts({projection: {name: true, phones: true, image: false}}); }
+    const m = new Map(), me = S.me ? S.me.phone : "";
+    (r.contacts || []).forEach(c => {
+      const nm = (c.name && (c.name.display || [c.name.given, c.name.family].filter(Boolean).join(" "))) || c.displayName || "";
+      (c.phones || c.phoneNumbers || []).forEach(q => { const ph = normPh(q.number || q.value || q); if (ph && ph !== me && !m.has(ph)) m.set(ph, nm); });
+    });
+    S.cmap = m; S.contacts = [...m].map(([ph, nm]) => ({ph, nm})).sort((a, b) => (a.nm || a.ph).localeCompare(b.nm || b.ph)); S.cst = "ok";
+  } catch (e) { S.cst = "err"; S.cerr = String((e && e.message) || e || "").slice(0, 80); }
+  cstRefresh();
+}
+function cstRefresh() {
+  const s = S.sheet; if (s && s.id === "send" && s.step === 1 && !s.busy) { const l = document.getElementById("clist"); if (l) l.innerHTML = contactRows(s); }
+  S.subs.forEach(x => { if (x.list) { const l = x.el.querySelector(".v3list"); if (l) l.innerHTML = x.list(x); } });
+}
+function cstBox() {
+  const st = S.cst;
+  if (st === "denied") return `<div class="v3pm"><p>${t("v_perm")}</p><button onclick="loadContacts(true)">${t("v_permb")}</button></div>`;
+  if (st === "none") return `<p class="em">${t("g_nocont")}</p>`;
+  if (st === "err") return `<div class="v3pm"><p>${t("g_nocont")}${S.cerr ? `<small>${esc(S.cerr)}</small>` : ""}</p><button onclick="loadContacts(true)">${t("v_retry")}</button></div>`;
+  if (st === "ok") return `<p class="em">${t("g_nocon0")}</p>`;
+  return `<div class="v3sk"><i></i><i></i><i></i><i></i></div>`;
+}
+const v3av = (nm, ph) => `<span class="avs">${avatar(nm, ph)}${isFav(ph) ? `<i class="stf">${STAR}</i>` : ""}</span>`;
+function cRows(q, o) {
+  o = o || {}; const ql = String(q || "").trim().toLowerCase();
+  const l = S.contacts.filter(c => !ql || c.ph.includes(ql) || (c.nm || "").toLowerCase().includes(ql)).slice(0, 300);
+  if (!l.length) return ql && S.cst === "ok" ? `<p class="em">${t("nomatch")}</p>` : cstBox();
+  return l.map(c => `<div class="rr v3rr" onclick="${o.sel ? `subTog('${c.ph}')` : `subPick('${c.ph}')`}">${v3av(c.nm, c.ph)}<div><b>${esc(c.nm || c.ph)}</b><span>${c.nm ? esc(c.ph) : ""}</span></div>${o.sel ? `<i class="v3cb${o.sel.includes(c.ph) ? " on" : ""}">${tickSvg}</i>` : ""}</div>`).join("");
+}
+function subPick(ph) { const s = subTop(); if (!s) return; if (s.mode === "fav") favAsk("add", ph); else if (s.mode === "reqh") rqPick(ph); }
+function subTog(ph) {
+  const s = subTop(); if (!s || s.mode !== "reqg") return; hap(); const i = s.sel.indexOf(ph);
+  if (i >= 0) s.sel.splice(i, 1); else if (s.sel.length >= 10) { toast(t("grpneed2")); return; } else s.sel.push(ph);
+  s.el.querySelector(".v3list").innerHTML = s.list(s); const b = s.el.querySelector(".v3bar"); if (b) b.classList.toggle("on", s.sel.length > 0);
+}
+SUBR.clp = (s) => {
+  const top = s.mode === "reqh" ? `<div class="v3tr"><button class="v3t" onclick="rqList()"><span>${IC_REQ}</span><b>${t("v_rqs")}</b></button><button class="v3t" onclick="rqGroup()"><span>${IC_GRP}</span><b>${t("v_grpT")}</b></button></div>` : "";
+  const hd = s.mode === "reqg" ? `<p class="v3pre">${t("v_selc")}</p>` : "";
+  return subShell(s, s.title, `<div class="v3s"><div class="fld sf">${ic("srch")}<input maxlength="20" placeholder="${t("sname")}" value="${esc(s.q)}" autocomplete="off" oninput="subQ(this)"></div></div>${top}${hd}<p class="v3h">${t(s.mode === "reqg" ? "v_cont" : "v_all")}</p><div class="v3list">${s.list(s)}</div>`,
+    s.mode === "reqg" ? `<button class="v3bar${s.sel.length ? " on" : ""}" onclick="rqGNext()"><span>${t("g_next")}</span>${NXT}</button>` : "", "v3cl");
+};
+
+/* ---------- সেন্ড মানি ধাপ ১ ---------- */
+function sendRows(s) {
+  const q = (s.v || "").trim(), ql = q.toLowerCase(), g = s.grp;
+  const m = (ph, nm) => !ql || ph.includes(ql) || String(nm || "").toLowerCase().includes(ql);
+  const ck = (ph) => `<i class="v3cb${g && g.sel.includes(ph) ? " on" : ""}">${tickSvg}</i>`;
+  const R = (ph, nm, clk) => { if (g && nm) g.names[ph] = nm; return `<div class="rr v3rr" onclick="${g ? `grpTog('${ph}')` : clk}">${v3av(nm, ph)}<div><b>${esc(nm || ph)}</b><span>${nm ? esc(ph) : ""}</span></div>${g ? ck(ph) : ""}</div>`; };
+  let h = "";
+  const rec = peopleFor("send").map(f => [f[0], f[1] || cName(f[0])]).filter(f => m(f[0], f[1]));
+  if (isPh(q) && !rec.some(f => f[0] === q) && !S.cmap.has(q)) h += R(q, "", `pickNum('${q}')`);
+  if (rec.length && !g) h += `<p class="v3h">${t("v_recent")}</p>` + rec.slice(0, 8).map(f => R(f[0], f[1], `pickNum('${f[0]}')`)).join("");
+  const all = S.contacts.filter(c => m(c.ph, c.nm)).slice(0, 300);
+  h += `<p class="v3h">${t("v_all")}</p>` + (all.length ? all.map(c => R(c.ph, c.nm, `pickNum('${c.ph}')`)).join("") : (ql && S.cst === "ok" ? `<p class="em">${t("nomatch")}</p>` : cstBox()));
+  return h;
+}
+function v3num() { const f = document.getElementById("f1"); if (!f) return; hap(); f.setAttribute("inputmode", "numeric"); f.onblur = () => f.removeAttribute("inputmode"); f.blur(); setTimeout(() => { try { f.focus(); } catch (e) {} }, 40); }
+function sendStep1(s) {
+  const g = s.grp, n = g ? g.sel.length : 0;
+  const search = `<div class="v3s"><div class="fld sf">${ic("srch")}<input id="f1" maxlength="20" placeholder="${t("sname")}" value="${esc(s.v)}" autocomplete="off" oninput="srchIn(this)"></div><div class="err" id="er">${esc(s.err)}</div></div>`;
+  const tl = (ico, lbl, js) => `<button class="v3t" onclick="${js}"><span>${ico}</span><b>${lbl}</b></button>`;
+  const qr = g ? "" : `<button class="qrbtn v3q" onclick="openQR('scan','send')">${ic("qr")}<span>${t("qrtap")}</span></button>`;
+  const row = g ? `<div class="gsel"><b>${t("g_selc")}: ${n}/10</b><button onclick="grpOff()">${t("g_exit")}</button></div>${n ? `<div class="gchips">${g.sel.map(p => `<span onclick="grpTog('${p}')">${esc(g.names[p] || p)} ✕</span>`).join("")}</div>` : ""}`
+    : `<div class="v3tr">${tl(IC_FAVT, `${t("g_fav")} (${S.fav.length})`, "favOpen()")}${tl(IC_REQ, t("v_rq"), "rqHome()")}${tl(IC_AUTO, t("autop") === "autop" ? "অটো পে" : t("autop"), "hap();toast(t('soon'))")}${tl(IC_GRP, t("g_grp"), "grpOn()")}</div>`;
+  const h = wrapPage(s, g ? t("g_grp") : t("send"), "sbBack()", `${search}${qr}${row}<div class="pcard lst v3l"><div id="clist">${contactRows(s)}</div></div>${g ? "" : `<button class="v3fab" onclick="v3num()">${PLUS}<span>${t("v_add")}</span></button>`}`,
+    `<button class="btn" onclick="nextStep()">${g ? t("g_next") + " (" + n + ")" : t("next")}${NXT}</button>`);
+  return h.replace('class="sh pgx', 'class="sh pgx v3s1' + (g ? " v3g" : ""));
+}
+/* পেমেন্ট / ক্যাশ আউট ধাপ ১: ছোট চৌকো QR টাইলের বদলে লম্বা বাটন */
+const _bk1 = bkStep1;
+bkStep1 = function (s) {
+  return _bk1(s).replace(/<div class="tl3">[\s\S]*?<\/div><div class="pcard lst">/, `<button class="qrbtn v3q" onclick="openQR('scan','${s.id}')">${ic("qr")}<span>${t("qrtap")}</span></button><div class="pcard lst">`);
+};
+function openS(id, pre, rn) { openS0(id, pre, rn); if (id === "send" && S.sheet && S.sheet.id === "send") { loadFav(); loadContacts(); } }
+
+/* ---------- প্রিয় নাম্বার ---------- */
+function favUsed() {
+  const now = new Date(), set = new Set(S.fav.map(f => f.phone)); let u = 0;
+  (S.tx || []).forEach(x => { if (x.type !== "send" || x.from_id !== S.uid || !set.has(x.to_phone)) return; const d = new Date(x.created_at); if (d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()) u += Number(x.amount) || 0; });
+  return u;
+}
+function favOpen() { hap(); loadFav(); subOpen({id: "favs"}); }
+function favInfo() { hap(); toast(t("v_info")); }
+function favAdd() { if (S.fav.length >= 10) { toast(t("favmax")); return; } loadContacts(); subOpen({id: "clp", mode: "fav", title: t("g_fav"), q: "", list: (x) => cRows(x.q)}); }
+SUBR.favs = (s) => {
+  const nm = (f) => f.name || cName(f.phone);
+  const rows = S.fav.length ? S.fav.map(f => `<div class="v3fr">${v3av(nm(f), f.phone)}<div><b>${esc(nm(f) || f.phone)}</b><span>${nm(f) ? esc(f.phone) : ""}</span></div><button class="v3rm" onclick="favAsk('rm','${f.phone}')">${t("v_rm")}</button></div>`).join("") : `<p class="em">${t("v_nofav")}</p>`;
+  return subShell(s, t("g_fav"), `<div class="v3fx"><small class="v3fs">${t("v_chgfree")}</small><div class="v3fu"><span>${t("v_used")}</span><b>${money2(favUsed())}</b><p>${t("v_lim")} ${money2(FAV_LIM)} <i onclick="favInfo()">i</i></p></div><div class="v3fh"><span>${t("v_myfav")}</span><em>${S.fav.length}/10 ${t("g_fav")}</em></div>${rows}</div><button class="v3fab" onclick="favAdd()">${PLUS}<span>${t("v_add")}</span></button>`, "", "v3fv");
+};
+const v3who = (nm, ph) => `<div class="v3pw">${v3av(nm, ph)}<div><b>${esc(nm || ph)}</b><span>${nm ? esc(ph) : ""}</span></div></div>`;
+/* PIN পেজ (সব জায়গার জন্য এক): নিচে অ্যাপ-কিপ্যাড + "পিন কনফার্ম করুন" বার */
+SUBR.pinx = (s) => subShell(s, s.title, `<div class="v3pc">${s.who}${s.sum || ""}<p class="v3nl">${t("v_note")}</p><p class="v3nt">${s.note}</p>
+  <div class="v3pr">${IC_LOCK}<input id="v3pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(s.pin)}" oninput="pinxIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();pinxGo()}"><button class="fpb" aria-label="fingerprint" onclick="pinxBio()">${ic("fp")}</button></div><div class="err c" id="v3er">${esc(s.err)}</div></div>`,
+  `<button class="btn" id="v3go" onclick="pinxGo()">${t("pinok")}</button>`);
+function pinxIn(el) { const s = subTop(); if (!s || s.id !== "pinx") return; const v = digs(el.value, 6); if (el.value !== v) el.value = v; s.pin = v; s.err = ""; const e = document.getElementById("v3er"); if (e) e.textContent = ""; hap(); }
+async function pinxGo() {
+  const s = subTop(); if (!s || s.id !== "pinx" || s.busy) return;
+  const f = document.getElementById("v3pin"); if (f) s.pin = digs(f.value, 6);
+  const er = (m) => { s.err = m; const e = document.getElementById("v3er"); if (e) e.textContent = m; };
+  if (s.pin.length !== 6) { er(t("badpin")); v3shake(s); return; }
+  s.busy = true; const gb = document.getElementById("v3go"); if (gb) gb.classList.add("ld");
+  try { await signIn(S.auth && S.me ? S.me.phone : S.phone, s.pin); await s.ok(s.pin); }
+  catch (e) { s.busy = false; if (gb) gb.classList.remove("ld"); s.pin = ""; const f2 = document.getElementById("v3pin"); if (f2) f2.value = ""; er(errMsg(e)); v3shake(s); return; }
+  s.busy = false;
+}
+async function pinxBio() {
+  const s = subTop(); if (!s || s.id !== "pinx" || s.busy) return; hap(); const N = cap().NativeBiometric;
+  if (!N || !bioOn()) { toast(t("fpoff")); return; }
+  try { await N.verifyIdentity({reason: t("bioR"), title: "FuNPaY", useFallback: true}); const c = await N.getCredentials({server: BIO_SERVER}); s.pin = digs(c.password, 6); const f = document.getElementById("v3pin"); if (f) f.value = s.pin; pinxGo(); }
+  catch (e) { toast(t("fpbad")); }
+}
+async function favAsk(mode, ph) {
+  hap(); let nm = cName(ph);
+  if (mode === "add") {
+    if (isFav(ph)) { toast(t("v_already")); return; }
+    if (S.fav.length >= 10) { toast(t("favmax")); return; }
+    if (S.me && ph === S.me.phone) { toast(t("self")); return; }
+    try { const r = await api("/rest/v1/rpc/lookup_phone", {m: "POST", b: {p_phone: ph}}); if (!r.length) { toast(t("g_noacc")); return; } nm = r[0].pname || nm; } catch (e) { toast(errMsg(e)); return; }
+  } else { const f = S.fav.find(x => x.phone === ph); nm = (f && f.name) || nm; }
+  subOpen({id: "pinx", title: t("v_cfmT"), who: v3who(nm, ph), note: t(mode === "add" ? "v_noteAdd" : "v_noteRm"), pin: "", err: "", focus: "v3pin",
+    ok: async () => {
+      if (mode === "add") { await api("/rest/v1/rpc/fav_add", {m: "POST", b: {p_phone: ph}}); if (!isFav(ph)) S.fav.push({phone: ph, name: nm}); }
+      else { await api("/rest/v1/rpc/fav_remove", {m: "POST", b: {p_phone: ph}}); S.fav = S.fav.filter(f => f.phone !== ph); }
+      hap("MEDIUM"); loadFav();
+      const fi = S.subs.findIndex(x => x.id === "favs"); if (fi >= 0) { subDraw(S.subs[fi]); subBack(S.subs.length - 1 - fi); } else subBack();
+      const sh = S.sheet; if (sh && sh.id === "send" && sh.step === 1 && !sh.busy) setTimeout(() => { if (S.sheet === sh && !S.subs.length) rer(); }, 260);
+    }});
+}
+async function toggleFav(p, ev) { if (ev) { ev.stopPropagation(); ev.preventDefault(); } favAsk(isFav(p) ? "rm" : "add", p); }
+
+/* ---------- রিকোয়েস্ট মানি ---------- */
+function rqHome() { hap(); loadContacts(); subOpen({id: "clp", mode: "reqh", title: t("v_rq"), q: "", list: (x) => cRows(x.q)}); }
+function rqGroup() { loadContacts(); subOpen({id: "clp", mode: "reqg", title: t("v_rq"), q: "", sel: [], list: (x) => cRows(x.q, {sel: x.sel})}); }
+async function rqPick(ph) {
+  hap(); if (S.me && ph === S.me.phone) { toast(t("self")); return; }
+  try { const r = await api("/rest/v1/rpc/lookup_phone", {m: "POST", b: {p_phone: ph}}); if (!r.length) { toast(t("g_noacc")); return; } rqAmt([{ph, nm: r[0].pname || cName(ph)}]); } catch (e) { toast(errMsg(e)); }
+}
+async function rqGNext() {
+  const s = subTop(); if (!s || s.mode !== "reqg" || s.busy) return;
+  if (!s.sel.length) { toast(t("v_selc")); return; }
+  s.busy = true;
+  try { const rs = await Promise.all(s.sel.map(p => api("/rest/v1/rpc/lookup_phone", {m: "POST", b: {p_phone: p}}))); const bad = s.sel.filter((p, i) => !rs[i].length); s.busy = false; if (bad.length) { toast(t("g_noacc") + ": " + bad.join(", ")); return; } rqAmt(s.sel.map((p, i) => ({ph: p, nm: rs[i][0].pname || cName(p)}))); }
+  catch (e) { s.busy = false; toast(errMsg(e)); }
+}
+function rqAmt(tg) { subOpen({id: "rqa", targets: tg, a: "", note: "", err: "", focus: "v3amt"}); }
+SUBR.rqa = (s) => {
+  const one = s.targets.length === 1, x = s.targets[0];
+  const who = one ? v3who(x.nm, x.ph) : `<div class="v3pw">${avatar(t("g_grp"), "grp")}<div><b>${t("g_grp")}</b><span>${s.targets.length} ${t("v_people")}</span></div></div>`;
+  return subShell(s, t("v_rq"), `<div class="v3ac"><p class="v3nl">${t("v_rqfrom")}</p><div class="v3cd">${who}</div><p class="v3nl" style="margin-top:16px">${t("amt")}</p><div class="v3cd"><div class="fld big bka"><u>৳</u><input id="v3amt" inputmode="decimal" placeholder="0" value="${esc(s.a)}" oninput="rqAIn(this)"></div><div class="err" id="v3er">${esc(s.err)}</div></div><p class="v3nl" style="margin-top:16px">${t("g_ref")}</p><div class="v3cd v3nf"><input id="v3note" maxlength="50" placeholder="${t("g_note")}" value="${esc(s.note)}" oninput="rqNIn(this)" autocomplete="off"></div></div>`,
+    `<button class="btn" onclick="rqANext()">${t("go2")}${NXT}</button>`);
+};
+function rqAIn(el) {
+  const s = subTop(); if (!s) return; let v = en(el.value).replace(/[^0-9.]/g, ""); const p = v.split(".");
+  if (p.length > 1) v = p[0] + "." + p.slice(1).join("").slice(0, 2); v = v.replace(/^0+(?=\d)/, "").slice(0, 9);
+  if (el.value !== v) el.value = v; s.a = v; s.err = ""; const e = document.getElementById("v3er"); if (e) e.textContent = "";
+}
+function rqNIn(el) { const s = subTop(); if (s) s.note = el.value.slice(0, 50); }
+function rqANext() {
+  const s = subTop(); if (!s || s.id !== "rqa") return; const amt = parseFloat(s.a);
+  if (!(amt >= 1) || amt > 100000) { s.err = t("bada"); const e = document.getElementById("v3er"); if (e) e.textContent = s.err; v3shake(s); return; }
+  const a = Math.round(amt * 100) / 100, one = s.targets.length === 1, x = s.targets[0];
+  subOpen({id: "pinx", title: t("v_rq"), who: one ? v3who(x.nm, x.ph) : `<div class="v3pw">${avatar(t("g_grp"), "grp")}<div><b>${t("g_grp")}</b><span>${s.targets.length} ${t("v_people")}</span></div></div>`,
+    sum: `<div class="v3sm"><span>${t("v_amtl")}</span><b>${money2(a)}</b></div>`, note: t("v_rqNote"), pin: "", err: "", focus: "v3pin",
+    ok: async () => {
+      for (const y of s.targets) await api("/rest/v1/rpc/req_create", {m: "POST", b: {p_phone: y.ph, p_amount: a, p_note: s.note || null}});
+      hap("MEDIUM"); const d = subOpen({id: "rqd", amt: a, targets: s.targets});
+      setTimeout(() => { S.subs.filter(z => z !== d).forEach(z => z.el.remove()); S.subs = [d]; }, 340);
+    }});
+}
+SUBR.rqd = (s) => subShell(s, t("v_rq"), `<div class="v3dn"><i class="v3ok">${tickSvg}</i><h3>${t("v_rqDone")}</h3><p>${s.targets.length === 1 ? esc(s.targets[0].nm || s.targets[0].ph) : s.targets.length + " " + t("v_people")} · ${money2(s.amt)}</p><small>${t("v_rqDoneS")}</small></div>`,
+  `<button class="v3bar on" onclick="subBack()"><span>${t("next")}</span>${NXT}</button>`, "v3dp");
+function rqList() { hap(); subOpen({id: "rql", tab: "in"}); rqLoad(); }
+async function rqLoad() {
+  try { const r = await api("/rest/v1/rpc/req_list", {m: "POST", b: {}}); S.rq = Array.isArray(r) ? r : []; S.rqErr = ""; } catch (e) { S.rqErr = t("v_rqerr"); }
+  S.rqLoaded = true; const p = S.subs.find(x => x.id === "rql"); if (p) subDraw(p);
+}
+const rqDate = (d) => { try { return fmt(d); } catch (e) { return ""; } };
+SUBR.rql = (s) => {
+  const l = S.rq.filter(r => r.dir === s.tab);
+  const st = (r) => r.status === "paid" ? t("v_paid") : r.status === "pending" ? t("v_pend") : t("v_dcl");
+  const items = l.map(r => `<div class="v3rq"><div class="v3rh">${v3av(r.name, r.phone)}<div><b>${esc(r.name || r.phone)}</b><span>${r.name ? esc(r.phone) : ""}</span></div><em>${money2(r.amount)}</em></div>${r.note ? `<p>${esc(r.note)}</p>` : ""}<div class="v3rf"><small>${rqDate(r.created_at)} · <u class="s-${r.status}">${st(r)}</u></small>${r.status === "pending" ? (r.dir === "in" ? `<span><button class="v3b1" onclick="rqDecl('${r.id}')">${t("v_decl")}</button><button class="v3b2" onclick="rqPay('${r.id}')">${t("v_pay")}</button></span>` : `<span><button class="v3b1" onclick="rqCancel('${r.id}')">${t("v_cancel")}</button></span>`) : ""}</div></div>`).join("");
+  const empty = `<div class="v3em">${IC_REQ}<p>${t(s.tab === "in" ? "v_rqNoIn" : "v_rqNoOut")}</p></div>`;
+  return subShell(s, t("v_rq"), `<div class="v3tabs"><button class="${s.tab === "in" ? "on" : ""}" onclick="rqTab('in')">${t("v_rqIn")}</button><button class="${s.tab === "out" ? "on" : ""}" onclick="rqTab('out')">${t("v_rqOut")}</button></div>${S.rqErr ? `<p class="em">${S.rqErr}</p>` : l.length ? `<div class="v3rl">${items}</div>` : (S.rqLoaded ? empty : `<div class="v3sk"><i></i><i></i><i></i></div>`)}`, "", "v3rv");
+};
+function rqTab(k) { const s = subTop(); if (!s || s.id !== "rql" || s.tab === k) return; hap(); s.tab = k; subDraw(s); }
+async function rqAct(fn, id) { hap(); try { await api("/rest/v1/rpc/" + fn, {m: "POST", b: {p_id: id}}); } catch (e) { toast(errMsg(e)); } rqLoad(); }
+const rqDecl = (id) => rqAct("req_decline", id), rqCancel = (id) => rqAct("req_cancel", id);
+function rqPay(id) {
+  const r = S.rq.find(x => x.id === id); if (!r) return; hap();
+  S.subs.forEach(x => x.el.remove()); S.subs = [];
+  openS("send", r.phone, r.name || "");
+  const s = S.sheet; if (s && s.id === "send") { if (s.step === 1) { s.step = 2; s.rn = r.name || ""; } s.a = String(r.amount); s.reqId = id; if (r.note) s.note = r.note; s.err = ""; renderSheet(); }
+}
+const _ctx = confirmTx;
+confirmTx = async function () {
+  const s0 = S.sheet, rid = s0 && s0.reqId; const r = await _ctx.apply(this, arguments);
+  if (rid && S.sheet && S.sheet !== s0 && S.sheet.done) api("/rest/v1/rpc/req_paid", {m: "POST", b: {p_id: rid}}).catch(() => {});
+  return r;
+};
+
+/* ---------- টাচ/ফেস আইডি সেটআপ (পূর্ণ পেজ) ---------- */
+const bioTx = () => { try { return bioOn() && localStorage.getItem("fpbiomode") === "tx" && !(S.sheet && S.sheet.nobio); } catch (e) { return false; } };
+function bioStart(pin) { subOpen({id: "bios", mode: "tx", pin: pin || ""}); }
+SUBR.bios = (s) => subShell(s, t("v_bioT"), `<div class="v3bh">${FP_ART}<b>${t("v_bioH")}</b><p>${t("v_bioS")}</p></div><p class="v3sel">${t("v_sel")}</p>
+  <div class="v3opt${s.mode === "tx" ? " on" : ""}" onclick="bioMode('tx')"><div><b>${t("v_bioLT")}</b><span>${t("v_bioLTd")}</span><u onclick="event.stopPropagation();bioLim()">${t("v_bioLim")}</u></div><i class="v3rd">${tickSvg}</i></div>
+  <div class="v3opt${s.mode === "login" ? " on" : ""}" onclick="bioMode('login')"><div><b>${t("v_bioL")}</b><span>${t("v_bioLd")}</span></div><i class="v3rd">${tickSvg}</i></div>
+  ${s.mode === "tx" ? `<div class="v3nb">${t("v_bioN")}</div>` : ""}`, `<button class="v3bar on" onclick="bioNext()"><span>${t("next")}</span>${NXT}</button>`, "v3bp");
+function bioMode(m) { const s = subTop(); if (!s || s.id !== "bios" || s.mode === m) return; hap(); s.mode = m; subDraw(s); }
+function bioLim() { hap(); toast(t("v_bioLimT")); }
+async function bioEnable(pin, mode) {
+  const N = cap().NativeBiometric; if (!N) throw new Error("noscan");
+  const ph = S.auth && S.me ? S.me.phone : S.phone, wasOut = !S.auth;
+  await N.verifyIdentity({reason: t("bioR"), title: "FuNPaY", useFallback: true});
+  await N.setCredentials({username: ph, password: pin, server: BIO_SERVER});
+  try { localStorage.setItem("fpbio", ph); localStorage.setItem("fpbiomode", mode); } catch (e) {}
+  hap("MEDIUM"); toast(t("bioOn")); subBack(S.subs.length || 1);
+  if (wasOut) { try { await enter(); } catch (e) { S.tok = ""; S.rt = ""; render(); toast(errMsg(e)); } } else setTimeout(() => swFlip(true), 320);
+}
+async function bioNext() {
+  const s = subTop(); if (!s || s.id !== "bios" || s.busy) return; hap(); const mode = s.mode;
+  if (s.pin) {   /* লগইনের সময় PIN দেওয়া ছিল: আবার চায় না */
+    s.busy = true;
+    try { await signIn(S.auth && S.me ? S.me.phone : S.phone, s.pin); await bioEnable(s.pin, mode); } catch (e) { s.busy = false; toast(t("fpbad")); }
+    return;
+  }
+  subOpen({id: "pinx", title: t("v_bioT"), who: `<div class="v3pw"><i class="v3fi">${ic("fp")}</i><div><b>${t("v_bioH")}</b><span>${t(mode === "tx" ? "v_bioLT" : "v_bioL")}</span></div></div>`, note: t("bioOffD").replace(/বন্ধ করতে/, "চালু করতে").replace("turn it off", "turn it on"), pin: "", err: "", focus: "v3pin",
+    ok: (pin) => bioEnable(pin, mode)});
+}
+async function toggleBio() {
+  hap(); const N = cap().NativeBiometric; if (!N) { toast(t("noscan")); return; }
+  if (bioOn()) { S.sheet = {id: "bio", off: true, pin: "", fresh: true, err: ""}; renderSheet(); return; }
+  try { const a = await N.isAvailable({useFallback: true}); if (!a.isAvailable) { toast(t("errg")); return; } } catch (e) { toast(t("errg")); return; }
+  bioStart("");
+}
+async function bioTap() {
+  if (S.busy) return; if (bioOn()) { bioUnlock(); return; }
+  const N = cap().NativeBiometric; if (!N) { toast(t("noscan")); return; }
+  try { const a = await N.isAvailable({useFallback: true}); if (!a.isAvailable) { toast(t("errg")); return; } } catch (e) { toast(t("errg")); return; }
+  bioStart("");
+}
+/* লগইনের পর (PIN বা SMS যেভাবেই হোক) একবার অফার; PIN জানা থাকলে আবার চায় না, SMS হলে PIN চায় */
+async function offerBio(pin) {
+  const N = cap().NativeBiometric;
+  if (!N || !S.auth || S.sheet || S.upd || S.subs.length || bioOn()) return;
+  try { if (localStorage.getItem("fpbioask") === S.phone) return; } catch (e) {}
+  try { const a = await N.isAvailable({useFallback: true}); if (!a.isAvailable) return; } catch (e) { return; }
+  try { localStorage.setItem("fpbioask", S.phone); } catch (e) {}
+  bioStart(pin || "");
+}
+/* "লগইন ও লেনদেন" বাছা থাকলে কনফার্ম পেজে ধরে রাখতে হয় না: ট্যাপ করে ফিঙ্গার দিলেই যায় */
+let tcb = false;
+async function txConfirmBio() {
+  if (tcb) return; tcb = true; const N = cap().NativeBiometric, s = S.sheet;
+  try {
+    await N.verifyIdentity({reason: t("bioR"), title: "FuNPaY", useFallback: true});
+    if (S.sheet !== s) { tcb = false; return; }
+    hap("MEDIUM"); const b = document.getElementById("lgh") || document.getElementById("hold"); if (b) b.classList.add("ld"); tcb = false; confirmTx(); return;
+  } catch (e) { if (s) s.nobio = true; toast(t("v_bioTxF")); }
+  tcb = false;
+}
+const _lgStart = lgStart;
+lgStart = function (e) { if (bioTx()) { if (e && e.preventDefault) e.preventDefault(); txConfirmBio(); return; } return _lgStart.apply(this, arguments); };
+const _holdStart = holdStart;
+holdStart = function (e) { if (bioTx()) { if (e && e.preventDefault) e.preventDefault(); txConfirmBio(); return; } return _holdStart.apply(this, arguments); };
+const _bk4 = bkStep4;
+bkStep4 = function (s) { const h = _bk4(s); return bioTx() ? h.replace(/(<div class="c4f">[\s\S]*?<\/div>)<p>[^<]*<\/p>/, `$1<p>${t("v_bioTx")}</p>`) : h; };
