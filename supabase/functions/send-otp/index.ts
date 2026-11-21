@@ -31,13 +31,13 @@ Deno.serve(async (req) => {
   const now = Date.now();
   const ago = (ms: number) => new Date(now - ms).toISOString();
 
-  // সীমা: একই নম্বরে 60 সেকেন্ডে একবার, 24 ঘণ্টায় সর্বোচ্চ 5 বার; একই IP থেকে ঘণ্টায় সর্বোচ্চ 15 বার
+  // সীমা: একই নম্বরে 60 সেকেন্ডে একবার, 24 ঘণ্টায় সর্বোচ্চ 10 বার; একই IP থেকে ঘণ্টায় সর্বোচ্চ 40 বার (শুধু সফলভাবে পাঠানো SMS গোনা হয়)
   const last = await db.from("otp_log").select("at").eq("phone", phone).gte("at", ago(60_000)).limit(1);
   if (last.data && last.data.length) return out(429, { error: "OTPWAIT" });
   const day = await db.from("otp_log").select("id", { count: "exact", head: true }).eq("phone", phone).gte("at", ago(86_400_000));
-  if ((day.count || 0) >= 5) return out(429, { error: "OTPLIM" });
+  if ((day.count || 0) >= 10) return out(429, { error: "OTPLIM" });
   const hr = await db.from("otp_log").select("id", { count: "exact", head: true }).eq("ip", ip).gte("at", ago(3_600_000));
-  if ((hr.count || 0) >= 15) return out(429, { error: "OTPLIM" });
+  if ((hr.count || 0) >= 40) return out(429, { error: "OTPLIM" });
 
   const n = new Uint32Array(1); crypto.getRandomValues(n);
   const code = String(n[0] % 1_000_000).padStart(6, "0");
@@ -47,7 +47,6 @@ Deno.serve(async (req) => {
     phone, code_hash: hash, expires_at: new Date(now + 5 * 60_000).toISOString(), attempts: 0, sent_at: new Date(now).toISOString(),
   });
   if (up.error) { console.error("db", up.error.message); return out(500, { error: "SERVER" }); }
-  await db.from("otp_log").insert({ phone, ip });
 
   // SMS: ইংরেজিতে রাখা হয়েছে (সাধারণ text টাইপে সবচেয়ে নিরাপদ, কোড ঠিকই ধরা পড়ে)
   const msg = `Your FuNPaY code is ${code}. Do not share it with anyone.`;
@@ -73,5 +72,7 @@ Deno.serve(async (req) => {
     await db.from("otp_codes").delete().eq("phone", phone);
     return out(502, { error: "OTPSMS" });
   }
+  // SMS সফলভাবে গেলে তবেই সীমার হিসাবে ধরা হয় (ব্যর্থ হলে চেষ্টা নষ্ট হয় না)
+  await db.from("otp_log").insert({ phone, ip });
   return out(200, { ok: true });
 });

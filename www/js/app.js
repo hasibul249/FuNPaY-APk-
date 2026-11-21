@@ -168,7 +168,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.33"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.35"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -622,8 +622,8 @@ function loginHtml() {
       <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="lp" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="numIn(this)"></div>
       <div class="le"></div>
       <p class="terms">${t("terms")}</p>
-      </div>
-    <button class="nbar" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
+      <button class="nbar nin" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button>
+      </div></div>`;
   /* 2.5) OTP পেজ: SMS এ কোড যায়, Allow দিলে ঘরে নিজে বসে (ঘর readonly), অ্যান্ড্রয়েডের বাইরে বা না এলে হাতে লেখার পথ খোলে */
   if (S.view === "otp") return `<div class="fl light otpv">${lgBar("otpStop();S.view='ph';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
@@ -631,11 +631,9 @@ function loginHtml() {
       <div class="otpb" id="otpbox" onclick="otpFocus()">${[0, 1, 2, 3, 4, 5].map(i => `<i id="ob${i}"></i>`).join("")}<input id="otpin" class="otpi" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" ${S.otpManual ? "" : "readonly"} oninput="otpTyped(this)" onfocus="otpPaint()" onblur="otpPaint()" onpaste="otpPasteEv(event)"></div>
       <div class="otst" id="otst" aria-live="polite"></div>
       <div class="otpact">
-        <button class="otpp" id="otppb" onclick="otpPaste()">${ic("copy")}<span>${t("otppaste")}</span></button>
         <button class="otprs" id="otprs" onclick="otpResend()"><svg class="otrg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" class="bg"/><circle cx="12" cy="12" r="9" class="fg" id="otrf"/></svg><span id="otrt"></span></button>
+        <button class="otpp" id="otppb" onclick="otpPaste()">${ic("copy")}<span>${t("otppaste")}</span></button>
       </div>
-      <p class="terms otpw" id="otpwait">${S.otpManual ? "" : t("otpw")}</p>
-      <button class="lnk3" id="otpman" style="${S.otpManual ? "display:none" : ""}" onclick="otpManualOn()">${t("otpm")}</button>
     </div></div>`;
   /* 3) নতুন অ্যাকাউন্ট (শুধু নম্বরে অ্যাকাউন্ট না থাকলে আসে) */
   if (S.view === "reg") return `<div class="fl light regv">${lgBar("S.view='ph';render()")}
@@ -699,8 +697,8 @@ function otpStart() {
     const m = /(?:^|\D)(\d{6})(?:\D|$)/.exec(String((r && r.message) || ""));
     if (m) otpFill(m[1]); else otpManualOn();
   }).catch(() => { if (my === otpSeq && S.view === "otp") otpManualOn(); });
-  /* 25 সেকেন্ডেও না এলে হাতে লেখার পথ খুলে দেওয়া (পপআপ না আসা ফোনের জন্য) */
-  setTimeout(() => { if (my === otpSeq && S.view === "otp" && !S.otpManual && !S.otpBusy) otpManualOn(); }, 25000);
+  /* ৬ সেকেন্ডে কোড না ধরা পড়লে কিবোর্ড নিজে খুলে যায় */
+  setTimeout(() => { if (my === otpSeq && S.view === "otp" && !S.otpManual && !S.otpBusy) otpManualOn(); }, 6000);
 }
 function otpTick() {
   if (S.view !== "otp") { clearInterval(otpTm); return; }
@@ -837,7 +835,7 @@ async function pinGo() {
   if (S.busy) return;
   const el = document.getElementById("pinin"), le = document.querySelector(".le"), pin = el ? digs(el.value, 6) : S.pin;
   S.pin = pin;
-  if (pin.length !== 6) { if (le) le.textContent = t("badpin"); hap("HEAVY"); return; }
+  if (pin.length !== 6) { hap("HEAVY"); return; }
   const ds = document.querySelector(".bkp"), gb = document.getElementById("pingo");
   S.busy = true; if (le) le.textContent = ""; if (gb) gb.classList.add("ld");
   try { await signIn(S.phone, pin); S.lp = pin; await enter(); }
@@ -1123,7 +1121,7 @@ function spGo() {
   const s = S.sheet; if (!s || s.busy || s.step !== 3) return;
   const f = document.getElementById("spin"); if (f) s.pin = digs(f.value, 6);
   if (s.pin.length === 6) { verifyPin(); return; }
-  s.err = t("badpin"); const er = document.getElementById("er"); if (er) er.textContent = s.err; shakeBox();
+  shakeBox();
 }
 async function verifyPin() {
   const s = S.sheet; if (!s || s.busy || s.step !== 3 || s.pin.length !== 6) return;
@@ -2322,7 +2320,7 @@ async function kUpload(path, data) {
 async function kSubmit() {
   if (K.busy) return;
   const el = document.getElementById("kpin"), le = document.getElementById("kle"), pin = el ? digs(el.value, 6) : "";
-  if (!isPin(pin)) { if (le) le.textContent = t("badpin"); hap("HEAVY"); return; }
+  if (!isPin(pin)) { hap("HEAVY"); return; }
   K.busy = true; const sb = document.getElementById("ksb"); if (sb) sb.classList.add("ld"); if (le) le.textContent = "";
   const fail = (e) => { K.busy = false; kMsg(""); const b = document.getElementById("ksb"); if (b) b.classList.remove("ld"); const l2 = document.getElementById("kle"); if (l2) l2.textContent = errMsg(e); K.err = l2 ? l2.textContent : ""; hap("HEAVY"); const f = document.getElementById("kpin"); if (f) { f.value = ""; } };
   try { await signIn(S.me.phone, pin); } catch (e) { return fail(e); }
@@ -2593,8 +2591,8 @@ async function kVal() {
 }
 
 /* ---- NID স্ক্যান পাতা: চার পাশে UI রঙ + লোগো, ক্যামেরা শুধু কার্ডের ঘরে ---- */
-const kBg = () => `<div class="kbg"><i class="b1"></i><i class="b2"></i></div>`;
-const kLogo = () => `<div class="klg"><img src="icons/logo.png" alt=""><b>FuNPaY</b></div>`;
+const kBg = () => `<div class="kbg"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>`;
+const kLogo = () => `<div class="klg"><img src="icons/logo-pink.png" alt=""><b>FuNPaY</b></div>`;
 function kScan(side) {
   const fr = side === "front", pv = K.pv;
   const chip = pv && K.vbusy ? `<div class="kchk"><i class="kspin"></i><span>${t("k_chk2")}</span></div>` : pv && K.auto ? `<div class="kchk gd">${tickSvg}<span>${t("k_got")}</span></div>` : "";
@@ -2916,7 +2914,7 @@ function kInfo() {
   const rows = KF.map(([k, lb, ik], i) => {
     const v = K.d[k] || "", ok = KV[k](v), lock = K.lk && K.lk[k];
     let body;
-    if (k === "dob") body = `<button type="button" class="kdb" onclick="kDobOpen()"><span id="kv_dob">${v ? esc(v) : t("k_miss")}</span><em>${t("k_edit")}</em></button>`;
+    if (k === "dob") body = `<button type="button" class="kdb" onclick="kDobOpen()"><span id="kv_dob">${v ? esc(v) : t("k_miss")}</span><em><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>${t("k_edit")}</em></button>`;
     else if (k === "addr") body = `<textarea id="kv_${k}" rows="2" placeholder="${t("k_miss")}" oninput="kSet('${k}',this)">${esc(v)}</textarea>`;
     else body = `<input id="kv_${k}" value="${esc(v)}" placeholder="${k === "name" ? t("k_nmen") : t("k_miss")}" ${k === "nid" ? 'inputmode="numeric" maxlength="17"' : 'maxlength="80"'}${k === "name" ? ' autocapitalize="words" autocorrect="off" spellcheck="false"' : ""}${lock ? " readonly" : ""} oninput="kSet('${k}',this)">`;
     return `<div class="kf ${ok ? "gd" : "bd"}${lock ? " lk" : ""}" style="--n:${i}"><div class="kfi">${kic(ik)}</div><div class="kfb"><label>${t(lb)}</label>${body}${lock ? `<small class="klk2">${t("k_lockd")}</small>` : ""}</div><i class="kt2 ${ok ? "gd" : "no"}">${ok ? kTickI : kCrossI}</i></div>`;
@@ -3069,7 +3067,7 @@ function scanHtml(s) {
   };
   /* ---- v2.33: ফোনের কিবোর্ডের ঠিক ওপরে "পরবর্তী/এগিয়ে যান" বার (নাম্বার ও পরিমাণের ঘরে) ---- */
   let fb = null, fbc = null, fbT = 0;
-  const isPhoneK = (e) => e && e.tagName === "INPUT" && !isPin(e) && e.id !== "otpin" && e.id !== "rp" && !e.readOnly && (/^(numeric|decimal)$/.test(e.getAttribute("inputmode") || "") || e.type === "tel");
+  const isPhoneK = (e) => e && e.tagName === "INPUT" && !isPin(e) && e.id !== "otpin" && e.id !== "lp" && e.id !== "rp" && !e.readOnly && (/^(numeric|decimal)$/.test(e.getAttribute("inputmode") || "") || e.type === "tel");
   const footBtn = (e) => (e.closest(".sh,.kw,#app") || document).querySelector(".pfoot .btn,.kbtn,.btn");
   const readyP = (e) => {
     if (e.getAttribute("inputmode") === "decimal") return (parseFloat(e.value) || 0) > 0;
@@ -3958,7 +3956,7 @@ async function pinxGo() {
   const s = subTop(); if (!s || s.id !== "pinx" || s.busy) return;
   const f = document.getElementById("v3pin"); if (f) s.pin = digs(f.value, 6);
   const er = (m) => { s.err = m; const e = document.getElementById("v3er"); if (e) e.textContent = m; };
-  if (s.pin.length !== 6) { er(t("badpin")); v3shake(s); return; }
+  if (s.pin.length !== 6) { v3shake(s); return; }
   s.busy = true; const gb = document.getElementById("v3go"); if (gb) gb.classList.add("ld");
   try { await signIn(S.auth && S.me ? S.me.phone : S.phone, s.pin); await s.ok(s.pin); }
   catch (e) { s.busy = false; if (gb) gb.classList.remove("ld"); s.pin = ""; const f2 = document.getElementById("v3pin"); if (f2) f2.value = ""; er(errMsg(e)); v3shake(s); return; }
@@ -4060,12 +4058,12 @@ confirmTx = async function () {
 };
 
 /* ---------- টাচ/ফেস আইডি সেটআপ (পূর্ণ পেজ) ---------- */
-const bioTx = () => { try { return bioOn() && localStorage.getItem("fpbiomode") === "tx" && !(S.sheet && S.sheet.nobio); } catch (e) { return false; } };
+/* ফিঙ্গার চালু থাকুক বা না থাকুক, পেমেন্ট কনফার্মে সবসময় ধরে রাখতে হয় (ফিঙ্গার শুধু PIN এর জায়গায়) */
+const bioTx = () => false;
 function bioStart(pin) { subOpen({id: "bios", mode: "tx", pin: pin || ""}); }
 SUBR.bios = (s) => subShell(s, t("v_bioT"), `<div class="v3bh">${FP_ART}<b>${t("v_bioH")}</b><p>${t("v_bioS")}</p></div><p class="v3sel">${t("v_sel")}</p>
   <div class="v3opt${s.mode === "tx" ? " on" : ""}" onclick="bioMode('tx')"><div><b>${t("v_bioLT")}</b><span>${t("v_bioLTd")}</span><u onclick="event.stopPropagation();bioLim()">${t("v_bioLim")}</u></div><i class="v3rd">${tickSvg}</i></div>
-  <div class="v3opt${s.mode === "login" ? " on" : ""}" onclick="bioMode('login')"><div><b>${t("v_bioL")}</b><span>${t("v_bioLd")}</span></div><i class="v3rd">${tickSvg}</i></div>
-  ${s.mode === "tx" ? `<div class="v3nb">${t("v_bioN")}</div>` : ""}`, `<button class="v3bar on" onclick="bioNext()"><span>${t("next")}</span>${NXT}</button>`, "v3bp");
+  <div class="v3opt${s.mode === "login" ? " on" : ""}" onclick="bioMode('login')"><div><b>${t("v_bioL")}</b><span>${t("v_bioLd")}</span></div><i class="v3rd">${tickSvg}</i></div>`, `<button class="v3bar on" onclick="bioNext()"><span>${t("next")}</span>${NXT}</button>`, "v3bp");
 function bioMode(m) { const s = subTop(); if (!s || s.id !== "bios" || s.mode === m) return; hap(); s.mode = m; subDraw(s); }
 function bioLim() { hap(); toast(t("v_bioLimT")); }
 async function bioEnable(pin, mode) {
@@ -4125,3 +4123,199 @@ const _holdStart = holdStart;
 holdStart = function (e) { if (bioTx()) { if (e && e.preventDefault) e.preventDefault(); txConfirmBio(); return; } return _holdStart.apply(this, arguments); };
 const _bk4 = bkStep4;
 bkStep4 = function (s) { const h = _bk4(s); return bioTx() ? h.replace(/(<div class="c4f">[\s\S]*?<\/div>)<p>[^<]*<\/p>/, `$1<p>${t("v_bioTx")}</p>`) : h; };
+
+
+/* =====================================================================
+   v2.34 — লেখা: আইডেন্টি কার্ডের পেজ, ফেস ভেরিফিকেশন (সবসময় ইংরেজি)
+   ===================================================================== */
+Object.assign(T.bn, {k_front: "আইডেন্টি কার্ডের ফ্রন্ট পেজ", k_back: "আইডেন্টি কার্ডের ব্যাক পেজ", k_face: "Face Verification"});
+Object.assign(T.en, {k_front: "ID Card Front Page", k_back: "ID Card Back Page", k_face: "Face Verification"});
+
+/* =====================================================================
+   v2.35 — KYC: একবার আপলোডেই গ্রহণ, আপলোডের সময় ক্যামেরা বন্ধ, দ্রুত অটো ছবি,
+   যাচাইয়ের লাইভ তালিকা, ধাপ বদলের অ্যানিমেশন
+   ===================================================================== */
+Object.assign(T.bn, {k_pb1: "কার্ড খোঁজা হচ্ছে", k_pb2: "সামনে/পেছনের দিক মেলানো হচ্ছে", k_pb3: "লেখা পড়া হচ্ছে", k_pb4: "ছবি পরিষ্কার কিনা দেখা হচ্ছে", k_pb5: "আলো দেখা হচ্ছে", k_hold: "চমৎকার, স্থির রাখুন…"});
+Object.assign(T.en, {k_pb1: "Finding the card", k_pb2: "Checking front or back side", k_pb3: "Reading the text", k_pb4: "Checking sharpness", k_pb5: "Checking the light", k_hold: "Good, hold still…"});
+
+/* ----- OCR লাইনে অটো-কাজ আটকে থাকলে বাতিল করা যায় ----- */
+let KAG = 0;
+function kOcrData(cv, side, tag) {
+  const g = KAG;
+  const run = async () => {
+    if (tag === "auto" && g !== KAG) return null;
+    const w = await kWorker(); if (!w) return null; KCUR = side || "";
+    try { const r = await Promise.race([w.recognize(cv), new Promise((_, no) => setTimeout(() => no(new Error("SLOW")), 80000))]); return (r && r.data) || null; }
+    catch (e) { console.log("ocr", e && e.message); return null; } finally { KCUR = ""; }
+  };
+  const p = KQ.then(run, run); KQ = p.catch(() => {}); return p;
+}
+function kOcrText(cv, side, tag) { return kOcrData(cv, side, tag).then(d => d === null ? null : (d.text || "")); }
+
+/* ----- ধাপ বদলের অ্যানিমেশনসহ রেন্ডার; ছবির প্রিভিউ থাকলে ক্যামেরা পুরো বন্ধ ----- */
+const KORD = ["intro", "front", "back", "info", "face", "match", "pin", "wait", "ok"];
+let KLAST = null;
+function kycRender() {
+  const el = kEl(), want = K.step === "face" ? "user" : (K.step === "front" || K.step === "back") ? "environment" : "";
+  kcamStop(!!want && !!KS && KSf === want && !K.pv && !K.galOpen);
+  window.__kyc = true; const first = !K.open; K.open = true;
+  el.className = first ? "kin" : "";
+  const changed = !first && KLAST && KLAST !== K.step, dir = changed ? (KORD.indexOf(K.step) >= KORD.indexOf(KLAST) ? 1 : -1) : 0;
+  let old = null;
+  if (changed && el.firstElementChild) {
+    old = el.firstElementChild; el.removeChild(old);
+    old.querySelectorAll("[id]").forEach(n => n.removeAttribute("id"));
+    old.querySelectorAll("video").forEach(v => { try { v.pause(); } catch (e) {} });
+    old.classList.add("kpo", dir > 0 ? "kpo-f" : "kpo-b");
+  }
+  el.innerHTML = kHtml();
+  if (changed) { K.galOpen = 0; const nw = el.firstElementChild; if (nw) nw.classList.add(dir > 0 ? "kpi-f" : "kpi-b"); }
+  if (old) { el.appendChild(old); setTimeout(() => { try { old.remove(); } catch (e) {} }, 360); }
+  KLAST = K.step;
+  kSb();
+  if (["front", "back", "face"].includes(K.step) && !K.pv && !K.galOpen) setTimeout(kcamInit, changed ? 140 : 80);
+  if (K.step === "info" && K.reading) kInfoStart();
+  if (K.step === "match" && !K.mres && !K.mrun) kMatchRun();
+  if (K.step === "pin") setTimeout(() => { const f = document.getElementById("kpin"); if (f) { try { f.focus(); } catch (e) {} } }, 420);
+}
+
+/* ----- গ্যালারি: ক্যামেরা বন্ধ করে ফাইল বাছাই, ফিরে এলে (বাতিল করলে) আবার ক্যামেরা চালু ----- */
+let KGI = null;
+function kGalInput() {
+  if (KGI && document.body.contains(KGI)) return KGI;
+  const i = document.createElement("input"); i.type = "file"; i.accept = "image/*"; i.id = "kgfx"; i.style.display = "none";
+  i.addEventListener("change", () => { K.galPick = Date.now(); kFile(i); });
+  i.addEventListener("cancel", () => kCamBack());
+  document.body.appendChild(i); KGI = i; return i;
+}
+function kGalOpen() {
+  hap();
+  if (K.galOpen || K.pv || K.vbusy || (K.step !== "front" && K.step !== "back")) return;
+  K.galOpen = Date.now(); K.galPick = 0;
+  KA.pause = Infinity; kcamStop();
+  const v = document.getElementById("kvid"); if (v) { try { v.pause(); v.srcObject = null; } catch (e) {} v.classList.remove("on"); }
+  galAsk(() => { try { const i = kGalInput(); i.value = ""; i.click(); } catch (e) { kCamBack(); } }, () => kCamBack());
+}
+function kCamBack() {
+  K.galOpen = 0;
+  if (!K.open || K.pv || K.vbusy || K.loadingGal || (K.step !== "front" && K.step !== "back")) return;
+  KA.pause = 0; kcamInit();
+}
+function galAsk(cb, no) {
+  if (KGAL) { cb(); return; }
+  if (document.getElementById("galq")) return;
+  const d = document.createElement("div"); d.id = "galq"; d.className = "galq";
+  d.innerHTML = `<div class="galb"><div class="gali">${ic("gal")}</div><h3>${t(window.__kyc ? "k_galh" : "galh")}</h3><p>${t(window.__kyc ? "k_gald" : "gald")}</p><button class="galy" id="galy">${t(window.__kyc ? "k_galb" : "galb")}</button><button class="galn" id="galn">${t(window.__kyc ? "k_galn" : "galn")}</button></div>`;
+  document.body.appendChild(d); hap();
+  const close = () => { d.classList.add("out"); setTimeout(() => d.remove(), 220); };
+  d.querySelector("#galn").onclick = () => { hap(); close(); if (no) no(); };
+  d.querySelector("#galy").onclick = async () => {
+    hap(); try { const F = cap().Filesystem; if (F && F.requestPermissions) await F.requestPermissions(); } catch (e) {}
+    KGAL = true; try { localStorage.setItem("fp_gal", "1"); } catch (e) {}
+    close(); cb();
+  };
+}
+function kPopOk() { const o = document.getElementById("kpop"); if (o) o.remove(); KA.pause = Date.now() + 1200; hap(); if (!K.pv && !KS) kCamBack(); }
+function kFile(inp) {
+  const f = inp && inp.files && inp.files[0];
+  if (!f) { kCamBack(); return; }
+  const side = K.step;
+  if (side !== "front" && side !== "back") { try { inp.value = ""; } catch (e) {} return; }
+  K.loadingGal = true; KA.pause = Infinity; kcamStop();
+  const u = URL.createObjectURL(f), im = new Image();
+  const done = () => { try { URL.revokeObjectURL(u); } catch (e) {} try { inp.value = ""; } catch (e) {} };
+  im.onload = async () => {
+    let shot = false; try { shot = await kIsShot(f, im); } catch (e) {}
+    K.loadingGal = false;
+    if (K.step !== side) { done(); return; }
+    if (shot) { done(); kPop(t("k_shh"), t("k_shm")); return; }
+    K.pv = kShrink(im, 1800, .86); K.repSrc = "gal"; K.imgWH = [im.naturalWidth, im.naturalHeight]; done();
+    K.auto = false; K.adv = ""; K.pre[side] = ""; K.rep = null; K.vbusy = true; kycRender(); kVal();
+  };
+  im.onerror = () => { done(); K.loadingGal = false; toast(t("k_nocam")); kCamBack(); };
+  im.src = u;
+}
+document.addEventListener("visibilitychange", () => {
+  if (!K.open || (K.step !== "front" && K.step !== "back")) return;
+  if (document.hidden) { if (!K.pv) kcamStop(); return; }
+  if (K.pv || K.vbusy) return;
+  setTimeout(() => {
+    if (K.pv || K.vbusy || K.loadingGal || document.getElementById("galq") || document.getElementById("kperm")) return;
+    if (K.galOpen && K.galPick) return;
+    K.galOpen = 0; KA.pause = 0; kcamInit();
+  }, 1200);
+});
+
+/* ----- যাচাই: OCR ধীর/বন্ধ থাকলেও ভুল করে ফেরত নয় (আগে এ কারণেই দ্বিতীয়বার আপলোড লাগত) ----- */
+function kJudge(txt, side, geo) {
+  const like = !geo || geo.cardLike;
+  if (typeof txt !== "string") return "ok";
+  const r = kClass2(txt);
+  if (side === "front" && r.c === "back" && r.bs >= 2) return "wrong:back";
+  if (side === "back" && r.c === "front" && r.fs >= 3 && r.bs === 0) return "wrong:front";
+  if (r.c === "none") return like ? "ok" : "notid";
+  return "ok";
+}
+async function kVal() {
+  const s = K.step, img = K.pv; let txt, geo = null;
+  try { const cv = await kPrep(img, 1500); geo = kGeoCv(cv); txt = await Promise.race([kOcrText(cv, ""), kTO(14000)]); } catch (e) { txt = undefined; }
+  if (K.pv !== img || K.step !== s) return;
+  K.vbusy = false;
+  const j = kJudge(txt === undefined ? null : txt, s, geo);
+  if (j === "notid") { kReject("k_notid", "k_notidm"); return; }
+  if (j.indexOf("wrong") === 0) { kReject("k_wrong", j === "wrong:front" ? "k_isf" : "k_isb"); return; }
+  if (typeof txt === "string" && txt) K.pre[s] = txt;
+  K.rep = kMakeRep(s, K.repSrc || "cam", geo, txt, img);
+  /* সব ঠিক থাকলে (ক্যামেরা বা গ্যালারি, দুটোতেই) তালিকা দেখিয়ে নিজে পরের ধাপে যায় */
+  K.adv = (!K.rep.warn) ? img : "";
+  kycRender();
+  if (K.adv === img) K.at = setTimeout(() => { if (K.pv === img && K.step === s && K.adv === img) kUse(); }, 2300);
+}
+
+/* ----- অটো ছবি: ফ্রেমে কার্ড স্থির হলেই সাথে সাথে ছবি, তারপর সবার সামনে যাচাই ----- */
+function kAutoStart() {
+  kAutoStop(); KA.ok = 0; KA.none = 0; KA.prev = null; KA.busy = false; KA.t0 = Date.now(); kWorker();
+  KA.pause = document.getElementById("kpop") ? Infinity : 0; KA.tm = setInterval(kAutoTick, 350); KA.mt = setTimeout(kManualShow, 9000);
+}
+function kAutoStop() { clearInterval(KA.tm); clearTimeout(KA.mt); KA.tm = 0; KA.busy = false; KAG++; }
+function kFlash() {
+  const w = document.querySelector("#kyc .kwr"), f = document.querySelector("#kyc .kfr"); if (f) f.classList.add("dn");
+  if (!w) return; const x = document.createElement("div"); x.className = "kflash"; w.appendChild(x); setTimeout(() => x.remove(), 520);
+}
+function kAutoTick() {
+  if (KA.busy || Date.now() < KA.pause || K.loadingGal || K.galOpen) return;
+  const v = document.getElementById("kvid"), s = K.step;
+  if (!v || !v.videoWidth || v.readyState < 2 || K.pv || (s !== "front" && s !== "back")) return;
+  const m = kMet(v); if (!m) return;
+  const late = Date.now() - (KA.t0 || 0) > 6000, fr = document.querySelector("#kyc .kfr");
+  const lite = late ? (m.edge > .008 && m.edge < .85 && m.cells >= 3 && m.mean > 25 && m.mean < 252) : (m.edge > .014 && m.edge < .8 && m.cells >= 6 && m.mean > 30 && m.mean < 250);
+  const good = lite && m.diff < 14 && m.sharp > (late ? 18 : 28);
+  if (!good) { KA.ok = 0; if (fr) fr.classList.remove("lk"); kSt(!lite ? "k_auto" : m.diff >= 14 ? "k_steady" : "k_blur"); return; }
+  KA.ok++; if (fr) fr.classList.add("lk"); kSt("k_hold");
+  if (KA.ok < 3) return;
+  KA.ok = 0; KA.busy = true;
+  const shot = kCardShot(v); kFlash(); hap("MEDIUM");
+  setTimeout(() => {
+    KA.busy = false;
+    if (!K.open || K.step !== s || K.pv) return;
+    K.pre[s] = ""; K.pv = shot; K.auto = true; K.adv = ""; K.repSrc = "cam"; K.imgWH = null; K.rep = null; K.vbusy = true; kycRender(); kVal();
+  }, 260);
+}
+
+/* ----- স্ক্যান পাতা: গ্যালারি বোতাম ক্যামেরা বন্ধ করে; যাচাই চলার সময় লাইভ তালিকা ----- */
+function kBusyHtml() {
+  const rows = ["k_pb1", "k_pb2", "k_pb3", "k_pb4", "k_pb5"].map((k, i) => `<div class="ri pn" style="--n:${i}"><i><b class="kspin"></b></i><span>${t(k)}</span></div>`).join("");
+  return `<div class="krep busy"><div class="rh"><i class="rc bz"><b class="kspin"></b></i><div><b>${t(K.repSrc === "gal" ? "k_rp_gal" : "k_rp_cam")}</b><small>${t("k_chk2")}</small></div></div><div class="rg">${rows}</div></div>`;
+}
+function kScan(side) {
+  const fr = side === "front", pv = K.pv;
+  const chip = pv && K.vbusy ? `<div class="kchk"><i class="kspin"></i><span>${t("k_chk2")}</span></div>` : pv && K.auto ? `<div class="kchk gd">${tickSvg}<span>${t("k_got")}</span></div>` : "";
+  return `<div class="kcam kn">${kBg()}
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t(fr ? "k_front" : "k_back")}</b><em>${fr ? 1 : 2}/2</em></div>${kLogo()}
+    <div class="kwr${pv ? " pv" : ""}"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid()}</div>
+      <div class="kfr${pv && !K.vbusy ? " dn" : ""}"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>${pv ? "" : '<u class="kln"></u>'}</div></div>${chip}
+    <div class="kbt">${pv ? "" : `<p id="kst">${t("k_auto")}</p>`}
+      ${pv ? (K.vbusy ? kBusyHtml() : `${K.rep && K.rep.side === side ? kRepHtml() : ""}<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo${K.adv && K.adv === pv ? " cd" : ""}" onclick="kUse()">${t("k_use")}</button></div>`)
+        : `<div class="ksh"><button type="button" class="kgal" aria-label="Gallery" onclick="kGalOpen()">${kic("gal")}</button><button class="kshut" aria-label="${t("k_snap")}" onclick="kSnap()"><i></i></button><span class="kgal sp"></span></div>`}
+      <small class="knc" id="knc"></small></div></div>`;
+}

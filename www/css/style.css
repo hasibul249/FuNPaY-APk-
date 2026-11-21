@@ -2387,3 +2387,135 @@ html.pinkb .v3fab{display:none!important}
 
 .v3cd .fld.big{display:flex;justify-content:center;align-items:center;gap:6px;padding:12px 16px}
 .v3cd .fld.big u{position:static;text-decoration:none}
+
+
+/* =====================================================================
+   v2.34 — নগদের মতো নরম ব্যাকগ্রাউন্ড, লগইন/কোড পেজ গোছানো, KYC পেজ নতুন ডিজাইন
+   ===================================================================== */
+/* ---- হালকা পেজের ব্যাকগ্রাউন্ড (লগইন, কোড, অ্যাকাউন্ট খোলা) ---- */
+.fl.light{
+  background:
+    radial-gradient(75% 40% at 112% -6%, rgba(255,140,190,.55) 0%, rgba(255,140,190,0) 72%),
+    radial-gradient(62% 36% at -14% 4%, rgba(255,206,164,.50) 0%, rgba(255,206,164,0) 72%),
+    linear-gradient(180deg,#fff1f7 0%,#fdf5f9 40%,#fbf8fa 100%);
+}
+.fl.light::after{content:"";position:absolute;right:-84px;bottom:-40px;width:320px;height:320px;background:url(../icons/logo-pink.png) center/contain no-repeat;opacity:.055;pointer-events:none;z-index:0;transform:rotate(-12deg)}
+.fl.light>*{position:relative;z-index:1}
+
+/* ---- লগইন পেজ: ফাঁকা কমানো, পরবর্তী বাটন কিবোর্ডের ওপরেই দেখা যায় ---- */
+.fl.light .fbar{padding-top:calc(8px + var(--st))}
+.fl.light .fbody{padding:6px 22px 16px}
+.fl.light .fbody .mini{width:46px;margin:0 0 8px}
+.fl.light .fbody h2{font-size:19px;line-height:1.3}
+.fl.light .fbody label{margin:12px 0 6px}
+.fl.light .le{min-height:0;margin-top:8px}
+.fl.light .le:empty{margin:0}
+.fl.light .terms{margin-top:10px;font-size:12.5px;line-height:1.45}
+.nbar.nin{position:relative;bottom:auto;width:100%;height:54px;margin-top:14px;padding:0 22px;border-radius:16px;background:linear-gradient(90deg,#e2136e,#f0549a);box-shadow:0 10px 22px rgba(226,19,110,.28)}
+.fl.light:focus-within .nbar.nin{background:linear-gradient(90deg,#e2136e,#f0549a)}
+.nbar.nin:active{transform:scale(.98)}
+.nbar.nin.ld{background:var(--lp,#e2136e)!important}
+
+/* ---- কোড যাচাই পেজ ---- */
+.otpv .otpph{display:block;width:max-content;max-width:100%;margin:16px 0 4px;padding:11px 22px;border-radius:28px;background:linear-gradient(180deg,#fff,#fde7f1);border:1.5px solid #f6c3d9;color:#c40f5e;font-size:24px;font-weight:800;letter-spacing:.6px;box-shadow:0 8px 20px rgba(226,19,110,.14)}
+.otpv .otpb{gap:10px;margin:22px 0 2px}
+.otpv .otpb i{height:62px;border-radius:17px;box-shadow:0 4px 12px rgba(160,40,100,.08)}
+.otpv .otst{margin-top:12px;min-height:26px}
+.otpv .otpact{display:flex;gap:12px;margin:16px 0 0}
+.otpv .otpact .otpp,.otpv .otpact .otprs{flex:1;height:54px;border-radius:27px;font-size:15px;font-weight:800;gap:9px;transition:transform .18s var(--ease),box-shadow .25s,background .25s}
+.otpv .otpact .otprs{border:1.5px solid #ecdce6;background:#fff;color:#9a8f98;box-shadow:0 4px 12px rgba(160,40,100,.06)}
+.otpv .otpact .otprs.rdy{border-color:#f3b9d3;background:#fff;color:var(--lp);box-shadow:0 6px 16px rgba(226,19,110,.14)}
+.otpv .otpact .otpp{border:0;background:linear-gradient(135deg,#e2136e,#f0549a);color:#fff;box-shadow:0 10px 22px rgba(226,19,110,.3)}
+.otpv .otpact .otpp svg{width:19px;height:19px;stroke:#fff;fill:none}
+.otpv .otpact .otpp:active,.otpv .otpact .otprs:active{transform:scale(.96)}
+
+/* ---- KYC তথ্য পাতা: ঘরগুলো আরও সুন্দর, জন্মতারিখের এডিট বাটন ডানে মাঝখানে ---- */
+#kyc .kbody .kf{position:relative;padding:11px 14px;gap:12px;border-radius:20px;margin-bottom:10px;background:#fff;box-shadow:0 8px 22px rgba(170,20,95,.09)}
+#kyc .kbody .kf .kfi{width:42px;height:42px;border-radius:14px;background:linear-gradient(160deg,#fff0f7,#fbd3e5)}
+#kyc .kbody .kf .kfi svg{width:21px;height:21px}
+#kyc .kbody .kf label{font-size:11.5px;font-weight:700;letter-spacing:.2px;margin-bottom:2px}
+#kyc .kbody .kf input,#kyc .kbody .kf textarea{font-size:15.5px;font-weight:700}
+#kyc .kbody .kf.gd{background:linear-gradient(180deg,#fff,#f6fdf9)}
+#kyc .kbody .kf .kt2{width:28px;height:28px}
+#kyc .kbody .kf .kt2 svg{width:15px;height:15px}
+#kyc .kbody .ksum{border-radius:20px;padding:12px 16px;box-shadow:0 8px 22px rgba(170,20,95,.09)}
+#kyc .kdb{position:static;min-height:34px;padding:0}
+#kyc .kdb em{position:absolute;right:56px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;padding:9px 15px;border-radius:22px;background:linear-gradient(135deg,#fde7f1,#fbd3e5);color:var(--p);box-shadow:0 4px 10px rgba(226,19,110,.14)}
+#kyc .kdb em svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#kyc .kdb:active em{transform:translateY(-50%) scale(.94)}
+
+/* ---- KYC ক্যামেরা পাতা (আইডি কার্ড + মুখ): হালকা গোলাপি ব্যাকগ্রাউন্ড, লোগো দিয়ে ডিজাইন ---- */
+#kyc .kcam.kn{--fw:min(60vw,236px);background:linear-gradient(180deg,#fff4fa 0%,#ffe3ef 52%,#ffd0e4 100%);color:#2a1020}
+#kyc .kcam.kn .kbg .b1{left:50%;top:44%;width:150vmin;height:150vmin;margin:-75vmin 0 0 -75vmin;background:radial-gradient(circle,rgba(255,255,255,.95) 0%,rgba(255,255,255,.5) 34%,rgba(255,255,255,0) 66%);animation:kaura 5.5s ease-in-out infinite}
+#kyc .kcam.kn .kbg .b2{display:block;left:-20vmin;right:auto;top:-18vmin;bottom:auto;width:70vmin;height:70vmin;border-radius:50%;background:radial-gradient(circle,rgba(255,150,196,.55),rgba(255,150,196,0) 70%);filter:none;opacity:1}
+#kyc .kcam.kn .kbg .b3{position:absolute;inset:0;background:url(../icons/logo-pink.png) 0 0/56px 56px space;opacity:.07;-webkit-mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.25) 38%,rgba(0,0,0,.25) 62%,#000 100%);mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.25) 38%,rgba(0,0,0,.25) 62%,#000 100%)}
+#kyc .kcam.kn .ktp{padding-top:calc(8px + var(--st))}
+#kyc .kcam.kn .kbk{color:var(--p);background:#fff;box-shadow:0 4px 12px rgba(226,19,110,.16);width:40px;height:40px;margin-top:2px}
+#kyc .kcam.kn .kbk:active{background:#fde7f1}
+#kyc .kcam.kn .ktp b{left:60px;right:60px;color:#2a1020;font-size:15.5px;line-height:44px}
+#kyc .kcam.kn .ktp em{background:#fff;color:var(--p);box-shadow:0 4px 12px rgba(226,19,110,.16)}
+#kyc .kcam.kn .klg{top:calc(76px + var(--st));flex-direction:column;gap:5px;color:#c40f5e;font-size:18px;letter-spacing:.6px}
+#kyc .kcam.kn .klg img{width:70px;height:70px;border-radius:0;background:none;padding:0;box-shadow:none;filter:drop-shadow(0 6px 12px rgba(226,19,110,.25))}
+#kyc .kcam.kn .kbt{background:linear-gradient(0deg,rgba(255,214,232,.97) 46%,rgba(255,214,232,0));color:#2a1020}
+#kyc .kcam.kn .kbt p{color:#6a3350;opacity:1;font-weight:600}
+#kyc .kcam.kn .knc{color:#c40f5e}
+/* আইডি কার্ডের ঘর */
+#kyc .kcam.kn .kwr:not(.ov){top:50%}
+#kyc .kcam.kn .kwr:not(.ov) .kwin{border-radius:20px;box-shadow:0 0 0 5px #fff,0 0 0 7px rgba(226,19,110,.35),0 18px 40px rgba(226,19,110,.26)}
+#kyc .kcam.kn .kfr i{border-color:var(--p)}
+#kyc .kcam.kn .kfr.dn i{border-color:#12a15b}
+#kyc .kcam.kn .kchk{top:50%}
+#kyc .kcam.kn .kshut{border-color:var(--p);background:#fff}
+#kyc .kcam.kn .kshut i{background:linear-gradient(135deg,#e2136e,#f0549a)}
+#kyc .kcam.kn .kgal{background:#fff;color:var(--p);box-shadow:0 4px 12px rgba(226,19,110,.16)}
+#kyc .kcam.kn .kgal.sp{visibility:hidden}
+#kyc .kcam.kn .kgh{background:#fff;color:var(--p);border:1.5px solid #f3b9d3}
+/* মুখের ঘর (ডিম্বাকৃতি) */
+#kyc .kcam.kn .kwr.ov{top:46%;width:var(--fw);aspect-ratio:.78}
+#kyc .kcam.kn .kwr.ov .kwin{inset:3.4%;box-shadow:0 0 0 5px #fff,0 0 0 7px rgba(226,19,110,.3),0 18px 44px rgba(226,19,110,.28)}
+#kyc .kcam.kn .kov u{top:46%;width:var(--fw);box-shadow:none;border:0}
+#kyc .kcam.kn .kov u.dn{box-shadow:0 0 26px #12a15b66}
+#kyc .kcam.kn .kcnt{top:46%;color:var(--p);text-shadow:0 4px 18px #fff}
+#kyc .kcam.kn .kfok{top:46%}
+#kyc .kcam.kn .krt{stroke:rgba(226,19,110,.22);stroke-width:3}
+#kyc .kcam.kn .krf{stroke:var(--p);stroke-width:3.6}
+#kyc .kcam.kn .kra.on{filter:drop-shadow(0 0 5px rgba(226,19,110,.55))}
+#kyc .kcam.kn .kra.on .krt{stroke:rgba(226,19,110,.75);stroke-width:3.8}
+#kyc .kcam.kn .kra.dn2 .krt,#kyc .kcam.kn .kra.dn2 .krf{stroke:#12a15b}
+#kyc .kcam.kn .kfarr.up{top:calc(46% - var(--fw) / 1.56 - 64px)}
+#kyc .kcam.kn .kfarr.down,#kyc .kcam.kn .kfarr.blink{top:calc(46% + var(--fw) / 1.56 + 12px)}
+#kyc .kcam.kn .kfarr.left,#kyc .kcam.kn .kfarr.right{top:46%}
+/* কী করতে হবে: গাইড কার্ড */
+#kyc .kcam.kn .kdir{gap:14px;border-radius:26px;padding:12px 18px 12px 12px;margin:0 0 12px;background:linear-gradient(180deg,#fff,#fff5fa);border:1.5px solid #f8cde1;box-shadow:0 14px 34px rgba(226,19,110,.2)}
+#kyc .kcam.kn .kgd{width:80px;height:80px;box-shadow:0 0 0 4px #fff,0 0 0 6px rgba(226,19,110,.25),0 8px 18px rgba(226,19,110,.25)}
+#kyc .kcam.kn .kdir .kfm{font-size:16.5px;font-weight:800;line-height:1.3;color:#2a1020}
+#kyc .kcam.kn .kdots{gap:7px;margin-top:10px}
+#kyc .kcam.kn .kdots i{height:7px;border-radius:4px;background:#f3dbe7}
+#kyc .kcam.kn .kdots.d5 i{height:7px}
+#kyc .kcam.kn .kpg .kfbar{height:8px;background:rgba(226,19,110,.15)}
+#kyc .kcam.kn .kpg .kfbar i{background:linear-gradient(90deg,#e2136e,#ff7ab4 60%,#12a15b)}
+#kyc .kcam.kn .kpg .kfpc{color:var(--p);font-size:15px}
+
+/* =====================================================================
+   v2.35 — KYC ধাপ বদলের অ্যানিমেশন, অটো ছবির ঝলক, যাচাইয়ের লাইভ তালিকা
+   ===================================================================== */
+@keyframes kpIf{from{opacity:0;transform:translateX(44px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes kpIb{from{opacity:0;transform:translateX(-44px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes kpOf{from{opacity:1;transform:none}to{opacity:0;transform:translateX(-52px) scale(.96)}}
+@keyframes kpOb{from{opacity:1;transform:none}to{opacity:0;transform:translateX(52px) scale(.96)}}
+#kyc .kpi-f{animation:kpIf .46s cubic-bezier(.22,1,.36,1) backwards}
+#kyc .kpi-b{animation:kpIb .46s cubic-bezier(.22,1,.36,1) backwards}
+#kyc .kpo{position:absolute!important;top:0;bottom:0;left:0;right:0;margin:0 auto;height:auto!important;z-index:80;pointer-events:none}
+#kyc .kpo-f{animation:kpOf .34s cubic-bezier(.4,0,1,1) both}
+#kyc .kpo-b{animation:kpOb .34s cubic-bezier(.4,0,1,1) both}
+@keyframes kfl{from{opacity:.95}to{opacity:0}}
+#kyc .kflash{position:absolute;inset:0;border-radius:18px;background:#fff;z-index:5;pointer-events:none;animation:kfl .5s ease-out both}
+#kyc .kn .kfr.lk i{border-color:#12a15b;animation:none;filter:drop-shadow(0 0 6px rgba(18,161,91,.55))}
+#kyc .kgo{position:relative;overflow:hidden}
+@keyframes kcd{from{width:0}to{width:100%}}
+#kyc .kgo.cd::after{content:"";position:absolute;left:0;bottom:0;height:4px;background:rgba(255,255,255,.8);animation:kcd 2.3s linear forwards}
+#kyc .krep.busy .rc{background:#f3dbe7}
+#kyc .krep.busy .ri.pn{background:#fff3f8;color:#7a3a58;animation:kri .35s calc(.1s + var(--n) * .08s) both}
+#kyc .krep.busy .ri.pn i{background:#f3dbe7}
+#kyc .krep.busy .kspin{display:block;width:16px;height:16px;border-width:2.5px;border-color:rgba(226,19,110,.25);border-top-color:#e2136e}
+#kyc .krep.busy .ri.pn i .kspin{width:11px;height:11px;border-width:2px}
