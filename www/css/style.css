@@ -1811,3 +1811,198 @@ input[data-kp="1"]{caret-color:transparent;cursor:pointer}
 .gdi{display:flex;align-items:center;gap:4px;width:116px;border-bottom:1.5px solid #e6d9e1;flex:none}
 .gdi u{text-decoration:none;color:#e2136e;font-weight:800;font-size:16px}
 .gdi input{width:100%;border:0;background:transparent;font:inherit;font-size:17px;font-weight:700;color:#e2136e;height:36px;outline:0;min-width:0}
+
+/* ===== v2.27 — KYC ফেস/ক্যামেরা: শান্ত রং, মাঝখানে ইংরেজি শিরোনাম, ছোট মুখের গাইড, নরম অ্যানিমেশন ===== */
+#kyc .kcam{background:radial-gradient(130% 75% at 50% -8%,#4c1238 0%,#1d0a18 50%,#0b050c 100%)}
+#kyc .kcam .kbg .b1{left:50%;top:40%;width:120vmin;height:120vmin;margin:-60vmin 0 0 -60vmin;border-radius:50%;filter:none;opacity:1;background:radial-gradient(circle,rgba(226,19,110,.34) 0%,rgba(226,19,110,.12) 38%,rgba(226,19,110,0) 68%);animation:kaura 5.5s ease-in-out infinite}
+#kyc .kcam .kbg .b2{display:none}
+@keyframes kaura{0%,100%{transform:scale(.94);opacity:.8}50%{transform:scale(1.06);opacity:1}}
+#kyc .ktp{justify-content:space-between;pointer-events:none}
+#kyc .ktp .kbk,#kyc .ktp em{pointer-events:auto;position:relative;z-index:2}
+#kyc .ktp b{position:absolute;left:64px;right:64px;top:calc(8px + var(--st));line-height:44px;text-align:center;font-size:17px;font-weight:800;letter-spacing:.2px;flex:none;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#kyc .kcam .klg{top:calc(58px + var(--st));font-size:14px;letter-spacing:.5px}
+#kyc .kcam .klg img{width:30px;height:30px;border-radius:10px;box-shadow:0 3px 12px rgba(226,19,110,.45)}
+#kyc .kwr.ov .kwin{box-shadow:0 0 0 1.5px #ffffff30,0 0 44px rgba(226,19,110,.28)}
+#kyc .krt{stroke:#ffffff2e;stroke-width:2.6}
+#kyc .krf{stroke:#ff7fb6;stroke-width:3.4}
+#kyc .kra.on{filter:drop-shadow(0 0 6px #ff5fa899)}
+#kyc .kra.on .krt{stroke:#ff7fb6aa;stroke-width:3.4;animation:krp 1.3s ease-in-out infinite}
+#kyc .kra.dn2{filter:drop-shadow(0 0 5px #2ed47a88)}
+#kyc .kra.dn2 .krt,#kyc .kra.dn2 .krf{stroke:#2ed47a;stroke-width:3.4}
+#kyc .kf2 .kfarr{width:42px;height:42px;margin-top:-21px;background:rgba(226,19,110,.9);box-shadow:0 4px 14px rgba(226,19,110,.4)}
+#kyc .kf2 .kfarr svg{width:22px;height:22px}
+#kyc .kf2 .kfarr.up,#kyc .kf2 .kfarr.down{margin-left:-21px}
+#kyc .kf2 .kfarr.blink{display:none}
+#kyc .kf2 .kbt{padding:24px 16px calc(16px + var(--sb))}
+#kyc .kf2 .kdir{gap:12px;border-radius:20px;padding:9px 14px 10px 9px;margin:0 0 10px;box-shadow:0 14px 34px rgba(0,0,0,.4)}
+#kyc .kf2 .kdir .kfm{font-size:14px;font-weight:700;line-height:1.3}
+#kyc .kf2 .kdots{margin-top:7px}
+#kyc .kgd{width:62px;height:62px;border-radius:50%;background:linear-gradient(160deg,#fff0f7,#fbd3e5);flex:none;overflow:hidden;box-shadow:inset 0 0 0 2px #fff,0 4px 12px rgba(226,19,110,.25)}
+#kyc .kgd svg{width:100%;height:100%;display:block}
+.kgf .gs{fill:#f4b6d3}
+.kgf .gk{fill:#ffe0c9;stroke:#e2136e;stroke-width:1.6}
+.kgf .gr{fill:#3b2430}
+.kgf .gb{fill:none;stroke:#7a4a5d;stroke-width:1.6;stroke-linecap:round}
+.kgf .ge ellipse{fill:#2a1a22;transform-box:fill-box;transform-origin:center}
+.kgf .gn{fill:none;stroke:#d98a7a;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.kgf .gm{fill:none;stroke:#e2136e;stroke-width:2;stroke-linecap:round}
+.kgf .gf,.kgf .gr,.kgf .gk{transform-origin:32px 32px}
+.kgf{animation:kgfl 3s ease-in-out infinite}
+@keyframes kgfl{50%{transform:translateY(-1px)}}
+.kgf.right .gf{animation:kgr 2.4s cubic-bezier(.45,0,.2,1) infinite}.kgf.right .gr{animation:kgrh 2.4s cubic-bezier(.45,0,.2,1) infinite}
+.kgf.left .gf{animation:kgl 2.4s cubic-bezier(.45,0,.2,1) infinite}.kgf.left .gr{animation:kglh 2.4s cubic-bezier(.45,0,.2,1) infinite}
+.kgf.up .gf{animation:kgu 2.4s cubic-bezier(.45,0,.2,1) infinite}.kgf.up .gr{animation:kguh 2.4s cubic-bezier(.45,0,.2,1) infinite}
+.kgf.down .gf{animation:kgd 2.4s cubic-bezier(.45,0,.2,1) infinite}.kgf.down .gr{animation:kgdh 2.4s cubic-bezier(.45,0,.2,1) infinite}
+.kgf.blink .ge ellipse{animation:kgb 2.2s ease-in-out infinite}
+@keyframes kgr{0%,12%{transform:none}38%,66%{transform:translateX(7px) scaleX(.86)}92%,100%{transform:none}}
+@keyframes kgrh{0%,12%{transform:none}38%,66%{transform:translateX(3.5px) scaleX(.94)}92%,100%{transform:none}}
+@keyframes kgl{0%,12%{transform:none}38%,66%{transform:translateX(-7px) scaleX(.86)}92%,100%{transform:none}}
+@keyframes kglh{0%,12%{transform:none}38%,66%{transform:translateX(-3.5px) scaleX(.94)}92%,100%{transform:none}}
+@keyframes kgu{0%,12%{transform:none}38%,66%{transform:translateY(-5px) scaleY(.94)}92%,100%{transform:none}}
+@keyframes kguh{0%,12%{transform:none}38%,66%{transform:translateY(-2.5px)}92%,100%{transform:none}}
+@keyframes kgd{0%,12%{transform:none}38%,66%{transform:translateY(5px) scaleY(.94)}92%,100%{transform:none}}
+@keyframes kgdh{0%,12%{transform:none}38%,66%{transform:translateY(3px)}92%,100%{transform:none}}
+@keyframes kgb{0%,10%,44%,100%{transform:scaleY(1)}17%,23%{transform:scaleY(.08)}30%{transform:scaleY(1)}37%{transform:scaleY(.08)}}
+#kyc .kpg{display:flex;align-items:center;gap:10px;margin:0 4px 6px}
+#kyc .kpg .kfbar{flex:1;height:6px;margin:0;background:#ffffff22}
+#kyc .kpg .kfbar i{background:linear-gradient(90deg,#ff5fa8,#ffa0cb 55%,#2ed47a)}
+#kyc .kpg .kfpc{margin:0;min-height:0;min-width:44px;text-align:right;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+#kyc .kf2 .ksh:not(.man){height:0;overflow:hidden;padding:0}
+#kyc .kmrw.kmok span{position:absolute;inset:0;display:grid;place-items:center}
+#kyc .kmrw.kmok span svg{width:48px;height:48px}
+/* গ্যালারির অনুমতির কার্ড */
+.galq{position:fixed;inset:0;z-index:99999;background:rgba(16,6,12,.55);display:flex;align-items:flex-end;justify-content:center;animation:kfade .2s both}
+.galq.out{opacity:0;transition:opacity .2s}
+.galb{width:100%;max-width:430px;background:#fff;border-radius:26px 26px 0 0;padding:22px 22px calc(22px + env(safe-area-inset-bottom,0px));text-align:center;animation:kup .35s cubic-bezier(.22,1,.36,1) both}
+.gali{width:64px;height:64px;border-radius:20px;background:#fde7f1;color:#e2136e;display:grid;place-items:center;margin:0 auto 12px}
+.gali svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.galb h3{font-size:18px;margin:0 0 6px;color:#2a262b}
+.galb p{font-size:14px;color:#8b8590;line-height:1.5;margin:0 0 16px}
+.galy{width:100%;height:50px;border:0;border-radius:14px;background:#e2136e;color:#fff;font-weight:800;font-size:16px;box-shadow:0 8px 18px rgba(226,19,110,.3);cursor:pointer}
+.galn{width:100%;height:44px;margin-top:6px;border:0;background:none;color:#8b8590;font-weight:700;font-size:14px;cursor:pointer}
+
+/* =====================================================================
+   v2.28 — সেন্ড মানি: প্রাপক ঘর, পরিমাণ পাতা (স্ক্রল ছাড়া), PIN ঘর, নিশ্চিত পাতা, সফল পাতা,
+   লেনদেনের বিস্তারিত (ছোট শুভেচ্ছা কার্ড), হিস্টোরির সারি
+   ===================================================================== */
+/* ---- প্রাপক ঘর (সব ধাপে একই) ---- */
+.bk2>.bkc:first-child,.bk3>.bkc:first-child{background:transparent;padding:14px 16px 4px}
+.bkp{position:relative;display:flex;align-items:center;gap:12px;min-height:66px;padding:11px 14px;border:1.5px solid #f1dce8;border-radius:18px;background:linear-gradient(180deg,#fff 0%,#fff8fb 100%);box-shadow:0 4px 16px rgba(226,19,110,.08);overflow:visible}
+.bkp .avs{display:block;margin:0;flex:none;position:relative;line-height:0}
+.bkp .av2{width:44px;height:44px;font-size:18px;font-weight:700}
+.bkp>div{flex:1;min-width:0}
+.bkp b{display:block;font-size:15.5px;line-height:1.3;font-weight:700;color:#2a1a22;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkp>div span{display:block;font-size:13.5px;line-height:1.3;margin-top:2px;color:#7d7580;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkp .vf{margin-left:auto;flex:none;width:24px;height:24px}
+.bkp .vf svg{width:13px;height:13px}
+
+/* ---- ধাপ ২: পরিমাণ (কিবোর্ড খোলা থাকলেও স্ক্রল ছাড়া) ---- */
+.bk2 .bkl{font-size:12.5px;margin:10px 16px 2px}
+.bk2>.bkc{padding-top:6px;padding-bottom:6px}
+.bk2 .fld.big{height:48px;padding:0}
+.bk2 .fld.big input{font-size:28px;height:46px}
+.bk2 .avl{margin:6px 0 0;font-size:13px;text-align:center}
+.bk2 .fee{min-height:0;margin:0}.bk2 .fee:empty{display:none}
+.bk2 .qa{margin-top:10px;gap:8px;justify-content:center;overflow:visible}
+.bk2 .qa button{height:36px;padding:0 13px;font-size:13px}
+.bk2 .err{min-height:0;margin:4px 4px 0;text-align:center}.bk2 .err:empty{display:none}
+.bk2 .gadd{margin:10px 16px 4px;padding:10px 14px;border-radius:16px}
+.bk2 .tw{margin:6px 16px 0}
+
+/* ---- ধাপ ৩: অঙ্ক · রেফারেন্স · কার্ড · PIN ---- */
+.bk3 .bk3t{margin:10px 16px 0;padding:12px 14px;border-radius:16px;background:#fff;box-shadow:0 2px 10px rgba(160,40,100,.06)}
+.bk3 .bk3t span{font-size:12.5px}.bk3 .bk3t b{font-size:16px;margin-top:3px}
+.bk3 .bkref{margin:10px 16px 0;padding:11px 14px 12px;border-radius:16px;box-shadow:0 2px 10px rgba(160,40,100,.06)}
+.bk3 .bkref input{font-size:15px;padding:8px 0 0}
+.bk3 .gmrow{display:flex;align-items:center;gap:10px;margin:10px 16px 0;padding:13px 14px;border-radius:16px;background:#fff;box-shadow:0 2px 10px rgba(160,40,100,.06);font-size:14.5px;color:#2a1a22}
+.bk3 .gmrow b{font-weight:700}
+.bk3 .gmrow svg{width:24px;height:24px;flex:none;stroke:var(--p);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bk3 .pinrow.bkpin{margin:12px 16px 0;min-height:62px;padding:6px 8px 6px 16px!important;gap:12px;background:#fff;border:1.5px solid #f1dce8!important;border-radius:18px!important;box-shadow:0 4px 16px rgba(226,19,110,.08)!important}
+.bk3 .pinrow.bkpin:focus-within{border-color:var(--p)!important;box-shadow:0 0 0 4px rgba(226,19,110,.12)!important}
+.bk3 .bkpin>svg,.bk3 .bkpin .i{width:24px;height:24px;flex:none}
+.bk3 .bkpin input{height:48px!important;font-size:20px!important;font-weight:600;letter-spacing:7px;text-align:center;padding:0 0 0 4px!important}
+.bk3 .bkpin input::placeholder{font-size:15px;letter-spacing:0;font-weight:400;text-align:center}
+.bk3 .bkpin .fpb{width:46px;height:46px;border-radius:50%}
+.bk3 .bkpin .fpb svg{width:28px;height:28px}
+
+/* ---- ধাপ ৪: নিশ্চিত করুন ---- */
+.c4 .box{background:#faf5f8}
+.c4h{padding:calc(20px + var(--st)) 20px 6px}
+.c4h b{font-size:19px;line-height:1.3}
+.c4x{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;padding:0;background:#fff;box-shadow:0 2px 8px rgba(160,40,100,.10)}
+.c4x svg{width:20px;height:20px}
+.c4b{padding:10px 16px 16px}
+.c4w{padding:0;border:0;margin-bottom:12px}
+.c4g{display:grid;grid-template-columns:1fr 1fr;gap:10px;border:0}
+.c4g>div{padding:13px 14px;border:0!important;border-radius:16px;background:#fff;box-shadow:0 2px 10px rgba(160,40,100,.07);min-width:0}
+.c4g>div:first-child{grid-column:1/-1;background:linear-gradient(135deg,#e2136e,#c70f5f);box-shadow:0 8px 20px rgba(226,19,110,.25)}
+.c4g>div:first-child span,.c4g>div:first-child small{color:#ffffffcc}
+.c4g>div:first-child b{color:#fff;font-size:26px;font-weight:800;letter-spacing:.2px}
+.c4g span{font-size:12.5px;margin-bottom:4px}
+.c4g b{font-size:16px;font-weight:700;line-height:1.3}
+.c4g small{font-size:12.5px;margin-top:3px}
+.c4g .wide{grid-column:1/-1}
+.c4n{margin-top:10px;padding:12px 14px;border-radius:16px;background:#fff;box-shadow:0 2px 10px rgba(160,40,100,.07);align-items:center}
+.c4n p{font-size:13.5px;line-height:1.45}
+.c4f{padding:22px 20px calc(18px + var(--sb))}
+.c4f p{font-size:14.5px}
+
+/* ---- সফল পাতা ---- */
+.bkr{padding:16px 16px 4px!important;border-radius:22px!important}
+.bkr .bkh{margin-bottom:10px}
+.bkr .bkh b{font-size:17px;line-height:1.3;font-weight:700}
+.bkr .bkh em{font-size:16px;line-height:1.3;font-weight:700;margin-top:2px}
+.bkr .bkck{width:42px;height:42px;border-width:2.2px}
+.bkr .bkck svg{width:22px;height:22px}
+.bkr .rcp{padding:6px 0 12px}
+.bkr .rcp b{font-size:15px}.bkr .rcp span{font-size:13px}
+.bkg>div{padding:10px 14px}
+.bkg span{font-size:12px}
+.bkg b{font-size:14.5px;margin-top:3px}
+.bkg .nbv{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.bkg .nbv em{font-style:normal;min-width:0}
+.bkg .nbv .eye{margin:0 -4px 0 auto;flex:none}
+.bkg .refc b{font-weight:600;font-size:14px;line-height:1.35}
+.bkg .refc em{font-style:normal;min-width:0;overflow-wrap:anywhere;word-break:break-word}
+
+/* ---- লেনদেনের বিস্তারিত: শুভেচ্ছা কার্ড ছোট, বিস্তারিত নিজের জায়গায় ---- */
+.trdd .gcd{padding:2px 0 10px;display:block}
+.trdd .gcd .gc{aspect-ratio:auto;width:100%;max-width:none;min-height:86px;height:auto;padding:12px 16px;align-items:flex-start;justify-content:center;text-align:left;border-radius:16px}
+.trdd .gcd .gc .gct{font-size:17px;line-height:1.25;font-weight:800;max-width:56%}
+.trdd .gcd .gc .gca{font-size:12.5px;margin-top:3px;max-width:56%}
+.trdd .gcd .gc .gcn{font-size:12.5px;margin-top:3px;max-width:56%;overflow-wrap:anywhere}
+.trdd .gcd .gc svg{left:auto;right:0;bottom:0;width:46%;height:100%}
+.trdd .tnote{margin:0 4px 8px}
+.trdd .tgrid{margin-top:8px}
+
+/* ---- লেনদেনের সারি (হিস্টোরি): আলাদা আলাদা ঘর ---- */
+.tr{margin:0 12px 8px;padding:12px 14px;min-height:72px;gap:12px;background:#fff;border:1px solid #f3e6ee!important;border-radius:18px;box-shadow:0 2px 10px rgba(160,40,100,.06);transition:transform .18s var(--ease),box-shadow .2s,background-color .2s}
+.tr:first-of-type{margin-top:10px}
+.tr:active{transform:scale(.985);background:#fff6fa;box-shadow:0 1px 4px rgba(160,40,100,.08)}
+.tr .m b{font-size:14.5px;font-weight:700;color:#2a1a22}
+.tr .m span{font-size:13px}
+.tr .m small{font-size:11.5px}
+.tr .r b{font-size:15px;font-weight:800}
+.tr .r small{font-size:11.5px;display:block;margin-top:3px}
+.tr .r b.mi{color:#d8135f}.tr .r b.pl{color:#12a15b}
+.pg>#lst{padding:2px 0 10px;background:transparent!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none;margin:0}
+.sec .tr:last-child{margin-bottom:0}
+.pg>.note{border-radius:0 0 18px 18px;margin-bottom:6px}
+.bk2>.bkl+.bkc{padding:8px 16px 10px}
+.tr{gap:10px;padding:12px 12px 12px 14px}
+.tr .m span{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.3}
+.tr .r b{font-size:14.5px}
+
+/* ===== v2.28 — অ্যাপের কিপ্যাড: কোনো অ্যানিমেশন/ট্রানজিশন নেই (ল্যাগ কমানোর জন্য) ===== */
+#kpad{transition:none!important;box-shadow:0 -2px 10px rgba(40,10,30,.10)}
+#kpad .kpb,#kpad .kpb svg,#kpad .kk i{transition:none!important}
+#kpad .kpg button{transition:none!important;box-shadow:none;border:1px solid #e6e3e8}
+#kpad .kpg button:active{transform:none!important;background:#f0eef2}
+#kpad .kpg .kd,#kpad .kpg .kk{border-color:transparent;background:transparent}
+#kpad .kpg .kd:active,#kpad .kpg .kk:active{background:transparent}
+#kpad.on .kpb svg{transform:none}
+#kpad.sk .kpb{animation:none}
+#kpad .kpg.dc{display:none}
+#kpad.dec .kpg.pn{display:none}
+#kpad.dec .kpg.dc{display:grid}
+html.pinkb .pgx .pbody{scroll-behavior:auto}

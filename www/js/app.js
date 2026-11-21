@@ -102,13 +102,13 @@ Object.assign(T.bn, {recv:"মানি রিসিভ", cashin:"গ্রা�
  scanh:"অন্যের QR স্ক্যান করে টাকা পাঠান বা এজেন্টের কাছে ক্যাশ আউট করুন", qrhint:"এই QR দেখালেই যে কেউ আপনাকে টাকা পাঠাতে পারবে", noscan:"স্ক্যানার শুধু অ্যাপের ভেতরে চলে", badqr:"এটি FuNPaY এর QR নয়",
  got:"পেয়েছেন", newacc:"নতুন অ্যাকাউন্ট", haveacc:"অ্যাকাউন্ট আছে? লগইন করুন", other:"অন্য নম্বর", pin4:"6 ডিজিট PIN", reg:"অ্যাকাউন্ট খুলুন", setup:"ব্যাকএন্ড সেট করা নেই। README দেখে SUPA_URL আর SUPA_KEY বসান।",
  rcv:"প্রাপক", ep:"আপনার মোবাইল নম্বর", cont:"চালিয়ে যান", cobad:"ক্যাশ আউট সর্বনিম্ন 50 টাকা", addmax:"একবারে সর্বোচ্চ 5,000 টাকা", badpin:"PIN 6 ডিজিটের হতে হবে", back2:"স্বাগতম, আবার",
- conf1:"Supabase এ Confirm email বন্ধ করুন", lp:"আপনার 6 ডিজিট PIN দিন", dm:"টেস্ট ভার্সন: এই ব্যালেন্স আসল টাকা নয়", cashw:"এটি টেস্ট ব্যালেন্স, আসল টাকা নয়। এজেন্টের কাছ থেকে আসল টাকা নেবেন না।", bioT:"ফিঙ্গারপ্রিন্ট / স্ক্রিন লক দিয়ে আনলক", bioD:"পরের বার PIN-এর বদলে আঙুলের ছাপ বা ফোনের লক দিয়ে অ্যাপ খুলতে পারবেন। PIN-ও কাজ করবে।", bioY:"চালু করুন", bioR:"FuNPaY আনলক করুন", bioOn:"আনলক চালু হয়েছে", on:"চালু", off:"বন্ধ", myqrs:"নিজের QR", rcvd:"প্রাপক"});
+ conf1:"Supabase এ Confirm email বন্ধ করুন", lp:"আপনার 6 ডিজিট PIN দিন", dm:"", cashw:"", bioT:"ফিঙ্গারপ্রিন্ট / স্ক্রিন লক দিয়ে আনলক", bioD:"পরের বার PIN-এর বদলে আঙুলের ছাপ বা ফোনের লক দিয়ে অ্যাপ খুলতে পারবেন। PIN-ও কাজ করবে।", bioY:"চালু করুন", bioR:"FuNPaY আনলক করুন", bioOn:"আনলক চালু হয়েছে", on:"চালু", off:"বন্ধ", myqrs:"নিজের QR", rcvd:"প্রাপক"});
 Object.assign(T.en, {recv:"Money Received", cashin:"Customer Cash Out", agent:"Agent", nouser:"No FuNPaY account with this number", noag:"This is not an agent number", self:"You can't use your own number",
  neterr:"No internet, try again", errg:"Something went wrong", exists:"An account already exists for this number", soon:"This service is coming soon", myqr:"My QR", scanqr:"Scan QR",
  scanh:"Scan someone's QR to send money, or cash out at an agent", qrhint:"Show this QR so anyone can send you money", noscan:"The scanner only works inside the app", badqr:"This is not a FuNPaY QR",
  got:"received", newacc:"New account", haveacc:"Have an account? Log in", other:"Other number", pin4:"6-digit PIN", reg:"Create account", setup:"Backend is not set up. Follow the README and fill in SUPA_URL and SUPA_KEY.",
  rcv:"Recipient", ep:"Your mobile number", cont:"Continue", cobad:"Minimum cash out is ৳50", addmax:"Max ৳5,000 at a time", badpin:"PIN must be 4 digits", back2:"Welcome back",
- conf1:"Turn off Confirm email in Supabase", lp:"Enter your 6-digit PIN", dm:"Test version: this balance is not real money", cashw:"This is a test balance, not real money. Do not take real cash from an agent.", bioT:"Unlock with fingerprint / screen lock", bioD:"Next time open the app with your fingerprint or phone lock instead of the PIN. The PIN still works.", bioY:"Turn on", bioR:"Unlock FuNPaY", bioOn:"Unlock enabled", on:"On", off:"Off", myqrs:"Your QR", rcvd:"Recipient"});
+ conf1:"Turn off Confirm email in Supabase", lp:"Enter your 6-digit PIN", dm:"", cashw:"", bioT:"Unlock with fingerprint / screen lock", bioD:"Next time open the app with your fingerprint or phone lock instead of the PIN. The PIN still works.", bioY:"Turn on", bioR:"Unlock FuNPaY", bioOn:"Unlock enabled", on:"On", off:"Off", myqrs:"Your QR", rcvd:"Recipient"});
 
 Object.assign(T.bn, {lgreg:"লগ ইন / রেজিস্ট্রেশন", phh:"মোবাইল নম্বর দিয়ে লগ ইন / রেজিস্ট্রেশন করুন", cc:"দেশের কোড", bd:"বাংলাদেশ", mob:"মোবাইল নম্বর", terms:"আপনি নিয়ম ও শর্তসমূহে সম্মত আছেন", ft1:"নিরাপদ PIN", ft2:"ফিঙ্গারপ্রিন্ট", ft3:"QR পেমেন্ট", wel:"স্বাগতম", regh:"নতুন অ্যাকাউন্ট খুলুন", regs:"নাম, মোবাইল নম্বর আর 6 ডিজিট PIN দিন"});
 Object.assign(T.en, {lgreg:"Log in / Register", phh:"Log in / Register with your mobile number", cc:"Country code", bd:"Bangladesh", mob:"Mobile number", terms:"You agree to the terms and conditions", ft1:"Secure PIN", ft2:"Fingerprint", ft3:"QR payments", wel:"Welcome", regh:"Create a new account", regs:"Enter your name, mobile number and a 6-digit PIN"});
@@ -117,8 +117,8 @@ Object.assign(T.en, {rcnt:"Recent", sc1:"Place the QR code inside the frame", sc
 Object.assign(T.bn, {bt1:"অ্যাড মানি অফার", bt2:"রিচার্জ অফার", bt3:"রেফার অফার", o1:"প্রথম অ্যাড মানিতে 5% ক্যাশব্যাক", o2:"মোবাইল রিচার্জে 10 টাকা বোনাস", o3:"বন্ধুকে ইনভাইট করুন, পান 50 টাকা", os1:"ব্যাংক বা কার্ড থেকে টাকা যোগ করুন", os2:"যেকোনো অপারেটরে, প্রতি রিচার্জে", os3:"বন্ধু প্রথম লেনদেন করলেই", g1:"অ্যাড মানি", g2:"রিচার্জ করুন", g3:"ইনভাইট"});
 Object.assign(T.en, {bt1:"ADD MONEY OFFER", bt2:"RECHARGE OFFER", bt3:"REFER OFFER", o1:"5% cashback on your first Add Money", o2:"৳10 bonus on every recharge", o3:"Invite a friend and get ৳50", os1:"Add money from a bank or card", os2:"On any operator, every recharge", os3:"When your friend makes a first transfer", g1:"Add Money", g2:"Recharge", g3:"Invite"});
 
-Object.assign(T.bn, {menu:"FuNPaY মেনু", stmt:"স্টেটমেন্ট", lim:"লিমিট", help:"গ্রাহক সেবা", about:"FuNPaY নিয়ে জানুন", refer:"রেফার করুন", lock:"অ্যাপ লক করুন", logout:"লগ আউট", recv:"মানি রিসিভ", oth:"অন্যান্য", ftt:"ফিল্টার করুন", close:"বন্ধ", apply:"প্রয়োগ করুন", reset:"রিসেট", detail:"লেনদেনের বিবরণ", stat:"অবস্থা", okk:"সফল", limt:"লেনদেনের লিমিট", l1:"সেন্ড মানি / পেমেন্ট", l1v:"প্রতিবার 1 – 1,00,000 টাকা", l2:"ক্যাশ আউট", l2v:"প্রতিবার 50 – 50,000 টাকা, চার্জ 1.85%", l3:"অ্যাড মানি", l3v:"প্রতিবার সর্বোচ্চ 5,000 টাকা", l4:"সার্ভিস বিল", l4v:"প্রতিবার 1 – 1,00,000 টাকা", abt:"FuNPaY একটি টেস্ট মোবাইল ওয়ালেট অ্যাপ। এখানকার সব টাকা নকল, আসল টাকা নয়।", hlp:"সাহায্য লাগলে অ্যাপের ডেভেলপারের সাথে যোগাযোগ করুন। শীঘ্রই লাইভ সাপোর্ট আসছে।", invite:"FuNPaY অ্যাপে আমার নম্বরে টাকা পাঠান: ", nt2:"নোটিফিকেশন", fnone:"সব দেখাচ্ছে"});
-Object.assign(T.en, {menu:"FuNPaY Menu", stmt:"Statement", lim:"Limits", help:"Customer Service", about:"About FuNPaY", refer:"Refer a friend", lock:"Lock app", logout:"Log out", recv:"Money Received", oth:"Others", ftt:"Filter", close:"Close", apply:"Apply", reset:"Reset", detail:"Transaction details", stat:"Status", okk:"Successful", limt:"Transaction limits", l1:"Send Money / Payment", l1v:"৳1 – ৳1,00,000 per transaction", l2:"Cash Out", l2v:"৳50 – ৳50,000 per transaction, 1.85% fee", l3:"Add Money", l3v:"Up to ৳5,000 at a time", l4:"Service bills", l4v:"৳1 – ৳1,00,000 per transaction", abt:"FuNPaY is a test mobile wallet app. All money here is fake, not real.", hlp:"For help, contact the app developer. Live support is coming soon.", invite:"Send money to my number on the FuNPaY app: ", nt2:"Notifications", fnone:"Showing all"});
+Object.assign(T.bn, {menu:"FuNPaY মেনু", stmt:"স্টেটমেন্ট", lim:"লিমিট", help:"গ্রাহক সেবা", about:"FuNPaY নিয়ে জানুন", refer:"রেফার করুন", lock:"অ্যাপ লক করুন", logout:"লগ আউট", recv:"মানি রিসিভ", oth:"অন্যান্য", ftt:"ফিল্টার করুন", close:"বন্ধ", apply:"প্রয়োগ করুন", reset:"রিসেট", detail:"লেনদেনের বিবরণ", stat:"অবস্থা", okk:"সফল", limt:"লেনদেনের লিমিট", l1:"সেন্ড মানি / পেমেন্ট", l1v:"প্রতিবার 1 – 1,00,000 টাকা", l2:"ক্যাশ আউট", l2v:"প্রতিবার 50 – 50,000 টাকা, চার্জ 1.85%", l3:"অ্যাড মানি", l3v:"প্রতিবার সর্বোচ্চ 5,000 টাকা", l4:"সার্ভিস বিল", l4v:"প্রতিবার 1 – 1,00,000 টাকা", abt:"FuNPaY একটি মোবাইল ওয়ালেট অ্যাপ।", hlp:"সাহায্য লাগলে অ্যাপের ডেভেলপারের সাথে যোগাযোগ করুন। শীঘ্রই লাইভ সাপোর্ট আসছে।", invite:"FuNPaY অ্যাপে আমার নম্বরে টাকা পাঠান: ", nt2:"নোটিফিকেশন", fnone:"সব দেখাচ্ছে"});
+Object.assign(T.en, {menu:"FuNPaY Menu", stmt:"Statement", lim:"Limits", help:"Customer Service", about:"About FuNPaY", refer:"Refer a friend", lock:"Lock app", logout:"Log out", recv:"Money Received", oth:"Others", ftt:"Filter", close:"Close", apply:"Apply", reset:"Reset", detail:"Transaction details", stat:"Status", okk:"Successful", limt:"Transaction limits", l1:"Send Money / Payment", l1v:"৳1 – ৳1,00,000 per transaction", l2:"Cash Out", l2v:"৳50 – ৳50,000 per transaction, 1.85% fee", l3:"Add Money", l3v:"Up to ৳5,000 at a time", l4:"Service bills", l4v:"৳1 – ৳1,00,000 per transaction", abt:"FuNPaY is a mobile wallet app.", hlp:"For help, contact the app developer. Live support is coming soon.", invite:"Send money to my number on the FuNPaY app: ", nt2:"Notifications", fnone:"Showing all"});
 const BART = [
   '<circle cx="32" cy="32" r="22"/><path d="M23 41L41 23"/><circle cx="24.5" cy="24.5" r="3.6"/><circle cx="39.5" cy="39.5" r="3.6"/>',
   '<rect x="19" y="6" width="26" height="52" rx="6"/><path d="M28 50h8"/><path d="M34 15l-6 11h8l-6 12"/>',
@@ -291,7 +291,7 @@ function numIn(el) { const v = digs(el.value, 11); if (el.value !== v) el.value 
 function pinOnly(el) { const v = digs(el.value, 6); if (el.value !== v) el.value = v; }
 const isPh = (x) => /^01\d{9}$/.test(String(x));
 const isPin = (x) => /^\d{6}$/.test(String(x));
-const t = (k) => en(T[S.lang][k] || k);
+const t = (k) => en(((window.__kyc || /^k_/.test(k)) && T.en[k]) || T[S.lang][k] || k);
 const money = (n) => "৳ " + Number(n).toLocaleString("en-US", {maximumFractionDigits: 2});
 const TK = (x, y, s, c) => `<text x="${x}" y="${y}" font-size="${s}" font-weight="800" fill="${c}" text-anchor="middle" font-family="system-ui,'Noto Sans Bengali',sans-serif">৳</text>`;
 /* রঙিন সার্ভিস আইকন (বিকাশের মতো) */
@@ -356,7 +356,7 @@ function errMsg0(e) {
   if (/invalid login/i.test(m)) return t("wp");
   if (/already registered|already been registered|saving new user/i.test(m)) return t("exists");
   console.log(m);
-  return t("errg") + " (" + m.slice(0, 70) + ")";
+  return window.__kyc ? t("k_err2") : t("errg") + " (" + m.slice(0, 70) + ")";
 }
 async function loadAll(isFirst, quick) {
   const [p, x, nn] = await Promise.all([api("/rest/v1/profiles?select=*&id=eq." + S.uid, quick ? {tries: 1} : {}), api("/rest/v1/transactions?select=*&order=id.desc&limit=60", quick ? {tries: 1} : {}), api("/rest/v1/notices?select=*&order=id.desc&limit=30", {tries: 1}).catch(() => null)]);
@@ -506,7 +506,7 @@ function pphHtml() {
   const s = S.sheet, o = (ico, lbl, js) => `<button class="pho" onclick="${js}">${ic(ico)}<span>${lbl}</span></button>`;
   return `<div class="sh dlg${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div><h3>${t("ph1")}</h3>
     <div class="phv"><div class="big">${myAv((S.me || {}).name)}</div></div>
-    ${o("cam2", t("phc"), "document.getElementById('phc').click()")}${o("gal", t("phg"), "document.getElementById('phg').click()")}${myPhoto() ? o("trash", t("phd"), "phDel()") : ""}
+    ${o("cam2", t("phc"), "document.getElementById('phc').click()")}${o("gal", t("phg"), "galAsk(()=>document.getElementById('phg').click())")}${myPhoto() ? o("trash", t("phd"), "phDel()") : ""}
     <input id="phc" type="file" accept="image/*" capture="user" style="display:none" onchange="phPick(this)"><input id="phg" type="file" accept="image/*" style="display:none" onchange="phPick(this)">
     <button class="btn l" onclick="closeS()">${t("cancel")}</button></div></div>`;
 }
@@ -561,8 +561,8 @@ function pageMine() {
     + `<div class="prof"><div class="pavw" onclick="openPhoto()"><div class="big">${myAv(m.name)}</div><i class="cam">${ic("cam2")}</i></div><div class="pi2"><h3>${esc(m.name || t("acct"))} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p></div></div>`
     + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()")}${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("stmt", t("stmt"), "openStmt()")}${R("fp", t("bioT"), "toggleBio()", sw)}${R("bell", t("nt2"), "S.seg='n';go('inbox')")}${m.kyc_status === "approved" ? `<button class="mr" onclick="toast(t('k_kycok'))">${ic("ok2")}<span>${t("k_kyc")}</span><small class="kok">${t("k_ver")}</small></button>` : ""}</div>`
     + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()")}${R("lim", t("limt"), "openInfo('lim')")}</div>`
-    + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()")}${R("help", t("help"), "openInfo('help')")}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("bolt", t("ctest"), "netTest()")}${R("out", t("lock"), "lock()")}${R("out", t("logout"), "logout()")}</div>`
-    + (TEST_MODE ? `<p class="em">${t("dm")}</p>` : "");
+    + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()")}${R("help", t("help"), "openInfo('help')")}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("out", t("lock"), "lock()")}${R("out", t("logout"), "logout()")}</div>`
+    ;
 }
 
 /* ---------- লগইন / অ্যাকাউন্ট খোলা ---------- */
@@ -933,14 +933,16 @@ function sheetHtml0() {
     const who2 = person
       ? `<div class="rcp">${avatar(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${s.rn ? num : ""}</span></div></div>`
       : `<div class="rcp">${tile(s.id)}<div><b>${t(s.id)}</b><span>${[s.ch ? t(s.ch) : "", num].filter(Boolean).join(" · ")}</span></div></div>`;
-    const hidden = S.hideNb;
-    const cells = [`<div><span>${t("at")}</span><b>${fmt(s.at)}</b></div>`,
+    const hidden = S.hideNb, ref = (s.id === "send" && s.note) ? String(s.note).trim() : "";
+    const main = [`<div><span>${t("at")}</span><b>${fmt(s.at)}</b></div>`,
       `<div><span>${t("trx")}</span><b class="cpy"><em>${esc(s.trx)}</em><button class="eye" id="cpb" aria-label="${t("copy")}" onclick="copyTrx()">${ic("copy")}</button></b></div>`,
       `<div><span>${t("amtl")}</span><b>${money(s.amt)}</b></div>`,
       s.disc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(s.disc)}</b></div>` : s.fee ? `<div><span>${t("feel")}</span><b>${money(s.fee)}</b></div>` : "",
-      `<div><span>${t("total")}</span><b class="pk">${money(s.total)}</b></div>`,
-      `<div><span>${t("nbl")}</span><b class="nbv"><em id="nbv" data-v="${esc(money(s.nb))}">${hidden ? "৳ ••••" : esc(money(s.nb))}</em><button class="eye" id="nbe" aria-label="eye" onclick="toggleNb()">${ic(hidden ? "eyeo" : "eye")}</button></b></div>`];
-    return wrapPage(s, t(s.id), "closeS()", `<div class="pcard bkr"><div class="bkh"><div><b>${t(s.id)}</b><em>${t("done")}</em></div><i class="bkck"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>${who2}<div class="bkg">${cells.filter(Boolean).map((c, i, a) => (a.length % 2 && i === a.length - 1) ? c.replace("<div>", '<div class="wide">') : c).join("")}</div><button class="bks" onclick="shareRc()">${ic("shr")}<span>${t("share")}</span></button></div>`,
+      `<div><span>${t("total")}</span><b class="pk">${money(s.total)}</b></div>`].filter(Boolean);
+    if (main.length % 2) main[main.length - 1] = main[main.length - 1].replace("<div>", '<div class="wide">');
+    const nb = `<span>${t("nbl")}</span><b class="nbv"><em id="nbv" data-v="${esc(money(s.nb))}">${hidden ? "৳ ••••" : esc(money(s.nb))}</em><button class="eye" id="nbe" aria-label="eye" onclick="toggleNb()">${ic(hidden ? "eyeo" : "eye")}</button></b>`;
+    const cells = main.concat(ref ? [`<div class="refc"><span>${t("g_ref")}</span><b><em>${esc(ref)}</em></b></div>`, `<div class="nbc">${nb}</div>`] : [`<div class="nbc wide">${nb}</div>`]);
+    return wrapPage(s, t(s.id), "closeS()", `<div class="pcard bkr"><div class="bkh"><div><b>${t(s.id)}</b><em>${t("done")}</em></div><i class="bkck"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>${who2}<div class="bkg">${cells.join("")}</div><button class="bks" onclick="shareRc()">${ic("shr")}<span>${t("share")}</span></button></div>`,
       `<button class="bknx" onclick="closeS()"><span>${t("next")}</span>${NXT}</button>`);
   }
 
@@ -960,7 +962,6 @@ function sheetHtml0() {
     const rows = (!person && s.v ? `<div><span>${t(c.f)}</span><b>${esc(s.v)}</b></div>` : "") + (!person && s.ch ? `<div><span>${t("opr")}</span><b>${t(s.ch)}</b></div>` : "") + (person && s.id === "cash" ? `<div><span>${t("svc")}</span><b>${t("cash")}</b></div>` : "")
       + `<div><span>${t("amtl")}</span><b>${money(amt)}</b></div>${fee ? `<div><span>${t("feel")}</span><b>${money(fee)}</b></div>` : ""}${dsc ? `<div><span>${t("disc")}</span><b class="gr">- ${money(dsc)}</b></div>` : ""}`;
     return wrapPage(s, t(s.id), "backStep()", `${prog}<div class="pcard cfm">${who}<div class="cfa"><small>${t("total")}</small><b>${money(tot)}</b></div><div class="sm">${rows}</div></div>
-      ${TEST_MODE && s.id === "cash" ? `<p class="tw" style="margin-top:8px">${t("cashw")}</p>` : ""}
       <div class="err c" style="text-align:center;margin-top:10px">${esc(s.err)}</div>`,
       `<div class="holdw"><button id="hold" class="hold" onpointerdown="holdStart(event)" onpointerup="holdEnd()" onpointerleave="holdEnd()" onpointercancel="holdEnd()" oncontextmenu="return false"><i><span class="hc">${ic("ok2")}<b>${t("hold")}</b></span></i>${ic("ok2")}<b>${t("hold")}</b></button></div>`);
   }
@@ -1656,7 +1657,7 @@ function kycSync() {
   if (!K.open || K.step === "wait") { K.step = "intro"; kycRender(); }
 }
 function kycClose(wipe) {
-  kcamStop();
+  window.__kyc = false; kcamStop();
   const e = document.getElementById("kyc"); if (e) e.remove();
   K.open = false; K.flow = false; K.step = "intro"; K.pv = ""; K.busy = false; K.reading = false; K.auto = false; K.vbusy = false; clearTimeout(K.at);
   if (wipe) { kWorkerStop(); if (KFL) { try { KFL.close(); } catch (e) {} KFL = null; KFLp = null; } K.pre = {}; K.front = K.back = K.selfie = ""; K.d = {name:"", name_bn:"", father:"", mother:"", dob:"", nid:"", addr:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.lk = {}; K.ft = 0; K.redo = false; K.manual = false; K.rep = null; K.sum = null; }
@@ -1673,7 +1674,7 @@ function kSb() {
 function kycRender() {
   const el = kEl(), want = K.step === "face" ? "user" : (K.step === "front" || K.step === "back") ? "environment" : "";
   kcamStop(!!want && !!KS && KSf === want);
-  const first = !K.open; K.open = true;
+  window.__kyc = true; const first = !K.open; K.open = true;
   el.className = first ? "kin" : "";
   el.innerHTML = kHtml();
   kSb();
@@ -2034,7 +2035,7 @@ function kFaceOrd() {
 function kFaceStop() { KFc.on = false; clearTimeout(KFc.tm); }
 function kFaceMsg(k) { if (KFc.last !== k) { KFc.last = k; kSt(k); } }
 async function kFaceStart() {
-  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
+  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.sd = null; KFc.c1 = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
   KFc.bn = 0; kFaceMsg("k_fload"); kFaceUI();
   const m = await kFaceModel();
   if (!KFc.on || K.step !== "face" || K.pv) return;
@@ -2050,17 +2051,24 @@ function kFaceLoop() {
   if (!L) { if (++KFc.lost > 12) { KFc.hold = 0; KFc.bs = []; kFaceMsg("k_fnone"); } return; }
   KFc.lost = 0;
   const nose = L[1], xa = L[234].x, xb = L[454].x, xl = Math.min(xa, xb), xr = Math.max(xa, xb), fh = L[10], ch = L[152];
-  const w = xr - xl, yaw0 = (nose.x - xl) / w, pit0 = (nose.y - fh.y) / (ch.y - fh.y), yaw = (KFc.sy = KFc.sy == null ? yaw0 : KFc.sy + (yaw0 - KFc.sy) * .55), pit = (KFc.sp = KFc.sp == null ? pit0 : KFc.sp + (pit0 - KFc.sp) * .55), cx = (xl + xr) / 2, cy = (fh.y + ch.y) / 2;
-  const fit = Math.abs(cx - .5) < .14 && Math.abs(cy - .45) < .17 && w > .26 && w < .85;
+  const eyeY = (L[33].y + L[133].y + L[362].y + L[263].y) / 4;
+  const w = xr - xl, yaw0 = (nose.x - xl) / w, pit0 = (nose.y - fh.y) / (ch.y - fh.y), pdn0 = (nose.y - eyeY) / Math.max(.02, ch.y - eyeY);
+  const sm = (o, v) => (o == null ? v : o + (v - o) * .6);
+  const yaw = (KFc.sy = sm(KFc.sy, yaw0)), pit = (KFc.sp = sm(KFc.sp, pit0)), pdn = (KFc.sd = sm(KFc.sd, pdn0)), cx = (xl + xr) / 2, cy = (fh.y + ch.y) / 2;
+  /* শুরুতে কড়া, ধাপ চলার সময় নরম: মাথা নিচু/ঘোরালে মুখ ফ্রেমের একটু বাইরে গেলেও ধাপ থামবে না */
+  const fit = KFc.st < 0 ? (Math.abs(cx - .5) < .14 && Math.abs(cy - .45) < .17 && w > .26 && w < .85) : (Math.abs(cx - .5) < .25 && Math.abs(cy - .46) < .3 && w > .2 && w < .95);
   /* চোখের পলক: ব্লেন্ডশেপ স্কোর (০ = খোলা, ১ = বন্ধ) */
   let blink = -1; const bsh = res.faceBlendshapes && res.faceBlendshapes[0] && res.faceBlendshapes[0].categories;
   if (bsh && bsh.length) { const g = (n) => { const c = bsh.find(x => x.categoryName === n); return c ? c.score : 0; }; blink = (g("eyeBlinkLeft") + g("eyeBlinkRight")) / 2; }
   if (KFc.st < 0) {
     if (fit && Math.abs(yaw - .5) < .09 && (blink < 0 || blink < .3)) {
-      KFc.bs.push({yaw, pit});
+      KFc.bs.push({yaw, pit, pdn});
+      if (KFc.bs.length === 4) KFc.c1 = {img: kShrink(v, 1400, .9), sh: kSharp(v)};
       if (KFc.bs.length >= 8) {
-        KFc.base = {yaw: KFc.bs.reduce((a, b) => a + b.yaw, 0) / KFc.bs.length, pit: KFc.bs.reduce((a, b) => a + b.pit, 0) / KFc.bs.length};
-        KFc.shot = kShrink(v, 1400, .9); KFc.st = 0; KFc.hold = 0; KFc.t0 = Date.now(); KFc.bl = {c: false, n: 0}; hap("MEDIUM"); kFaceUI(); kFaceMsg(KDKM[KFc.ord[0]]); kFaceProg(0);
+        const av = (k) => KFc.bs.reduce((a, b) => a + b[k], 0) / KFc.bs.length;
+        KFc.base = {yaw: av("yaw"), pit: av("pit"), pdn: av("pdn")};
+        const c2 = {img: kShrink(v, 1400, .9), sh: kSharp(v)}; KFc.shot = KFc.c1 && KFc.c1.sh > c2.sh ? KFc.c1.img : c2.img;
+        KFc.st = 0; KFc.hold = 0; KFc.t0 = Date.now(); KFc.bl = {c: false, n: 0}; hap("MEDIUM"); kFaceUI(); kFaceMsg(KDKM[KFc.ord[0]]); kFaceProg(0);
       } else kFaceMsg("k_fhold");
     } else { KFc.bs = []; kFaceMsg("k_fcen"); }
     return;
@@ -2082,7 +2090,8 @@ function kFaceLoop() {
       p = Math.min(1, KFc.bl.n / 2) + (KFc.bl.c ? .2 : 0); p = Math.min(p, KFc.bl.n >= 2 ? 1 : .95); done = KFc.bl.n >= 2;
     }
   } else {
-    p = {right: (b.yaw - yaw) / .12, left: (yaw - b.yaw) / .12, up: (b.pit - pit) / .06, down: (pit - b.pit) / .07}[cur];
+    /* নিচ: নতুন মাপ (চোখ থেকে নাক-থুতনির অনুপাত) + পুরনো মাপ, দুটোর যেটা আগে পূরণ হয়; অল্প নিচু করলেই হবে */
+    p = {right: (b.yaw - yaw) / .12, left: (yaw - b.yaw) / .12, up: (b.pit - pit) / .06, down: Math.max((pdn - b.pdn) / .028, (pit - b.pit) / .04)}[cur];
     if (p >= 1) { if (++KFc.hold >= 4) done = true; } else KFc.hold = 0;
   }
   kFaceProg(p);
@@ -2116,9 +2125,9 @@ function kFaceUse() { hap(); K.selfie = K.pv; K.pv = ""; K.live = {ok: false, mo
 /* ----- v2.20: NID-র ছবির মুখের সাথে সেলফি মেলানো (পুরোটা ফোনের ভেতরে, face-api) -----
    মিল % = দুই মুখের "দূরত্ব" থেকে হিসাব। ৮৫% মানে দূরত্ব ০.৪৫ বা তার কম (face-api এর সাধারণ সীমা ০.৬ এর চেয়ে কড়া)।
    সার্ভারের SQL (update-v2.20-kyc-auto.sql) একই হিসাব নিজে আবার করে, তাই এই ধাপ সরাসরি অ্যাকাউন্ট চালু করতে পারে না। */
-const KM = {AUTO: 85, SWAP: .62, VER: "1.7.12"};
+const KM = {AUTO: 85, REVIEW: 70, SUSPECT: 30, TRIES: 3, SWAP: .62, VER: "1.7.12"};
 const KMB = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@" + KM.VER;
-const KMA = [[0, 100], [.30, 98], [.45, 85], [.60, 50], [.80, 10], [1, 0]];
+const KMA = [[0, 100], [.30, 97], [.50, 85], [.58, 70], [.70, 45], [.85, 30], [1, 10], [1.2, 0]];
 let KFA = null, KFAp = null, KFAbad = 0;
 function kFA() {
   if (KFA) return Promise.resolve(KFA);
@@ -2301,7 +2310,7 @@ async function kSubmit() {
   kUpSet(4);
   try { if (r && r.id) api("/rest/v1/rpc/kyc_extra", {m: "POST", tries: 1, b: {p_id: r.id, p_mother: (K.d.mother || "").trim(), p_name_bn: (K.d.name_bn || "").trim()}}).catch(() => {}); } catch (e) {}
   const auto = !!(r && typeof r === "object" && r.status === "approved");
-  { const R0 = K.mres || {}, nd = String(K.d.nid || ""); K.sum = {th: [K.front, K.back, K.selfie], name: K.d.name, nid: nd ? "••••••" + nd.slice(-4) : "", pct: R0.d === null || R0.d === undefined ? null : Math.round(R0.pct), auto}; }
+  { const R0 = K.mres || {}, nd = String(K.d.nid || ""); K.sum = {th: [K.front, K.back, K.selfie], name: K.d.name, nid: nd ? "••••••" + nd.slice(-4) : "", pct: R0.d === null || R0.d === undefined || R0.pct >= KM.AUTO ? null : Math.round(R0.pct), auto}; }
   K.busy = false; K.flow = false; K.msg = ""; K.err = ""; K.front = K.back = K.selfie = ""; K.p1 = K.p2 = null; K.live = null; K.mres = null; K.desc = null; K.tries = 0; K.cardDesc = null; K.cardThumb = "";
   if (S.me) { S.me.kyc_status = auto ? "approved" : "pending"; S.me.kyc_reason = null; }
   if (!auto) kycNotify("submitted");
@@ -2549,7 +2558,7 @@ async function kVal() {
 }
 
 /* ---- NID স্ক্যান পাতা: চার পাশে UI রঙ + লোগো, ক্যামেরা শুধু কার্ডের ঘরে ---- */
-const kBg = () => `<div class="kbg"><i class="b1"></i><i class="b2"></i>${[1, 2, 3, 4].map(n => `<img class="kwm w${n}" src="icons/logo.png" alt="">`).join("")}</div>`;
+const kBg = () => `<div class="kbg"><i class="b1"></i><i class="b2"></i></div>`;
 const kLogo = () => `<div class="klg"><img src="icons/logo.png" alt=""><b>FuNPaY</b></div>`;
 function kScan(side) {
   const fr = side === "front", pv = K.pv;
@@ -2560,7 +2569,7 @@ function kScan(side) {
       <div class="kfr${pv && !K.vbusy ? " dn" : ""}"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>${pv ? "" : '<u class="kln"></u>'}</div></div>${chip}
     <div class="kbt">${pv ? "" : `<p id="kst">${t("k_auto")}</p>`}
       ${pv ? (K.vbusy ? "" : `${K.rep && K.rep.side === side ? kRepHtml() : ""}<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kUse()">${t("k_use")}</button></div>`)
-        : `<div class="ksh"><label class="kgal">${kic("gal")}<input type="file" accept="image/*" hidden onchange="kFile(this)"></label><button class="kshut" aria-label="${t("k_snap")}" onclick="kSnap()"><i></i></button><span class="kgal sp"></span></div>`}
+        : `<div class="ksh"><button type="button" class="kgal" aria-label="Gallery" onclick="galAsk(()=>document.getElementById('kgf').click())">${kic("gal")}</button><input id="kgf" type="file" accept="image/*" hidden onchange="kFile(this)"><button class="kshut" aria-label="${t("k_snap")}" onclick="kSnap()"><i></i></button><span class="kgal sp"></span></div>`}
       <small class="knc" id="knc"></small></div></div>`;
 }
 
@@ -2962,26 +2971,29 @@ function scanHtml(s) {
     <div class="scbg"><i class="b1"></i><i class="b2"></i>${[1, 2, 3, 4].map(n => `<img class="wm w${n}" src="icons/logo.png" alt="">`).join("")}</div>
     <div class="scb"><div class="sctabs"><button class="on">${t("scn3")}</button><button onclick="qTab('my')">${t("myqr")}</button></div><button class="lnk2" onclick="manualSend()">${t("scn2")}</button></div></div></div>`;
 }
-/* v2.25 — বিকাশ স্টাইল নিজস্ব সংখ্যা কিবোর্ড: সব PIN ঘরে ফোনের কিবোর্ড নয়, অ্যাপের নিজের কিপ্যাড ওঠে (ওপরে "পিন কনফার্ম করুন ➜" বার) */
+/* v2.28 — অ্যাপের নিজস্ব সংখ্যা কিপ্যাড: PIN, টাকার পরিমাণ, মোবাইল নম্বর, OTP, NID — সব সংখ্যার ঘরে ফোনের কিবোর্ড নয়।
+   শুধু লেখার ঘরে (নাম, নোট, সার্চ ইত্যাদি) ফোনের কিবোর্ড ওঠে। কিপ্যাডে কোনো অ্যানিমেশন নেই, যাতে ফোন ল্যাগ না করে। */
 (function () {
-  let kp = null, bar = null, cur = null, hideT = 0;
-  const SEL = 'input[type="password"][inputmode="numeric"],input[data-kp="1"]';
+  let kp = null, bar = null, cur = null, hideT = 0, mq = 0;
+  const SEL = 'input[type="password"][inputmode="numeric"],input[data-kp="1"],input[inputmode="decimal"],input[inputmode="numeric"]:not(#rp)';
   const isPin = (e) => e && e.tagName === "INPUT" && e.getAttribute("data-kp") === "1";
   const fix = (root) => {
     (root || document).querySelectorAll(SEL).forEach((e) => {
       if (e.getAttribute("data-kp") === "1") return;
+      e.setAttribute("data-km", e.type === "password" ? "pin" : e.getAttribute("inputmode") === "decimal" ? "dec" : "num");
       e.setAttribute("data-kp", "1"); e.setAttribute("inputmode", "none"); e.readOnly = true;
     });
   };
   const ARW = '<svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>';
+  const DEL = '<button class="kd" data-k="d" aria-label="delete"><svg viewBox="0 0 40 28"><path d="M13 1h24a2 2 0 0 1 2 2v22a2 2 0 0 1-2 2H13L1 14z"/><path d="M19 9l10 10M29 9L19 19"/></svg></button>';
+  const OKB = '<button class="kk" data-k="ok" aria-label="ok"><i><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></button>';
   const mk = () => {
     if (kp) return kp;
     kp = document.createElement("div"); kp.id = "kpad";
-    const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "d", "0", "ok"].map((k) =>
-      k === "d" ? `<button class="kd" data-k="d" aria-label="delete"><svg viewBox="0 0 40 28"><path d="M13 1h24a2 2 0 0 1 2 2v22a2 2 0 0 1-2 2H13L1 14z"/><path d="M19 9l10 10M29 9L19 19"/></svg></button>`
-        : k === "ok" ? `<button class="kk" data-k="ok" aria-label="ok"><i><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></button>`
-        : `<button data-k="${k}">${k}</button>`).join("");
-    kp.innerHTML = `<div class="kpb"><span></span>${ARW}</div><div class="kpg">${keys}</div>`;
+    const n = (k) => `<button data-k="${k}">${k}</button>`;
+    const pn = ["1", "2", "3", "4", "5", "6", "7", "8", "9"].map(n).join("") + DEL + n("0") + OKB;
+    const dc = ["1", "2", "3", "4", "5", "6", "7", "8", "9"].map(n).join("") + n(".") + n("0") + DEL;
+    kp.innerHTML = `<div class="kpb"><span></span>${ARW}</div><div class="kpg pn">${pn}</div><div class="kpg dc">${dc}</div>`;
     bar = kp.firstChild;
     kp.addEventListener("pointerdown", (ev) => {
       const b = ev.target.closest("button,.kpb"); if (!b) return;
@@ -2990,18 +3002,34 @@ function scanHtml(s) {
     });
     document.body.appendChild(kp); return kp;
   };
-  const upd = () => { if (!kp || !cur) return; bar.firstChild.textContent = t("pinok"); const r = digs(cur.value, 6).length >= 6; kp.classList.toggle("on", r); };
+  const mode = (e) => e.getAttribute("data-km") || "pin";
+  const ready = (e) => {
+    const m = mode(e);
+    if (m === "dec") return (parseFloat(e.value) || 0) > 0;
+    const need = m === "pin" ? 6 : e.id === "lp" ? 11 : e.id === "otpin" ? 6 : 10;
+    return digs(e.value, 20).length >= need;
+  };
+  const upd = () => {
+    if (!kp || !cur) return; const m = mode(cur);
+    kp.classList.toggle("dec", m === "dec");
+    bar.firstChild.textContent = t(m === "pin" ? "pinok" : m === "dec" ? "go2" : "cont");
+    kp.classList.toggle("on", ready(cur));
+  };
   const press = (k) => {
     const e = cur; if (!e) return;
     if (k === "ok") return go();
-    let v = digs(e.value, 6);
-    if (k === "d") { if (!v) return; v = v.slice(0, -1); hap(); } else if (v.length < 6) v += k; else return;
+    const m = mode(e), mx = e.maxLength > 0 ? e.maxLength : (m === "pin" ? 6 : 12);
+    let v = m === "dec" ? String(e.value || "") : digs(e.value, mx);
+    if (k === "d") { if (!v) return; v = v.slice(0, -1); hap(); }
+    else if (k === ".") { if (m !== "dec" || v.indexOf(".") >= 0) return; v = (v || "0") + "."; }
+    else if (v.length < mx) v += k; else return;
     e.value = v; e.dispatchEvent(new Event("input", {bubbles: true})); upd();
   };
   const go = () => {
     const e = cur; if (!e || !kp) return;
-    if (digs(e.value, 6).length < 6) return;
+    if (!ready(e)) return;
     hap("MEDIUM");
+    if (e.id === "otpin") return;
     if (e.id === "rk") { const n = document.getElementById("rk2"); if (n) { n.focus(); return; } }
     if (/Enter/.test(e.getAttribute("onkeydown") || "")) { e.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", bubbles: true, cancelable: true})); return; }
     const b = (e.closest(".sh,.kw,#app") || document).querySelector(".pfoot .btn,.kbtn,.btn"); if (b) b.click();
@@ -3014,17 +3042,22 @@ function scanHtml(s) {
     requestAnimationFrame(() => {
       kp.classList.add("show"); document.documentElement.classList.add("pinkb");
       document.documentElement.style.setProperty("--kph", kp.offsetHeight + "px");
-      try { cur && cur.scrollIntoView({block: "center", behavior: "smooth"}); } catch (e) {}
+      try { cur && cur.scrollIntoView({block: "nearest"}); } catch (e) {}
     });
   });
-  document.addEventListener("focusout", () => {
+  document.addEventListener("focusout", (ev) => {
     clearTimeout(hideT);
+    const r = ev.relatedTarget; /* বাটন (যেমন ৳500 চিপ) চাপলে কিপ্যাড নামে না */
+    if (r && r.tagName !== "INPUT" && r.closest && r.closest("#sheet,#app")) return;
     hideT = setTimeout(() => { if (isPin(document.activeElement)) return; hide(); }, 160);
   });
   document.addEventListener("input", (ev) => { if (ev.target === cur) upd(); });
-  /* নতুন পেজ আঁকলেই PIN ঘরগুলো আগে থেকে "কিবোর্ড-বন্ধ" করে দেয়; ঘর মুছে গেলে কিপ্যাডও নেমে যায় */
+  /* নতুন পেজ আঁকলে সংখ্যার ঘরগুলো আগে থেকে "কিবোর্ড-বন্ধ" করে দেয় (একসাথে একবার, যাতে ধীর না হয়) */
   try {
-    new MutationObserver(() => { fix(); if (cur && !document.contains(cur)) hide(); }).observe(document.documentElement, {childList: true, subtree: true});
+    new MutationObserver(() => {
+      if (mq) return;
+      mq = requestAnimationFrame(() => { mq = 0; fix(); if (cur && !document.contains(cur)) hide(); });
+    }).observe(document.documentElement, {childList: true, subtree: true});
   } catch (e) {}
   fix();
 })();
@@ -3222,9 +3255,9 @@ function bkWho(s) {
 function noteIn(el) { const s = S.sheet; if (!s) return; s.note = el.value.slice(0, 50); const e = document.getElementById("ncnt"); if (e) e.textContent = s.note.length + "/50"; }
 function bkStep3(s) {
   const T3 = totals(s), cd = gcOf(s.card);
-  return wrapPage(s, t(s.id), "backStep()", `<div class="bk3"><p class="bkl">${t("g_rcp")}</p><div class="bkc">${bkWho(s)}</div>
+  return wrapPage(s, t(s.id), "backStep()", `<div class="bk3"><div class="bkc">${bkWho(s)}</div>
     <div class="bk3t"><div><span>${t("amtl")}</span><b>${money2(T3.amt)}</b></div><div><span>${t("feel")}</span><b>+ ${money2(T3.fee)}</b></div><div><span>${t("total")}</span><b>${money2(T3.tot)}</b></div></div>
-    ${s.id === "send" ? `<div class="bkref"><div><span>${t("g_ref")}</span><em id="ncnt">${(s.note || "").length}/50</em></div><input id="snote" maxlength="50" placeholder="${t("g_note")}" value="${esc(s.note || "")}" oninput="noteIn(this)" autocomplete="off"></div>${cd ? `<div class="gmrow"><span class="gmini">${cardArt(cd, null, "", true)}</span><b>${t("g_card")} · ${GC_TITLE[cd.cat]}</b></div>` : ""}` : ""}
+    ${s.id === "send" ? `<div class="bkref"><div><span>${t("g_ref")}</span><em id="ncnt">${(s.note || "").length}/50</em></div><input id="snote" maxlength="50" placeholder="${t("g_note")}" value="${esc(s.note || "")}" oninput="noteIn(this)" autocomplete="off"></div>${cd ? `<div class="gmrow">${IC_GIFT2}<b>${t("g_card")}</b></div>` : ""}` : ""}
     <div class="pinrow bkpin">${IC_LOCK}<input id="spin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(s.pin)}" oninput="spIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();spGo()}"><button class="fpb" aria-label="fingerprint" onclick="txBio()">${ic("fp")}</button></div>
     <div class="err c" id="er" style="text-align:center;margin-top:8px">${esc(s.err)}</div></div>`, `<button class="btn" id="spgo" onclick="spGo()">${t("ok")}</button>`);
 }
@@ -3345,7 +3378,7 @@ function bkStep2(s) {
     : `<div class="fld big bka"><u>৳</u><input id="f2" inputmode="decimal" placeholder="0" value="${esc(s.a)}" oninput="amtIn(this);gtotU()"></div>
        <div class="avl">${t("avl")}: <b>${money(S.bal)}</b>${g ? ` · ${tot}` : ""}</div><div class="fee" id="fl">${c.fee && !g ? t("feel") + ": " + money(fee) : ""}</div>
        <div class="qa">${chips}</div><div class="err" id="er">${esc(s.err)}</div>`;
-  return wrapPage(s, g ? t("g_grp") : t(s.id), "backStep()", `<div class="bk2"><p class="bkl">${g ? t("g_rcp") : t(lk)}</p><div class="bkc">${who}</div>
+  return wrapPage(s, g ? t("g_grp") : t(s.id), "backStep()", `<div class="bk2">${isSend ? "" : `<p class="bkl">${t(lk)}</p>`}<div class="bkc">${who}</div>
     ${g ? `<button class="gdf${diff ? " on" : ""}" onclick="grpDiff()"><span>${t("g_diff")}</span><i></i></button>` : ""}
     ${isSend && !g && s.v && !recents().some(f => f[0] === s.v) && !isFav(s.v) ? `<p class="tw" style="margin:8px 0 0">${t("chkn")}</p>` : ""}
     <p class="bkl" style="margin-top:14px">${g && !diff ? t("g_each") : t("amt")}</p><div class="bkc">${amtBox}</div>
@@ -3375,4 +3408,251 @@ function bkStep1(s) {
   const tiles = `<div class="tl3">${tl("srch", t("tnum"), "document.getElementById('f1').focus()")}${tl("qr", t("scanqr"), `openQR('scan','${s.id}')`)}</div>`;
   return wrapPage(s, t(s.id), "backStep()", `${tabs}${search}${tiles}<div class="pcard lst"><p class="lh">${t(cash ? "lagent" : "lpay")}</p><div id="clist">${contactRows(s)}</div></div>`,
     `<button class="btn" onclick="nextStep()">${t("next")}${NXT}</button>`);
+}
+
+
+/* =====================================================================
+   v2.27 — KYC: ফেস ভেরিফিকেশন নতুন করে (ইংরেজি লেখা, ছোট মুখের গাইড, স্মুথ অ্যানিমেশন),
+   ৮৫% অটো / ৭০–৮৫% রিভিউ / ৭০ এর নিচে আবার ছবি (৩ বার), ভালো মুখ মেলানো, ব্যাক = NID সামনে,
+   গ্যালারির অনুমতি। (এই ব্লক সবার শেষে বসে, তাই একই নামের আগের ফাংশন বদলে দেয়)
+   ===================================================================== */
+Object.assign(T.en, {
+  k_title: "Verification (KYC)", k_face: "Face Verification", k_front: "NID Front", k_back: "NID Back",
+  k_dr: "Turn your face to the right", k_dl: "Turn your face to the left", k_du: "Look up a little", k_dd: "Look down a little", k_db: "Blink your eyes twice",
+  k_fload: "Getting ready…", k_fcen: "Keep your face inside the oval", k_fhold: "Hold still…", k_fnone: "Face not visible, come into the frame",
+  k_fok: "Face scan complete", k_frs: "Time is up, starting again", k_ffb: "Face scan could not start (internet needed). Tap the button to take a photo",
+  k_m_h: "Matching your face", k_m_l1: "Getting face matching ready…", k_m_l2: "Reading the photo on your NID…", k_m_l3: "Comparing with your selfie…", k_m_l4: "Checking your face scan…",
+  k_m_okh: "Face verified", k_m_oks: "Your face matches your NID photo. Enter your PIN to open your account.",
+  k_m_rvh: "Under review", k_m_rvs: "Your face match is {p}%. Our support team will review it and give you the result very soon.",
+  k_m_rvs2: "Our support team will review your details and give you the result very soon.",
+  k_m_lowh: "Face did not match", k_m_lows: "Fix the points below and take your selfie again.",
+  k_m_finh: "Very low match", k_m_finp: "Your face match with your ID card is very low ({p}%). Our support team will check it manually and give you the result very soon.",
+  k_m_fin0: "We could not match your face with your ID card. Our support team will check it manually and give you the result very soon.",
+  k_m_nmh: "Check pending", k_m_nm: "The automatic face check could not run. Our support team will check your photos manually and give you the result very soon.",
+  k_m_try: "Take selfie again", k_m_card: "Retake NID", k_m_go: "Continue", k_m_att: "Attempt", k_m_pct: "Match",
+  k_wh: "Submitted, under review", k_ws: "Our support team is checking your NID and face photos. You will get the result by message very soon.",
+  k_nf_sub: "Your NID and face photos were submitted. Our support team will review them and tell you the result very soon.",
+  k_us0: "NID FRONT IMAGE", k_us1: "NID BACK IMAGE", k_us2: "FACE IMAGE", k_us3: "SUBMIT DETAILS",
+  k_err2: "Something went wrong. Please try again.",
+  k_galh: "Allow gallery access", k_gald: "FuNPaY needs access to your photos so you can choose a picture from your gallery.", k_galb: "Allow", k_galn: "Not now",
+  galh: "Allow gallery access", gald: "FuNPaY needs access to your photos so you can choose a picture from your gallery.", galb: "Allow", galn: "Not now"
+});
+Object.assign(T.bn, {galh: "গ্যালারির অনুমতি দিন", gald: "গ্যালারি থেকে ছবি বাছতে FuNPaY-কে আপনার ছবিগুলো দেখার অনুমতি দিন।", galb: "অনুমতি দিন", galn: "এখন না"});
+
+/* ----- গ্যালারির অনুমতি: ছবি বাছার আগে অ্যাপের ভেতরেই আগে চেয়ে নেয় (একবার দিলে আর জিজ্ঞেস করে না) ----- */
+let KGAL = false; try { KGAL = localStorage.getItem("fp_gal") === "1"; } catch (e) {}
+function galAsk(cb) {
+  if (KGAL) { cb(); return; }
+  if (document.getElementById("galq")) return;
+  const d = document.createElement("div"); d.id = "galq"; d.className = "galq";
+  d.innerHTML = `<div class="galb"><div class="gali">${ic("gal")}</div><h3>${t(window.__kyc ? "k_galh" : "galh")}</h3><p>${t(window.__kyc ? "k_gald" : "gald")}</p><button class="galy" id="galy">${t(window.__kyc ? "k_galb" : "galb")}</button><button class="galn" id="galn">${t(window.__kyc ? "k_galn" : "galn")}</button></div>`;
+  document.body.appendChild(d); hap();
+  const close = () => { d.classList.add("out"); setTimeout(() => d.remove(), 220); };
+  d.querySelector("#galn").onclick = () => { hap(); close(); };
+  d.querySelector("#galy").onclick = async () => {
+    hap(); try { const F = cap().Filesystem; if (F && F.requestPermissions) await F.requestPermissions(); } catch (e) {}
+    KGAL = true; try { localStorage.setItem("fp_gal", "1"); } catch (e) {}
+    close(); cb();
+  };
+}
+
+/* ----- ছবি কতটা পরিষ্কার (ঝাপসা নয়) তার মাপ: সবচেয়ে ভালো সেলফি বাছতে ----- */
+function kSharp(v) {
+  try {
+    const W = v.videoWidth || v.naturalWidth || v.width, H = v.videoHeight || v.naturalHeight || v.height, c = document.createElement("canvas"); c.width = 96; c.height = 120;
+    const g = c.getContext("2d", {willReadFrequently: true}); g.drawImage(v, W * .25, H * .12, W * .5, H * .62, 0, 0, 96, 120);
+    const d = g.getImageData(0, 0, 96, 120).data, gr = new Float32Array(96 * 120);
+    for (let i = 0, j = 0; j < gr.length; i += 4, j++) gr[j] = d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11;
+    let a = 0, b = 0, n = 0; for (let y = 1; y < 119; y++) for (let x = 1; x < 95; x++) { const i = y * 96 + x, l = 4 * gr[i] - gr[i - 1] - gr[i + 1] - gr[i - 96] - gr[i + 96]; a += l; b += l * l; n++; }
+    return b / n - (a / n) * (a / n);
+  } catch (e) { return 0; }
+}
+
+/* ----- মুখ খোঁজা (কম আলো/ঝাপসাতেও পেতে একাধিক উপায়) ----- */
+async function kDet(f, input, kind, mc) {
+  const o = kind === "tiny" ? new f.TinyFaceDetectorOptions({inputSize: 416, scoreThreshold: mc || .3}) : new f.SsdMobilenetv1Options({minConfidence: mc || .3, maxResults: 6});
+  const all = await f.detectAllFaces(input, o).withFaceLandmarks().withFaceDescriptors(); if (!all || !all.length) return null;
+  all.sort((a, b) => b.detection.score * b.detection.box.area - a.detection.score * a.detection.box.area);
+  const r = all[0], bx = r.detection.box; return {desc: Array.from(r.descriptor), score: r.detection.score, box: {x: bx.x, y: bx.y, width: bx.width, height: bx.height}};
+}
+async function kSelfieDet(f, shot, frs) {
+  const sim = await kImg(shot);
+  let s = await kDet(f, sim, "ssd"); if (!s) s = await kDet(f, sim, "tiny"); if (!s) s = await kDet(f, sim, "ssd", .12);
+  if (s) return {s, sim};
+  for (const fr of (frs || [])) { try { const im = await kImg(fr); const q = (await kDet(f, im, "ssd")) || (await kDet(f, im, "tiny")); if (q) return {s: q, sim: im}; } catch (e) {} }
+  return {s: null, sim};
+}
+function kEnh(c) { try { const o = document.createElement("canvas"); o.width = c.width; o.height = c.height; const g = o.getContext("2d"); g.filter = "contrast(1.3) brightness(1.08) saturate(.7)"; g.drawImage(c, 0, 0); return o; } catch (e) { return c; } }
+/* NID কার্ডের মুখ: একাধিক কাটা/উজ্জ্বল করা কপি থেকে একাধিক "ছাপ", পরে সেলফির সাথে সবচেয়ে ভালো জোড়া নেওয়া হয় */
+async function kCardFace(f, src) {
+  const im = await kImg(src), W = im.naturalWidth, H = im.naturalHeight; let base = im, r = await kDet(f, im, "ssd");
+  if (!r) { base = kCrop(im, {x: 0, y: 0, w: W * .55, h: H}, 1000); r = await kDet(f, base, "ssd"); }
+  if (!r) r = await kDet(f, base, "ssd", .12);
+  if (!r) r = await kDet(f, base, "tiny", .2);
+  if (!r) return null;
+  const descs = [r.desc]; let best = r, bb = base;
+  const c2 = kCrop(base, kGrow(r.box, 1.7), 480);
+  try { const r2 = await kDet(f, c2, "ssd"); if (r2 && r2.score >= r.score - .12) { best = r2; bb = c2; descs.push(r2.desc); } } catch (e) {}
+  try { const r3 = await kDet(f, kEnh(c2), "ssd"); if (r3 && r3.score >= .5) descs.push(r3.desc); } catch (e) {}
+  try { const r4 = await kDet(f, kCrop(base, kGrow(r.box, 2.1), 600), "ssd"); if (r4 && r4.score >= .5) descs.push(r4.desc); } catch (e) {}
+  const q = kQual(bb, best.box), th = kCrop(bb, kGrow(best.box, 1.5), 160).toDataURL("image/jpeg", .82);
+  return {desc: best.desc, descs, thumb: th, q, score: best.score};
+}
+async function kMatchRun() {
+  if (K.mrun) return; K.mrun = true; const id = ++K.mid, live = () => K.step === "match" && K.mid === id;
+  const R = {st: "low", pct: 0, rs: [], card: K.cardThumb || "", self: "", cardBad: false, d: null};
+  const fin = () => { if (!live()) return; K.mres = R; K.mrun = false; hap(R.st === "ok" ? "MEDIUM" : "HEAVY"); kycRender(); };
+  try {
+    kMs("k_m_l1"); const f = await kFA(); if (!live()) return;
+    if (!f) { R.st = "nomodel"; K.desc = null; return fin(); }
+    kMs("k_m_l2");
+    if (!K.cardDesc) { const c = await kCardFace(f, K.front); if (!live()) return; if (c) { K.cardDesc = c.desc; K.cardDescs = c.descs; K.cardThumb = c.thumb; K.cardQ = c.q; } }
+    R.card = K.cardThumb || "";
+    kMs("k_m_l3");
+    const sf = await kSelfieDet(f, K.selfie, K.live && K.live.fr); if (!live()) return;
+    const s = sf.s, sim = sf.sim;
+    if (s) R.self = kCrop(sim, kGrow(s.box, 1.5), 160).toDataURL("image/jpeg", .82);
+    kMs("k_m_l4");
+    const sw = {ok: false, n: 0, max: 0}, sds = s ? [s.desc] : [];
+    if (s && K.live && K.live.ok) {
+      for (const fr of K.live.fr) {
+        if (!live()) return;
+        try { const im = await kImg(fr); let q = await kDet(f, im, "tiny"); if (!q) q = await kDet(f, im, "ssd"); if (!q) continue;
+          const dd = kDist(q.desc, s.desc); sw.n++; sw.max = Math.max(sw.max, dd); if (dd <= KM.SWAP && q.score >= .6 && sds.length < 5) sds.push(q.desc); } catch (e) {}
+      }
+      sw.ok = sw.n >= 2 && sw.max <= KM.SWAP;
+    }
+    K.live = Object.assign({}, K.live, {swap_ok: sw.ok, swap_n: sw.n, swap_max: Math.round(sw.max * 1000) / 1000});
+    const cds = K.cardDesc ? (K.cardDescs && K.cardDescs.length ? K.cardDescs : [K.cardDesc]) : [];
+    if (cds.length && s) {
+      let bd = 9, bc = 0, bs = 0; cds.forEach((cd, i) => sds.forEach((sd, j) => { const dd = kDist(cd, sd); if (dd < bd) { bd = dd; bc = i; bs = j; } }));
+      R.d = bd; R.pct = kFacePct(bd); K.desc = {card: kRound(cds[bc]), selfie: kRound(sds[bs])};
+    } else K.desc = null;
+    const liveOn = !!(K.live && K.live.ok);
+    if (R.d === null) R.st = "low";
+    else if (liveOn && !sw.ok) R.st = "low";
+    else if (R.pct >= KM.AUTO) R.st = liveOn ? "ok" : "review";
+    else if (R.pct >= KM.REVIEW) R.st = "review";
+    else R.st = "low";
+    if (R.st === "low") {
+      const rs = R.rs;
+      if (!s) rs.push("k_r_noface");
+      else {
+        const q = kQual(sim, s.box);
+        if (q.mean < 70) rs.push("k_r_dark"); else if (q.mean > 205 || q.clip > .22) rs.push("k_r_bright");
+        if (q.sharp < 20) rs.push("k_r_blur");
+        if (s.box.width / (sim.naturalWidth || sim.width) < .2) rs.push("k_r_far");
+        if (s.score < .8) rs.push("k_r_cover");
+      }
+      if (!K.cardDesc) { rs.push("k_r_card"); R.cardBad = true; }
+      else if (K.cardQ && (K.cardQ.clip > .25 || K.cardQ.sharp < 12 || K.cardQ.mean < 55)) { rs.push("k_r_cardq"); R.cardBad = true; }
+      if (liveOn && s && !sw.ok) rs.push(sw.n < 2 ? "k_r_live" : "k_r_swap");
+      if (!rs.length) rs.push("k_r_diff");
+      K.tries++;
+    }
+    return fin();
+  } catch (e) {
+    console.log("match", e && e.message); R.st = "nomodel"; K.desc = null; return fin();
+  } finally { if (K.mid === id) K.mrun = false; }
+}
+/* মিল পাতা: ৮৫%+ এ % দেখানো হয় না (শুধু টিক); ৮৫ এর নিচে % দেখায়; "অ্যাডমিন" শব্দ নেই; ইউজারের "পাঠান" চাপা লাগে না */
+function kMatch() {
+  const R = K.mres, th = (src, cls) => `<div class="kmf${cls || ""}">${src ? `<img src="${src}" alt="">` : kic("face")}</div>`;
+  if (!R) return `<div class="kw">${kTop(t("k_face"), "", 3)}<div class="kbody"><div class="kcard kc1 kmx"><div class="kmp">${th(K.cardThumb, " sc")}<i class="kml"></i>${th("", " sc")}</div><h2>${t("k_m_h")}</h2><p id="kmst">${t("k_m_l1")}</p><div class="kbar"><i class="kmind"></i></div></div></div></div>`;
+  const ok = R.st === "ok", rv = R.st === "review", nm = R.st === "nomodel", low = R.st === "low", fin = low && K.tries >= KM.TRIES;
+  const hide = R.d === null || R.pct >= KM.AUTO, pc = R.d === null ? 0 : Math.round(R.pct);
+  const col = ok ? "#12a15b" : rv || fin ? "#e8a20c" : nm ? "#8b8590" : "#e5484d";
+  const h = ok ? "k_m_okh" : rv ? "k_m_rvh" : nm ? "k_m_nmh" : fin ? "k_m_finh" : "k_m_lowh";
+  const sub = ok ? t("k_m_oks") : rv ? (hide ? t("k_m_rvs2") : t("k_m_rvs").replace("{p}", pc)) : nm ? t("k_m_nm") : fin ? (R.d === null ? t("k_m_fin0") : t("k_m_finp").replace("{p}", pc)) : t("k_m_lows");
+  const mid = ok ? `<div class="kmrw kmok">${kRing(100, col)}<span>${kTickI.replace('stroke="#fff"', 'stroke="#12a15b"')}</span></div>` : nm ? `<div class="kmrw">${kRing(0, col)}<b style="color:${col}">—</b></div>`
+    : `<div class="kmrw">${kRing(hide ? 0 : R.pct, col)}<b style="color:${col}">${hide ? "—" : pc + "%"}</b></div>`;
+  const why = low && !fin ? `<div class="kmwy">${R.rs.map(k => `<div class="kmri">${kic("info") || ""}<span>${t(k)}</span></div>`).join("")}</div>` : "";
+  const meta = low && !fin ? `<small class="kmt">${t("k_m_att")} ${Math.min(K.tries, KM.TRIES)}/${KM.TRIES}${hide ? "" : " · " + t("k_m_pct") + " " + pc + "%"}</small>` : "";
+  const btns = low && !fin ? `<button class="kbtn" onclick="kMatchRetry(0)">${t("k_m_try")}</button>${R.cardBad ? `<button class="klk" onclick="kMatchRetry(1)">${t("k_m_card")}</button>` : ""}`
+    : `<button class="kbtn" onclick="kMatchGo()">${t("k_m_go")}</button>`;
+  return `<div class="kw">${kTop(t("k_face"), "kBack()", 3)}<div class="kbody"><div class="kcard kc1 kmx">
+    <div class="kmp">${th(R.card)}<div class="kmc" style="--c:${col}">${mid}</div>${th(R.self)}</div>
+    <h2>${t(h)}</h2><p>${sub}</p>${meta}${why}</div></div>
+    <div class="kbtm">${btns}</div></div>`;
+}
+
+/* ----- ব্যাক: NID এর ছবির ধাপের পর (তথ্য, মুখ, মিল, PIN) যেখানেই ব্যাক চাপুক, আবার NID সামনের ছবি তোলার জায়গায় ----- */
+function kToFront() {
+  K.pv = ""; K.reading = false; K.front = K.back = K.selfie = ""; K.pre = {}; K.p1 = K.p2 = null; K.auto = false; K.vbusy = false;
+  K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.cardDesc = null; K.cardDescs = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.rep = null; K.redo = false; K.err = "";
+  K.step = "front";
+}
+function kBack() {
+  hap();
+  if (K.busy && K.step !== "face") return;
+  const s = K.step;
+  if (s === "front") { if (K.pv) { K.pv = ""; kycRender(); return; } if (K.cardOnly) { K.cardOnly = false; K.step = "match"; kycRender(); return; } if (K.redo) { K.redo = false; K.step = "back"; kycRender(); return; } K.flow = false; K.step = "intro"; }
+  else if (s === "back") { K.pv = ""; K.step = "front"; }
+  else if (s === "info" || s === "face" || s === "pin") { if (s === "pin" && K.busy) return; kToFront(); }
+  else if (s === "match") { if (K.mrun) return; kToFront(); }
+  else return;
+  kycRender();
+}
+
+/* ----- ছোট অ্যানিমেটেড মুখ: যা করতে বলা হয় সে নিজেই করে দেখায় ----- */
+const KGUIDE = '<svg class="kgf" viewBox="0 0 64 64" aria-hidden="true"><path class="gs" d="M10 64c1-10 9-14 22-14s21 4 22 14z"/><ellipse class="gk" cx="32" cy="30" rx="16.5" ry="20"/><g class="gf"><path class="gb" d="M21.5 24.6q3.2-2.2 6.4-.4M36.1 24.2q3.2-1.8 6.4.4"/><g class="ge"><ellipse cx="25.3" cy="30.2" rx="2.7" ry="3.1"/><ellipse cx="38.7" cy="30.2" rx="2.7" ry="3.1"/></g><path class="gn" d="M32 31.5v6q-2 1.6-3.4.6"/><path class="gm" d="M26.5 42.6q5.5 4.2 11 0"/></g><path class="gr" d="M15 28c.2-11.5 7-17.5 17-17.5S48.8 16.5 49 28c-3.8-5.2-9.2-7.8-17-7.8S18.8 22.8 15 28z"/></svg>';
+function kFaceUI() {
+  const wr = document.getElementById("kwr"), c = KFc.ord[KFc.st];
+  for (let i = 0; i < 5; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
+  KFc.ord.forEach((s, i) => {
+    if (s === "blink") return;
+    const a = document.getElementById("kra" + KDM[s]); if (!a) return;
+    a.setAttribute("class", "kra" + (KFc.done[i] ? " dn2" : (i === KFc.st ? " on" : "")));
+    const f = a.querySelector(".krf"); if (f && !KFc.done[i] && i !== KFc.st) f.style.strokeDasharray = "0 100";
+  });
+  const n = KFc.done.filter(Boolean).length;
+  if (wr) { wr.classList.toggle("blk", c === "blink"); if (n > (KFc.bn || 0)) { wr.classList.remove("burst"); void wr.offsetWidth; wr.classList.add("burst"); } }
+  KFc.bn = n;
+  const gd = document.getElementById("kgd"), dr = document.getElementById("kdir");
+  if (gd && gd.dataset.c !== (c || "")) {
+    gd.dataset.c = c || ""; const sv = gd.querySelector("svg"); if (sv) sv.setAttribute("class", "kgf " + (c || ""));
+    if (dr) { dr.classList.remove("pop"); void dr.offsetWidth; dr.classList.add("pop"); }
+  }
+  const a = document.getElementById("kfarr");
+  if (a) { a.className = "kfarr" + (c ? " " + c : " h"); a.innerHTML = c && c !== "blink" ? `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="${KARR[c]}"/></svg>` : ""; }
+}
+/* অগ্রগতি: শুধু "এত % হয়েছে" (মোট ৫ ধাপের মিলিত), প্রতি ফ্রেমে নরমভাবে এগোয় */
+function kFaceProg(p) {
+  KFc.pt = Math.max(0, Math.min(1, p || 0));
+  if (KFc.pt === 0) KFc.pd = 0;
+  if (!KFc.raf) KFc.raf = requestAnimationFrame(kFaceAnim);
+}
+function kFaceAnim() {
+  KFc.raf = 0;
+  const cur = KFc.pd || 0, d = KFc.pt - cur;
+  KFc.pd = Math.abs(d) < .004 ? KFc.pt : cur + d * .18;
+  const nd = KFc.done.filter(Boolean).length, tot = Math.min(1, (nd + KFc.pd) / 5), x = Math.round(tot * 100), s = KFc.ord[KFc.st];
+  const b = document.getElementById("kfp"), c = document.getElementById("kfpc");
+  if (b) b.style.width = tot * 100 + "%";
+  if (c) c.textContent = x + "%";
+  if (s && s !== "blink") { const a = document.getElementById("kra" + KDM[s]), f = a && a.querySelector(".krf"); if (f) f.style.strokeDasharray = KFc.pd * 100 + " 100"; }
+  if (KFc.pd !== KFc.pt) KFc.raf = requestAnimationFrame(kFaceAnim);
+}
+function kFace() {
+  const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
+  const dots = [0, 1, 2, 3, 4].map(i => `<i id="kdt${i}"></i>`).join("");
+  return `<div class="kcam kn kf2">${kBg()}
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b class="ktt">${t("k_face")}</b><em>3/4</em></div>${kLogo()}
+    <div class="kwr ov" id="kwr"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}</div>
+      ${pv ? "" : `<svg class="krg" viewBox="0 0 100 128" aria-hidden="true">${kRingArc(0, -45, 45)}${kRingArc(1, 45, 135)}${kRingArc(2, 135, 225)}${kRingArc(3, 225, 315)}</svg>`}</div>
+    <div class="kov"><u id="kou" class="${pv ? "dn" : ""}"></u><div class="kfok">${kTickI}</div></div><div class="kcnt" id="kcnt"></div>${pv ? "" : '<div class="kfarr h" id="kfarr"></div>'}
+    <div class="kbt">${pv ? `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kFaceUse()">${t("k_use")}</button></div>`
+      : `<div class="kdir pop" id="kdir"><div class="kgd" id="kgd">${KGUIDE}</div><div class="kdt2"><b id="kst" class="kfm">${t("k_fload")}</b><span class="kdots d5">${dots}</span></div></div>
+         <div class="kpg"><div class="kfbar"><i id="kfp"></i></div><div class="kfpc" id="kfpc">0%</div></div><div class="ksh"><span class="kgal sp"></span><button class="kshut" aria-label="${t("k_snap")}" onclick="kFaceCount()"><i></i></button><span class="kgal sp"></span></div>`}
+      <small class="knc" id="knc"></small></div></div>`;
+}
+
+/* ----- জমার পরের পাতায় ৮৫% এর ওপরের স্কোর দেখানো হয় না ----- */
+function kSumHtml() {
+  const m = K.sum; if (!m) return "";
+  const cap = ["k_c1", "k_c2", "k_c3"];
+  const th = (src, i) => `<div class="kx3"><div class="kxi"><img src="${src}" alt=""><i>${kTickI}</i></div><span>${t(cap[i])}</span></div>`;
+  const chip = (tx) => `<span class="kxc"><i>${kTickI}</i>${tx}</span>`;
+  const sc = m.pct !== null && m.pct !== undefined && !m.auto ? `<div class="kxcs">${chip(t("k_fmatch") + " " + m.pct + "%")}</div>` : "";
+  return `<div class="kxs"><div class="kx3s">${m.th.map(th).join("")}</div>${sc}<div class="kxth"><img src="icons/logo.png" alt=""><b>${t("k_thx")}</b></div></div>`;
 }
