@@ -1,0 +1,5 @@
+{
+  "version": "1.2.28",
+  "pkg": "https://raw.githubusercontent.com/hasibul249/FuNPaY-APk-/ota/app-1.2.28.json",
+  "notes": "FuNPaY v2.24: সেন্ড মানি বিকাশ স্টাইল, লোগো টিপে ধরা, কন্টাক্ট+ইনভাইট, শুভেচ্ছা কার্ড, ১০ প্রিয় নাম্বার, গ্রুপ সেন্ড। SQL: update-v2.24.sql"
+}
