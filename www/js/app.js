@@ -168,7 +168,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.14"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.17"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -350,7 +350,7 @@ async function refreshTok() { setSess(await api("/auth/v1/token?grant_type=refre
 function errMsg(e) {
   const m = (e && e.message) || "";
   const sid = S.sheet && S.sheet.id;
-  const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh", OTPBAD:"otpbad", OTPEXP:"otpexp", OTPMANY:"otpmany", OTPWAIT:"otpwait", OTPLIM:"otplim", OTPSMS:"otpsms", BADPHONE:"badn"}[m];
+  const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh", OTPBAD:"otpbad", OTPEXP:"otpexp", OTPMANY:"otpmany", OTPWAIT:"otpwait", OTPLIM:"otplim", OTPSMS:"otpsms", BADPHONE:"badn", KYC:"k_lock", BADNID:"k_badnid", NIDUSED:"k_used", UPLOAD:"k_upf", KYCSTATE:"k_state", BADDATA:"k_bad"}[m];
   if (k) return t(k);
   if (/could not find the function|schema cache|PGRST202/i.test(m)) return t("dbold");
   if (/invalid login/i.test(m)) return t("wp");
@@ -359,8 +359,14 @@ function errMsg(e) {
   return t("errg") + " (" + m.slice(0, 70) + ")";
 }
 async function loadAll(isFirst, quick) {
-  const [p, x] = await Promise.all([api("/rest/v1/profiles?select=*&id=eq." + S.uid, quick ? {tries: 1} : {}), api("/rest/v1/transactions?select=*&order=id.desc&limit=60", quick ? {tries: 1} : {})]);
+  const [p, x, nn] = await Promise.all([api("/rest/v1/profiles?select=*&id=eq." + S.uid, quick ? {tries: 1} : {}), api("/rest/v1/transactions?select=*&order=id.desc&limit=60", quick ? {tries: 1} : {}), api("/rest/v1/notices?select=*&order=id.desc&limit=30", {tries: 1}).catch(() => null)]);
   if (!p.length) throw new Error("ERR");
+  if (Array.isArray(nn)) {
+    if (isFirst) S.nmax = undefined;
+    const mx = nn.length ? nn[0].id : 0;
+    if (!isFirst && S.nmax !== undefined && mx > S.nmax) noticePush(nn.filter(r => r.id > S.nmax));
+    S.nmax = Math.max(S.nmax || 0, mx); S.nt = nn;
+  }
   const fresh = x.filter(r => r.id > S.seen && !S.mine.has(r.trx));
   S.me = p[0]; S.bal = Number(p[0].balance); S.name = p[0].name; S.tx = x;
   if (x.length) S.seen = Math.max(S.seen, x[0].id);
@@ -371,7 +377,21 @@ async function loadAll(isFirst, quick) {
 const nrKey = () => "fpnr_" + (S.phone || (S.me && S.me.phone) || "");
 function nrGet() { try { const v = localStorage.getItem(nrKey()); return v === null ? null : (Number(v) || 0); } catch (e) { return 0; } }
 function nrSet(v) { try { localStorage.setItem(nrKey(), String(v)); } catch (e) {} }
-function unreadN() { const b = nrGet(); return b === null ? 0 : S.tx.filter(x => x.id > b && !S.mine.has(x.trx)).length; }
+function unreadN() { const b = nrGet(); return (b === null ? 0 : S.tx.filter(x => x.id > b && !S.mine.has(x.trx)).length) + nuN(); }
+const nnKey = () => "fpnn_" + (S.phone || (S.me && S.me.phone) || "");
+function nnGet() { try { const v = localStorage.getItem(nnKey()); return v === null ? null : (Number(v) || 0); } catch (e) { return 0; } }
+function nnSet(v) { try { localStorage.setItem(nnKey(), String(v)); } catch (e) {} }
+function nuN() { const c = nnGet(); return c === null ? 0 : (S.nt || []).filter(r => r.id > c).length; }
+function noticePush(list) {
+  const a = list.slice(0, 3); if (!a.length) return;
+  hap("MEDIUM");
+  if (document.hidden) { const LN = cap().LocalNotifications; if (LN) { try { Promise.resolve(LN.schedule({notifications: a.map((n, i) => ({id: (Number(n.id) % 2000000000) + 1000 + i, title: "FuNPaY · " + n.title, body: n.body, smallIcon: "ic_stat_funpay", iconColor: "#e2136e"}))})).catch(() => {}); } catch (e) {} } }
+  else toast(a[0].title);
+}
+function ntRow(n, base) {
+  const un = base !== null && n.id > base, bad = n.kind === "kyc_no";
+  return `<div class="tr nf${un ? " un" : ""}"><div class="ic knt${bad ? " bad" : ""}">${ic(bad ? "info" : "ok2")}</div><div class="m"><b>${esc(n.title)}</b><span>${esc(n.body)}</span></div><div class="r"><small>${fmt(n.created_at)}</small>${un ? '<i class="ud"></i>' : ""}</div></div>`;
+}
 const nbadge = (n) => n > 9 ? "9+" : String(n);
 function ntxt(x) {
   const v = tv(x), out = x.from_id === S.uid;
@@ -399,6 +419,7 @@ async function askNotifPerm() {
 function markRead() {
   if (!S.auth) return;
   if (S.tx.length) nrSet(Math.max(nrGet() || 0, S.tx[0].id));
+  if ((S.nt || []).length) nnSet(Math.max(nnGet() || 0, S.nt[0].id));
   document.querySelectorAll(".bg,.bd").forEach(e => e.remove());
   document.querySelectorAll(".nf.un").forEach(e => e.classList.remove("un"));
 }
@@ -412,19 +433,21 @@ function startPoll() { clearInterval(pollT); pollT = setInterval(() => { if (S.a
 async function refresh() {
   const b = S.bal, s = S.seen;
   try { await loadAll(false, true); } catch (e) { return; }
+  kycSync();
   if ((b !== S.bal || s !== S.seen) && !S.sheet && !S.upd && !(document.activeElement && document.activeElement.tagName === "INPUT")) render();
 }
 async function enter() {
   const lp = S.lp; S.lp = ""; S.seen = 0;
   await loadAll(true);
   if (nrGet() === null) nrSet(S.tx.length ? S.tx[0].id : 0);
+  if (nnGet() === null) nnSet(0);
   try { localStorage.setItem("fpreg", "1"); } catch (e) {}
   S.auth = true; S.fx = true; S.pin = ""; S.tab = "home"; S.view = "";
   render(); startPoll(); setTimeout(checkUpdate, 1500); setTimeout(askNotifPerm, 2600);
   if (lp) setTimeout(() => offerBio(lp), 1400);
 }
 function lock(auto) {
-  clearInterval(pollT); stopScanner();
+  clearInterval(pollT); stopScanner(); kycClose(true);
   if (OTA_PEND) { OTA_PEND = false; otaReload("p" + Date.now()); }
   S.auth = false; S.tok = ""; S.rt = ""; S.me = null; S.tx = []; S.sheet = null; S.upd = null; S.pin = ""; S.tab = "home";
   renderSheet(); render();
@@ -526,7 +549,7 @@ function pageHome() {
 }
 function pageInbox() {
   const head = tbar(t("inbox")) + `<div class="seg"><button class="${S.seg === "t" ? "on" : ""}" onclick="S.seg='t';render()">${t("txs")}</button><button class="${S.seg === "n" ? "on" : ""}" onclick="S.seg='n';render()">${t("nt")}${unreadN() ? `<i class="bd">${nbadge(unreadN())}</i>` : ""}</button></div>`;
-  if (S.seg === "n") { const b = nrGet(); return head + (S.tx.length ? S.tx.slice(0, 40).map(x => nfRow(x, b)).join("") : `<p class="em">${t("nonf")}</p>`); }
+  if (S.seg === "n") { const b = nrGet(), c = nnGet(), nt = (S.nt || []).map(n => ntRow(n, c)).join(""); return head + (nt || S.tx.length ? nt + S.tx.slice(0, 40).map(x => nfRow(x, b)).join("") : `<p class="em">${t("nonf")}</p>`); }
   return head + `<div class="srch"><div>${ic("srch")}<input placeholder="${t("sq")}" value="${esc(S.q)}" id="sq" oninput="S.q=this.value;document.getElementById('lst').innerHTML=list()"></div><button class="fb${S.ft.length ? " on" : ""}" onclick="openFilter()">${ic("filt")}<span>${t("flt")}</span>${S.ft.length ? `<i>${S.ft.length}</i>` : ""}</button></div><div class="note">${t("last")}</div><div id="lst">${list()}</div>`;
 }
 function pageMine() {
@@ -535,7 +558,7 @@ function pageMine() {
   const sw = `<i class="sw${bioOn() ? " on" : ""}"><b></b></i>`;
   return tbar(t("pr"))
     + `<div class="prof"><div class="pavw" onclick="openPhoto()"><div class="big">${myAv(m.name)}</div><i class="cam">${ic("cam2")}</i></div><div class="pi2"><h3>${esc(m.name || t("acct"))} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p></div></div>`
-    + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()")}${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("stmt", t("stmt"), "openStmt()")}${R("fp", t("bioT"), "toggleBio()", sw)}${R("bell", t("nt2"), "S.seg='n';go('inbox')")}</div>`
+    + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()")}${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("stmt", t("stmt"), "openStmt()")}${R("fp", t("bioT"), "toggleBio()", sw)}${R("bell", t("nt2"), "S.seg='n';go('inbox')")}${m.kyc_status === "approved" ? `<button class="mr" onclick="toast(t('k_kycok'))">${ic("ok2")}<span>${t("k_kyc")}</span><small class="kok">${t("k_ver")}</small></button>` : ""}</div>`
     + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()")}${R("lim", t("limt"), "openInfo('lim')")}</div>`
     + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()")}${R("help", t("help"), "openInfo('help')")}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("bolt", t("ctest"), "netTest()")}${R("out", t("lock"), "lock()")}${R("out", t("logout"), "logout()")}</div>`
     + (TEST_MODE ? `<p class="em">${t("dm")}</p>` : "");
@@ -782,6 +805,7 @@ function render() {
   if (S.auth && S.tab === "inbox" && S.seg === "n" && unreadN()) setTimeout(() => { if (S.auth && S.tab === "inbox" && S.seg === "n") markRead(); }, 1600);
   if (!S.auth && CONFIGURED && S.phone && !S.view && !bioOn()) setTimeout(() => { const f = document.getElementById("pinin"); if (f && !S.busy) { try { f.focus(); } catch (e) {} } }, 400);
   if (!S.auth && CONFIGURED) { const f = document.getElementById(S.view === "reg" ? "rn" : "lp"); if (f && S.view) setTimeout(() => { try { f.focus(); } catch (e) {} }, 350); }
+  kycSync();
 }
 const go = (k) => {
   if (S.tab === k) { render(); document.getElementById("app").scrollTo({top: 0, behavior: "smooth"}); return; }
@@ -1529,6 +1553,328 @@ function logout() {
   S.phone = ""; S.name = ""; S.view = ""; lock();
 }
 
+/* ---------- v2.16: KYC (NID স্ক্যান + মুখ + PIN, তারপর অ্যাডমিন যাচাই) ---------- */
+Object.assign(T.bn, {k_title:"ভেরিফিকেশন (KYC)", k_h:"পরিচয় যাচাই করুন", k_sub:"অ্যাকাউন্ট চালু করতে আপনার NID ও মুখ যাচাই লাগবে।", k_l1:"NID কার্ডের সামনে ও পেছনের ছবি", k_l2:"নিজের মুখের ছবি", k_l3:"PIN দিয়ে নিশ্চিত করা", k_note:"যাচাই শেষ হলে ফল আপনার মোবাইলে মেসেজে জানানো হবে।", k_start:"শুরু করুন", k_again:"আবার জমা দিন", k_rej:"আবেদন বাতিল হয়েছে", k_front:"NID-র সামনের দিক", k_back:"NID-র পেছনের দিক", k_hf:"কার্ডটি ফ্রেমের ভেতরে রাখুন, লেখা যেন পরিষ্কার দেখা যায়", k_hb:"এবার কার্ডের পেছনের দিক ফ্রেমে রাখুন", k_retake:"আবার তুলুন", k_use:"ঠিক আছে", k_nocam:"ক্যামেরা চালু করা যায়নি। নিচের গ্যালারি বাটনে চেপে ছবি নিন", k_readd:"NID থেকে তথ্য পড়া হচ্ছে", k_readw:"একটু সময় লাগতে পারে, অপেক্ষা করুন", k_info:"আপনার তথ্য", k_infos:"অ্যাপ NID থেকে পড়ে নিয়েছে। ভুল থাকলে ঘরে চেপে ঠিক করুন।", k_nm:"নাম", k_fa:"পিতার নাম (নমিনি)", k_dob:"জন্মতারিখ", k_nid:"NID নম্বর", k_ad:"ঠিকানা", k_miss:"পড়া যায়নি, এখানে লিখুন", k_next:"পরের ধাপ", k_face:"মুখ যাচাই", k_faceh:"মুখ ফ্রেমের ভেতরে রাখুন, আলো যেন সামনে থাকে", k_snap:"ছবি তুলুন", k_pin:"PIN দিয়ে নিশ্চিত করুন", k_pins:"ছবি ও তথ্য জমা দিতে আপনার 6 ডিজিটের PIN দিন", k_sub2:"জমা দিন", k_up:"ছবি আপলোড হচ্ছে…", k_up2:"তথ্য জমা হচ্ছে…", k_wh:"জমা হয়েছে, যাচাই চলছে", k_ws:"আমরা আপনার NID ও মুখ মিলিয়ে দেখছি। ফল মেসেজে আসবে, তখন অ্যাকাউন্ট চালু হবে।", k_chk:"অবস্থা দেখুন", k_okh:"অ্যাকাউন্ট চালু হয়েছে", k_oks:"আপনার পরিচয় যাচাই হয়েছে। এখন সব সেবা ব্যবহার করতে পারবেন।", k_home:"হোমে যান", k_bad:"সব ঘর ঠিকমতো পূরণ করুন", k_badnid:"NID নম্বর ঠিক নয় (10, 13 বা 17 ডিজিট)", k_still:"এখনো যাচাই চলছে", k_used:"এই NID দিয়ে আরেকটি অ্যাকাউন্ট আছে", k_upf:"ছবি আপলোড হয়নি, আবার চেষ্টা করুন", k_state:"আবেদন আগেই জমা আছে", k_lock:"KYC যাচাই শেষ না হলে টাকা খরচ করা যাবে না", k_ocrfail:"লেখা পড়া যায়নি, নিজে লিখুন। ছবি দেখে অ্যাডমিন মিলিয়ে নেবেন।", k_ver:"যাচাই করা", k_kyc:"KYC যাচাই", k_kycok:"যাচাই হয়েছে"});
+Object.assign(T.en, {k_title:"Verification (KYC)", k_h:"Verify your identity", k_sub:"To activate your account we need to verify your NID and face.", k_l1:"Photos of the front and back of your NID", k_l2:"A photo of your face", k_l3:"Confirm with your PIN", k_note:"You will get the result by SMS/message once it is reviewed.", k_start:"Start", k_again:"Submit again", k_rej:"Request rejected", k_front:"NID front", k_back:"NID back", k_hf:"Keep the card inside the frame, text should be sharp", k_hb:"Now place the back of the card in the frame", k_retake:"Retake", k_use:"Looks good", k_nocam:"Could not start the camera. Use the gallery button below", k_readd:"Reading details from your NID", k_readw:"This may take a moment", k_info:"Your details", k_infos:"The app read these from your NID. Tap a box to fix anything wrong.", k_nm:"Name", k_fa:"Father's name (nominee)", k_dob:"Date of birth", k_nid:"NID number", k_ad:"Address", k_miss:"Could not read, type here", k_next:"Next", k_face:"Face check", k_faceh:"Keep your face inside the frame with light in front", k_snap:"Take photo", k_pin:"Confirm with PIN", k_pins:"Enter your 6-digit PIN to submit your photos and details", k_sub2:"Submit", k_up:"Uploading photos…", k_up2:"Submitting details…", k_wh:"Submitted, under review", k_ws:"We are matching your NID and face. You will get the result by message and your account will be activated.", k_chk:"Check status", k_okh:"Account activated", k_oks:"Your identity is verified. You can now use every service.", k_home:"Go home", k_bad:"Fill in all the boxes", k_badnid:"NID number is not valid (10, 13 or 17 digits)", k_still:"Still under review", k_used:"Another account already uses this NID", k_upf:"Photo upload failed, try again", k_state:"A request is already submitted", k_lock:"You cannot spend money until KYC is approved", k_ocrfail:"Could not read the text, please type it. The admin will check against the photo.", k_ver:"Verified", k_kyc:"KYC", k_kycok:"Verified"});
+
+const K = {open:false, step:"intro", flow:false, d:{name:"", father:"", dob:"", nid:"", addr:""}, front:"", back:"", selfie:"", pv:"", reason:"", busy:false, reading:false, fail:false, pg:{front:0, back:0}, msg:"", err:"", p1:null, p2:null};
+let KS = null;
+const KI = {
+  kn:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+  kf:'<circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3 20c0-3.6 3-5.4 6-5.4s6 1.8 6 5.4M15.5 14.8c3 0 5.5 1.5 5.5 5"/>',
+  kd:'<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  ki:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16c.6-1.6 1.7-2.2 3-2.2s2.4.6 3 2.2M14 10h4M14 13.5h3"/>',
+  ka:'<path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  gal:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M4 18l5-5 4 4 3-3 4 4"/>',
+  face:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M8.5 14.5c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2"/>',
+  pin:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/><circle cx="12" cy="16" r="1.4" fill="currentColor"/>'
+};
+const kic = (k) => `<svg class="i" viewBox="0 0 24 24">${KI[k] || P[k] || ""}</svg>`;
+const kBk = '<svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>';
+const kEl = () => { let e = document.getElementById("kyc"); if (!e) { e = document.createElement("div"); e.id = "kyc"; document.body.appendChild(e); } return e; };
+
+/* অবস্থা মেলানো: প্রোফাইলের kyc_status অনুযায়ী স্ক্রিন খোলা/বন্ধ (SQL চালানো না থাকলে কিছুই করে না, অ্যাপ আগের মতো চলে) */
+function kycSync() {
+  if (!S.auth || !S.me || S.me.kyc_status === undefined || S.me.kyc_status === null) return;
+  const st = S.me.kyc_status;
+  if (st === "approved") { if (K.open && K.step !== "ok") { K.step = "ok"; K.flow = false; hap("MEDIUM"); kycRender(); } return; }
+  if (K.flow) return;
+  K.reason = S.me.kyc_reason || "";
+  if (st === "pending") { if (!K.open || K.step !== "wait") { K.step = "wait"; kycRender(); } return; }
+  if (!K.open || K.step === "wait") { K.step = "intro"; kycRender(); }
+}
+function kycClose(wipe) {
+  kcamStop();
+  const e = document.getElementById("kyc"); if (e) e.remove();
+  K.open = false; K.flow = false; K.step = "intro"; K.pv = ""; K.busy = false; K.reading = false;
+  if (wipe) { K.front = K.back = K.selfie = ""; K.d = {name:"", father:"", dob:"", nid:"", addr:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; }
+  sbar();
+}
+function kSb() {
+  try {
+    const B = cap().StatusBar; if (!B) return;
+    const dark = ["front", "back", "face"].includes(K.step), col = dark ? "#12050c" : "#e2136e";
+    Promise.resolve(B.setBackgroundColor({color: col})).catch(() => {}); Promise.resolve(B.setStyle({style: "DARK"})).catch(() => {});
+    const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", col);
+  } catch (e) {}
+}
+function kycRender() {
+  const el = kEl(); kcamStop();
+  const first = !K.open; K.open = true;
+  el.className = first ? "kin" : "";
+  el.innerHTML = kHtml();
+  kSb();
+  if (["front", "back", "face"].includes(K.step) && !K.pv) setTimeout(kcamInit, 80);
+  if (K.step === "info" && K.reading) kInfoStart();
+  if (K.step === "pin") setTimeout(() => { const f = document.getElementById("kpin"); if (f) { try { f.focus(); } catch (e) {} } }, 320);
+}
+function kHtml() {
+  const s = K.step;
+  if (s === "intro") return kIntro();
+  if (s === "front" || s === "back") return kScan(s);
+  if (s === "info") return kInfo();
+  if (s === "face") return kFace();
+  if (s === "pin") return kPin();
+  if (s === "wait") return kWait();
+  return kOk();
+}
+function kTop(title, back, idx) {
+  const seg = idx >= 0 ? `<div class="ksg">${[0, 1, 2, 3].map(i => `<i class="${i <= idx ? "on" : ""}"></i>`).join("")}</div>` : "";
+  return `<div class="kt"><button class="kbk${back ? "" : " h"}" onclick="${back || ""}">${kBk}</button><b>${title}</b><span></span></div>${seg}`;
+}
+const KILL = '<svg class="kill" viewBox="0 0 200 150" aria-hidden="true"><rect x="22" y="30" width="120" height="78" rx="12" fill="#fff" stroke="#e2136e" stroke-width="3"/><circle cx="52" cy="62" r="13" fill="#fde7f1" stroke="#e2136e" stroke-width="3"/><path d="M33 94c3-10 10-14 19-14s16 4 19 14" fill="none" stroke="#e2136e" stroke-width="3" stroke-linecap="round"/><path d="M88 52h38M88 66h30M88 80h36" stroke="#f0a3c6" stroke-width="5" stroke-linecap="round"/><g class="kshield"><path d="M150 70l30 10v22c0 17-13 28-30 33-17-5-30-16-30-33V80z" fill="#e2136e"/><path d="M137 105l9 9 18-20" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>';
+function kIntro() {
+  const rej = K.reason ? `<div class="krej">${ic("info")}<div><b>${t("k_rej")}</b><span>${esc(K.reason)}</span></div></div>` : "";
+  const li = (k, tx) => `<div class="kli">${kic(k)}<span>${t(tx)}</span></div>`;
+  return `<div class="kw">${kTop(t("k_title"), "", -1)}<div class="kbody">${rej}<div class="kcard kc1">${KILL}<h2>${t("k_h")}</h2><p>${t("k_sub")}</p></div>
+    <div class="kcard kc2">${li("ki", "k_l1")}${li("face", "k_l2")}${li("pin", "k_l3")}</div><p class="knote">${t("k_note")}</p></div>
+    <div class="kbtm"><button class="kbtn" onclick="kStart()">${t(K.reason ? "k_again" : "k_start")}</button><button class="klk" onclick="logout()">${t("logout")}</button></div></div>`;
+}
+function kStart() { hap(); K.flow = true; K.pv = ""; K.front = K.back = K.selfie = ""; K.err = ""; K.step = "front"; kycRender(); }
+
+/* ----- ক্যামেরা ----- */
+function kcamStop() { if (KS) { try { KS.getTracks().forEach(x => x.stop()); } catch (e) {} KS = null; } }
+async function kcamInit() {
+  const v = document.getElementById("kvid"); if (!v) return;
+  const face = K.step === "face";
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error("NOCAM");
+    KS = await navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: face ? "user" : "environment"}, width: {ideal: 1920}, height: {ideal: 1080}}, audio: false});
+    if (!document.getElementById("kvid")) { kcamStop(); return; }
+    v.srcObject = KS; await v.play();
+  } catch (e) { kcamStop(); const n = document.getElementById("knc"); if (n) n.textContent = t("k_nocam"); }
+}
+function kShrink(src, max, q) {
+  const w = src.videoWidth || src.naturalWidth || src.width, h = src.videoHeight || src.naturalHeight || src.height, k = Math.min(1, max / Math.max(w, h));
+  const c = document.createElement("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k);
+  c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", q);
+}
+function kSnap() {
+  const v = document.getElementById("kvid");
+  if (!v || !v.videoWidth) { toast(t("k_nocam")); return; }
+  hap("MEDIUM"); K.pv = kShrink(v, 1800, .86); kcamStop(); kycRender();
+}
+function kFile(inp) {
+  const f = inp.files && inp.files[0]; if (!f) return;
+  const u = URL.createObjectURL(f), im = new Image();
+  im.onload = () => { K.pv = kShrink(im, 1800, .86); URL.revokeObjectURL(u); kcamStop(); kycRender(); };
+  im.onerror = () => { URL.revokeObjectURL(u); toast(t("k_nocam")); };
+  im.src = u;
+}
+function kRetake() { hap(); K.pv = ""; kycRender(); }
+function kScan(side) {
+  const fr = side === "front", pv = K.pv;
+  return `<div class="kcam">${pv ? `<img class="kpvi" src="${pv}" alt="">` : `<video id="kvid" playsinline muted autoplay></video>`}
+    <div class="kfr${pv ? " dn" : ""}"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>${pv ? "" : '<u class="kln"></u>'}</div>
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t(fr ? "k_front" : "k_back")}</b><em>${fr ? 1 : 2}/2</em></div>
+    <div class="kbt">${pv ? "" : `<p>${t(fr ? "k_hf" : "k_hb")}</p>`}
+      ${pv ? `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kUse()">${t("k_use")}</button></div>`
+        : `<div class="ksh"><label class="kgal">${kic("gal")}<input type="file" accept="image/*" hidden onchange="kFile(this)"></label><button class="kshut" aria-label="${t("k_snap")}" onclick="kSnap()"><i></i></button><span class="kgal sp"></span></div>`}
+      <small class="knc" id="knc"></small></div></div>`;
+}
+function kUse() {
+  hap();
+  if (K.step === "front") { K.front = K.pv; K.pv = ""; K.pg.front = 0; K.p1 = kRead(K.front, "front"); K.step = "back"; }
+  else { K.back = K.pv; K.pv = ""; K.pg.back = 0; K.p2 = kRead(K.back, "back"); K.step = "info"; K.reading = true; }
+  kycRender();
+}
+
+/* ----- NID থেকে লেখা পড়া (ফোনের ভেতরেই চলে; প্রথমবার ভাষার ফাইল নামাতে একটু নেট লাগে) ----- */
+function kTess() {
+  if (window.Tesseract) return Promise.resolve(window.Tesseract);
+  return new Promise((ok, no) => {
+    const s = document.createElement("script"); s.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js";
+    s.onload = () => (window.Tesseract ? ok(window.Tesseract) : no(new Error("OCR"))); s.onerror = () => no(new Error("OCR")); document.head.appendChild(s);
+  });
+}
+function kPrep(src) {
+  return new Promise((ok, no) => {
+    const im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, 1800 / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement("canvas");
+      c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+      const g = c.getContext("2d"); try { g.filter = "grayscale(1) contrast(1.35)"; } catch (e) {} g.drawImage(im, 0, 0, c.width, c.height); ok(c);
+    };
+    im.onerror = () => no(new Error("IMG")); im.src = src;
+  });
+}
+function kPct() {
+  const p = Math.round(((K.pg.front || 0) + (K.pg.back || 0)) * 50), a = document.getElementById("kpct"), b = document.getElementById("kbi");
+  if (a) a.textContent = p + "%"; if (b) b.style.width = p + "%";
+}
+async function kRead(img, side) {
+  try {
+    const T0 = await kTess(), cv = await kPrep(img);
+    const job = T0.recognize(cv, "ben+eng", {logger: (m) => { if (m && m.status === "recognizing text") { K.pg[side] = m.progress || 0; kPct(); } }});
+    const r = await Promise.race([job, new Promise((_, no) => setTimeout(() => no(new Error("SLOW")), 90000))]);
+    K.pg[side] = 1; kPct();
+    return kParse((r && r.data && r.data.text) || "", side);
+  } catch (e) { console.log("ocr", e && e.message); K.pg[side] = 1; kPct(); return {fail: true}; }
+}
+const kClean = (s) => String(s || "").replace(/[^ঀ-৿A-Za-z0-9 ,.\-\/()]/g, " ").replace(/\s+/g, " ").trim();
+function kParse(raw, side) {
+  const txt = en(raw), L = txt.split(/\r?\n/).map(s => s.trim()).filter(Boolean), o = {};
+  const after = (re) => { for (const l of L) { const m = l.match(re); if (m && m[1] && kClean(m[1]).length > 1) return kClean(m[1]); } return ""; };
+  const t2 = txt.replace(/(?<=\d)[ \-]+(?=\d)/g, ""), mm = t2.match(/(?:NID|ID)\s*(?:No\.?|Number)?\s*[:;.\-]?\s*(\d{10,17})/i), m3 = t2.match(/\b(\d{17}|\d{13}|\d{10})\b/);
+  const nid = [mm && mm[1], m3 && m3[1]].find(x => x && [10, 13, 17].includes(x.length));
+  if (nid) o.nid = nid;
+  if (side === "front") {
+    const ne = after(/\bName\s*[:;.\-]?\s*([A-Za-z][A-Za-z .'\-]{2,})/i), nb = after(/নাম\s*[:;.\-]?\s*([ঀ-৿][ঀ-৿ .]{1,})/);
+    o.name = ne ? ne.toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()) : nb;
+    o.father = after(/পিতা\s*[:;.\-]?\s*([ঀ-৿][ঀ-৿ .]{1,})/);
+    const m = txt.match(/(\d{1,2})\s*[\- ]?\s*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[ ,.\-]*(\d{4})/i);
+    if (m) o.dob = m[1].padStart(2, "0") + " " + m[2][0].toUpperCase() + m[2].slice(1, 3).toLowerCase() + " " + m[3];
+    else { const n = txt.match(/\b(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})\b/); if (n) o.dob = n[1].padStart(2, "0") + "/" + n[2].padStart(2, "0") + "/" + n[3]; }
+  } else {
+    const i = L.findIndex(l => /ঠিকানা/.test(l));
+    if (i >= 0) {
+      const parts = [L[i].replace(/^.*ঠিকানা\s*[:;.\-]?/, "")];
+      for (let j = i + 1; j < L.length && j < i + 4; j++) { if (/রক্ত|Blood|জন্মস্থান|Place|মুদ্রণ|Principal|Issuing|Date/i.test(L[j])) break; parts.push(L[j]); }
+      o.addr = kClean(parts.join(", "));
+    }
+  }
+  Object.keys(o).forEach(k => { if (!o[k]) delete o[k]; });
+  return o;
+}
+
+/* ----- তথ্য পাতা ----- */
+async function kInfoStart() {
+  const [a, b] = await Promise.all([K.p1, K.p2]);
+  if (K.step !== "info") return;
+  [b, a].forEach(r => { if (r) ["name", "father", "dob", "nid", "addr"].forEach(k => { if (r[k]) K.d[k] = r[k]; }); });
+  K.fail = !!(a && a.fail && b && b.fail);
+  K.reading = false; hap("MEDIUM"); kycRender();
+}
+const KF = [["name", "k_nm", "kn"], ["father", "k_fa", "kf"], ["dob", "k_dob", "kd"], ["nid", "k_nid", "ki"], ["addr", "k_ad", "ka"]];
+function kInfo() {
+  if (K.reading) return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="krd"><div class="kscn"><svg viewBox="0 0 200 126" aria-hidden="true"><rect x="3" y="3" width="194" height="120" rx="14" fill="#fff" stroke="#e2136e" stroke-width="3"/><circle cx="44" cy="50" r="15" fill="#fde7f1"/><path d="M80 38h86M80 56h70M80 74h80M26 98h140" stroke="#f0a3c6" stroke-width="6" stroke-linecap="round"/></svg><u></u></div><b>${t("k_readd")}</b><span id="kpct">0%</span><div class="kbar"><i id="kbi"></i></div><small>${t("k_readw")}</small></div></div>`;
+  const rows = KF.map(([k, lb, ik], n) => {
+    const v = K.d[k] || "";
+    const inp = k === "addr" ? `<textarea id="kv_${k}" rows="2" placeholder="${t("k_miss")}" oninput="kSet('${k}',this)">${esc(v)}</textarea>`
+      : `<input id="kv_${k}" value="${esc(v)}" placeholder="${t("k_miss")}" ${k === "nid" ? 'inputmode="numeric" maxlength="17"' : 'maxlength="80"'} oninput="kSet('${k}',this)">`;
+    return `<div class="kf" style="--n:${n}"><div class="kfi">${kic(ik)}</div><div class="kfb"><label>${t(lb)}</label>${inp}</div><i class="kt2 ${v ? "ok" : "no"}">${v ? tickSvg : "!"}</i></div>`;
+  }).join("");
+  return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="kbody"><p class="ksubt">${t(K.fail ? "k_ocrfail" : "k_infos")}</p>${rows}<div class="le kle">${esc(K.err)}</div></div>
+    <div class="kbtm"><button class="kbtn" onclick="kInfoNext()">${t("k_next")}</button></div></div>`;
+}
+function kSet(k, el) {
+  let v = el.value; if (k === "nid") { v = digs(v, 17); if (el.value !== v) el.value = v; }
+  K.d[k] = v;
+  const tk = el.closest(".kf").querySelector(".kt2"), ok = v.trim().length > 0; tk.className = "kt2 " + (ok ? "ok" : "no"); tk.innerHTML = ok ? tickSvg : "!";
+}
+function kInfoNext() {
+  const d = K.d, le = document.querySelector(".kle");
+  const bad = ["name", "father", "dob", "addr"].some(k => String(d[k] || "").trim().length < 2) ? t("k_bad") : ![10, 13, 17].includes(String(d.nid || "").length) ? t("k_badnid") : "";
+  if (bad) { K.err = bad; if (le) le.textContent = bad; hap("HEAVY"); return; }
+  hap(); K.err = ""; K.pv = ""; K.step = "face"; kycRender();
+}
+
+/* ----- মুখ যাচাই ----- */
+function kFace() {
+  const pv = K.pv;
+  return `<div class="kcam">${pv ? `<img class="kpvi" src="${pv}" alt="">` : `<video id="kvid" class="mir" playsinline muted autoplay></video>`}
+    <div class="kov"><u class="${pv ? "dn" : ""}"></u></div><div class="kcnt" id="kcnt"></div>
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t("k_face")}</b><em>3/4</em></div>
+    <div class="kbt">${pv ? "" : `<p>${t("k_faceh")}</p>`}
+      ${pv ? `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kFaceUse()">${t("k_use")}</button></div>`
+        : `<div class="ksh"><span class="kgal sp"></span><button class="kshut" aria-label="${t("k_snap")}" onclick="kFaceCount()"><i></i></button><label class="kgal">${kic("gal")}<input type="file" accept="image/*" capture="user" hidden onchange="kFile(this)"></label></div>`}
+      <small class="knc" id="knc"></small></div></div>`;
+}
+function kFaceCount() {
+  const v = document.getElementById("kvid"), c = document.getElementById("kcnt");
+  if (!v || !v.videoWidth) { toast(t("k_nocam")); return; }
+  if (K.busy) return; K.busy = true;
+  let n = 3;
+  const tick = () => {
+    if (K.step !== "face" || K.pv) { K.busy = false; return; }
+    if (n === 0) { if (c) c.textContent = ""; K.busy = false; kSnap(); return; }
+    if (c) { c.textContent = n; c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop"); } hap(); n--; setTimeout(tick, 900);
+  };
+  tick();
+}
+function kFaceUse() { hap(); K.selfie = K.pv; K.pv = ""; K.step = "pin"; K.err = ""; kycRender(); }
+
+/* ----- PIN ও জমা ----- */
+function kPin() {
+  const th = (src) => `<div class="kth"><img src="${src}" alt=""></div>`;
+  return `<div class="kw">${kTop(t("k_pin"), "kBack()", 3)}<div class="kbody"><div class="kcard kc1"><div class="kths">${th(K.front)}${th(K.back)}${th(K.selfie)}</div>
+    <h2>${t("k_pin")}</h2><p>${t("k_pins")}</p>
+    <div class="kpf"><input id="kpin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" autocomplete="off" oninput="pinOnly(this);kPinTyp()" onkeydown="if(event.key==='Enter')kSubmit()"></div>
+    <div class="le kle" id="kle">${esc(K.err)}</div><div class="kmsg" id="kmsg">${esc(K.msg)}</div></div></div>
+    <div class="kbtm"><button class="kbtn" id="ksb" onclick="kSubmit()">${t("k_sub2")}</button></div></div>`;
+}
+function kPinTyp() { const le = document.getElementById("kle"); if (le) le.textContent = ""; }
+const kMsg = (m) => { K.msg = m; const e = document.getElementById("kmsg"); if (e) e.textContent = m; };
+async function kUpload(path, data) {
+  const BASE = String(SUPA_URL).replace(/[\s"']/g, "").replace(/\/+$/, ""), KEY = String(SUPA_KEY).replace(/[\s"']/g, "");
+  const blob = await (await fetch(data)).blob();
+  for (let tr = 0; tr < 2; tr++) {
+    const ac = typeof AbortController !== "undefined" ? new AbortController() : null, tm = ac ? setTimeout(() => ac.abort(), 60000) : 0;
+    let r;
+    try { r = await fetch(BASE + "/storage/v1/object/kyc/" + path, {method: "POST", headers: {apikey: KEY, Authorization: "Bearer " + S.tok, "Content-Type": "image/jpeg"}, body: blob, signal: ac ? ac.signal : undefined}); }
+    catch (e) { throw new Error("NET"); } finally { clearTimeout(tm); }
+    if (r.status === 401 && tr === 0 && S.rt) { try { await refreshTok(); continue; } catch (e) { throw new Error("SESS"); } }
+    if (!r.ok) throw new Error("UPLOAD");
+    return;
+  }
+}
+async function kSubmit() {
+  if (K.busy) return;
+  const el = document.getElementById("kpin"), le = document.getElementById("kle"), pin = el ? digs(el.value, 6) : "";
+  if (!isPin(pin)) { if (le) le.textContent = t("badpin"); hap("HEAVY"); return; }
+  K.busy = true; const sb = document.getElementById("ksb"); if (sb) sb.classList.add("ld"); if (le) le.textContent = "";
+  const fail = (e) => { K.busy = false; kMsg(""); const b = document.getElementById("ksb"); if (b) b.classList.remove("ld"); const l2 = document.getElementById("kle"); if (l2) l2.textContent = errMsg(e); K.err = l2 ? l2.textContent : ""; hap("HEAVY"); const f = document.getElementById("kpin"); if (f) { f.value = ""; } };
+  try { await signIn(S.me.phone, pin); } catch (e) { return fail(e); }
+  const base = S.uid + "/" + Date.now(), P3 = {front: base + "-front.jpg", back: base + "-back.jpg", selfie: base + "-selfie.jpg"};
+  try {
+    kMsg(t("k_up"));
+    await kUpload(P3.front, K.front); await kUpload(P3.back, K.back); await kUpload(P3.selfie, K.selfie);
+    kMsg(t("k_up2"));
+    const d = K.d;
+    await api("/rest/v1/rpc/submit_kyc", {m: "POST", tries: 1, b: {p_name: d.name.trim(), p_father: d.father.trim(), p_dob: d.dob.trim(), p_nid: d.nid, p_addr: d.addr.trim(), p_front: P3.front, p_back: P3.back, p_selfie: P3.selfie}});
+  } catch (e) { return fail(e); }
+  K.busy = false; K.flow = false; K.msg = ""; K.err = ""; K.front = K.back = K.selfie = ""; K.p1 = K.p2 = null;
+  if (S.me) { S.me.kyc_status = "pending"; S.me.kyc_reason = null; }
+  kycNotify("submitted"); hap("MEDIUM"); K.step = "wait"; kycRender();
+}
+/* অ্যাডমিনকে Telegram এ খবর (Edge Function "kyc-notify" না থাকলে চুপচাপ বাদ যায়) */
+function kycNotify(action, id) {
+  try {
+    const BASE = String(SUPA_URL).replace(/[\s"']/g, "").replace(/\/+$/, ""), KEY = String(SUPA_KEY).replace(/[\s"']/g, "");
+    fetch(BASE + "/functions/v1/kyc-notify", {method: "POST", headers: {apikey: KEY, Authorization: "Bearer " + S.tok, "Content-Type": "application/json"}, body: JSON.stringify({action, id})}).catch(() => {});
+  } catch (e) {}
+}
+
+/* ----- অপেক্ষা ও সফল পাতা ----- */
+function kWait() {
+  return `<div class="kw">${kTop(t("k_title"), "", -1)}<div class="kdone"><div class="kcir wt"><svg viewBox="0 0 24 24"><path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9s8 4 8 9"/></svg></div>
+    <h2>${t("k_wh")}</h2><p>${t("k_ws")}</p></div>
+    <div class="kbtm"><button class="kbtn" id="kck" onclick="kCheck()">${t("k_chk")}</button><button class="klk" onclick="logout()">${t("logout")}</button></div></div>`;
+}
+async function kCheck() {
+  hap(); const b = document.getElementById("kck"); if (b) b.classList.add("ld");
+  try { await loadAll(false); kycSync(); if (K.step === "wait") toast(t("k_still")); } catch (e) { toast(t("neterr")); }
+  const b2 = document.getElementById("kck"); if (b2) b2.classList.remove("ld");
+}
+function kOk() {
+  return `<div class="kw">${kTop(t("k_title"), "", -1)}<div class="kdone"><div class="kcir ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h2>${t("k_okh")}</h2><p>${t("k_oks")}</p></div><div class="kbtm"><button class="kbtn" onclick="kHome()">${t("k_home")}</button></div></div>`;
+}
+function kHome() { hap(); kycClose(true); S.tab = "home"; S.fx = true; render(); }
+function kBack() {
+  hap();
+  if (K.busy && K.step !== "face") return;
+  const s = K.step;
+  if (s === "front") { if (K.pv) { K.pv = ""; kycRender(); return; } K.flow = false; K.step = "intro"; }
+  else if (s === "back") { K.pv = ""; K.step = "front"; }
+  else if (s === "info") { K.pv = ""; K.reading = false; K.step = "back"; }
+  else if (s === "face") { K.pv = ""; K.step = "info"; }
+  else if (s === "pin") { K.pv = ""; K.step = "face"; }
+  else return;
+  kycRender();
+}
+
 /* কিবোর্ডের উচ্চতা মনে রেখে PIN শিট সব সময় কিবোর্ডের জায়গার ওপরেই রাখা (কিবোর্ড আসার আগে নিচে নেমে থাকবে না) */
 let KBMAX = window.innerHeight;
 function kbSync() {
@@ -1557,6 +1903,7 @@ try {
   let bgAt = 0;
   if (A) {
     A.addListener("backButton", () => {
+      if (K.open) { if (["front", "back", "info", "face", "pin"].includes(K.step)) kBack(); else A.exitApp(); return; }
       if (S.sheet && !S.sheet.done && (S.sheet.step || 1) > 1 && !S.upd) { backStep(); return; }
       if (S.sheet || S.upd) { closeS(); return; }
       if (!S.auth && CONFIGURED && (S.view === "reg" || S.view === "ph" || S.phone)) { hap(); if (S.view === "reg") S.view = "ph"; else if (S.view === "ph") S.view = ""; else { S.phone = ""; S.pin = ""; S.view = "ph"; } render(); return; }

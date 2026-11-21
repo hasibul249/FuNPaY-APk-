@@ -1,0 +1,77 @@
+FuNPaY v2.17: KYC (NID + মুখ + PIN) ও অ্যাডমিন অ্যাপের সংযোগ
+===========================================================
+
+কীভাবে চলে
+----------
+1) ইউজার অ্যাপে NID-র সামনে ও পেছনের ছবি তোলে, অ্যাপ লেখা পড়ে নেয় (নাম, পিতার নাম = নমিনি, জন্মতারিখ, NID নম্বর, ঠিকানা)।
+2) ইউজার ঘরগুলো দেখে ঠিক করে, নিজের মুখের ছবি তোলে, PIN দিয়ে জমা দেয়।
+3) আবেদন "pending" হয়ে Supabase এ জমা পড়ে। ছবি যায় প্রাইভেট স্টোরেজ "kyc" এ। অ্যাডমিন Telegram এ খবর পায় (চালু করলে)।
+4) অ্যাডমিন অ্যাপে NID-র ছবি, সেলফি আর পড়া তথ্য পাশাপাশি দেখে একসেপ্ট বা বাতিল (কারণসহ) করে।
+5) ইউজারের অ্যাপের মেসেজ বক্সে (ইনবক্স > নোটিফিকেশন) নোটিশ যায়। অ্যাপ খোলা না থাকলে ফোনের নোটিফিকেশনও আসে। SMS চালু থাকলে SMS ও যায়।
+6) একসেপ্ট হলে অ্যাকাউন্ট চালু। যতক্ষণ KYC শেষ না হয় অ্যাপে KYC স্ক্রিন আটকে রাখে, আর সার্ভারেও টাকা খরচ বন্ধ থাকে।
+   (আগের সব ইউজার নিজে নিজে "approved" ধরা হয়, তাদের আটকাবে না।)
+
+একবারের সেটআপ (এই ক্রমে)
+-------------------------
+ক) অ্যাডমিন অ্যাপের backend/update-v2.15.sql Supabase > SQL Editor এ একবার Run করুন (আগে করা থাকলে আবার লাগবে না)।
+খ) এই অ্যাপের backend/update-v2.18-kyc.sql পুরোটা Run করুন (আবার চালালেও সমস্যা নেই)।
+   এতে v2.17 এর সব কাজ আছে, তাই update-v2.17.sql আলাদা চালাবেন না। আগে চালিয়ে থাকলেও সমস্যা নেই, v2.18 মিলিয়ে নেয়।
+গ) অ্যাডমিন অ্যাকাউন্ট: Supabase > Authentication > Users > Add user (ইমেইল + পাসওয়ার্ড, "Auto Confirm User" টিক)। OTP চালু থাকলে অ্যাডমিন অ্যাপের README র ৩ নম্বর ধাপ মেনে নিন। তারপর SQL Editor এ:
+     insert into public.admins(user_id, name, level) select id, 'আমি', 'owner' from auth.users where email = 'আপনার-অ্যাডমিন-ইমেইল';
+   (শুধু user_id আর note দিয়ে অ্যাডমিন বানালেও v2.18 সবচেয়ে পুরনো অ্যাডমিনকে owner করে দেয়, যাতে অ্যাডমিন অ্যাপে ঢোকা যায়।)
+ঘ) (ইচ্ছা হলে) Telegram/SMS: Edge Functions > Create function > নাম "kyc-notify" > supabase/functions/kyc-notify/index.ts পেস্ট > Deploy
+   Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (নতুন আবেদনে অ্যাডমিনের Telegram এ খবর)
+            BULKSMSBD_API_KEY, BULKSMSBD_SENDER_ID (সিদ্ধান্তের পর ইউজারকে SMS; আগের send-otp এর একই মান)
+   এটা না করলেও KYC পুরো চলে, শুধু Telegram/SMS যাবে না।
+ঙ) অ্যাডমিন অ্যাপ (v1.1 বা নতুন) নতুন APK বানিয়ে ইনস্টল করুন। এতে "KYC" ট্যাব, হোমে বাকি আবেদনের কার্ড ও ব্যাজ আছে। ইউজার অ্যাপে নতুন APK লাগবে না।
+
+ইউজারের নোটিশ (মেসেজ বক্স) নিয়ে
+---------------------------------
+KYC এর নোটিশ এবং অ্যাডমিন অ্যাপের "কনটেন্ট > নোটিশ" এখন একই "notices" টেবিলে থাকে (v2.18 এ এক করা হয়েছে)।
+ইউজার অ্যাপ নিজের নোটিশ আর সবার জন্য পাঠানো (চালু ও মেয়াদের ভেতরের) নোটিশ ইনবক্সে দেখে। KYC এর স্বয়ংক্রিয় নোটিশ অ্যাডমিন অ্যাপের নোটিশ তালিকায় ও অডিট লগে আলাদা করে আসে না, শুধু KYC সিদ্ধান্তটাই অডিট লগে ওঠে।
+
+অ্যাডমিন অ্যাপ থেকে কীভাবে কানেক্ট করবেন
+-----------------------------------------
+FuNPaY Admin অ্যাপ (v1.1 এ এসব জোড়া আছে) একই Supabase প্রজেক্টে (একই URL ও anon key) অ্যাডমিন অ্যাকাউন্টে লগইন করে নিচের ফাংশন ডাকবে।
+সব ডাক: POST {SUPA_URL}/rest/v1/rpc/<নাম>   হেডার: apikey: <anon key>, Authorization: Bearer <অ্যাডমিনের access_token>, Content-Type: application/json
+
+লগইন:  POST {SUPA_URL}/auth/v1/token?grant_type=password   body: {"email":"...","password":"..."}  -> access_token
+
+1) আবেদনের তালিকা    admin_kyc_list      body: {"p_status":"pending","p_limit":50,"p_offset":0,"p_q":"নাম/নম্বর/NID (ঐচ্ছিক)"}   (p_status: pending | approved | rejected | all)
+2) একটির পুরো তথ্য     admin_kyc_get       body: {"p_id":12}   -> name, father_name (নমিনি), dob, nid_no, address, front_path, back_path, selfie_path, reviewer, prev_rejects ...
+3) একসেপ্ট             admin_kyc_decide    body: {"p_id":12,"p_approve":true}
+4) বাতিল (কারণসহ)      admin_kyc_decide    body: {"p_id":12,"p_approve":false,"p_reason":"ছবি অস্পষ্ট"}
+   কারণ বাছার জন্য তিনটি তৈরি বোতাম রাখতে পারেন: "ছবি অস্পষ্ট", "মুখ মেলেনি", "তথ্য পড়া যায়নি" (অথবা নিজে লেখা)।
+   ফল: ইউজারের কাছে নোটিশ চলে যায় ("KYC একসেপ্ট হয়েছে" / "KYC বাতিল হয়েছে, কারণ: ...")। ফেরত আসে ইউজারের নম্বর।
+5) ব্যাজের সংখ্যা       admin_kyc_counts    body: {}   -> pending, approved, rejected
+
+ছবি দেখানো (প্রাইভেট, তাই signed লিংক লাগে):
+   POST {SUPA_URL}/storage/v1/object/sign/kyc/<front_path>   body: {"expiresIn":300}
+   উত্তরে {"signedURL":"/object/sign/kyc/...?token=..."} আসে। ছবির লিংক = {SUPA_URL}/storage/v1 + signedURL
+   (এই লিংক 5 মিনিট চলে। প্রতিবার খোলার সময় নতুন নিন।)
+
+সিদ্ধান্তের পর (SMS/Telegram চাইলে):  POST {SUPA_URL}/functions/v1/kyc-notify   body: {"action":"decided","id":12}   (একই অ্যাডমিন টোকেন)
+
+JavaScript উদাহরণ:
+   const H = {apikey: KEY, Authorization: "Bearer " + token, "Content-Type": "application/json"};
+   const rpc = (n, b) => fetch(URL + "/rest/v1/rpc/" + n, {method: "POST", headers: H, body: JSON.stringify(b || {})}).then(r => r.json());
+   const list = await rpc("admin_kyc_list", {p_status: "pending"});
+   const one = (await rpc("admin_kyc_get", {p_id: list[0].id}))[0];
+   const sign = (p) => fetch(URL + "/storage/v1/object/sign/kyc/" + p, {method: "POST", headers: H, body: JSON.stringify({expiresIn: 300})}).then(r => r.json()).then(j => URL + "/storage/v1" + j.signedURL);
+   const [nidFront, nidBack, selfie] = await Promise.all([sign(one.front_path), sign(one.back_path), sign(one.selfie_path)]);
+   await rpc("admin_kyc_decide", {p_id: one.id, p_approve: false, p_reason: "ছবি অস্পষ্ট"});
+   fetch(URL + "/functions/v1/kyc-notify", {method: "POST", headers: H, body: JSON.stringify({action: "decided", id: one.id})});
+
+ত্রুটির কোড (রেসপন্সের message): NOADMIN = অ্যাকাউন্ট admins তালিকায় নেই, DONE = আগেই সিদ্ধান্ত হয়ে গেছে, NEEDREASON = বাতিলে কারণ লাগবে, NIDUSED = এই NID আরেকজনের অ্যাকাউন্টে একসেপ্ট করা আছে, NOREQ = আবেদন পাওয়া যায়নি।
+
+নিরাপত্তা
+---------
+- NID/সেলফির ছবি প্রাইভেট স্টোরেজে থাকে। ইউজার শুধু নিজের ফোল্ডারে ছবি তুলতে পারে, অন্যের ছবি দেখতে পারে না। অ্যাডমিন অ্যাকাউন্ট ছাড়া কেউ আবেদন পড়তে বা সিদ্ধান্ত দিতে পারে না।
+- অ্যাডমিন অ্যাপে কখনো service_role key বসাবেন না। অ্যাডমিনের নিজের লগইন টোকেনই যথেষ্ট।
+- NID ও ছবি ব্যক্তিগত তথ্য। এগুলো রাখা ও ব্যবহারে বাংলাদেশের ডেটা সুরক্ষা নিয়ম মেনে চলুন, আর অকারণে সংরক্ষণ করবেন না।
+
+NID পড়া নিয়ে জরুরি কথা
+------------------------
+- লেখা পড়া অ্যাপের ভেতরেই হয় (Tesseract, বাংলা + ইংরেজি)। প্রথমবার ভাষার ফাইল নামাতে ইউজারের নেট লাগে, তাই একটু সময় নেয়।
+- বাংলা হাতে-ছাপা লেখায় ভুল হতে পারে, তাই প্রতিটি ঘর ইউজার ঠিক করতে পারে এবং আপনি ছবির সঙ্গে মিলিয়ে সিদ্ধান্ত দেন। পড়া যায়নি এমন ঘর কমলা "!" চিহ্ন দেখায়।
+- "মুখ যাচাই" এখন সেলফি তোলা, মেলানো আপনি অ্যাডমিন অ্যাপে চোখে দেখে করেন। আসল অটো ফেস-ম্যাচ/লাইভনেস লাগলে লাইসেন্সপ্রাপ্ত eKYC সেবা (যেমন নির্বাচন কমিশনের NID যাচাই API) জুড়তে হবে।
