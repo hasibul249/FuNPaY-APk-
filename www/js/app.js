@@ -22,7 +22,7 @@ const P = {
   lang:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18"/>',
   out:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>', card:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>'
 };
-P.fp = '<path fill="currentColor" stroke="none" d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.13-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .78.07 2.01.67 3.61.1.26-.03.55-.29.64-.26.1-.55-.04-.64-.29-.49-1.31-.73-2.61-.73-3.96 0-1.2.23-2.29.68-3.24 1.33-2.79 4.28-4.6 7.51-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/>';
+P.fp = '<path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/>';
 P.lock = '<rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 018 0v3" fill="none"/><circle cx="12" cy="16" r="1.5" fill="#fff" stroke="none"/>';
 P.ok2 = '<circle cx="12" cy="12" r="9.5"/><path d="M7.5 12.4l3 3 6-6.4"/>';
 P.copy = '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>';
@@ -561,7 +561,7 @@ function pageMine() {
     + `<div class="prof"><div class="pavw" onclick="openPhoto()"><div class="big">${myAv(m.name)}</div><i class="cam">${ic("cam2")}</i></div><div class="pi2"><h3>${esc(m.name || t("acct"))} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p></div></div>`
     + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()")}${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("stmt", t("stmt"), "openStmt()")}${R("fp", t("bioT"), "toggleBio()", sw)}${R("bell", t("nt2"), "S.seg='n';go('inbox')")}${m.kyc_status === "approved" ? `<button class="mr" onclick="toast(t('k_kycok'))">${ic("ok2")}<span>${t("k_kyc")}</span><small class="kok">${t("k_ver")}</small></button>` : ""}</div>`
     + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()")}${R("lim", t("limt"), "openInfo('lim')")}</div>`
-    + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()")}${R("help", t("help"), "openInfo('help')")}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("out", t("lock"), "lock()")}${R("out", t("logout"), "logout()")}</div>`
+    + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()")}${R("help", t("help"), "openInfo('help')")}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("out", t("logout"), "logout()")}</div>`
     ;
 }
 
@@ -593,10 +593,10 @@ function LOGOF(key) { const first = FPK !== key; FPK = key; return fpRing(first 
 function fpSplash() {
   if (document.getElementById("fpsplash")) return;
   const el = document.createElement("div"); el.id = "fpsplash";
-  const nm = [..."FuNPaY"].map((c, i) => `<span class="fpa-ch" style="animation-delay:${(1 + i * .06).toFixed(2)}s">${c}</span>`).join("");
-  el.innerHTML = `<div class="fps-orb fps-o1"></div><div class="fps-orb fps-o2"></div><div class="fps-lg">${fpRing(.45)}</div><div class="fps-name">${nm}</div><div class="fps-tag">${t("tag")}</div><div class="fps-ld"><i></i><i></i><i></i></div>`;
+  const nm = [...("FuNPaY")].map((c, i) => `<span class="fpa-ch" style="animation-delay:${(.5 + i * .06).toFixed(2)}s">${c}</span>`).join("");
+  el.innerHTML = `<div class="fps-orb fps-o1"></div><div class="fps-orb fps-o2"></div><div class="fps-lg">${fpRing(0)}</div><div class="fps-txt"><div class="fps-name">${nm}</div><div class="fps-tag">${t("tag")}</div></div><div class="fps-ld"><i></i><i></i><i></i></div>`;
   const end = () => { if (!el.parentNode) return; el.classList.add("out"); setTimeout(() => el.remove(), 500); };
-  el.onclick = end; document.body.appendChild(el); setTimeout(end, 2300);
+  el.onclick = end; document.body.appendChild(el); setTimeout(end, 2200);
 }
 
 const lgBar = (backJs) => `<div class="fbar"><button class="fback" aria-label="${t("back")}" onclick="${backJs}"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="flang"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>`;
@@ -645,7 +645,7 @@ function loginHtml() {
     <button class="nbar lb2" onclick="doReg()"><span>${t("reg")}</span>${NXT}</button></div>`;
   /* 4) PIN পেজ: উপরে লোগো অ্যানিমেশন (আগের মতোই), নিচে বিকাশের মতো নম্বর + PIN ঘর + ফিঙ্গারপ্রিন্ট আইকন, কিবোর্ড ফোনের নিজের */
   return `<div class="fl pinp"><div class="orb o1"></div><div class="orb o2"></div>
-    <div class="fbar pbar"><button class="fback" aria-label="${t("back")}" onclick="hap();S.phone='';S.pin='';S.view='ph';render()"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
+    <div class="fbar pbar">${REG() ? '<span class="fback-sp"></span>' : `<button class="fback" aria-label="${t("back")}" onclick="hap();S.phone='';S.pin='';S.view='ph';render()"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>`}<div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
     <div class="phead">${LOGOF("pin")}<b>${greet()}</b></div>
     <div class="psheet bkl">
       <div class="bkf"><label>${t("accno")}</label><div class="bkn">+88&nbsp;&nbsp;${esc(S.phone)}</div></div>
@@ -657,7 +657,15 @@ function loginHtml() {
       ${S.noRpc ? `<button class="lnk3" onclick="hap();S.regPhone=S.phone;S.phone='';S.pin='';S.view='reg';render()">${t("newacc2")}</button>` : ""}
     </div></div>`;
 }
-function bioTap() { if (bioOn()) bioUnlock(); else toast(t("bioh")); }
+async function bioTap() {
+  if (S.busy) return;
+  if (bioOn()) { bioUnlock(); return; }
+  const N = cap().NativeBiometric;
+  if (!N) { toast(t("noscan")); return; }
+  try { const a = await N.isAvailable({useFallback: true}); if (!a.isAvailable) { toast(t("errg")); return; } } catch (e) { toast(t("errg")); return; }
+  hap(); S.sheet = {id: "bio", pin: "", fresh: true, err: "", login: true}; renderSheet();
+  setTimeout(() => { const f = document.getElementById("f3"); if (f) { try { f.focus(); } catch (e) {} } }, 300);
+}
 async function setPhone() {
   if (S.busy) return;
   const v = digs(document.getElementById("lp").value, 11), le = document.querySelector(".le"), nb = document.getElementById("phnext");
@@ -847,6 +855,14 @@ function sbar() {
     const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", col);
   } catch (e) {}
 }
+/* নিচের বারের আইকন: বন্ধ অবস্থায় রেখা, চালু অবস্থায় গোলাপি ভরাট */
+const NAVI = {
+  home: ['<path d="M12 3.2l8.6 7.2V19a1.8 1.8 0 01-1.8 1.8H5.2A1.8 1.8 0 013.4 19v-8.6z"/><path d="M9.6 16.6h4.8"/>', '<path class="f" d="M12 3.2l8.6 7.2V19a1.8 1.8 0 01-1.8 1.8H5.2A1.8 1.8 0 013.4 19v-8.6z"/><path class="w" d="M9.6 16.6h4.8"/>'],
+  mine: ['<path d="M5.5 7.6h12a1.6 1.6 0 011.6 1.6v1.2"/><rect x="3" y="7.6" width="18" height="12.6" rx="3.2"/><circle cx="16.6" cy="14.2" r="1.15"/>', '<path class="s" d="M5.5 7.6h12a1.6 1.6 0 011.6 1.6v1.2"/><rect class="f" x="3" y="7.6" width="18" height="12.6" rx="3.2"/><circle class="wf" cx="16.6" cy="14.2" r="1.3"/>'],
+  inbox: ['<rect x="3" y="5.2" width="18" height="13.6" rx="3"/><path d="M3.6 7.6L12 13.4l8.4-5.8"/>', '<rect class="f" x="3" y="5.2" width="18" height="13.6" rx="3"/><path class="w" d="M3.8 7.8L12 13.4l8.2-5.6"/>'],
+  qr: ['<path class="q" d="M4 9V6.5A2.5 2.5 0 016.5 4H9M15 4h2.5A2.5 2.5 0 0120 6.5V9M20 15v2.5a2.5 2.5 0 01-2.5 2.5H15M9 20H6.5A2.5 2.5 0 014 17.5V15"/><rect class="qf" x="8.4" y="8.4" width="2.9" height="2.9" rx=".7"/><rect class="qf" x="12.7" y="8.4" width="2.9" height="2.9" rx=".7"/><rect class="qf" x="8.4" y="12.7" width="2.9" height="2.9" rx=".7"/><path class="q" d="M13 14.2h2.6M14.3 12.9v2.6"/>']
+};
+const navIc = (k, on) => `<svg class="nvi${on ? " on" : ""}" viewBox="0 0 24 24" aria-hidden="true">${NAVI[k][on && NAVI[k][1] ? 1 : 0]}</svg>`;
 function render() {
   save();
   const fx = S.fx;
@@ -855,8 +871,8 @@ function render() {
   else {
     const pg = S.tab === "home" ? pageHome() : S.tab === "inbox" ? pageInbox() : pageMine();
     h = `<div class="pg${fx ? " in" : ""}">${pg}</div>`;
-    const nv = (k, lbl) => `<button class="${S.tab === k ? "on" : ""}" onclick="go('${k}')"><span class="ni">${ic(k)}${k === "inbox" && unreadN() ? `<span class="bg">${nbadge(unreadN())}</span>` : ""}</span>${lbl}</button>`;
-    h += `<nav class="${fx ? "fx" : ""}">${nv("home", t("home"))}${nv("mine", t("mine"))}<button class="qrb" onclick="openQR('scan')"><span class="ni">${ic("qr")}</span>${t("qrs")}</button>${nv("inbox", t("inbox"))}</nav>`;
+    const nv = (k, lbl) => `<button class="${S.tab === k ? "on" : ""}" onclick="go('${k}')"><span class="ni">${navIc(k, S.tab === k)}${k === "inbox" && unreadN() ? `<span class="bg">${nbadge(unreadN())}</span>` : ""}</span><em>${lbl}</em></button>`;
+    h += `<nav class="${fx ? "fx" : ""}">${nv("home", t("home"))}${nv("mine", t("mine"))}<button class="qrb" onclick="openQR('scan')"><span class="ni">${navIc("qr", false)}</span><em>${t("qrs")}</em></button>${nv("inbox", t("inbox"))}</nav>`;
   }
   const ap = document.getElementById("app"), sc = ap.scrollTop, ob = document.querySelector(".ban"), bl = ob ? ob.scrollLeft : 0;
   ap.innerHTML = h; ap.className = S.auth ? "au" : "";
@@ -1276,7 +1292,7 @@ function qTab(tb) { hap(); if (!S.sheet || S.sheet.tab === tb) return; stopScann
 function qrHtml() {
   const s = S.sheet, m = S.me || {};
   if (s.tab === "scan") return scanHtml(s);
-  return wrapPage(s, t("myqr"), "closeS()", `<div class="qpage"><div class="qcard"><div class="qav">${myAv(m.name)}</div><b>${esc(m.name || t("acct"))}</b><span>${esc(m.phone)} ${agBadge()}</span><div class="qwrap">${qrSvg("funpay:" + m.phone)}</div><small>${t("qrhint")}</small></div></div>`,
+  return wrapPage(s, t("myqr"), "closeS()", `<div class="qpage"><div class="qdeco" aria-hidden="true"><i class="d1"></i><i class="d2"></i><i class="d3"></i>${[1, 2, 3, 4, 5, 6].map(n => `<img class="qwm q${n}" src="icons/logo.png" alt="">`).join("")}</div><div class="qcard"><div class="qav">${myAv(m.name)}</div><b>${esc(m.name || t("acct"))}</b><span>${esc(m.phone)} ${agBadge()}</span><div class="qwrap">${qrSvg("funpay:" + m.phone)}</div><small>${t("qrhint")}</small></div><div class="qfoot"><img src="icons/logo.png" alt=""><b>FuNPaY</b><span>${t("tag")}</span></div></div>`,
     `<button class="btn" onclick="qTab('scan')">${ic("qr")}${t("scanqr")}</button>`);
 }
 /* ---------- স্ক্যানার: ক্যামেরা পেছনে, সুন্দর ফ্রেম সামনে ---------- */
@@ -1387,17 +1403,20 @@ async function toggleBio() {
 async function enableBio() {
   const s = S.sheet, N = cap().NativeBiometric;
   if (!s || s.busy || !N) return;
+  const ph = S.auth && S.me ? S.me.phone : S.phone, wasOut = !S.auth;
   const pin = s.pin || digs((document.getElementById("f3") || {}).value, 6);
   const fail = (m) => { s.busy = false; setBusy(false); if (S.sheet !== s) return; s.err = m; renderSheet(); shakeBox(); };
   if (!isPin(pin)) return fail(t("wp"));
   s.busy = true; setBusy(true);
   try {
-    await signIn(S.me.phone, pin);
+    await signIn(ph, pin);
     await N.verifyIdentity({reason: t("bioR"), title: "FuNPaY", useFallback: true});
-    await N.setCredentials({username: S.me.phone, password: pin, server: BIO_SERVER});
-    localStorage.setItem("fpbio", S.me.phone);
+    await N.setCredentials({username: ph, password: pin, server: BIO_SERVER});
+    localStorage.setItem("fpbio", ph);
   } catch (e) { return fail(errMsg(e)); }
-  s.busy = false; closeS(); toast(t("bioOn")); if (S.tab === "mine") render();
+  s.busy = false; toast(t("bioOn"));
+  if (wasOut) { S.sheet = null; renderSheet(); try { await enter(); } catch (e) { S.tok = ""; S.rt = ""; render(); toast(errMsg(e)); } return; }
+  closeS(); if (S.tab === "mine") render();
 }
 async function bioUnlock() {
   const N = cap().NativeBiometric;
@@ -1612,12 +1631,11 @@ async function stmShare() {
   try { ok = await shareImage(pdfBlob(stmPages(s.data)), "FuNPaY-statement-" + Date.now() + ".pdf", t("stt"), "application/pdf"); } catch (e) { console.log(e); }
   if (!ok) toast(t("shfail"));
 }
-/* পুরোপুরি লগআউট: নম্বর, ফিঙ্গারপ্রিন্ট সব মুছে নতুন করে শুরু */
+/* লগ আউট: অ্যাকাউন্ট ও ফিঙ্গারপ্রিন্ট ফোনে থেকে যায়, শুধু লগইন (PIN) পাতায় ফিরে আসে */
 function logout() {
   hap();
-  try { ["fpreg", "fpbio", "fpbioask"].forEach(k => localStorage.removeItem(k)); } catch (e) {}
-  try { const N = cap().NativeBiometric; if (N) Promise.resolve(N.deleteCredentials({server: BIO_SERVER})).catch(() => {}); } catch (e) {}
-  S.phone = ""; S.name = ""; S.view = ""; lock();
+  S.view = ""; S.pin = "";
+  lock();
 }
 
 /* ---------- v2.16: KYC (NID স্ক্যান + মুখ + PIN, তারপর অ্যাডমিন যাচাই) ---------- */
@@ -2645,7 +2663,7 @@ setInterval(() => {
   const st = b.children[1].offsetLeft - b.children[0].offsetLeft, i = (Math.round(b.scrollLeft / st) + 1) % b.children.length;
   b.scrollTo({left: i * st, behavior: "smooth"});
 }, 5500);
-/* অ্যান্ড্রয়েড ব্যাক বাটন, স্ট্যাটাস বার, ব্যাকগ্রাউন্ডে 1 মিনিটের বেশি থাকলে অটো লক */
+/* অ্যান্ড্রয়েড ব্যাক বাটন, স্ট্যাটাস বার, ব্যাকগ্রাউন্ডে 1 ঘন্টার বেশি থাকলে আবার PIN চাওয়া */
 try {
   const A = cap().App;
   let bgAt = 0;
@@ -2654,13 +2672,14 @@ try {
       if (K.open) { if (["front", "back", "info", "face", "match", "pin"].includes(K.step)) kBack(); else A.exitApp(); return; }
       if (S.sheet && !S.sheet.done && (S.sheet.step || 1) > 1 && !S.upd) { backStep(); return; }
       if (S.sheet || S.upd) { closeS(); return; }
+      if (!S.auth && CONFIGURED && REG() && S.phone && !S.view) { A.exitApp(); return; }
       if (!S.auth && CONFIGURED && (S.view === "reg" || S.view === "ph" || S.phone)) { hap(); if (S.view === "reg") S.view = "ph"; else if (S.view === "ph") S.view = ""; else { S.phone = ""; S.pin = ""; S.view = "ph"; } render(); return; }
       if (S.auth && S.tab !== "home") { go("home"); return; }
       A.exitApp();
     });
     A.addListener("appStateChange", (st) => {
       if (!st.isActive) { bgAt = Date.now(); return; }
-      if (S.auth && bgAt && Date.now() - bgAt > 60000) lock(true); else if (S.auth) refresh();
+      if (S.auth && bgAt && Date.now() - bgAt > 3600000) lock(true); else if (S.auth) refresh();
       bgAt = 0; setTimeout(checkUpdate, 900);
     });
   }
@@ -3042,7 +3061,7 @@ function scanHtml(s) {
     requestAnimationFrame(() => {
       kp.classList.add("show"); document.documentElement.classList.add("pinkb");
       document.documentElement.style.setProperty("--kph", kp.offsetHeight + "px");
-      try { cur && cur.scrollIntoView({block: "nearest"}); } catch (e) {}
+      try { if (cur && !cur.closest(".pinp")) cur.scrollIntoView({block: "nearest"}); } catch (e) {}
     });
   });
   document.addEventListener("focusout", (ev) => {
@@ -3067,7 +3086,7 @@ function scanHtml(s) {
    শুভেচ্ছা কার্ড, ১০ প্রিয় নাম্বার, গ্রুপ সেন্ড   (SQL: backend/update-v2.24.sql)
    ===================================================================== */
 Object.assign(T.bn, {g_rcp: "প্রাপক", g_ref: "রেফারেন্স", g_note: "নোট লিখতে ট্যাপ করুন", g_cfm: "নিশ্চিত করুন", g_nochg: "+ চার্জ প্রযোজ্য নয়",
-  g_hold: "করতে লোগো টিপে ধরে রাখুন", g_favnote: "প্রিয় নাম্বারে সেন্ড মানি'তে কোনো চার্জ নেই।", g_fav: "প্রিয় নাম্বার", g_favmax: "সর্বোচ্চ ১০টি প্রিয় নাম্বার রাখা যায়",
+  g_hold: "করতে টিপে ধরুন", g_favnote: "প্রিয় নাম্বারে সেন্ড মানি'তে কোনো চার্জ নেই।", g_fav: "প্রিয় নাম্বার", g_favmax: "সর্বোচ্চ ১০টি প্রিয় নাম্বার রাখা যায়",
   g_cont: "কন্টাক্ট", g_grp: "গ্রুপ সেন্ড", g_card: "শুভেচ্ছা কার্ড", g_cardadd: "শুভেচ্ছা কার্ড যোগ করুন", g_cards: "শুভেচ্ছা কার্ডসমূহ", g_cardsv: "সেভ করে এগিয়ে যান",
   g_prev: "প্রিভিও", g_cnote: "নোট/স্বাক্ষর যোগ করুন", g_camt: "পরিমাণ", g_cdel: "কার্ড বাদ দিন", g_nocont: "এই ফোনে কন্টাক্ট পড়া যাচ্ছে না",
   g_contperm: "কন্টাক্ট দেখার অনুমতি দিন", g_srcc: "নাম বা নম্বর খুঁজুন", g_nocon0: "কোনো কন্টাক্ট পাওয়া যায়নি", g_noacc: "এই নম্বরে FuNPaY একাউন্ট নেই",
@@ -3075,7 +3094,7 @@ Object.assign(T.bn, {g_rcp: "প্রাপক", g_ref: "রেফারেন�
   g_people: "জন", g_next: "পরবর্তী", g_grpneed: "কমপক্ষে ২ জন বাছুন (সর্বোচ্চ ১০)", g_each: "প্রত্যেককে", g_gtot: "মোট", g_gdone: "গ্রুপ সেন্ড", g_exit: "বাতিল", g_cdone: "কার্ডসহ",
   g_c_abh: "অভিনন্দন", g_c_bd: "জন্মদিন", g_c_biye: "বিয়ে", g_c_dhn: "ধন্যবাদ", g_c_shub: "শুভকামনা", g_c_bnd: "বন্ধু", g_c_ann: "অ্যানিভার্সারি", g_selc: "নির্বাচিত", favmax: "সর্বোচ্চ ১০টি প্রিয় নাম্বার রাখা যায়", grpcnt: "গ্রুপে ২ থেকে ১০ জন থাকতে হবে"});
 Object.assign(T.en, {g_rcp: "Recipient", g_ref: "Reference", g_note: "Tap to write a note", g_cfm: "Confirm", g_nochg: "+ No charge applicable",
-  g_hold: "— press and hold the logo", g_favnote: "No charge on Send Money to favorite numbers.", g_fav: "Favorite numbers", g_favmax: "You can keep up to 10 favorite numbers",
+  g_hold: "", g_favnote: "No charge on Send Money to favorite numbers.", g_fav: "Favorite numbers", g_favmax: "You can keep up to 10 favorite numbers",
   g_cont: "Contacts", g_grp: "Group Send", g_card: "Greeting card", g_cardadd: "Add a greeting card", g_cards: "Greeting cards", g_cardsv: "Save and continue",
   g_prev: "Preview", g_cnote: "Add a note / signature", g_camt: "Amount", g_cdel: "Remove card", g_nocont: "Cannot read contacts on this phone",
   g_contperm: "Please allow contacts access", g_srcc: "Search name or number", g_nocon0: "No contacts found", g_noacc: "No FuNPaY account on this number",
@@ -3266,13 +3285,13 @@ function bkStep4(s) {
   const T3 = totals(s), nb = T3.d < 0 ? S.bal - T3.tot : S.bal + T3.amt, cd = gcOf(s.card);
   const cell = (l, v, sub) => `<div><span>${l}</span><b>${v}</b>${sub ? `<small>${sub}</small>` : ""}</div>`;
   const rows = [!PERSON.includes(s.id) && s.v ? cell(t(cfg(s.id).f), esc(s.v)) : "", !PERSON.includes(s.id) && s.ch ? cell(t("opr"), t(s.ch)) : ""].join("");
-  return `<div class="sh pgx c4${s.fresh ? "" : " re"}"><div class="box"><div class="c4h"><b><em>${t(s.id)}</em> ${t("g_cfm")}</b><button class="c4x" aria-label="${t("close")}" onclick="closeS()"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
+  return `<div class="sh pgx c4${s.fresh ? "" : " re"}"><div class="box"><div class="c4h"><b class="c4t"><em>${t(s.id)}</em><span>${t("g_cfm")}</span></b><button class="c4x" aria-label="${t("close")}" onclick="closeS()"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
     <div class="c4b"><div class="stp${s.fxs ? " go" : ""}">${bkWho(s) ? `<div class="c4w">${bkWho(s)}</div>` : ""}
-      <div class="c4g">${cell(t("total"), money2(T3.tot), T3.fee ? "+ " + t("feel") + " " + money2(T3.fee) : t("g_nochg"))}${cell(t("nbl"), money2(nb))}${rows}${s.id === "send" ? cell(t("g_ref"), esc(s.note || "—")) : ""}${cd ? `<div class="wide"><span>${t("g_card")}</span><b>${GC_TITLE[cd.cat]}</b></div>` : ""}</div>
+      <div class="c4g"><div class="c4tot"><b>${money2(T3.tot)}</b><small>${T3.fee ? "+ " + t("feel") + " " + money2(T3.fee) : t("g_nochg")}</small></div>${cell(t("nbl"), money2(nb))}${rows}${s.id === "send" ? cell(t("g_ref"), esc(s.note || "—")) : ""}${cd ? `<div class="wide"><span>${t("g_card")}</span><b>${GC_TITLE[cd.cat]}</b></div>` : ""}</div>
       ${s.id === "send" && !s.grp && isFav(s.v) ? `<div class="c4n"><svg class="stn" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"/></svg><p>${t("g_favnote")}</p></div>` : ""}
       ${s.grp ? `<div class="c4n"><p>${T3.n} ${t("g_people")}${s.grp.diff ? "" : " × " + money2(parseFloat(s.a) || 0)}</p></div>` : ""}
       <div class="err c" id="c4e" style="text-align:center;margin-top:10px">${esc(s.err)}</div></div></div>
-    <div class="c4f"><div id="lgh" class="lgh" onpointerdown="lgStart(event)" onpointerup="lgEnd()" onpointerleave="lgEnd()" onpointercancel="lgEnd()" oncontextmenu="return false"><svg viewBox="0 0 100 100"><circle class="r0" cx="50" cy="50" r="46"/><circle class="r1" cx="50" cy="50" r="46"/></svg><img src="icons/logo.png" alt=""></div><p>${t(s.id)} ${t("g_hold")}</p></div></div></div>`;
+    <div class="c4f"><div id="lgh" class="lgh" onpointerdown="lgStart(event)" onpointerup="lgEnd()" onpointerleave="lgEnd()" onpointercancel="lgEnd()" oncontextmenu="return false"><svg viewBox="0 0 100 100"><circle class="r0" cx="50" cy="50" r="46"/><circle class="r1" cx="50" cy="50" r="46"/></svg><img src="icons/logo.png" alt=""></div><p>${S.lang === "en" ? "Tap and hold to confirm the payment" : t(s.id) + " " + t("g_hold")}</p></div></div></div>`;
 }
 let lgT = 0;
 function lgStart(e) { const b = document.getElementById("lgh"); if (!b || lgT || b.classList.contains("ld")) return; if (e && e.preventDefault) e.preventDefault(); hap(); b.classList.add("hd"); lgT = setTimeout(() => { lgT = 0; b.classList.remove("hd"); b.classList.add("ld"); hap("MEDIUM"); confirmTx(); }, 1000); }

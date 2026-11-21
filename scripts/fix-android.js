@@ -49,7 +49,13 @@ if (fs.existsSync(m)) {
   const res = "android/app/src/main/res";
   if (!fs.existsSync(res)) return;
   fs.mkdirSync(res + "/values", {recursive: true}); fs.mkdirSync(res + "/drawable", {recursive: true});
-  fs.writeFileSync(res + "/drawable/fp_splash_icon.xml", '<?xml version="1.0" encoding="utf-8"?>\n<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><solid android:color="#00000000"/><size android:width="48dp" android:height="48dp"/></shape>\n');
+  /* স্প্ল্যাশে লোগো প্রথম ফ্রেম থেকেই (ওয়েব স্প্ল্যাশের সাথে হুবহু এক জায়গা ও মাপ: ১৬০dp, ঠিক মাঝখানে) */
+  [["mdpi"],["hdpi"],["xhdpi"],["xxhdpi"],["xxxhdpi"]].forEach(([d]) => {
+    const src = "native/splash/fp_splash_icon_" + d + ".png";
+    if (!fs.existsSync(src)) return;
+    fs.mkdirSync(res + "/drawable-" + d, {recursive: true});
+    fs.copyFileSync(src, res + "/drawable-" + d + "/fp_splash_icon.png");
+  });
   fs.writeFileSync(res + "/values/fp_colors.xml", '<?xml version="1.0" encoding="utf-8"?>\n<resources><color name="fp_splash_bg">#c40f5e</color></resources>\n');
   const st = res + "/values/styles.xml";
   if (fs.existsSync(st)) {
