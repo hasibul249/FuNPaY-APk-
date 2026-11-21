@@ -350,7 +350,7 @@ async function refreshTok() { setSess(await api("/auth/v1/token?grant_type=refre
 function errMsg(e) {
   const m = (e && e.message) || "";
   const sid = S.sheet && S.sheet.id;
-  const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh", OTPBAD:"otpbad", OTPEXP:"otpexp", OTPMANY:"otpmany", OTPWAIT:"otpwait", OTPLIM:"otplim", OTPSMS:"otpsms", BADPHONE:"badn", KYC:"k_lock", BADNID:"k_badnid", NIDUSED:"k_used", UPLOAD:"k_upf", KYCSTATE:"k_state", BADDATA:"k_bad"}[m];
+  const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh", OTPBAD:"otpbad", OTPEXP:"otpexp", OTPMANY:"otpmany", OTPWAIT:"otpwait", OTPLIM:"otplim", OTPSMS:"otpsms", BADPHONE:"badn", KYC:"k_lock", BADNID:"k_badnid", NIDUSED:"k_used", UPLOAD:"k_upf", KYCSTATE:"k_state", BADDATA:"k_bad", KYCLIMIT:"k_limit"}[m];
   if (k) return t(k);
   if (/could not find the function|schema cache|PGRST202/i.test(m)) return t("dbold");
   if (/invalid login/i.test(m)) return t("wp");
@@ -621,10 +621,11 @@ function loginHtml() {
   /* 2.5) OTP পেজ: SMS এ কোড যায়, Allow দিলে ঘরে নিজে বসে (ঘর readonly), অ্যান্ড্রয়েডের বাইরে বা না এলে হাতে লেখার পথ খোলে */
   if (S.view === "otp") return `<div class="fl light">${lgBar("otpStop();S.view='ph';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
-      <h2>${t("otph")}</h2><p class="sub">${t("otps")} <b>+88 ${esc(S.otpPhone)}</b></p>
-      <div class="pfield"><input id="otpin" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" autocomplete="one-time-code" ${S.otpManual ? "" : "readonly"} oninput="otpTyped(this)"></div>
+      <h2>${t("otph")}</h2><p class="sub">${t("otps")}</p><div class="otpph">+88 ${esc(S.otpPhone)}</div>
+      <div class="otpb" onclick="otpFocus()">${[0, 1, 2, 3, 4, 5].map(i => `<i id="ob${i}"></i>`).join("")}<input id="otpin" class="otpi" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" ${S.otpManual ? "" : "readonly"} oninput="otpTyped(this)" onfocus="otpPaint()" onblur="otpPaint()" onpaste="otpPasteEv(event)"></div>
       <div class="le"></div>
-      <p class="terms" id="otpwait">${S.otpManual ? "" : t("otpw")}</p>
+      <p class="terms otpw" id="otpwait">${S.otpManual ? "" : t("otpw")}</p>
+      <button class="otpp" onclick="otpPaste()">${t("otppaste")}</button>
       <button class="lnk3" id="otpman" style="${S.otpManual ? "display:none" : ""}" onclick="otpManualOn()">${t("otpm")}</button>
       <button class="lnk3" id="otprs" onclick="otpResend()"></button>
     </div></div>`;
@@ -673,7 +674,7 @@ const otpEl = (id) => document.getElementById(id);
 function otpNative() { try { return (window.Capacitor && Capacitor.isPluginAvailable && Capacitor.isPluginAvailable("SmsConsent") && cap().SmsConsent) || null; } catch (e) { return null; } }
 function otpStop() { otpSeq++; clearInterval(otpTm); const P = otpNative(); if (P) { try { Promise.resolve(P.stop()).catch(() => {}); } catch (e) {} } }
 function otpStart() {
-  clearInterval(otpTm); otpTm = setInterval(otpTick, 1000); otpTick();
+  otpPaint(); clearInterval(otpTm); otpTm = setInterval(otpTick, 1000); otpTick();
   const P = otpNative(), my = ++otpSeq;
   if (!P) { otpManualOn(); return; }
   Promise.resolve(P.start()).then((r) => {
@@ -697,8 +698,24 @@ function otpManualOn() {
   const m = otpEl("otpman"); if (m) m.style.display = "none";
   const w = otpEl("otpwait"); if (w) w.textContent = "";
 }
-function otpFill(code) { const i = otpEl("otpin"); if (i) i.value = code; otpVerify(code); }
-function otpTyped(el) { const v = digs(el.value, 6); if (el.value !== v) el.value = v; const le = document.querySelector(".le"); if (le) le.textContent = ""; if (v.length === 6) otpVerify(v); }
+function otpFocus() { if (!S.otpManual) otpManualOn(); else { const i = otpEl("otpin"); if (i) { try { i.focus(); } catch (e) {} } } otpPaint(); }
+function otpPaint() {
+  const i = otpEl("otpin"); if (!i) return; const v = i.value || "", on = document.activeElement === i;
+  for (let k = 0; k < 6; k++) { const b = otpEl("ob" + k); if (b) { b.textContent = v[k] || ""; b.className = (v[k] ? "f " : "") + (on && k === Math.min(v.length, 5) ? "a" : ""); } }
+}
+function otpPasteText(tx) {
+  const m = String(tx || "").match(/(?:^|\D)(\d{6})(?:\D|$)/), v = m ? m[1] : digs(tx, 6), i = otpEl("otpin");
+  if (!i || !v) return; if (!S.otpManual) otpManualOn();
+  i.value = v; otpTyped(i);
+}
+function otpPasteEv(e) { try { e.preventDefault(); otpPasteText((e.clipboardData || window.clipboardData).getData("text")); } catch (x) {} }
+async function otpPaste() {
+  hap();
+  try { const tx = await navigator.clipboard.readText(); if (tx) { otpPasteText(tx); return; } } catch (e) {}
+  otpManualOn(); toast(t("otpcb"));
+}
+function otpFill(code) { const i = otpEl("otpin"); if (i) i.value = code; otpPaint(); otpVerify(code); }
+function otpTyped(el) { const v = digs(el.value, 6); if (el.value !== v) el.value = v; otpPaint(); const le = document.querySelector(".le"); if (le) le.textContent = ""; if (v.length === 6) otpVerify(v); }
 async function otpVerify(code) {
   if (S.otpBusy) return;
   S.otpBusy = true;
@@ -711,7 +728,7 @@ async function otpVerify(code) {
   } catch (e) {
     S.otpBusy = false; hap("HEAVY");
     const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e);
-    const i = otpEl("otpin"); if (i && S.otpManual) { i.value = ""; try { i.focus(); } catch (x) {} }
+    const i = otpEl("otpin"); if (i && S.otpManual) { i.value = ""; try { i.focus(); } catch (x) {} } otpPaint(); const bx = document.querySelector(".otpb"); if (bx) { bx.classList.remove("shk"); void bx.offsetWidth; bx.classList.add("shk"); }
   }
 }
 async function otpResend() {
@@ -719,7 +736,7 @@ async function otpResend() {
   S.busy = true; const le = document.querySelector(".le"); if (le) le.textContent = "";
   try {
     await api("/functions/v1/send-otp", {m: "POST", auth: false, tries: 1, b: {phone: S.otpPhone}});
-    S.otpAt = Date.now(); const i = otpEl("otpin"); if (i && !S.otpManual) i.value = ""; if (le) le.textContent = t("otpsent");
+    S.otpAt = Date.now(); const i = otpEl("otpin"); if (i && !S.otpManual) i.value = ""; otpPaint(); if (le) le.textContent = t("otpsent");
     otpStart();
   } catch (e) { if (le) le.textContent = errMsg(e); hap("HEAVY"); }
   S.busy = false; otpTick();
@@ -1557,7 +1574,13 @@ function logout() {
 Object.assign(T.bn, {k_title:"ভেরিফিকেশন (KYC)", k_h:"পরিচয় যাচাই করুন", k_sub:"অ্যাকাউন্ট চালু করতে আপনার NID ও মুখ যাচাই লাগবে।", k_l1:"NID কার্ডের সামনে ও পেছনের ছবি", k_l2:"নিজের মুখের ছবি", k_l3:"PIN দিয়ে নিশ্চিত করা", k_note:"যাচাই শেষ হলে ফল আপনার মোবাইলে মেসেজে জানানো হবে।", k_start:"শুরু করুন", k_again:"আবার জমা দিন", k_rej:"আবেদন বাতিল হয়েছে", k_front:"NID-র সামনের দিক", k_back:"NID-র পেছনের দিক", k_hf:"কার্ডটি ফ্রেমের ভেতরে রাখুন, লেখা যেন পরিষ্কার দেখা যায়", k_hb:"এবার কার্ডের পেছনের দিক ফ্রেমে রাখুন", k_retake:"আবার তুলুন", k_use:"ঠিক আছে", k_nocam:"ক্যামেরা চালু করা যায়নি। নিচের গ্যালারি বাটনে চেপে ছবি নিন", k_readd:"NID থেকে তথ্য পড়া হচ্ছে", k_readw:"একটু সময় লাগতে পারে, অপেক্ষা করুন", k_info:"আপনার তথ্য", k_infos:"অ্যাপ NID থেকে পড়ে নিয়েছে। ভুল থাকলে ঘরে চেপে ঠিক করুন।", k_nm:"নাম", k_fa:"পিতার নাম (নমিনি)", k_dob:"জন্মতারিখ", k_nid:"NID নম্বর", k_ad:"ঠিকানা", k_miss:"পড়া যায়নি, এখানে লিখুন", k_next:"পরের ধাপ", k_face:"মুখ যাচাই", k_faceh:"মুখ ফ্রেমের ভেতরে রাখুন, আলো যেন সামনে থাকে", k_snap:"ছবি তুলুন", k_pin:"PIN দিয়ে নিশ্চিত করুন", k_pins:"ছবি ও তথ্য জমা দিতে আপনার 6 ডিজিটের PIN দিন", k_sub2:"জমা দিন", k_up:"ছবি আপলোড হচ্ছে…", k_up2:"তথ্য জমা হচ্ছে…", k_wh:"জমা হয়েছে, যাচাই চলছে", k_ws:"আমরা আপনার NID ও মুখ মিলিয়ে দেখছি। ফল মেসেজে আসবে, তখন অ্যাকাউন্ট চালু হবে।", k_chk:"অবস্থা দেখুন", k_okh:"অ্যাকাউন্ট চালু হয়েছে", k_oks:"আপনার পরিচয় যাচাই হয়েছে। এখন সব সেবা ব্যবহার করতে পারবেন।", k_home:"হোমে যান", k_bad:"সব ঘর ঠিকমতো পূরণ করুন", k_badnid:"NID নম্বর ঠিক নয় (10, 13 বা 17 ডিজিট)", k_still:"এখনো যাচাই চলছে", k_used:"এই NID দিয়ে আরেকটি অ্যাকাউন্ট আছে", k_upf:"ছবি আপলোড হয়নি, আবার চেষ্টা করুন", k_state:"আবেদন আগেই জমা আছে", k_lock:"KYC যাচাই শেষ না হলে টাকা খরচ করা যাবে না", k_ocrfail:"লেখা পড়া যায়নি, নিজে লিখুন। ছবি দেখে অ্যাডমিন মিলিয়ে নেবেন।", k_ver:"যাচাই করা", k_kyc:"KYC যাচাই", k_kycok:"যাচাই হয়েছে"});
 Object.assign(T.en, {k_title:"Verification (KYC)", k_h:"Verify your identity", k_sub:"To activate your account we need to verify your NID and face.", k_l1:"Photos of the front and back of your NID", k_l2:"A photo of your face", k_l3:"Confirm with your PIN", k_note:"You will get the result by SMS/message once it is reviewed.", k_start:"Start", k_again:"Submit again", k_rej:"Request rejected", k_front:"NID front", k_back:"NID back", k_hf:"Keep the card inside the frame, text should be sharp", k_hb:"Now place the back of the card in the frame", k_retake:"Retake", k_use:"Looks good", k_nocam:"Could not start the camera. Use the gallery button below", k_readd:"Reading details from your NID", k_readw:"This may take a moment", k_info:"Your details", k_infos:"The app read these from your NID. Tap a box to fix anything wrong.", k_nm:"Name", k_fa:"Father's name (nominee)", k_dob:"Date of birth", k_nid:"NID number", k_ad:"Address", k_miss:"Could not read, type here", k_next:"Next", k_face:"Face check", k_faceh:"Keep your face inside the frame with light in front", k_snap:"Take photo", k_pin:"Confirm with PIN", k_pins:"Enter your 6-digit PIN to submit your photos and details", k_sub2:"Submit", k_up:"Uploading photos…", k_up2:"Submitting details…", k_wh:"Submitted, under review", k_ws:"We are matching your NID and face. You will get the result by message and your account will be activated.", k_chk:"Check status", k_okh:"Account activated", k_oks:"Your identity is verified. You can now use every service.", k_home:"Go home", k_bad:"Fill in all the boxes", k_badnid:"NID number is not valid (10, 13 or 17 digits)", k_still:"Still under review", k_used:"Another account already uses this NID", k_upf:"Photo upload failed, try again", k_state:"A request is already submitted", k_lock:"You cannot spend money until KYC is approved", k_ocrfail:"Could not read the text, please type it. The admin will check against the photo.", k_ver:"Verified", k_kyc:"KYC", k_kycok:"Verified"});
 
-const K = {open:false, step:"intro", flow:false, d:{name:"", father:"", dob:"", nid:"", addr:""}, front:"", back:"", selfie:"", pv:"", reason:"", busy:false, reading:false, fail:false, pg:{front:0, back:0}, msg:"", err:"", p1:null, p2:null};
+Object.assign(T.bn, {k_ok:"ঠিক আছে", k_auto:"কার্ডটি ফ্রেমে ধরুন, সিস্টেম নিজেই ছবি তুলে নেবে", k_steady:"ক্যামেরা স্থির রাখুন…", k_blur:"আরও কাছে বা আলোতে ধরুন, লেখা পরিষ্কার হওয়া চাই", k_chk2:"কার্ড যাচাই হচ্ছে…", k_got:"ছবি তোলা হয়েছে", k_wrong:"ভুল দিক", k_isf:"এটি পেছনের দিক নয়, এটি সামনের দিক। কার্ডের পেছনের দিক (ঠিকানার দিক) দেখান।", k_isb:"এটি সামনের দিক নয়, এটি পেছনের দিক। কার্ডের সামনের দিক (ছবি ও নামের দিক) দেখান।", k_notid:"এটি আইডি কার্ড নয়", k_notidm:"আইডি কার্ড প্রদান করুন। কার্ডের পুরোটা ফ্রেমে রেখে পরিষ্কার ছবি দিন।", k_shh:"স্ক্রিনশট চলবে না", k_shm:"স্ক্রিনশট নয়, কার্ডের আসল ছবি (ক্যামেরায় তোলা) আপলোড করুন।", k_okc:"টি ঘর ঠিক আছে", k_s1:"জমা হয়েছে", k_s2:"যাচাই চলছে", k_s3:"কনফার্ম", k_sr:"ডান", k_sl:"বাম", k_su:"উপর", k_sd:"নিচ", k_dr:"ধীরে ডান দিকে মুখ ঘোরান", k_dl:"ধীরে বাম দিকে মুখ ঘোরান", k_du:"মুখ একটু উপরে তুলুন", k_dd:"মুখ একটু নিচে নামান", k_fload:"মুখ যাচাইয়ের প্রস্তুতি চলছে…", k_fcen:"মুখ ফ্রেমের মাঝে সোজা রাখুন", k_fhold:"এভাবেই স্থির থাকুন…", k_fnone:"মুখ দেখা যাচ্ছে না, ফ্রেমে আনুন", k_fok:"মুখ যাচাই সম্পন্ন", k_left:"বাকি", k_ffb:"মুখ যাচাই চালু করা যায়নি (নেট লাগে)। নিচের বাটনে চেপে ছবি তুলুন", otppaste:"কোড পেস্ট করুন", otpcb:"কোড পেস্ট করা গেল না, ঘরে চেপে ধরে পেস্ট করুন"});
+Object.assign(T.en, {k_ok:"OK", k_auto:"Hold the card in the frame, the app will take the photo by itself", k_steady:"Hold the camera steady…", k_blur:"Move closer or into light, the text must be sharp", k_chk2:"Checking the card…", k_got:"Photo taken", k_wrong:"Wrong side", k_isf:"This is the front, not the back. Show the back of the card (address side).", k_isb:"This is the back, not the front. Show the front of the card (photo and name side).", k_notid:"This is not an ID card", k_notidm:"Please provide an ID card. Keep the whole card in view, clear photo.", k_shh:"Screenshots are not allowed", k_shm:"Upload the real photo of the card taken with a camera, not a screenshot.", k_okc:" fields look right", k_s1:"Submitted", k_s2:"Reviewing", k_s3:"Confirmed", k_sr:"Right", k_sl:"Left", k_su:"Up", k_sd:"Down", k_dr:"Slowly turn your face to the right", k_dl:"Slowly turn your face to the left", k_du:"Tilt your face up a little", k_dd:"Tilt your face down a little", k_fload:"Getting face check ready…", k_fcen:"Keep your face straight in the middle of the frame", k_fhold:"Stay like this…", k_fnone:"Face not visible, bring it into the frame", k_fok:"Face check complete", k_left:"Left", k_ffb:"Face check could not start (needs internet). Use the button below to take a photo", otppaste:"Paste code", otpcb:"Could not paste, long-press the boxes and paste"});
+
+Object.assign(T.bn, {"k_sb": "পলক", "k_db": "দুইবার চোখের পলক ফেলুন", "k_frs": "সময় শেষ, ধাপগুলো আবার শুরু হলো", "k_m_h": "মুখ মেলানো হচ্ছে", "k_m_l1": "মুখ চেনার প্রস্তুতি চলছে (প্রথমবার একটু সময় লাগে)…", "k_m_l2": "NID কার্ডের ছবি থেকে মুখ খুঁজছি…", "k_m_l3": "সেলফির সাথে মিলিয়ে দেখছি…", "k_m_l4": "মুখ ঘোরানোর ছবিগুলো যাচাই হচ্ছে…", "k_m_okh": "মুখ মিলেছে", "k_m_oks": "NID-র ছবির সাথে আপনার মুখ মিলেছে। PIN দিলেই অ্যাকাউন্ট চালু হয়ে যাবে।", "k_m_rvh": "মিল ভালো, অ্যাডমিন দেখবে", "k_m_rvs": "মুখ মিলেছে, কিন্তু লাইভনেস পুরো যাচাই করা যায়নি। তাই অ্যাডমিন দেখে অ্যাকাউন্ট চালু করবে।", "k_m_lowh": "মুখ মেলেনি", "k_m_lows": "নিচের কারণগুলো ঠিক করে আবার সেলফি দিন।", "k_m_final": "২ বার চেষ্টা হয়েছে। এবার \"মেলেনি\" চিহ্নসহ অ্যাডমিনের কাছে পাঠানো হবে, অ্যাডমিন নিজে দেখে সিদ্ধান্ত নেবে।", "k_m_nmh": "স্বয়ংক্রিয় যাচাই হয়নি", "k_m_nm": "মুখ মেলানোর অংশ চালু করা যায়নি (নেট লাগে)। অ্যাডমিন হাতে মিলিয়ে দেখবে।", "k_m_try": "আবার সেলফি দিন", "k_m_card": "NID আবার তুলুন", "k_m_send": "অ্যাডমিনের কাছে পাঠান", "k_m_go": "এগিয়ে যান", "k_m_att": "চেষ্টা", "k_m_need": "চালু হতে লাগবে", "k_r_noface": "সেলফিতে মুখ পাওয়া যায়নি। মুখ ফ্রেমের মাঝখানে রাখুন।", "k_r_dark": "আলো কম, মুখ স্পষ্ট নয়। আলোর দিকে মুখ করে তুলুন।", "k_r_bright": "আলো খুব বেশি বা পেছন থেকে আসছে, মুখ সাদা হয়ে গেছে।", "k_r_blur": "ছবি ঝাপসা। ফোন স্থির রাখুন।", "k_r_far": "মুখ ছোট দেখাচ্ছে। ক্যামেরার আরও কাছে আসুন।", "k_r_cover": "মুখ ঢাকা বা অস্পষ্ট: চশমা, টুপি, মাস্ক বা হাত সরিয়ে নিন।", "k_r_card": "NID কার্ডের ছবিতে মুখ পাওয়া যায়নি। কার্ড পরিষ্কার করে আবার তুলুন, আলোর ঝলক যেন না পড়ে।", "k_r_cardq": "NID-র ছবির মুখ ঝাপসা, অন্ধকার বা ঝলকে ঢাকা। কার্ড আবার তুলুন।", "k_r_swap": "মুখ ঘোরানোর সময় একই মুখ পাওয়া যায়নি।", "k_r_live": "মুখ ঘোরানো ও চোখের পলক ঠিকমতো যাচাই হয়নি, আবার করুন।", "k_r_diff": "NID-র ছবির সাথে মুখের মিল কম। আলো ঠিক রেখে সরাসরি ক্যামেরার দিকে তাকান।", "k_limit": "আজ অনেকবার চেষ্টা হয়েছে, পরে আবার চেষ্টা করুন"});
+Object.assign(T.en, {"k_sb": "Blink", "k_db": "Blink your eyes twice", "k_frs": "Time is up, the steps start again", "k_m_h": "Matching your face", "k_m_l1": "Getting face matching ready (first time takes a moment)…", "k_m_l2": "Finding the face on your NID photo…", "k_m_l3": "Comparing with your selfie…", "k_m_l4": "Checking the photos from the head turns…", "k_m_okh": "Face matched", "k_m_oks": "Your face matches the photo on your NID. Enter your PIN and your account will be activated.", "k_m_rvh": "Good match, admin will review", "k_m_rvs": "Your face matched, but liveness could not be fully checked. The admin will review and activate your account.", "k_m_lowh": "Face did not match", "k_m_lows": "Fix the points below and take the selfie again.", "k_m_final": "You have tried twice. It will now go to the admin marked \"not matched\" and the admin will decide.", "k_m_nmh": "Automatic check not done", "k_m_nm": "Face matching could not start (needs internet). The admin will check by hand.", "k_m_try": "Take selfie again", "k_m_card": "Retake NID", "k_m_send": "Send to admin", "k_m_go": "Continue", "k_m_att": "Try", "k_m_need": "needed to activate", "k_r_noface": "No face found in the selfie. Keep your face in the middle of the frame.", "k_r_dark": "Too dark, your face is not clear. Face the light.", "k_r_bright": "Too bright or light from behind, your face is washed out.", "k_r_blur": "The photo is blurry. Hold the phone steady.", "k_r_far": "Your face looks small. Move closer to the camera.", "k_r_cover": "Face is covered or unclear: remove glasses, cap, mask or hand.", "k_r_card": "No face found on the NID photo. Retake the card clearly, with no glare.", "k_r_cardq": "The face on the NID is blurry, dark or hidden by glare. Retake the card.", "k_r_swap": "The same face was not found during the head turns.", "k_r_live": "Head turns and blink were not checked properly, try again.", "k_r_diff": "Low match with the NID photo. Keep good light and look straight at the camera.", "k_limit": "Too many tries today, please try again later"});
+const K = {open:false, step:"intro", flow:false, d:{name:"", father:"", dob:"", nid:"", addr:""}, front:"", back:"", selfie:"", pv:"", reason:"", busy:false, reading:false, fail:false, pg:{front:0, back:0}, msg:"", err:"", p1:null, p2:null, pre:{}, vbusy:false, auto:false, at:0,
+  /* v2.20: মুখ মেলানো */ live:null, cardOnly:false, mres:null, mrun:false, mid:0, tries:0, cardDesc:null, cardThumb:"", cardQ:null, desc:null};
 let KS = null;
 const KI = {
   kn:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
@@ -1586,8 +1609,8 @@ function kycSync() {
 function kycClose(wipe) {
   kcamStop();
   const e = document.getElementById("kyc"); if (e) e.remove();
-  K.open = false; K.flow = false; K.step = "intro"; K.pv = ""; K.busy = false; K.reading = false;
-  if (wipe) { K.front = K.back = K.selfie = ""; K.d = {name:"", father:"", dob:"", nid:"", addr:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; }
+  K.open = false; K.flow = false; K.step = "intro"; K.pv = ""; K.busy = false; K.reading = false; K.auto = false; K.vbusy = false; clearTimeout(K.at);
+  if (wipe) { kWorkerStop(); if (KFL) { try { KFL.close(); } catch (e) {} KFL = null; KFLp = null; } K.pre = {}; K.front = K.back = K.selfie = ""; K.d = {name:"", father:"", dob:"", nid:"", addr:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; }
   sbar();
 }
 function kSb() {
@@ -1606,6 +1629,7 @@ function kycRender() {
   kSb();
   if (["front", "back", "face"].includes(K.step) && !K.pv) setTimeout(kcamInit, 80);
   if (K.step === "info" && K.reading) kInfoStart();
+  if (K.step === "match" && !K.mres && !K.mrun) kMatchRun();
   if (K.step === "pin") setTimeout(() => { const f = document.getElementById("kpin"); if (f) { try { f.focus(); } catch (e) {} } }, 320);
 }
 function kHtml() {
@@ -1614,6 +1638,7 @@ function kHtml() {
   if (s === "front" || s === "back") return kScan(s);
   if (s === "info") return kInfo();
   if (s === "face") return kFace();
+  if (s === "match") return kMatch();
   if (s === "pin") return kPin();
   if (s === "wait") return kWait();
   return kOk();
@@ -1630,10 +1655,18 @@ function kIntro() {
     <div class="kcard kc2">${li("ki", "k_l1")}${li("face", "k_l2")}${li("pin", "k_l3")}</div><p class="knote">${t("k_note")}</p></div>
     <div class="kbtm"><button class="kbtn" onclick="kStart()">${t(K.reason ? "k_again" : "k_start")}</button><button class="klk" onclick="logout()">${t("logout")}</button></div></div>`;
 }
-function kStart() { hap(); K.flow = true; K.pv = ""; K.front = K.back = K.selfie = ""; K.err = ""; K.step = "front"; kycRender(); }
+function kStart() { hap(); K.flow = true; K.pv = ""; K.front = K.back = K.selfie = ""; K.err = ""; K.pre = {}; K.auto = false; K.vbusy = false; K.step = "front"; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; kWorker(); kycRender(); }
 
-/* ----- ক্যামেরা ----- */
-function kcamStop() { if (KS) { try { KS.getTracks().forEach(x => x.stop()); } catch (e) {} KS = null; } }
+/* ----- ক্যামেরা (v2.19: ভিডিও-লোগো বন্ধ, অটো ছবি তোলা, বাছাই-যাচাই) ----- */
+const KPOST = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+const kVid = () => `<video id="kvid" poster="${KPOST}" playsinline muted autoplay disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback"></video>`;
+const KA = {tm: 0, mt: 0, cv: null, prev: null, ok: 0, none: 0, busy: false, pause: 0};
+const KFc = {on: false, tm: 0, st: 0, base: null, bs: [], hold: 0, lost: 0, shot: "", done: [0, 0, 0, 0], last: "", ord: ["right", "left", "up", "blink"], fr: [], t0: 0, rs: 0, bl: {c: false, n: 0}, nob: false};
+let KFL = null, KFLp = null, KFLbad = false, KQ = Promise.resolve(), KCUR = "", KWp = null, KWbad = 0;
+function kcamStop() {
+  kAutoStop(); kFaceStop();
+  if (KS) { try { KS.getTracks().forEach(x => x.stop()); } catch (e) {} KS = null; }
+}
 async function kcamInit() {
   const v = document.getElementById("kvid"); if (!v) return;
   const face = K.step === "face";
@@ -1641,8 +1674,9 @@ async function kcamInit() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error("NOCAM");
     KS = await navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: face ? "user" : "environment"}, width: {ideal: 1920}, height: {ideal: 1080}}, audio: false});
     if (!document.getElementById("kvid")) { kcamStop(); return; }
-    v.srcObject = KS; await v.play();
-  } catch (e) { kcamStop(); const n = document.getElementById("knc"); if (n) n.textContent = t("k_nocam"); }
+    v.srcObject = KS; await v.play(); v.classList.add("on");
+    if (face) kFaceStart(); else kAutoStart();
+  } catch (e) { kcamStop(); const n = document.getElementById("knc"); if (n) n.textContent = t("k_nocam"); kManualShow(); }
 }
 function kShrink(src, max, q) {
   const w = src.videoWidth || src.naturalWidth || src.width, h = src.videoHeight || src.naturalHeight || src.height, k = Math.min(1, max / Math.max(w, h));
@@ -1650,33 +1684,149 @@ function kShrink(src, max, q) {
   c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
   return c.toDataURL("image/jpeg", q);
 }
+const kSt = (k) => { const e = document.getElementById("kst"); if (e) e.textContent = t(k); };
+function kManualShow() { const s = document.querySelector("#kyc .ksh"); if (s) s.classList.add("man"); }
+/* ছবির অবস্থা-পপআপ */
+function kPop(title, msg) {
+  const el = document.getElementById("kyc"); if (!el) return;
+  KA.pause = Infinity; const o = document.getElementById("kpop"); if (o) o.remove();
+  const d = document.createElement("div"); d.className = "kpop"; d.id = "kpop";
+  d.innerHTML = `<div class="kpb"><div class="kpi">!</div><h3>${esc(title)}</h3><p>${esc(msg)}</p><button class="kbtn" onclick="kPopOk()">${t("k_ok")}</button></div>`;
+  el.appendChild(d); hap("HEAVY");
+}
+function kPopOk() { const o = document.getElementById("kpop"); if (o) o.remove(); KA.pause = Date.now() + 1200; hap(); }
+/* ম্যানুয়াল শাটার */
 function kSnap() {
   const v = document.getElementById("kvid");
   if (!v || !v.videoWidth) { toast(t("k_nocam")); return; }
-  hap("MEDIUM"); K.pv = kShrink(v, 1800, .86); kcamStop(); kycRender();
+  hap("MEDIUM"); K.pv = kShrink(v, 1800, .86); K.auto = false; kcamStop();
+  if (K.step === "face") { kycRender(); return; }
+  K.vbusy = true; K.pre[K.step] = ""; kycRender(); kVal();
+}
+/* গ্যালারি থেকে আপলোড: পুরো ছবিই নেওয়া হয়, ক্রপ নেই */
+async function kIsShot(f, im) {
+  const nm = String(f.name || ""), png = /png/i.test(f.type || "");
+  if (/screenshot|screen[_ \-]?shot|স্ক্রিনশট/i.test(nm) || png) return true;
+  let exif = false;
+  try { const b = new Uint8Array(await f.slice(0, 65536).arrayBuffer()); for (let i = 0; i < b.length - 4; i++) { if (b[i] === 69 && b[i + 1] === 120 && b[i + 2] === 105 && b[i + 3] === 102) { exif = true; break; } } } catch (e) {}
+  const d = window.devicePixelRatio || 1, sw = screen.width * d, sh = screen.height * d, w = im.naturalWidth, h = im.naturalHeight;
+  const asp = Math.max(w, h) / Math.min(w, h), sa = Math.max(sw, sh) / Math.min(sw, sh);
+  return !exif && h > w && Math.abs(asp - sa) / sa < .03;
 }
 function kFile(inp) {
   const f = inp.files && inp.files[0]; if (!f) return;
-  const u = URL.createObjectURL(f), im = new Image();
-  im.onload = () => { K.pv = kShrink(im, 1800, .86); URL.revokeObjectURL(u); kcamStop(); kycRender(); };
+  const u = URL.createObjectURL(f), im = new Image(), side = K.step;
+  im.onload = async () => {
+    let shot = false; try { shot = await kIsShot(f, im); } catch (e) {}
+    if (K.step !== side) { URL.revokeObjectURL(u); return; }
+    if (shot) { URL.revokeObjectURL(u); try { inp.value = ""; } catch (e) {} kPop(t("k_shh"), t("k_shm")); return; }
+    K.pv = kShrink(im, 1800, .86); URL.revokeObjectURL(u); K.auto = false; K.pre[side] = ""; kcamStop(); K.vbusy = true; kycRender(); kVal();
+  };
   im.onerror = () => { URL.revokeObjectURL(u); toast(t("k_nocam")); };
   im.src = u;
 }
-function kRetake() { hap(); K.pv = ""; kycRender(); }
+function kRetake() { hap(); clearTimeout(K.at); K.pv = ""; K.auto = false; K.vbusy = false; kycRender(); }
 function kScan(side) {
   const fr = side === "front", pv = K.pv;
-  return `<div class="kcam">${pv ? `<img class="kpvi" src="${pv}" alt="">` : `<video id="kvid" playsinline muted autoplay></video>`}
-    <div class="kfr${pv ? " dn" : ""}"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>${pv ? "" : '<u class="kln"></u>'}</div>
-    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t(fr ? "k_front" : "k_back")}</b><em>${fr ? 1 : 2}/2</em></div>
-    <div class="kbt">${pv ? "" : `<p>${t(fr ? "k_hf" : "k_hb")}</p>`}
-      ${pv ? `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kUse()">${t("k_use")}</button></div>`
+  const chip = pv && K.vbusy ? `<div class="kchk"><i class="kspin"></i><span>${t("k_chk2")}</span></div>` : pv && K.auto ? `<div class="kchk gd">${tickSvg}<span>${t("k_got")}</span></div>` : "";
+  return `<div class="kcam">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid()}
+    <div class="kfr${pv && !K.vbusy ? " dn" : ""}"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>${pv ? "" : '<u class="kln"></u>'}</div>
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t(fr ? "k_front" : "k_back")}</b><em>${fr ? 1 : 2}/2</em></div>${chip}
+    <div class="kbt">${pv ? "" : `<p id="kst">${t("k_auto")}</p>`}
+      ${pv ? (K.vbusy ? "" : `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kUse()">${t("k_use")}</button></div>`)
         : `<div class="ksh"><label class="kgal">${kic("gal")}<input type="file" accept="image/*" hidden onchange="kFile(this)"></label><button class="kshut" aria-label="${t("k_snap")}" onclick="kSnap()"><i></i></button><span class="kgal sp"></span></div>`}
       <small class="knc" id="knc"></small></div></div>`;
 }
 function kUse() {
-  hap();
-  if (K.step === "front") { K.front = K.pv; K.pv = ""; K.pg.front = 0; K.p1 = kRead(K.front, "front"); K.step = "back"; }
+  hap(); clearTimeout(K.at); K.auto = false;
+  if (K.step === "front" && K.cardOnly) { K.front = K.pv; K.pv = ""; K.cardOnly = false; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.mres = null; K.desc = null; K.step = "match"; kycRender(); return; }
+  if (K.step === "front") { K.front = K.pv; K.pv = ""; K.pg.front = 0; K.p1 = kRead(K.front, "front"); K.step = "back"; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.mres = null; kFaceModel(); kFA(); }
   else { K.back = K.pv; K.pv = ""; K.pg.back = 0; K.p2 = kRead(K.back, "back"); K.step = "info"; K.reading = true; }
+  kycRender();
+}
+/* ----- অটো ছবি তোলা: ফ্রেমের ভেতরের কার্ড স্থির ও পরিষ্কার হলে নিজেই পড়ে দেখে সামনে/পেছনে মিলিয়ে ছবি তোলে ----- */
+function kAutoStart() {
+  kAutoStop(); KA.ok = 0; KA.none = 0; KA.prev = null; KA.busy = false; KA.pause = 0; kWorker();
+  KA.tm = setInterval(kAutoTick, 420); KA.mt = setTimeout(kManualShow, 9000);
+}
+function kAutoStop() { clearInterval(KA.tm); clearTimeout(KA.mt); KA.tm = 0; KA.busy = false; }
+function kRegion(v, pad) {
+  const cam = document.querySelector("#kyc .kcam"), fr = document.querySelector("#kyc .kfr"); if (!cam || !fr) return null;
+  const cr = cam.getBoundingClientRect(), r = fr.getBoundingClientRect(), vw = v.videoWidth, vh = v.videoHeight, s = Math.max(cr.width / vw, cr.height / vh);
+  const ox = (vw * s - cr.width) / 2, oy = (vh * s - cr.height) / 2;
+  let x = (r.left - cr.left + ox) / s, y = (r.top - cr.top + oy) / s, w = r.width / s, h = r.height / s;
+  const px = w * pad, py = h * pad; x -= px; y -= py; w += 2 * px; h += 2 * py;
+  x = Math.max(0, x); y = Math.max(0, y); w = Math.min(vw - x, w); h = Math.min(vh - y, h);
+  return {x, y, w, h};
+}
+function kRegCanvas(v, pad, max) {
+  const R = kRegion(v, pad) || {x: 0, y: 0, w: v.videoWidth, h: v.videoHeight}, k = Math.min(1, max / Math.max(R.w, R.h));
+  const c = document.createElement("canvas"); c.width = Math.round(R.w * k); c.height = Math.round(R.h * k);
+  const g = c.getContext("2d"); try { g.filter = "grayscale(1) contrast(1.35)"; } catch (e) {} g.drawImage(v, R.x, R.y, R.w, R.h, 0, 0, c.width, c.height); return c;
+}
+function kMet(v) {
+  const R = kRegion(v, 0); if (!R || R.w < 10) return null;
+  const W = 240, H = Math.max(40, Math.round(W * R.h / R.w)), c = KA.cv || (KA.cv = document.createElement("canvas")); c.width = W; c.height = H;
+  const g = c.getContext("2d", {willReadFrequently: true}); g.drawImage(v, R.x, R.y, R.w, R.h, 0, 0, W, H);
+  const d = g.getImageData(0, 0, W, H).data, n = W * H, gr = new Uint8Array(n); let sum = 0;
+  for (let i = 0, j = 0; j < n; i += 4, j++) { const y = (d[i] * 77 + d[i + 1] * 150 + d[i + 2] * 29) >> 8; gr[j] = y; sum += y; }
+  let lap = 0, lap2 = 0, edge = 0, cnt = 0;
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+    const i = y * W + x, l = 4 * gr[i] - gr[i - 1] - gr[i + 1] - gr[i - W] - gr[i + W]; lap += l; lap2 += l * l; cnt++;
+    if (Math.abs(gr[i + 1] - gr[i - 1]) + Math.abs(gr[i + W] - gr[i - W]) > 60) edge++;
+  }
+  const m = lap / cnt; let diff = 99;
+  if (KA.prev && KA.prev.length === n) { diff = 0; for (let i = 0; i < n; i += 3) diff += Math.abs(gr[i] - KA.prev[i]); diff /= n / 3; }
+  KA.prev = gr;
+  return {mean: sum / n, sharp: lap2 / cnt - m * m, edge: edge / cnt, diff};
+}
+async function kAutoTick() {
+  if (KA.busy || Date.now() < KA.pause) return;
+  const v = document.getElementById("kvid"), s = K.step;
+  if (!v || !v.videoWidth || K.pv || (s !== "front" && s !== "back")) return;
+  const m = kMet(v); if (!m) return;
+  const good = m.mean > 45 && m.mean < 245 && m.sharp > 60 && m.edge > .035 && m.edge < .7 && m.diff < 9;
+  if (!good) { KA.ok = 0; kSt(m.diff >= 9 ? "k_steady" : m.sharp <= 60 ? "k_blur" : "k_auto"); return; }
+  if (++KA.ok < 3) { kSt("k_steady"); return; }
+  KA.ok = 0; KA.busy = true; kSt("k_chk2");
+  const txt = await kOcrText(kRegCanvas(v, .06, 1400), "");
+  if (K.step !== s || K.pv) { KA.busy = false; return; }
+  if (txt === null) { KA.busy = false; KA.pause = Date.now() + 3000; kSt("k_auto"); kManualShow(); return; }
+  const c = kClass(txt);
+  if (c === s) { KA.none = 0; kAutoGot(v, txt, s); return; }
+  KA.busy = false;
+  if (c === "front" || c === "back") { KA.none = 0; kPop(t("k_wrong"), t(c === "front" ? "k_isf" : "k_isb")); return; }
+  if (c === "none" && ++KA.none >= 2) { KA.none = 0; kPop(t("k_notid"), t("k_notidm")); return; }
+  KA.pause = Date.now() + 600; kSt("k_auto");
+}
+function kAutoGot(v, txt, s) {
+  const img = kShrink(v, 1800, .86);
+  K.pre[s] = txt; K.pv = img; K.auto = true; K.vbusy = false; hap("MEDIUM"); kycRender();
+  K.at = setTimeout(() => { if (K.pv === img && K.step === s && K.auto) kUse(); }, 1500);
+}
+/* ছবি পড়ে সামনে/পেছনের দিক চেনা */
+function kClass(raw) {
+  const s = String(raw || "");
+  const F = [/\bName\b/i, /Date\s*of\s*Birth|Birth\b/i, /নাম/, /পিতা/, /মাতা/, /National\s*ID/i, /জাতীয়\s*পরিচয়/, /ID\s*NO/i, /গণপ্রজাতন্ত্রী/, /People'?s\s*Republic|Government\s*of/i, /সরকার/, /জন্ম\s*তারিখ/];
+  const B = [/ঠিকানা|ঠিকা/, /রক্ত|Blood/i, /জন্মস্থান|Place\s*of\s*Birth/i, /মুদ্রণ|Printing/i, /কর্তৃপক্ষ|Authority|Issuing/i, /স্বাক্ষর/, /ডাকঘর|কুড়াই/, /Address/i];
+  const fs = F.filter(r => r.test(s)).length, bs = B.filter(r => r.test(s)).length;
+  if (fs >= 2 && fs > bs) return "front";
+  if (bs >= 1 && bs > fs) return "back";
+  if (fs + bs === 0) return "none";
+  return "weak";
+}
+function kReject(a, b) { K.pv = ""; K.vbusy = false; K.auto = false; K.pre[K.step] = ""; kycRender(); kPop(t(a), t(b)); }
+async function kVal() {
+  const s = K.step, img = K.pv; let txt = null;
+  try { txt = await kOcrText(await kPrep(img, 1500), ""); } catch (e) {}
+  if (K.pv !== img || K.step !== s) return;
+  K.vbusy = false;
+  if (txt !== null) {
+    const c = kClass(txt);
+    if (c === "none") { kReject("k_notid", "k_notidm"); return; }
+    if ((c === "front" || c === "back") && c !== s) { kReject("k_wrong", c === "front" ? "k_isf" : "k_isb"); return; }
+    K.pre[s] = txt;
+  }
   kycRender();
 }
 
@@ -1688,11 +1838,31 @@ function kTess() {
     s.onload = () => (window.Tesseract ? ok(window.Tesseract) : no(new Error("OCR"))); s.onerror = () => no(new Error("OCR")); document.head.appendChild(s);
   });
 }
-function kPrep(src) {
+function kWorker() {
+  if (KWp) return KWp;
+  if (KWbad >= 2) return Promise.resolve(null);
+  KWp = (async () => {
+    try {
+      const T0 = await kTess();
+      return await T0.createWorker(["ben", "eng"], 1, {logger: (m) => { if (m && m.status === "recognizing text" && KCUR) { K.pg[KCUR] = m.progress || 0; kPct(); } }});
+    } catch (e) { KWbad++; KWp = null; console.log("ocr", e && e.message); return null; }
+  })();
+  return KWp;
+}
+function kWorkerStop() { if (KWp) { KWp.then(w => { if (w) w.terminate(); }).catch(() => {}); KWp = null; } }
+function kOcrText(cv, side) {
+  const run = async () => {
+    const w = await kWorker(); if (!w) return null; KCUR = side || "";
+    try { const r = await Promise.race([w.recognize(cv), new Promise((_, no) => setTimeout(() => no(new Error("SLOW")), 80000))]); return (r && r.data && r.data.text) || ""; }
+    catch (e) { console.log("ocr", e && e.message); return null; } finally { KCUR = ""; }
+  };
+  const p = KQ.then(run, run); KQ = p.catch(() => {}); return p;
+}
+function kPrep(src, max) {
   return new Promise((ok, no) => {
     const im = new Image();
     im.onload = () => {
-      const k = Math.min(1, 1800 / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement("canvas");
+      const k = Math.min(1, (max || 1800) / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement("canvas");
       c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
       const g = c.getContext("2d"); try { g.filter = "grayscale(1) contrast(1.35)"; } catch (e) {} g.drawImage(im, 0, 0, c.width, c.height); ok(c);
     };
@@ -1705,11 +1875,10 @@ function kPct() {
 }
 async function kRead(img, side) {
   try {
-    const T0 = await kTess(), cv = await kPrep(img);
-    const job = T0.recognize(cv, "ben+eng", {logger: (m) => { if (m && m.status === "recognizing text") { K.pg[side] = m.progress || 0; kPct(); } }});
-    const r = await Promise.race([job, new Promise((_, no) => setTimeout(() => no(new Error("SLOW")), 90000))]);
+    let txt = K.pre[side];
+    if (txt == null || txt === "") { txt = await kOcrText(await kPrep(img, 1800), side); if (txt === null) throw new Error("NOOCR"); }
     K.pg[side] = 1; kPct();
-    return kParse((r && r.data && r.data.text) || "", side);
+    return kParse(txt, side);
   } catch (e) { console.log("ocr", e && e.message); K.pg[side] = 1; kPct(); return {fail: true}; }
 }
 const kClean = (s) => String(s || "").replace(/[^ঀ-৿A-Za-z0-9 ,.\-\/()]/g, " ").replace(/\s+/g, " ").trim();
@@ -1738,7 +1907,8 @@ function kParse(raw, side) {
   return o;
 }
 
-/* ----- তথ্য পাতা ----- */
+
+/* ----- তথ্য পাতা: ঠিক হলে সবুজ টিক, ভুল/খালি হলে লাল ক্রস ----- */
 async function kInfoStart() {
   const [a, b] = await Promise.all([K.p1, K.p2]);
   if (K.step !== "info") return;
@@ -1747,38 +1917,153 @@ async function kInfoStart() {
   K.reading = false; hap("MEDIUM"); kycRender();
 }
 const KF = [["name", "k_nm", "kn"], ["father", "k_fa", "kf"], ["dob", "k_dob", "kd"], ["nid", "k_nid", "ki"], ["addr", "k_ad", "ka"]];
+const KV = {
+  name: (v) => String(v || "").trim().length >= 2,
+  father: (v) => String(v || "").trim().length >= 2,
+  dob: (v) => /\d/.test(v || "") && String(v || "").trim().length >= 6,
+  nid: (v) => [10, 13, 17].includes(String(v || "").length),
+  addr: (v) => String(v || "").trim().length >= 4
+};
+const kTickI = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const kCrossI = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>';
+const kOkN = () => KF.filter(([k]) => KV[k](K.d[k])).length;
 function kInfo() {
   if (K.reading) return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="krd"><div class="kscn"><svg viewBox="0 0 200 126" aria-hidden="true"><rect x="3" y="3" width="194" height="120" rx="14" fill="#fff" stroke="#e2136e" stroke-width="3"/><circle cx="44" cy="50" r="15" fill="#fde7f1"/><path d="M80 38h86M80 56h70M80 74h80M26 98h140" stroke="#f0a3c6" stroke-width="6" stroke-linecap="round"/></svg><u></u></div><b>${t("k_readd")}</b><span id="kpct">0%</span><div class="kbar"><i id="kbi"></i></div><small>${t("k_readw")}</small></div></div>`;
-  const rows = KF.map(([k, lb, ik], n) => {
-    const v = K.d[k] || "";
+  const n = kOkN();
+  const rows = KF.map(([k, lb, ik], i) => {
+    const v = K.d[k] || "", ok = KV[k](v);
     const inp = k === "addr" ? `<textarea id="kv_${k}" rows="2" placeholder="${t("k_miss")}" oninput="kSet('${k}',this)">${esc(v)}</textarea>`
       : `<input id="kv_${k}" value="${esc(v)}" placeholder="${t("k_miss")}" ${k === "nid" ? 'inputmode="numeric" maxlength="17"' : 'maxlength="80"'} oninput="kSet('${k}',this)">`;
-    return `<div class="kf" style="--n:${n}"><div class="kfi">${kic(ik)}</div><div class="kfb"><label>${t(lb)}</label>${inp}</div><i class="kt2 ${v ? "ok" : "no"}">${v ? tickSvg : "!"}</i></div>`;
+    return `<div class="kf ${ok ? "gd" : "bd"}" style="--n:${i}"><div class="kfi">${kic(ik)}</div><div class="kfb"><label>${t(lb)}</label>${inp}</div><i class="kt2 ${ok ? "gd" : "no"}">${ok ? kTickI : kCrossI}</i></div>`;
   }).join("");
-  return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="kbody"><p class="ksubt">${t(K.fail ? "k_ocrfail" : "k_infos")}</p>${rows}<div class="le kle">${esc(K.err)}</div></div>
+  return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="kbody"><div class="ksum"><div><b id="ksn">${n}/5</b><span>${t("k_okc")}</span></div><div class="kbar"><i id="ksb2" style="width:${n * 20}%"></i></div></div>
+    <p class="ksubt">${t(K.fail ? "k_ocrfail" : "k_infos")}</p>${rows}<div class="le kle">${esc(K.err)}</div></div>
     <div class="kbtm"><button class="kbtn" onclick="kInfoNext()">${t("k_next")}</button></div></div>`;
 }
 function kSet(k, el) {
   let v = el.value; if (k === "nid") { v = digs(v, 17); if (el.value !== v) el.value = v; }
   K.d[k] = v;
-  const tk = el.closest(".kf").querySelector(".kt2"), ok = v.trim().length > 0; tk.className = "kt2 " + (ok ? "ok" : "no"); tk.innerHTML = ok ? tickSvg : "!";
+  const row = el.closest(".kf"), tk = row.querySelector(".kt2"), ok = KV[k](v);
+  tk.className = "kt2 " + (ok ? "gd" : "no"); tk.style.animation = "none"; tk.style.transform = "scale(1)"; tk.innerHTML = ok ? kTickI : kCrossI;
+  row.classList.toggle("gd", ok); row.classList.toggle("bd", !ok);
+  const n = kOkN(), a = document.getElementById("ksn"), b = document.getElementById("ksb2"); if (a) a.textContent = n + "/5"; if (b) b.style.width = n * 20 + "%";
 }
 function kInfoNext() {
   const d = K.d, le = document.querySelector(".kle");
-  const bad = ["name", "father", "dob", "addr"].some(k => String(d[k] || "").trim().length < 2) ? t("k_bad") : ![10, 13, 17].includes(String(d.nid || "").length) ? t("k_badnid") : "";
+  const bad = ["name", "father", "dob", "addr"].some(k => !KV[k](d[k])) ? t("k_bad") : !KV.nid(d.nid) ? t("k_badnid") : "";
   if (bad) { K.err = bad; if (le) le.textContent = bad; hap("HEAVY"); return; }
   hap(); K.err = ""; K.pv = ""; K.step = "face"; kycRender();
 }
 
-/* ----- মুখ যাচাই ----- */
+/* ----- মুখ যাচাই: ডান → বাম → উপর → নিচ, ক্যামেরায় সরাসরি মুখের অবস্থান দেখে ----- */
+async function kFaceModel() {
+  if (KFL) return KFL; if (KFLbad) return null;
+  if (!KFLp) KFLp = (async () => {
+    try {
+      const base = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+      const M = await import(base + "/vision_bundle.mjs"), fs = await M.FilesetResolver.forVisionTasks(base + "/wasm");
+      const mk = (d) => M.FaceLandmarker.createFromOptions(fs, {baseOptions: {modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task", delegate: d}, runningMode: "VIDEO", numFaces: 1, outputFaceBlendshapes: true});
+      try { KFL = await mk("GPU"); } catch (e) { KFL = await mk("CPU"); }
+      return KFL;
+    } catch (e) { console.log("face", e && e.message); KFLbad = true; KFLp = null; return null; }
+  })();
+  return KFLp;
+}
+/* v2.20: লাইভনেস চ্যালেঞ্জ এখন এলোমেলো ক্রমে (৩টি মুখ ঘোরানো + ১টি চোখের পলক), সময়সীমা আছে, প্রতি ধাপে ছবি রেখে পরে একই মুখ কিনা মেলানো হয় */
+const KALL = ["right", "left", "up", "down"];
+const KSKM = {right: "k_sr", left: "k_sl", up: "k_su", down: "k_sd", blink: "k_sb"}, KDKM = {right: "k_dr", left: "k_dl", up: "k_du", down: "k_dd", blink: "k_db"};
+const KARR = {right: "M5 12h14M13 6l6 6-6 6", left: "M19 12H5M11 6l-6 6 6 6", up: "M12 19V5M6 11l6-6 6 6", down: "M12 5v14M6 13l6 6 6-6", blink: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 100-6 3 3 0 000 6z"};
+const KLIMIT = 40000;
+function kRnd(n) { try { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; } catch (e) { return Math.floor(Math.random() * n); } }
+function kFaceOrd() {
+  const a = KALL.slice(); for (let i = a.length - 1; i > 0; i--) { const j = kRnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+  const o = a.slice(0, 3); o.splice(kRnd(4), 0, "blink"); return o;
+}
+function kFaceStop() { KFc.on = false; clearTimeout(KFc.tm); }
+function kFaceMsg(k) { if (KFc.last !== k) { KFc.last = k; kSt(k); } }
+function kFaceUI() {
+  KFc.ord.forEach((s, i) => { const e = document.getElementById("kpl" + i); if (e) e.className = "kpl" + (KFc.done[i] ? " dn2" : i === KFc.st ? " on" : ""); });
+  const a = document.getElementById("kfarr"), c = KFc.ord[KFc.st];
+  if (a) { a.className = "kfarr" + (c ? " " + c : " h"); a.innerHTML = c ? `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="${KARR[c]}"/></svg>` : ""; }
+}
+function kFaceProg(p) {
+  const b = document.getElementById("kfp"), c = document.getElementById("kfpc"), x = Math.max(0, Math.min(100, Math.round(p * 100)));
+  if (b) b.style.width = x + "%"; if (c) c.textContent = x >= 100 ? "✓" : t("k_left") + " " + (100 - x) + "%";
+}
+async function kFaceStart() {
+  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
+  kFaceMsg("k_fload"); kFaceUI();
+  const m = await kFaceModel();
+  if (!KFc.on || K.step !== "face" || K.pv) return;
+  if (!m) { kFaceMsg("k_ffb"); kManualShow(); return; }
+  kFaceMsg("k_fcen"); kFaceLoop();
+}
+function kFaceLoop() {
+  if (!KFc.on || K.step !== "face" || K.pv) return;
+  KFc.tm = setTimeout(kFaceLoop, 70);
+  const v = document.getElementById("kvid"); if (!v || !v.videoWidth || v.readyState < 2) return;
+  let res; try { res = KFL.detectForVideo(v, performance.now()); } catch (e) { return; }
+  const L = res && res.faceLandmarks && res.faceLandmarks[0];
+  if (!L) { if (++KFc.lost > 12) { KFc.hold = 0; KFc.bs = []; kFaceMsg("k_fnone"); } return; }
+  KFc.lost = 0;
+  const nose = L[1], xa = L[234].x, xb = L[454].x, xl = Math.min(xa, xb), xr = Math.max(xa, xb), fh = L[10], ch = L[152];
+  const w = xr - xl, yaw = (nose.x - xl) / w, pit = (nose.y - fh.y) / (ch.y - fh.y), cx = (xl + xr) / 2, cy = (fh.y + ch.y) / 2;
+  const fit = Math.abs(cx - .5) < .14 && Math.abs(cy - .45) < .17 && w > .26 && w < .85;
+  /* চোখের পলক: ব্লেন্ডশেপ স্কোর (০ = খোলা, ১ = বন্ধ) */
+  let blink = -1; const bsh = res.faceBlendshapes && res.faceBlendshapes[0] && res.faceBlendshapes[0].categories;
+  if (bsh && bsh.length) { const g = (n) => { const c = bsh.find(x => x.categoryName === n); return c ? c.score : 0; }; blink = (g("eyeBlinkLeft") + g("eyeBlinkRight")) / 2; }
+  if (KFc.st < 0) {
+    if (fit && Math.abs(yaw - .5) < .09 && (blink < 0 || blink < .3)) {
+      KFc.bs.push({yaw, pit});
+      if (KFc.bs.length >= 8) {
+        KFc.base = {yaw: KFc.bs.reduce((a, b) => a + b.yaw, 0) / KFc.bs.length, pit: KFc.bs.reduce((a, b) => a + b.pit, 0) / KFc.bs.length};
+        KFc.shot = kShrink(v, 1400, .9); KFc.st = 0; KFc.hold = 0; KFc.t0 = Date.now(); KFc.bl = {c: false, n: 0}; hap("MEDIUM"); kFaceUI(); kFaceMsg(KDKM[KFc.ord[0]]); kFaceProg(0);
+      } else kFaceMsg("k_fhold");
+    } else { KFc.bs = []; kFaceMsg("k_fcen"); }
+    return;
+  }
+  /* সময়সীমা: ৪০ সেকেন্ডে শেষ না হলে ধাপগুলো আবার প্রথম থেকে */
+  if (Date.now() - KFc.t0 > KLIMIT) {
+    KFc.rs++; KFc.st = 0; KFc.done = [0, 0, 0, 0]; KFc.hold = 0; KFc.fr = []; KFc.bl = {c: false, n: 0}; KFc.t0 = Date.now(); KFc.last = "";
+    hap("HEAVY"); kFaceUI(); kFaceMsg("k_frs"); kFaceProg(0); return;
+  }
+  if (!fit) { KFc.hold = 0; kFaceMsg("k_fcen"); return; }
+  const b = KFc.base, st = KFc.st, cur = KFc.ord[st];
+  kFaceMsg(KDKM[cur]);
+  let p = 0, done = false;
+  if (cur === "blink") {
+    if (blink < 0) { KFc.nob = true; done = true; p = 1; }
+    else {
+      if (blink > .5 && !KFc.bl.c) KFc.bl.c = true;
+      else if (blink < .25 && KFc.bl.c) { KFc.bl.c = false; KFc.bl.n++; hap(); }
+      p = Math.min(1, KFc.bl.n / 2) + (KFc.bl.c ? .2 : 0); p = Math.min(p, KFc.bl.n >= 2 ? 1 : .95); done = KFc.bl.n >= 2;
+    }
+  } else {
+    p = {right: (b.yaw - yaw) / .12, left: (yaw - b.yaw) / .12, up: (b.pit - pit) / .06, down: (pit - b.pit) / .07}[cur];
+    if (p >= 1) { if (++KFc.hold >= 4) done = true; } else KFc.hold = 0;
+  }
+  kFaceProg(p);
+  if (!done) return;
+  KFc.fr.push(kShrink(v, 480, .8)); KFc.done[st] = 1; KFc.st = st + 1; KFc.hold = 0; KFc.bl = {c: false, n: 0}; hap("MEDIUM"); kFaceUI();
+  if (KFc.st > 3) { kFaceFinish(); return; }
+  kFaceMsg(KDKM[KFc.ord[KFc.st]]); kFaceProg(0);
+}
+function kFaceFinish() {
+  KFc.on = false; clearTimeout(KFc.tm); K.selfie = KFc.shot; kFaceMsg("k_fok"); kFaceProg(1);
+  K.live = {ok: !KFc.nob, mode: "live", ord: KFc.ord.slice(), ms: Date.now() - KFc.t0, rs: KFc.rs, fr: KFc.fr.slice()};
+  K.mres = null; K.desc = null;
+  const u = document.getElementById("kou"); if (u) u.classList.add("dn"); const o = document.querySelector("#kyc .kov"); if (o) o.classList.add("fin");
+  const a = document.getElementById("kfarr"); if (a) a.className = "kfarr h";
+  setTimeout(() => { if (K.step === "face") { K.pv = ""; K.step = "match"; K.err = ""; kycRender(); } }, 1200);
+}
 function kFace() {
-  const pv = K.pv;
-  return `<div class="kcam">${pv ? `<img class="kpvi" src="${pv}" alt="">` : `<video id="kvid" class="mir" playsinline muted autoplay></video>`}
-    <div class="kov"><u class="${pv ? "dn" : ""}"></u></div><div class="kcnt" id="kcnt"></div>
-    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t("k_face")}</b><em>3/4</em></div>
-    <div class="kbt">${pv ? "" : `<p>${t("k_faceh")}</p>`}
-      ${pv ? `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kFaceUse()">${t("k_use")}</button></div>`
-        : `<div class="ksh"><span class="kgal sp"></span><button class="kshut" aria-label="${t("k_snap")}" onclick="kFaceCount()"><i></i></button><label class="kgal">${kic("gal")}<input type="file" accept="image/*" capture="user" hidden onchange="kFile(this)"></label></div>`}
+  const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
+  const pills = KFc.ord.map((s, i) => `<span class="kpl" id="kpl${i}"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="${KARR[s]}"/></svg></i><b>${t(KSKM[s])}</b><u>${kTickI}</u></span>`).join("");
+  return `<div class="kcam">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}
+    <div class="kov"><u id="kou" class="${pv ? "dn" : ""}"></u><div class="kfok">${kTickI}</div></div><div class="kcnt" id="kcnt"></div>
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t("k_face")}</b><em>3/4</em></div>${pv ? "" : `<div class="kpls">${pills}</div><div class="kfarr h" id="kfarr"></div>`}
+    <div class="kbt">${pv ? `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kFaceUse()">${t("k_use")}</button></div>`
+      : `<p id="kst" class="kfm">${t("k_fload")}</p><div class="kfbar"><i id="kfp"></i></div><div class="kfpc" id="kfpc"></div><div class="ksh"><span class="kgal sp"></span><button class="kshut" aria-label="${t("k_snap")}" onclick="kFaceCount()"><i></i></button><span class="kgal sp"></span></div>`}
       <small class="knc" id="knc"></small></div></div>`;
 }
 function kFaceCount() {
@@ -1793,7 +2078,145 @@ function kFaceCount() {
   };
   tick();
 }
-function kFaceUse() { hap(); K.selfie = K.pv; K.pv = ""; K.step = "pin"; K.err = ""; kycRender(); }
+function kFaceUse() { hap(); K.selfie = K.pv; K.pv = ""; K.live = {ok: false, mode: "manual", ord: [], ms: 0, rs: 0, fr: []}; K.mres = null; K.desc = null; K.step = "match"; K.err = ""; kycRender(); }
+
+/* ----- v2.20: NID-র ছবির মুখের সাথে সেলফি মেলানো (পুরোটা ফোনের ভেতরে, face-api) -----
+   মিল % = দুই মুখের "দূরত্ব" থেকে হিসাব। ৮৫% মানে দূরত্ব ০.৪৫ বা তার কম (face-api এর সাধারণ সীমা ০.৬ এর চেয়ে কড়া)।
+   সার্ভারের SQL (update-v2.20-kyc-auto.sql) একই হিসাব নিজে আবার করে, তাই এই ধাপ সরাসরি অ্যাকাউন্ট চালু করতে পারে না। */
+const KM = {AUTO: 85, SWAP: .62, VER: "1.7.12"};
+const KMB = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@" + KM.VER;
+const KMA = [[0, 100], [.30, 98], [.45, 85], [.60, 50], [.80, 10], [1, 0]];
+let KFA = null, KFAp = null, KFAbad = 0;
+function kFA() {
+  if (KFA) return Promise.resolve(KFA);
+  if (KFAbad >= 2) return Promise.resolve(null);
+  if (!KFAp) KFAp = (async () => {
+    try {
+      if (!window.faceapi) await new Promise((ok, no) => { const s = document.createElement("script"); s.src = KMB + "/dist/face-api.js"; s.onload = ok; s.onerror = () => no(new Error("FA")); document.head.appendChild(s); });
+      const f = window.faceapi; if (!f) throw new Error("FA");
+      try { await f.tf.setBackend("webgl"); } catch (e) {}
+      try { await f.tf.ready(); } catch (e) {}
+      const u = KMB + "/model/";
+      await Promise.all([f.nets.ssdMobilenetv1.loadFromUri(u), f.nets.tinyFaceDetector.loadFromUri(u), f.nets.faceLandmark68Net.loadFromUri(u), f.nets.faceRecognitionNet.loadFromUri(u)]);
+      KFA = f; return f;
+    } catch (e) { KFAbad++; KFAp = null; console.log("fa", e && e.message); return null; }
+  })();
+  return KFAp;
+}
+const kImg = (src) => new Promise((ok, no) => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => no(new Error("IMG")); im.src = src; });
+const kDist = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) { const x = a[i] - b[i]; s += x * x; } return Math.sqrt(s); };
+function kFacePct(d) {
+  if (!(d > 0)) return 100;
+  for (let i = 1; i < KMA.length; i++) if (d <= KMA[i][0]) { const a = KMA[i - 1], b = KMA[i]; return Math.round((a[1] + (b[1] - a[1]) * (d - a[0]) / (b[0] - a[0])) * 10) / 10; }
+  return 0;
+}
+/* ছবির একটা অংশ কেটে নতুন canvas (ছোট/বড় করে) */
+function kCrop(src, box, outW) {
+  const W = src.naturalWidth || src.videoWidth || src.width, H = src.naturalHeight || src.videoHeight || src.height;
+  const x = Math.max(0, box.x), y = Math.max(0, box.y), w = Math.max(8, Math.min(W - x, box.w)), h = Math.max(8, Math.min(H - y, box.h));
+  const c = document.createElement("canvas"); c.width = Math.round(outW); c.height = Math.max(8, Math.round(outW * h / w));
+  c.getContext("2d").drawImage(src, x, y, w, h, 0, 0, c.width, c.height); return c;
+}
+const kGrow = (b, k) => ({x: b.x - b.width * (k - 1) / 2, y: b.y - b.height * (k - 1) / 2, w: b.width * k, h: b.height * k});
+/* মুখের এলাকার মান: আলো, ঝাপসা ভাব, ঝলক */
+function kQual(src, b) {
+  const c = kCrop(src, kGrow(b, 1.15), 160), g = c.getContext("2d", {willReadFrequently: true}), W = c.width, H = c.height, d = g.getImageData(0, 0, W, H).data, n = W * H, gr = new Uint8Array(n);
+  let sum = 0, clip = 0; for (let i = 0, j = 0; j < n; i += 4, j++) { const y = (d[i] * 77 + d[i + 1] * 150 + d[i + 2] * 29) >> 8; gr[j] = y; sum += y; if (y > 245) clip++; }
+  let lap = 0, lap2 = 0, cnt = 0; for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) { const i = y * W + x, l = 4 * gr[i] - gr[i - 1] - gr[i + 1] - gr[i - W] - gr[i + W]; lap += l; lap2 += l * l; cnt++; }
+  const m = lap / cnt; return {mean: sum / n, sharp: lap2 / cnt - m * m, clip: clip / n};
+}
+/* সবচেয়ে বড় ও নিশ্চিত মুখটি নেওয়া */
+async function kDet(f, input, kind) {
+  const o = kind === "tiny" ? new f.TinyFaceDetectorOptions({inputSize: 320, scoreThreshold: .4}) : new f.SsdMobilenetv1Options({minConfidence: .3, maxResults: 6});
+  const all = await f.detectAllFaces(input, o).withFaceLandmarks().withFaceDescriptors(); if (!all || !all.length) return null;
+  all.sort((a, b) => b.detection.score * b.detection.box.area - a.detection.score * a.detection.box.area);
+  const r = all[0], bx = r.detection.box; return {desc: Array.from(r.descriptor), score: r.detection.score, box: {x: bx.x, y: bx.y, width: bx.width, height: bx.height}};
+}
+/* NID কার্ডের ছবির মুখ: প্রথমে পুরো ছবিতে, না পেলে বাঁ দিকটা বড় করে খোঁজা; পেলে মুখ কেটে বড় করে আবার হিসাব (ছোট ছাপা ছবিতে নির্ভুলতা বাড়ে) */
+async function kCardFace(f, src) {
+  const im = await kImg(src), W = im.naturalWidth, H = im.naturalHeight; let base = im, r = await kDet(f, im, "ssd");
+  if (!r) { base = kCrop(im, {x: 0, y: 0, w: W * .55, h: H}, 1000); r = await kDet(f, base, "ssd"); }
+  if (!r) return null;
+  const g = kGrow(r.box, 1.7), c2 = kCrop(base, g, 480); let best = r, bb = base, ob = null;
+  try { const r2 = await kDet(f, c2, "ssd"); if (r2 && r2.score >= r.score - .12) { best = r2; bb = c2; } } catch (e) {}
+  const q = kQual(bb, best.box), th = kCrop(bb, kGrow(best.box, 1.5), 160).toDataURL("image/jpeg", .82);
+  return {desc: best.desc, thumb: th, q, score: best.score};
+}
+const kRound = (a) => a.map(x => Math.round(x * 1e4) / 1e4);
+const kMs = (k) => { const e = document.getElementById("kmst"); if (e) e.textContent = t(k); };
+async function kMatchRun() {
+  if (K.mrun) return; K.mrun = true; const id = ++K.mid, live = () => K.step === "match" && K.mid === id;
+  const R = {st: "low", pct: 0, rs: [], card: K.cardThumb || "", self: "", cardBad: false, d: null};
+  const fin = () => { if (!live()) return; K.mres = R; K.mrun = false; hap(R.st === "ok" ? "MEDIUM" : "HEAVY"); kycRender(); };
+  try {
+    kMs("k_m_l1"); const f = await kFA(); if (!live()) return;
+    if (!f) { R.st = "nomodel"; K.desc = null; return fin(); }
+    kMs("k_m_l2");
+    if (!K.cardDesc) { const c = await kCardFace(f, K.front); if (!live()) return; if (c) { K.cardDesc = c.desc; K.cardThumb = c.thumb; K.cardQ = c.q; } }
+    R.card = K.cardThumb || "";
+    kMs("k_m_l3");
+    const sim = await kImg(K.selfie), s = await kDet(f, sim, "ssd"); if (!live()) return;
+    if (s) R.self = kCrop(sim, kGrow(s.box, 1.5), 160).toDataURL("image/jpeg", .82);
+    /* লাইভনেসের ধাপে তোলা ছবিগুলোতে একই মুখ আছে কিনা */
+    kMs("k_m_l4");
+    const sw = {ok: false, n: 0, max: 0};
+    if (s && K.live && K.live.ok) {
+      for (const fr of K.live.fr) { if (!live()) return; try { const q = await kDet(f, await kImg(fr), "tiny"); if (!q) continue; sw.n++; sw.max = Math.max(sw.max, kDist(q.desc, s.desc)); } catch (e) {} }
+      sw.ok = sw.n >= 2 && sw.max <= KM.SWAP;
+    }
+    K.live = Object.assign({}, K.live, {swap_ok: sw.ok, swap_n: sw.n, swap_max: Math.round(sw.max * 1000) / 1000});
+    if (K.cardDesc && s) { R.d = kDist(K.cardDesc, s.desc); R.pct = kFacePct(R.d); K.desc = {card: kRound(K.cardDesc), selfie: kRound(s.desc)}; } else K.desc = null;
+    const liveOn = !!(K.live && K.live.ok);
+    if (R.pct >= KM.AUTO && liveOn && sw.ok) R.st = "ok";
+    else if (R.pct >= KM.AUTO && !liveOn) R.st = "review";
+    else R.st = "low";
+    if (R.st === "low") {
+      const rs = R.rs;
+      if (!s) rs.push("k_r_noface");
+      else {
+        const q = kQual(sim, s.box);
+        if (q.mean < 70) rs.push("k_r_dark"); else if (q.mean > 205 || q.clip > .22) rs.push("k_r_bright");
+        if (q.sharp < 20) rs.push("k_r_blur");
+        if (s.box.width / sim.naturalWidth < .2) rs.push("k_r_far");
+        if (s.score < .8) rs.push("k_r_cover");
+      }
+      if (!K.cardDesc) { rs.push("k_r_card"); R.cardBad = true; }
+      else if (K.cardQ && (K.cardQ.clip > .25 || K.cardQ.sharp < 12 || K.cardQ.mean < 55)) { rs.push("k_r_cardq"); R.cardBad = true; }
+      if (liveOn && s && !sw.ok) rs.push(sw.n < 2 ? "k_r_live" : "k_r_swap");
+      if (!rs.length) rs.push("k_r_diff");
+      K.tries++;
+    }
+    return fin();
+  } catch (e) {
+    console.log("match", e && e.message); R.st = "nomodel"; K.desc = null; return fin();
+  } finally { if (K.mid === id) K.mrun = false; }
+}
+function kRing(pct, col) {
+  const c = 2 * Math.PI * 60, off = c * (1 - Math.max(0, Math.min(100, pct)) / 100);
+  return `<svg class="kmr" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="#f3c4da" stroke-width="9"/><circle cx="70" cy="70" r="60" fill="none" stroke="${col}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 70 70)" style="--c:${c.toFixed(1)};--o:${off.toFixed(1)}"/></svg>`;
+}
+function kMatch() {
+  const R = K.mres, th = (src, cls) => `<div class="kmf${cls || ""}">${src ? `<img src="${src}" alt="">` : kic("face")}</div>`;
+  if (!R) return `<div class="kw">${kTop(t("k_face"), "", 3)}<div class="kbody"><div class="kcard kc1 kmx"><div class="kmp">${th(K.cardThumb, " sc")}<i class="kml"></i>${th("", " sc")}</div><h2>${t("k_m_h")}</h2><p id="kmst">${t("k_m_l1")}</p><div class="kbar"><i class="kmind"></i></div></div></div></div>`;
+  const ok = R.st === "ok", rv = R.st === "review", nm = R.st === "nomodel", fin = !ok && !rv && !nm && K.tries >= 2;
+  const col = ok ? "#12a15b" : rv ? "#e8a20c" : "#e5484d", pctTxt = R.d === null ? "—" : Math.round(R.pct) + "%";
+  const h = ok ? "k_m_okh" : rv ? "k_m_rvh" : nm ? "k_m_nmh" : "k_m_lowh", sub = ok ? "k_m_oks" : rv ? "k_m_rvs" : nm ? "k_m_nm" : fin ? "k_m_final" : "k_m_lows";
+  const why = !ok && !rv && !nm ? `<div class="kmwy">${R.rs.map(k => `<div class="kmri">${kic("info") || ""}<span>${t(k)}</span></div>`).join("")}</div>` : "";
+  const btns = ok || rv ? `<button class="kbtn" onclick="kMatchGo()">${t(ok ? "k_m_go" : "k_m_send")}</button>`
+    : nm || fin ? `<button class="kbtn" onclick="kMatchGo()">${t("k_m_send")}</button>${fin ? `<button class="klk" onclick="kMatchRetry(0)">${t("k_m_try")}</button>` : ""}`
+    : `<button class="kbtn" onclick="kMatchRetry(0)">${t("k_m_try")}</button>${R.cardBad ? `<button class="klk" onclick="kMatchRetry(1)">${t("k_m_card")}</button>` : ""}`;
+  return `<div class="kw">${kTop(t("k_face"), "kBack()", 3)}<div class="kbody"><div class="kcard kc1 kmx">
+    <div class="kmp">${th(R.card)}<div class="kmc" style="--c:${col}"><div class="kmrw">${kRing(R.d === null ? 0 : R.pct, col)}<b style="color:${col}">${pctTxt}</b></div></div>${th(R.self)}</div>
+    <h2>${t(h)}</h2><p>${t(sub)}</p>${R.d !== null ? `<small class="kmt">${t("k_m_att")} ${Math.min(K.tries + (ok || rv ? 1 : 0), 2) || 1}/2 · ${t("k_m_need")} ${KM.AUTO}%</small>` : ""}${why}</div></div>
+    <div class="kbtm">${btns}</div></div>`;
+}
+function kMatchGo() { hap(); K.err = ""; K.step = "pin"; kycRender(); }
+function kMatchRetry(card) {
+  hap(); K.pv = "";
+  if (card) { K.cardOnly = true; K.step = "front"; }
+  else { K.mres = null; K.selfie = ""; K.live = null; K.desc = null; K.step = "face"; }
+  kycRender();
+}
 
 /* ----- PIN ও জমা ----- */
 function kPin() {
@@ -1826,17 +2249,27 @@ async function kSubmit() {
   K.busy = true; const sb = document.getElementById("ksb"); if (sb) sb.classList.add("ld"); if (le) le.textContent = "";
   const fail = (e) => { K.busy = false; kMsg(""); const b = document.getElementById("ksb"); if (b) b.classList.remove("ld"); const l2 = document.getElementById("kle"); if (l2) l2.textContent = errMsg(e); K.err = l2 ? l2.textContent : ""; hap("HEAVY"); const f = document.getElementById("kpin"); if (f) { f.value = ""; } };
   try { await signIn(S.me.phone, pin); } catch (e) { return fail(e); }
-  const base = S.uid + "/" + Date.now(), P3 = {front: base + "-front.jpg", back: base + "-back.jpg", selfie: base + "-selfie.jpg"};
+  let r = null; const base = S.uid + "/" + Date.now(), P3 = {front: base + "-front.jpg", back: base + "-back.jpg", selfie: base + "-selfie.jpg"};
   try {
     kMsg(t("k_up"));
     await kUpload(P3.front, K.front); await kUpload(P3.back, K.back); await kUpload(P3.selfie, K.selfie);
     kMsg(t("k_up2"));
-    const d = K.d;
-    await api("/rest/v1/rpc/submit_kyc", {m: "POST", tries: 1, b: {p_name: d.name.trim(), p_father: d.father.trim(), p_dob: d.dob.trim(), p_nid: d.nid, p_addr: d.addr.trim(), p_front: P3.front, p_back: P3.back, p_selfie: P3.selfie}});
+    const d = K.d, base1 = {p_name: d.name.trim(), p_father: d.father.trim(), p_dob: d.dob.trim(), p_nid: d.nid, p_addr: d.addr.trim(), p_front: P3.front, p_back: P3.back, p_selfie: P3.selfie};
+    const lv = K.live || {}, dc = K.desc, R = K.mres || {};
+    const b2 = Object.assign({}, base1, {p_card_desc: dc ? dc.card : null, p_selfie_desc: dc ? dc.selfie : null,
+      p_live: {ok: !!lv.ok, mode: lv.mode || "", ord: lv.ord || [], ms: lv.ms || 0, rs: lv.rs || 0, swap_ok: !!lv.swap_ok, swap_n: lv.swap_n || 0, swap_max: lv.swap_max || 0, pct: R.d === null || R.d === undefined ? null : R.pct, st: R.st || ""},
+      p_tries: K.tries, p_mismatch: !!(R.st && R.st !== "ok")});
+    try { r = await api("/rest/v1/rpc/submit_kyc2", {m: "POST", tries: 1, b: b2}); }
+    catch (e) {
+      /* v2.20 SQL চালানো না থাকলে পুরনো পথে জমা (অ্যাডমিন হাতে যাচাই করবে) */
+      if (/could not find the function|schema cache|PGRST202/i.test((e && e.message) || "")) r = await api("/rest/v1/rpc/submit_kyc", {m: "POST", tries: 1, b: base1}); else throw e;
+    }
   } catch (e) { return fail(e); }
-  K.busy = false; K.flow = false; K.msg = ""; K.err = ""; K.front = K.back = K.selfie = ""; K.p1 = K.p2 = null;
-  if (S.me) { S.me.kyc_status = "pending"; S.me.kyc_reason = null; }
-  kycNotify("submitted"); hap("MEDIUM"); K.step = "wait"; kycRender();
+  const auto = !!(r && typeof r === "object" && r.status === "approved");
+  K.busy = false; K.flow = false; K.msg = ""; K.err = ""; K.front = K.back = K.selfie = ""; K.p1 = K.p2 = null; K.live = null; K.mres = null; K.desc = null; K.tries = 0; K.cardDesc = null; K.cardThumb = "";
+  if (S.me) { S.me.kyc_status = auto ? "approved" : "pending"; S.me.kyc_reason = null; }
+  if (!auto) kycNotify("submitted");
+  hap("MEDIUM"); K.step = auto ? "ok" : "wait"; kycRender();
 }
 /* অ্যাডমিনকে Telegram এ খবর (Edge Function "kyc-notify" না থাকলে চুপচাপ বাদ যায়) */
 function kycNotify(action, id) {
@@ -1848,7 +2281,10 @@ function kycNotify(action, id) {
 
 /* ----- অপেক্ষা ও সফল পাতা ----- */
 function kWait() {
-  return `<div class="kw">${kTop(t("k_title"), "", -1)}<div class="kdone"><div class="kcir wt"><svg viewBox="0 0 24 24"><path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9s8 4 8 9"/></svg></div>
+  const face = `<div class="kfv"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="62" fill="none" stroke="#f3c4da" stroke-width="5"/><circle class="kfr2" cx="70" cy="70" r="62" fill="none" stroke="#e2136e" stroke-width="5" stroke-linecap="round" pathLength="100" transform="rotate(-90 70 70)"/><g class="kfa"><ellipse cx="70" cy="70" rx="28" ry="35" fill="#fde7f1" stroke="#e2136e" stroke-width="3.5"/><circle cx="60" cy="63" r="3.4" fill="#e2136e"/><circle cx="80" cy="63" r="3.4" fill="#e2136e"/><path d="M70 66v9l-4 3" fill="none" stroke="#e2136e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M60 87q10 7 20 0" fill="none" stroke="#e2136e" stroke-width="3" stroke-linecap="round"/></g><g class="kfc"><circle cx="70" cy="70" r="40" fill="#12a15b"/><path d="M52 71l13 13 24-27" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div>`;
+  const n = (c, ic, lb) => `<div class="n ${c}"><i>${ic}</i><span>${t(lb)}</span></div>`;
+  const stages = `<div class="kst3">${n("done", kTickI, "k_s1")}<s class="full"></s>${n("act", '<em class="kdot"></em>', "k_s2")}<s class="run"></s>${n("", "3", "k_s3")}</div>`;
+  return `<div class="kw">${kTop(t("k_title"), "", -1)}<div class="kdone">${face}${stages}
     <h2>${t("k_wh")}</h2><p>${t("k_ws")}</p></div>
     <div class="kbtm"><button class="kbtn" id="kck" onclick="kCheck()">${t("k_chk")}</button><button class="klk" onclick="logout()">${t("logout")}</button></div></div>`;
 }
@@ -1866,11 +2302,12 @@ function kBack() {
   hap();
   if (K.busy && K.step !== "face") return;
   const s = K.step;
-  if (s === "front") { if (K.pv) { K.pv = ""; kycRender(); return; } K.flow = false; K.step = "intro"; }
+  if (s === "front") { if (K.pv) { K.pv = ""; kycRender(); return; } if (K.cardOnly) { K.cardOnly = false; K.step = "match"; kycRender(); return; } K.flow = false; K.step = "intro"; }
   else if (s === "back") { K.pv = ""; K.step = "front"; }
   else if (s === "info") { K.pv = ""; K.reading = false; K.step = "back"; }
   else if (s === "face") { K.pv = ""; K.step = "info"; }
-  else if (s === "pin") { K.pv = ""; K.step = "face"; }
+  else if (s === "match") { if (K.mrun) return; K.mres = null; K.pv = ""; K.step = "face"; }
+  else if (s === "pin") { K.pv = ""; K.step = K.mres ? "match" : "face"; }
   else return;
   kycRender();
 }
@@ -1903,7 +2340,7 @@ try {
   let bgAt = 0;
   if (A) {
     A.addListener("backButton", () => {
-      if (K.open) { if (["front", "back", "info", "face", "pin"].includes(K.step)) kBack(); else A.exitApp(); return; }
+      if (K.open) { if (["front", "back", "info", "face", "match", "pin"].includes(K.step)) kBack(); else A.exitApp(); return; }
       if (S.sheet && !S.sheet.done && (S.sheet.step || 1) > 1 && !S.upd) { backStep(); return; }
       if (S.sheet || S.upd) { closeS(); return; }
       if (!S.auth && CONFIGURED && (S.view === "reg" || S.view === "ph" || S.phone)) { hap(); if (S.view === "reg") S.view = "ph"; else if (S.view === "ph") S.view = ""; else { S.phone = ""; S.pin = ""; S.view = "ph"; } render(); return; }
