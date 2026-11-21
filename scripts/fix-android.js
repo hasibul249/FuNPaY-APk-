@@ -21,7 +21,7 @@ fs.writeFileSync(g, p);
 const m = "android/app/src/main/AndroidManifest.xml";
 if (fs.existsSync(m)) {
   let x = fs.readFileSync(m, "utf8");
-  ["android.permission.CAMERA", "android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT", "android.permission.VIBRATE", "android.permission.POST_NOTIFICATIONS"].forEach((perm) => {
+  ["android.permission.CAMERA", "android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT", "android.permission.VIBRATE", "android.permission.POST_NOTIFICATIONS", "android.permission.READ_CONTACTS"].forEach((perm) => {
     if (!x.includes(perm)) x = x.replace("</manifest>", `    <uses-permission android:name="${perm}" />\n</manifest>`);
   });
   fs.writeFileSync(m, x);

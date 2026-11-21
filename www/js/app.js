@@ -168,7 +168,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.22"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.24"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -347,7 +347,7 @@ async function signUp(phone, pin, name) {
   setSess(j);
 }
 async function refreshTok() { setSess(await api("/auth/v1/token?grant_type=refresh_token", {m: "POST", auth: false, b: {refresh_token: S.rt}})); }
-function errMsg(e) {
+function errMsg0(e) {
   const m = (e && e.message) || "";
   const sid = S.sheet && S.sheet.id;
   const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh", OTPBAD:"otpbad", OTPEXP:"otpexp", OTPMANY:"otpmany", OTPWAIT:"otpwait", OTPLIM:"otplim", OTPSMS:"otpsms", BADPHONE:"badn", KYC:"k_lock", BADNID:"k_badnid", NIDUSED:"k_used", UPLOAD:"k_upf", KYCSTATE:"k_state", BADDATA:"k_bad", KYCLIMIT:"k_limit"}[m];
@@ -885,7 +885,7 @@ function peek(b) {
 
 function dot(e) { const st = e.children.length > 1 ? e.children[1].offsetLeft - e.children[0].offsetLeft : e.clientWidth, i = Math.round(e.scrollLeft / st); document.querySelectorAll(".dts i").forEach((d, j) => d.className = j === i ? "on" : ""); }
 /* ---------- লেনদেনের ফর্ম: ধাপ 1 = তথ্য, ধাপ 2 = যাচাই + PIN, শেষে সফল পেজ ---------- */
-function openS(id, pre, rn) {
+function openS0(id, pre, rn) {
   if (!WIRED.includes(id)) { hap(); toast(t("soon")); return; }
   const c = cfg(id), s1 = !!(c.k || c.ch), jump = !!(pre && rn !== undefined && c.k === "n" && isPh(pre));
   hap(); S.sheet = {id, step: jump || !s1 ? 2 : 1, s1, v: pre || "", ch: "", a: "", pin: "", err: "", done: false, fresh: true, fxs: false, rn: jump ? rn : "", busy: false, cp: null}; renderSheet();
@@ -926,7 +926,7 @@ const wrapPage = (s, title, back, body, foot) => `<div class="sh pgx${s.fresh ? 
 const feeOf = (c, amt) => Math.round((c.fee || 0) * amt * 100) / 100;
 const tickSvg = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const PERSON = ["send", "pay", "cash"];
-function sheetHtml() {
+function sheetHtml0() {
   const s = S.sheet, c = cfg(s.id), d = c.d || -1, person = PERSON.includes(s.id);
   if (s.done) {
     const num = s.v ? esc(s.v) : "";
@@ -1027,7 +1027,7 @@ function srchIn(el) {
   const l = document.getElementById("clist"); if (l) l.innerHTML = contactRows(s);
   const e = document.getElementById("er"); if (e) e.textContent = "";
 }
-async function nextStep() {
+async function nextStep0() {
   sync();
   const s = S.sheet; if (!s || s.busy) return;
   const c = cfg(s.id), d = c.d || -1;
@@ -1232,13 +1232,16 @@ async function claimCoupon() {
 
 async function confirmTx() {
   const s = S.sheet; if (!s || s.busy || s.step !== 4) return;
-  const c = cfg(s.id), d = c.d || -1, amt = parseFloat(s.a), fee = feeOf(c, amt), pin = s.pin || "", dsc = s.id === "pay" ? cpDisc(s.cp, amt) : 0;
+  const gd = !!(s.grp && s.grp.diff), gsum = gd ? gSum(s) : 0;
+  const c = cfg(s.id), d = c.d || -1, amt = gd ? gsum / s.grp.sel.length : parseFloat(s.a), fee = feeOf(c, amt), pin = s.pin || "", dsc = s.id === "pay" ? cpDisc(s.cp, amt) : 0;
   const fail = (m) => { s.busy = false; if (S.sheet !== s) return; s.pin = ""; s.err = m; renderSheet(); shakeBox(); };
   s.busy = true; { const hb = document.getElementById("hold"); if (hb) hb.classList.add("ld"); }
   const R = (fn, b) => api("/rest/v1/rpc/" + fn, {m: "POST", b});
   let trx;
   try {
-    if (s.id === "send") trx = await R("send_money", {p_to: s.v, p_amount: amt, p_type: s.id});
+    if (s.id === "send" && s.grp) { const rr = gd ? await R("send_group2", {p_to: s.grp.sel, p_amounts: s.grp.sel.map(x => Number(s.grp.amts[x])), p_note: s.note || null, p_card: s.card || null}) : await R("send_group", {p_to: s.grp.sel, p_amount: amt, p_note: s.note || null, p_card: s.card || null}); trx = rr[0]; }
+    else if (s.id === "send" && (s.note || s.card)) trx = await R("send_money2", {p_to: s.v, p_amount: amt, p_note: s.note || null, p_card: s.card || null});
+    else if (s.id === "send") trx = await R("send_money", {p_to: s.v, p_amount: amt, p_type: s.id});
     else if (s.id === "pay") trx = await R("pay_merchant", {p_to: s.v, p_amount: amt, p_uc: s.cp ? s.cp.uc_id : null});
     else if (s.id === "cash") trx = await R("cash_out", {p_agent: s.v, p_amount: amt});
     else if (s.id === "add") trx = await R("add_test_money", {p_amount: amt});
@@ -1249,6 +1252,7 @@ async function confirmTx() {
   }
   s.busy = false; S.mine.add(trx);
   S.sheet = {id: s.id, done: true, total: d < 0 ? amt + fee - dsc : amt, amt, fee, disc: dsc, trx, v: s.v, rn: s.rn, ch: s.ch, at: new Date().toISOString(), fresh: false, fxs: true, nb: d < 0 ? S.bal - (amt + fee - dsc) : S.bal + amt};
+  { const mul = s.id === "send" && s.grp ? s.grp.sel.length : 1; if (mul > 1) { const tt = gd ? gsum : amt * mul; Object.assign(S.sheet, {total: tt, amt: tt, nb: S.bal - tt, rn: t("g_gdone") + " · " + mul + " " + t("g_people"), v: ""}); } }
   if (dsc && S.cps) S.cps = S.cps.filter(k => !s.cp || k.uc_id !== s.cp.uc_id);
   hap("MEDIUM"); renderSheet(); refresh(); nfOwn(S.sheet);
 }
@@ -1476,7 +1480,7 @@ function trdRows(x) {
   R.push([t("trx"), esc(x.trx), null, x.trx], [t("at"), fmt(x.created_at)]);
   return R;
 }
-function trdHtml() {
+function trdHtml0() {
   const s = S.sheet, x = s.x, v = tv(x);
   const out = x.from_id === S.uid, nm = out ? x.to_name : x.from_name, ph = out ? x.to_phone : x.from_phone;
   const R = trdRows(x).filter(r => r[0] !== t("svc"));
@@ -1624,7 +1628,7 @@ Object.assign(T.en, {k_ok:"OK", k_auto:"Hold the card in the frame, the app will
 
 Object.assign(T.bn, {"k_sb": "পলক", "k_db": "দুইবার চোখের পলক ফেলুন", "k_frs": "সময় শেষ, ধাপগুলো আবার শুরু হলো", "k_m_h": "মুখ মেলানো হচ্ছে", "k_m_l1": "মুখ চেনার প্রস্তুতি চলছে (প্রথমবার একটু সময় লাগে)…", "k_m_l2": "NID কার্ডের ছবি থেকে মুখ খুঁজছি…", "k_m_l3": "সেলফির সাথে মিলিয়ে দেখছি…", "k_m_l4": "মুখ ঘোরানোর ছবিগুলো যাচাই হচ্ছে…", "k_m_okh": "মুখ মিলেছে", "k_m_oks": "NID-র ছবির সাথে আপনার মুখ মিলেছে। PIN দিলেই অ্যাকাউন্ট চালু হয়ে যাবে।", "k_m_rvh": "মিল ভালো, অ্যাডমিন দেখবে", "k_m_rvs": "মুখ মিলেছে, কিন্তু লাইভনেস পুরো যাচাই করা যায়নি। তাই অ্যাডমিন দেখে অ্যাকাউন্ট চালু করবে।", "k_m_lowh": "মুখ মেলেনি", "k_m_lows": "নিচের কারণগুলো ঠিক করে আবার সেলফি দিন।", "k_m_final": "২ বার চেষ্টা হয়েছে। এবার \"মেলেনি\" চিহ্নসহ অ্যাডমিনের কাছে পাঠানো হবে, অ্যাডমিন নিজে দেখে সিদ্ধান্ত নেবে।", "k_m_nmh": "স্বয়ংক্রিয় যাচাই হয়নি", "k_m_nm": "মুখ মেলানোর অংশ চালু করা যায়নি (নেট লাগে)। অ্যাডমিন হাতে মিলিয়ে দেখবে।", "k_m_try": "আবার সেলফি দিন", "k_m_card": "NID আবার তুলুন", "k_m_send": "অ্যাডমিনের কাছে পাঠান", "k_m_go": "এগিয়ে যান", "k_m_att": "চেষ্টা", "k_m_need": "চালু হতে লাগবে", "k_r_noface": "সেলফিতে মুখ পাওয়া যায়নি। মুখ ফ্রেমের মাঝখানে রাখুন।", "k_r_dark": "আলো কম, মুখ স্পষ্ট নয়। আলোর দিকে মুখ করে তুলুন।", "k_r_bright": "আলো খুব বেশি বা পেছন থেকে আসছে, মুখ সাদা হয়ে গেছে।", "k_r_blur": "ছবি ঝাপসা। ফোন স্থির রাখুন।", "k_r_far": "মুখ ছোট দেখাচ্ছে। ক্যামেরার আরও কাছে আসুন।", "k_r_cover": "মুখ ঢাকা বা অস্পষ্ট: চশমা, টুপি, মাস্ক বা হাত সরিয়ে নিন।", "k_r_card": "NID কার্ডের ছবিতে মুখ পাওয়া যায়নি। কার্ড পরিষ্কার করে আবার তুলুন, আলোর ঝলক যেন না পড়ে।", "k_r_cardq": "NID-র ছবির মুখ ঝাপসা, অন্ধকার বা ঝলকে ঢাকা। কার্ড আবার তুলুন।", "k_r_swap": "মুখ ঘোরানোর সময় একই মুখ পাওয়া যায়নি।", "k_r_live": "মুখ ঘোরানো ও চোখের পলক ঠিকমতো যাচাই হয়নি, আবার করুন।", "k_r_diff": "NID-র ছবির সাথে মুখের মিল কম। আলো ঠিক রেখে সরাসরি ক্যামেরার দিকে তাকান।", "k_limit": "আজ অনেকবার চেষ্টা হয়েছে, পরে আবার চেষ্টা করুন"});
 Object.assign(T.en, {"k_sb": "Blink", "k_db": "Blink your eyes twice", "k_frs": "Time is up, the steps start again", "k_m_h": "Matching your face", "k_m_l1": "Getting face matching ready (first time takes a moment)…", "k_m_l2": "Finding the face on your NID photo…", "k_m_l3": "Comparing with your selfie…", "k_m_l4": "Checking the photos from the head turns…", "k_m_okh": "Face matched", "k_m_oks": "Your face matches the photo on your NID. Enter your PIN and your account will be activated.", "k_m_rvh": "Good match, admin will review", "k_m_rvs": "Your face matched, but liveness could not be fully checked. The admin will review and activate your account.", "k_m_lowh": "Face did not match", "k_m_lows": "Fix the points below and take the selfie again.", "k_m_final": "You have tried twice. It will now go to the admin marked \"not matched\" and the admin will decide.", "k_m_nmh": "Automatic check not done", "k_m_nm": "Face matching could not start (needs internet). The admin will check by hand.", "k_m_try": "Take selfie again", "k_m_card": "Retake NID", "k_m_send": "Send to admin", "k_m_go": "Continue", "k_m_att": "Try", "k_m_need": "needed to activate", "k_r_noface": "No face found in the selfie. Keep your face in the middle of the frame.", "k_r_dark": "Too dark, your face is not clear. Face the light.", "k_r_bright": "Too bright or light from behind, your face is washed out.", "k_r_blur": "The photo is blurry. Hold the phone steady.", "k_r_far": "Your face looks small. Move closer to the camera.", "k_r_cover": "Face is covered or unclear: remove glasses, cap, mask or hand.", "k_r_card": "No face found on the NID photo. Retake the card clearly, with no glare.", "k_r_cardq": "The face on the NID is blurry, dark or hidden by glare. Retake the card.", "k_r_swap": "The same face was not found during the head turns.", "k_r_live": "Head turns and blink were not checked properly, try again.", "k_r_diff": "Low match with the NID photo. Keep good light and look straight at the camera.", "k_limit": "Too many tries today, please try again later"});
-const K = {open:false, step:"intro", flow:false, d:{name:"", father:"", dob:"", nid:"", addr:""}, front:"", back:"", selfie:"", pv:"", reason:"", busy:false, reading:false, fail:false, pg:{front:0, back:0}, msg:"", err:"", p1:null, p2:null, pre:{}, vbusy:false, auto:false, at:0,
+const K = {open:false, step:"intro", flow:false, d:{name:"", name_bn:"", father:"", mother:"", dob:"", nid:"", addr:""}, front:"", back:"", selfie:"", pv:"", reason:"", busy:false, reading:false, fail:false, pg:{front:0, back:0}, msg:"", err:"", p1:null, p2:null, pre:{}, vbusy:false, auto:false, at:0,
   /* v2.20: মুখ মেলানো */ live:null, cardOnly:false, mres:null, mrun:false, mid:0, tries:0, cardDesc:null, cardThumb:"", cardQ:null, desc:null};
 let KS = null;
 const KI = {
@@ -1655,7 +1659,7 @@ function kycClose(wipe) {
   kcamStop();
   const e = document.getElementById("kyc"); if (e) e.remove();
   K.open = false; K.flow = false; K.step = "intro"; K.pv = ""; K.busy = false; K.reading = false; K.auto = false; K.vbusy = false; clearTimeout(K.at);
-  if (wipe) { kWorkerStop(); if (KFL) { try { KFL.close(); } catch (e) {} KFL = null; KFLp = null; } K.pre = {}; K.front = K.back = K.selfie = ""; K.d = {name:"", father:"", dob:"", nid:"", addr:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.lk = {}; K.ft = 0; K.redo = false; K.manual = false; K.rep = null; K.sum = null; }
+  if (wipe) { kWorkerStop(); if (KFL) { try { KFL.close(); } catch (e) {} KFL = null; KFLp = null; } K.pre = {}; K.front = K.back = K.selfie = ""; K.d = {name:"", name_bn:"", father:"", mother:"", dob:"", nid:"", addr:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.lk = {}; K.ft = 0; K.redo = false; K.manual = false; K.rep = null; K.sum = null; }
   sbar();
 }
 function kSb() {
@@ -1707,7 +1711,7 @@ function kStart() { hap(); K.flow = true; K.pv = ""; K.front = K.back = K.selfie
 const KPOST = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 const kVid = () => `<video id="kvid" poster="${KPOST}" playsinline muted autoplay disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback"></video>`;
 const KA = {tm: 0, mt: 0, cv: null, prev: null, ok: 0, none: 0, busy: false, pause: 0};
-const KFc = {on: false, tm: 0, st: 0, base: null, bs: [], hold: 0, lost: 0, shot: "", done: [0, 0, 0, 0], last: "", ord: ["right", "left", "up", "blink"], fr: [], t0: 0, rs: 0, bl: {c: false, n: 0}, nob: false};
+const KFc = {on: false, tm: 0, st: 0, base: null, bs: [], hold: 0, lost: 0, shot: "", done: [0, 0, 0, 0, 0], last: "", ord: ["right", "left", "up", "down", "blink"], fr: [], t0: 0, rs: 0, bl: {c: false, n: 0}, nob: false};
 let KPS = {i: 0, n: 1}, KFL = null, KFLp = null, KFLbad = false, KQ = Promise.resolve(), KCUR = "", KWp = null, KWbad = 0;
 function kShrink(src, max, q) {
   const w = src.videoWidth || src.naturalWidth || src.width, h = src.videoHeight || src.naturalHeight || src.height, k = Math.min(1, max / Math.max(w, h));
@@ -1848,7 +1852,7 @@ function kNameOf(words, txtLine) {
   if (!good || letters < 4 || (tk.length === 1 && letters < 5)) return {v: "", bad: true};
   const known = cf.every(c => typeof c === "number");
   const mn = known ? Math.min.apply(null, cf) : null, av = known ? cf.reduce((a, c) => a + c, 0) / cf.length : null;
-  const sure = known && mn >= 60 && av >= 72 && (tk.length > 1 || mn >= 80);
+  const sure = known && mn >= 52 && av >= 68 && (tk.length > 1 || mn >= 78);
   return {v: tk.join(" "), sure, known};
 }
 function kNameCand(d, raw) {
@@ -1875,14 +1879,20 @@ function kDecide(reads) {
 async function kStrictFront(img, pre) {
   const reads = []; let txt = String(pre || "");
   if (pre) reads.push(kReadOf(null, pre));
-  KPS = {i: 0, n: 2};
+  KPS = {i: 0, n: 3};
   const A = await kOcrData(await kPrep(img, 1800), "front"); if (A === null && !pre) { KPS = {i: 0, n: 1}; return null; }
   if (A) { reads.push(kReadOf(A)); txt = A.text || txt; }
   let R = kDecide(reads);
   if (!R.done) {
-    KPS = {i: 1, n: 2};
+    KPS = {i: 1, n: 3};
     const B = await kOcrData(await kPrep(img, 2600, "grayscale(1) contrast(1.8) brightness(1.1)"), "front");
     if (B) { reads.push(kReadOf(B)); if (!txt) txt = B.text || ""; }
+    R = kDecide(reads);
+  }
+  if (!R.done) {
+    KPS = {i: 2, n: 3};
+    const C = await kOcrData(await kPrep(img, 2100, "grayscale(1) contrast(1.5) brightness(.96)"), "front");
+    if (C) { reads.push(kReadOf(C)); if (!txt) txt = C.text || ""; }
     R = kDecide(reads);
   }
   KPS = {i: 0, n: 1}; R.text = txt; return R;
@@ -1915,6 +1925,8 @@ function kParse(raw, side) {
   const after = (re) => { for (const l of L) { const m = l.match(re); if (m && m[1] && kClean(m[1]).length > 1) return kClean(m[1]); } return ""; };
   if (side === "front") {
     o.father = after(/পিতা\s*[:;.\-]?\s*([ঀ-৿][ঀ-৿ .]{1,})/);
+    o.mother = after(/মাতা\s*[:;.\-]?\s*([ঀ-৿][ঀ-৿ .]{1,})/);
+    o.name_bn = after(/(?:^|\s)নাম\s*[:;.\-]?\s*([ঀ-৿][ঀ-৿ .]{1,})/);
     const m = txt.match(/(\d{1,2})\s*[\- ]?\s*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[ ,.\-]*(\d{4})/i);
     if (m) o.dob = m[1].padStart(2, "0") + " " + m[2][0].toUpperCase() + m[2].slice(1, 3).toLowerCase() + " " + m[3];
     else { const n = txt.match(/\b(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})\b/); if (n) o.dob = n[1].padStart(2, "0") + "/" + n[2].padStart(2, "0") + "/" + n[3]; }
@@ -1942,7 +1954,7 @@ async function kInfoStart() {
     K.manual = true;
   }
   if (engineFail) K.manual = true;
-  [b, a].forEach(r => { if (r && !r.fail) ["father", "dob", "addr"].forEach(k => { if (r[k]) K.d[k] = r[k]; }); });
+  [b, a].forEach(r => { if (r && !r.fail) ["father", "mother", "name_bn", "dob", "addr"].forEach(k => { if (r[k]) K.d[k] = r[k]; }); });
   if (a && !a.fail && a.nid) { K.d.nid = a.nid; K.lk.nid = true; }
   if (a && !a.fail && a.name) { K.d.name = a.name; K.lk.name = true; }
   K.fail = !!K.manual;
@@ -1955,10 +1967,11 @@ function kFrontRedo() {
   K.redo = true; K.step = "front"; hap("HEAVY"); kycRender();
   setTimeout(() => { if (K.step === "front" && K.redo) kPop(t("k_sb_h"), t("k_sb_m")); }, 350);
 }
-const KF = [["name", "k_nm", "kn"], ["father", "k_fa", "kf"], ["dob", "k_dob", "kd"], ["nid", "k_nid", "ki"], ["addr", "k_ad", "ka"]];
+const KF = [["name", "k_nm", "kn"], ["father", "k_fa", "kf"], ["mother", "k_mo", "kf"], ["dob", "k_dob", "kd"], ["nid", "k_nid", "ki"], ["addr", "k_ad", "ka"]];
 const KV = {
-  name: (v) => String(v || "").trim().length >= 2,
+  name: (v) => /[A-Za-z]{2}/.test(String(v || "")) && String(v || "").trim().length >= 3,
   father: (v) => String(v || "").trim().length >= 2,
+  mother: (v) => String(v || "").trim().length >= 2,
   dob: (v) => /\d/.test(v || "") && String(v || "").trim().length >= 6,
   nid: (v) => [10, 13, 17].includes(String(v || "").length),
   addr: (v) => String(v || "").trim().length >= 4
@@ -1966,7 +1979,7 @@ const KV = {
 const kTickI = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const kCrossI = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>';
 const kOkN = () => KF.filter(([k]) => KV[k](K.d[k])).length;
-function kInfo() {
+function kInfoOld() {
   if (K.reading) return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="krd"><div class="kscn"><svg viewBox="0 0 200 126" aria-hidden="true"><rect x="3" y="3" width="194" height="120" rx="14" fill="#fff" stroke="#e2136e" stroke-width="3"/><circle cx="44" cy="50" r="15" fill="#fde7f1"/><path d="M80 38h86M80 56h70M80 74h80M26 98h140" stroke="#f0a3c6" stroke-width="6" stroke-linecap="round"/></svg><u></u></div><b>${t("k_readd")}</b><span id="kpct">0%</span><div class="kbar"><i id="kbi"></i></div><small>${t("k_readw")}</small></div></div>`;
   const n = kOkN();
   const rows = KF.map(([k, lb, ik], i) => {
@@ -2012,7 +2025,7 @@ async function kFaceModel() {
 const KALL = ["right", "left", "up", "down"];
 const KSKM = {right: "k_sr", left: "k_sl", up: "k_su", down: "k_sd", blink: "k_sb"}, KDKM = {right: "k_dr", left: "k_dl", up: "k_du", down: "k_dd", blink: "k_db"};
 const KARR = {right: "M5 12h14M13 6l6 6-6 6", left: "M19 12H5M11 6l-6 6 6 6", up: "M12 19V5M6 11l6-6 6 6", down: "M12 5v14M6 13l6 6 6-6", blink: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 100-6 3 3 0 000 6z"};
-const KLIMIT = 40000;
+const KLIMIT = 55000;
 function kRnd(n) { try { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; } catch (e) { return Math.floor(Math.random() * n); } }
 function kFaceOrd() {
   const a = KALL.slice(); for (let i = a.length - 1; i > 0; i--) { const j = kRnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
@@ -2021,7 +2034,7 @@ function kFaceOrd() {
 function kFaceStop() { KFc.on = false; clearTimeout(KFc.tm); }
 function kFaceMsg(k) { if (KFc.last !== k) { KFc.last = k; kSt(k); } }
 async function kFaceStart() {
-  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
+  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
   KFc.bn = 0; kFaceMsg("k_fload"); kFaceUI();
   const m = await kFaceModel();
   if (!KFc.on || K.step !== "face" || K.pv) return;
@@ -2030,14 +2043,14 @@ async function kFaceStart() {
 }
 function kFaceLoop() {
   if (!KFc.on || K.step !== "face" || K.pv) return;
-  KFc.tm = setTimeout(kFaceLoop, 70);
+  KFc.tm = setTimeout(kFaceLoop, 33);
   const v = document.getElementById("kvid"); if (!v || !v.videoWidth || v.readyState < 2) return;
   let res; try { res = KFL.detectForVideo(v, performance.now()); } catch (e) { return; }
   const L = res && res.faceLandmarks && res.faceLandmarks[0];
   if (!L) { if (++KFc.lost > 12) { KFc.hold = 0; KFc.bs = []; kFaceMsg("k_fnone"); } return; }
   KFc.lost = 0;
   const nose = L[1], xa = L[234].x, xb = L[454].x, xl = Math.min(xa, xb), xr = Math.max(xa, xb), fh = L[10], ch = L[152];
-  const w = xr - xl, yaw = (nose.x - xl) / w, pit = (nose.y - fh.y) / (ch.y - fh.y), cx = (xl + xr) / 2, cy = (fh.y + ch.y) / 2;
+  const w = xr - xl, yaw0 = (nose.x - xl) / w, pit0 = (nose.y - fh.y) / (ch.y - fh.y), yaw = (KFc.sy = KFc.sy == null ? yaw0 : KFc.sy + (yaw0 - KFc.sy) * .55), pit = (KFc.sp = KFc.sp == null ? pit0 : KFc.sp + (pit0 - KFc.sp) * .55), cx = (xl + xr) / 2, cy = (fh.y + ch.y) / 2;
   const fit = Math.abs(cx - .5) < .14 && Math.abs(cy - .45) < .17 && w > .26 && w < .85;
   /* চোখের পলক: ব্লেন্ডশেপ স্কোর (০ = খোলা, ১ = বন্ধ) */
   let blink = -1; const bsh = res.faceBlendshapes && res.faceBlendshapes[0] && res.faceBlendshapes[0].categories;
@@ -2054,7 +2067,7 @@ function kFaceLoop() {
   }
   /* সময়সীমা: ৪০ সেকেন্ডে শেষ না হলে ধাপগুলো আবার প্রথম থেকে */
   if (Date.now() - KFc.t0 > KLIMIT) {
-    KFc.rs++; KFc.st = 0; KFc.done = [0, 0, 0, 0]; KFc.hold = 0; KFc.fr = []; KFc.bl = {c: false, n: 0}; KFc.t0 = Date.now(); KFc.last = "";
+    KFc.rs++; KFc.st = 0; KFc.done = [0, 0, 0, 0, 0]; KFc.hold = 0; KFc.fr = []; KFc.bl = {c: false, n: 0}; KFc.t0 = Date.now(); KFc.last = "";
     hap("HEAVY"); kFaceUI(); kFaceMsg("k_frs"); kFaceProg(0); return;
   }
   if (!fit) { KFc.hold = 0; kFaceMsg("k_fcen"); return; }
@@ -2075,7 +2088,7 @@ function kFaceLoop() {
   kFaceProg(p);
   if (!done) return;
   KFc.fr.push(kShrink(v, 480, .8)); KFc.done[st] = 1; KFc.st = st + 1; KFc.hold = 0; KFc.bl = {c: false, n: 0}; hap("MEDIUM"); kFaceUI();
-  if (KFc.st > 3) { kFaceFinish(); return; }
+  if (KFc.st > 4) { kFaceFinish(); return; }
   kFaceMsg(KDKM[KFc.ord[KFc.st]]); kFaceProg(0);
 }
 function kFaceFinish() {
@@ -2286,6 +2299,7 @@ async function kSubmit() {
     }
   } catch (e) { return fail(e); }
   kUpSet(4);
+  try { if (r && r.id) api("/rest/v1/rpc/kyc_extra", {m: "POST", tries: 1, b: {p_id: r.id, p_mother: (K.d.mother || "").trim(), p_name_bn: (K.d.name_bn || "").trim()}}).catch(() => {}); } catch (e) {}
   const auto = !!(r && typeof r === "object" && r.status === "approved");
   { const R0 = K.mres || {}, nd = String(K.d.nid || ""); K.sum = {th: [K.front, K.back, K.selfie], name: K.d.name, nid: nd ? "••••••" + nd.slice(-4) : "", pct: R0.d === null || R0.d === undefined ? null : Math.round(R0.pct), auto}; }
   K.busy = false; K.flow = false; K.msg = ""; K.err = ""; K.front = K.back = K.selfie = ""; K.p1 = K.p2 = null; K.live = null; K.mres = null; K.desc = null; K.tries = 0; K.cardDesc = null; K.cardThumb = "";
@@ -2388,7 +2402,7 @@ async function kcamGet(face) {
   const f = face ? "user" : "environment";
   if (KS && KSf === f && KS.getVideoTracks().some(x => x.readyState === "live")) return KS;
   if (KS) { try { KS.getTracks().forEach(x => x.stop()); } catch (e) {} KS = null; KSf = ""; }
-  const tries = [{video: {facingMode: {ideal: f}, width: {ideal: 1280}, height: {ideal: 720}}, audio: false}, {video: {facingMode: f}, audio: false}, {video: true, audio: false}];
+  const tries = [face ? {video: {facingMode: {ideal: f}, width: {ideal: 640}, height: {ideal: 480}, frameRate: {ideal: 30, max: 30}}, audio: false} : {video: {facingMode: {ideal: f}, width: {ideal: 1280}, height: {ideal: 720}}, audio: false}, {video: {facingMode: f}, audio: false}, {video: true, audio: false}];
   let err;
   for (const c of tries) {
     try { KS = await navigator.mediaDevices.getUserMedia(c); KSf = f; return KS; }
@@ -2558,7 +2572,7 @@ function kRingArc(id, a1, a2) {
 }
 function kFaceUI() {
   const wr = document.getElementById("kwr"), c = KFc.ord[KFc.st];
-  for (let i = 0; i < 4; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
+  for (let i = 0; i < 5; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
   KFc.ord.forEach((s, i) => {
     if (s === "blink") return;
     const a = document.getElementById("kra" + KDM[s]); if (!a) return;
@@ -2800,4 +2814,565 @@ function kSumHtml() {
   const th = (src) => `<div class="kth"><img src="${src}" alt=""></div>`;
   const row = (lb, v) => `<div class="r"><i>${kTickI}</i><b>${t(lb)}</b>${v ? `<small>${esc(v)}</small>` : ""}</div>`;
   return `<div class="ksm"><div class="kths">${m.th.map(th).join("")}</div><div class="rows">${row("k_us0", t("k_sm_up"))}${row("k_us1", t("k_sm_up"))}${row("k_us2", t("k_sm_up"))}${row("k_sm_info", m.nid)}${m.pct !== null && m.pct !== undefined ? row("k_sm_face", m.pct + "%") : ""}</div></div>`;
+}
+
+/* =====================================================================
+   v2.23 — গ্রুপ ১ (KYC): ৫ ধাপ লাইভনেস, স্মুথ রিং, তথ্য পাতা (বাবা-মা, DOB চাকা), ভেরিফিকেশন পাতা
+   (এই ব্লক সবার শেষে বসে, তাই একই নামের আগের ফাংশন বদলে দেয়)
+   ===================================================================== */
+Object.assign(T.bn, {k_fa:"পিতার নাম", k_mo:"মাতার নাম", k_nm:"নাম (ইংরেজিতে)", k_dobsel:"জন্মতারিখ বাছুন", k_edit:"এডিট", k_done2:"নিশ্চিত করুন", k_cancel:"বাতিল",
+  k_ocrfail:"লেখা পড়া যায়নি, নিজে লিখুন।", k_c1:"NID সামনে", k_c2:"NID পেছনে", k_c3:"মুখ", k_allup:"সব ছবি আপলোড হয়েছে", k_infoup:"তথ্য জমা হয়েছে", k_fmatch:"মুখ মিল", k_nmen:"ইংরেজি অক্ষরে নাম লিখুন"});
+Object.assign(T.en, {k_fa:"Father's name", k_mo:"Mother's name", k_nm:"Name (in English)", k_dobsel:"Select date of birth", k_edit:"Edit", k_done2:"Confirm", k_cancel:"Cancel",
+  k_ocrfail:"Could not read the text, please type it.", k_c1:"NID front", k_c2:"NID back", k_c3:"Face", k_allup:"All photos uploaded", k_infoup:"Details submitted", k_fmatch:"Face match", k_nmen:"Type your name in English letters"});
+
+/* ----- লাইভনেস: ৫ ধাপ এলোমেলো ক্রমে (ডান, বাম, উপর, নিচ, চোখের পলক) ----- */
+function kFaceOrd() {
+  const a = ["right", "left", "up", "down", "blink"];
+  for (let i = a.length - 1; i > 0; i--) { const j = kRnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+/* ----- রিং/বারের অগ্রগতি এখন প্রতি ফ্রেমে নরম করে এগোয় (লাফায় না) ----- */
+function kFaceProg(p) {
+  KFc.pt = Math.max(0, Math.min(1, p || 0));
+  if (KFc.pt === 0) KFc.pd = 0;
+  if (!KFc.raf) KFc.raf = requestAnimationFrame(kFaceAnim);
+}
+function kFaceAnim() {
+  KFc.raf = 0;
+  const cur = KFc.pd || 0, d = KFc.pt - cur;
+  KFc.pd = Math.abs(d) < .006 ? KFc.pt : cur + d * .2;
+  const x = Math.round(KFc.pd * 100), b = document.getElementById("kfp"), c = document.getElementById("kfpc"), s = KFc.ord[KFc.st];
+  if (b) b.style.width = KFc.pd * 100 + "%";
+  if (c) c.textContent = KFc.pt >= 1 && KFc.pd >= .99 ? "✓" : t("k_left") + " " + (100 - x) + "%";
+  if (s && s !== "blink") { const a = document.getElementById("kra" + KDM[s]), f = a && a.querySelector(".krf"); if (f) f.style.strokeDasharray = KFc.pd * 100 + " 100"; }
+  if (KFc.pd !== KFc.pt) KFc.raf = requestAnimationFrame(kFaceAnim);
+}
+function kFace() {
+  const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
+  const dots = [0, 1, 2, 3, 4].map(i => `<i id="kdt${i}"></i>`).join("");
+  return `<div class="kcam kn">${kBg()}
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t("k_face")}</b><em>3/4</em></div>${kLogo()}
+    <div class="kwr ov" id="kwr"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}</div>
+      ${pv ? "" : `<svg class="krg" viewBox="0 0 100 128" aria-hidden="true">${kRingArc(0, -45, 45)}${kRingArc(1, 45, 135)}${kRingArc(2, 135, 225)}${kRingArc(3, 225, 315)}</svg>`}</div>
+    <div class="kov"><u id="kou" class="${pv ? "dn" : ""}"></u><div class="kfok">${kTickI}</div></div><div class="kcnt" id="kcnt"></div>${pv ? "" : '<div class="kfarr h" id="kfarr"></div>'}
+    <div class="kbt">${pv ? `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kFaceUse()">${t("k_use")}</button></div>`
+      : `<div class="kdir pop" id="kdir"><div class="kdi" id="kdi">${KFACE_SVG}</div><div class="kdt2"><b id="kst" class="kfm">${t("k_fload")}</b><span class="kdots d5">${dots}</span></div></div>
+         <div class="kfbar"><i id="kfp"></i></div><div class="kfpc" id="kfpc"></div><div class="ksh"><span class="kgal sp"></span><button class="kshut" aria-label="${t("k_snap")}" onclick="kFaceCount()"><i></i></button><span class="kgal sp"></span></div>`}
+      <small class="knc" id="knc"></small></div></div>`;
+}
+
+/* ----- তথ্য পাতা ----- */
+const KMON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function kDobParse(s) {
+  s = String(s || ""); let m = s.match(/(\d{1,2})\s+([A-Za-z]{3})[a-z]*\s+(\d{4})/);
+  if (m) { const mo = KMON.findIndex(x => x.toLowerCase() === m[2].toLowerCase()); if (mo >= 0) return {d: +m[1], m: mo, y: +m[3]}; }
+  m = s.match(/(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/); if (m) return {d: +m[1], m: Math.max(0, Math.min(11, +m[2] - 1)), y: +m[3]};
+  return null;
+}
+function kInfo() {
+  if (K.reading) return kInfoOld();
+  const n = kOkN(), tot = KF.length;
+  const rows = KF.map(([k, lb, ik], i) => {
+    const v = K.d[k] || "", ok = KV[k](v), lock = K.lk && K.lk[k];
+    let body;
+    if (k === "dob") body = `<button type="button" class="kdb" onclick="kDobOpen()"><span id="kv_dob">${v ? esc(v) : t("k_miss")}</span><em>${t("k_edit")}</em></button>`;
+    else if (k === "addr") body = `<textarea id="kv_${k}" rows="2" placeholder="${t("k_miss")}" oninput="kSet('${k}',this)">${esc(v)}</textarea>`;
+    else body = `<input id="kv_${k}" value="${esc(v)}" placeholder="${k === "name" ? t("k_nmen") : t("k_miss")}" ${k === "nid" ? 'inputmode="numeric" maxlength="17"' : 'maxlength="80"'}${k === "name" ? ' autocapitalize="words" autocorrect="off" spellcheck="false"' : ""}${lock ? " readonly" : ""} oninput="kSet('${k}',this)">`;
+    return `<div class="kf ${ok ? "gd" : "bd"}${lock ? " lk" : ""}" style="--n:${i}"><div class="kfi">${kic(ik)}</div><div class="kfb"><label>${t(lb)}</label>${body}${lock ? `<small class="klk2">${t("k_lockd")}</small>` : ""}</div><i class="kt2 ${ok ? "gd" : "no"}">${ok ? kTickI : kCrossI}</i></div>`;
+  }).join("");
+  return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="kbody"><div class="ksum"><div><b id="ksn">${n}/${tot}</b><span>${t("k_okc")}</span></div><div class="kbar"><i id="ksb2" style="width:${n * 100 / tot}%"></i></div></div>
+    ${K.fail ? `<p class="ksubt">${t("k_ocrfail")}</p>` : ""}${rows}<div class="le kle">${esc(K.err)}</div></div>
+    <div class="kbtm"><button class="kbtn" onclick="kInfoNext()">${t("k_next")}</button></div></div>`;
+}
+function kSet(k, el) {
+  let v = el.value;
+  if (k === "nid") { v = digs(v, 17); }
+  else if (k === "name") { v = v.replace(/[^A-Za-z .'\-]/g, "").replace(/\s{2,}/g, " "); }
+  if (el.value !== v) el.value = v;
+  K.d[k] = v;
+  const row = el.closest(".kf"), tk = row.querySelector(".kt2"), ok = KV[k](v);
+  tk.className = "kt2 " + (ok ? "gd" : "no"); tk.style.animation = "none"; tk.style.transform = "scale(1)"; tk.innerHTML = ok ? kTickI : kCrossI;
+  row.classList.toggle("gd", ok); row.classList.toggle("bd", !ok);
+  kInfoCount();
+}
+function kInfoCount() {
+  const n = kOkN(), tot = KF.length, a = document.getElementById("ksn"), b = document.getElementById("ksb2"); if (a) a.textContent = n + "/" + tot; if (b) b.style.width = n * 100 / tot + "%";
+}
+function kInfoNext() {
+  const d = K.d, le = document.querySelector(".kle");
+  const bad = ["name", "father", "mother", "dob", "addr"].some(k => !KV[k](d[k])) ? t("k_bad") : !KV.nid(d.nid) ? t("k_badnid") : "";
+  if (bad) { K.err = bad; if (le) le.textContent = bad; hap("HEAVY"); return; }
+  hap(); K.err = ""; K.pv = ""; K.step = "face"; kycRender();
+}
+
+/* ----- জন্মতারিখ: চাকার মতো ঘুরিয়ে বাছা (দিন / মাস / বছর) ----- */
+const KIH = 40;
+function kDobOpen() {
+  if (document.getElementById("kdw")) return; hap();
+  const cur = kDobParse(K.d.dob) || {d: 1, m: 0, y: 2005}, yMax = new Date().getFullYear() - 10, yMin = 1930;
+  const days = Array.from({length: 31}, (_, i) => String(i + 1).padStart(2, "0")), mons = KMON, yrs = []; for (let y = yMax; y >= yMin; y--) yrs.push(String(y));
+  const col = (id, arr, sel) => `<div class="kwc"><div class="kwl" id="kwl_${id}" data-n="${arr.length}">${arr.map((x, i) => `<div class="kwi${i === sel ? " on" : ""}">${x}</div>`).join("")}</div></div>`;
+  const yi = Math.max(0, yrs.indexOf(String(Math.min(yMax, Math.max(yMin, cur.y)))));
+  const o = document.createElement("div"); o.id = "kdw"; o.className = "kdw";
+  o.innerHTML = `<div class="kdb2" onclick="kDobClose()"></div><div class="kds"><div class="kdh"><b>${t("k_dobsel")}</b></div>
+    <div class="kwheel"><div class="kwband"></div>${col("d", days, Math.min(30, cur.d - 1))}${col("m", mons, cur.m)}${col("y", yrs, yi)}</div>
+    <div class="kdbt"><button class="kgh2" onclick="kDobClose()">${t("k_cancel")}</button><button class="kbtn" onclick="kDobOk()">${t("k_done2")}</button></div></div>`;
+  kEl().appendChild(o);
+  requestAnimationFrame(() => { ["d", "m", "y"].forEach(id => { const l = document.getElementById("kwl_" + id); if (!l) return; const i = [...l.children].findIndex(c => c.classList.contains("on")); l.scrollTop = Math.max(0, i) * KIH; l.addEventListener("scroll", () => kWheelSc(l), {passive: true}); }); o.classList.add("in"); });
+}
+function kWheelIdx(l) { return Math.max(0, Math.min(+l.dataset.n - 1, Math.round(l.scrollTop / KIH))); }
+function kWheelSc(l) {
+  if (l._r) return; l._r = requestAnimationFrame(() => {
+    l._r = 0; const i = kWheelIdx(l);
+    if (l._i !== i) { if (l._i !== undefined) hap("LIGHT"); l._i = i; [...l.children].forEach((c, j) => { c.classList.toggle("on", j === i); c.style.opacity = j === i ? 1 : Math.abs(j - i) === 1 ? .55 : .25; }); }
+  });
+}
+function kDobClose() { const o = document.getElementById("kdw"); if (!o) return; o.classList.remove("in"); setTimeout(() => o.remove(), 260); }
+function kDobOk() {
+  const g = (id) => kWheelIdx(document.getElementById("kwl_" + id)), y = +document.getElementById("kwl_y").children[g("y")].textContent, mo = g("m");
+  const dim = new Date(y, mo + 1, 0).getDate(), d = Math.min(g("d") + 1, dim);
+  K.d.dob = String(d).padStart(2, "0") + " " + KMON[mo] + " " + y;
+  hap("MEDIUM"); kDobClose();
+  const s = document.getElementById("kv_dob"); if (s) s.textContent = K.d.dob;
+  const row = s && s.closest(".kf"); if (row) { row.classList.add("gd"); row.classList.remove("bd"); const tk = row.querySelector(".kt2"); if (tk) { tk.className = "kt2 gd"; tk.innerHTML = kTickI; } }
+  kInfoCount();
+}
+
+/* ----- জমার পরের পাতা: ৩টি ছবির নিচে ছোট করে কী কী জমা হয়েছে ----- */
+function kSumHtml() {
+  const m = K.sum; if (!m) return "";
+  const cap = ["k_c1", "k_c2", "k_c3"];
+  const th = (src, i) => `<div class="kx3"><div class="kxi"><img src="${src}" alt=""><i>${kTickI}</i></div><span>${t(cap[i])}</span></div>`;
+  const chip = (tx) => `<span class="kxc"><i>${kTickI}</i>${tx}</span>`;
+  return `<div class="kxs"><div class="kx3s">${m.th.map(th).join("")}</div><div class="kxcs">${chip(t("k_allup"))}${chip(t("k_infoup") + (m.nid ? " · " + esc(m.nid) : ""))}${m.pct !== null && m.pct !== undefined ? chip(t("k_fmatch") + " " + m.pct + "%") : ""}</div></div>`;
+}
+
+/* =====================================================================
+   v2.23 — গ্রুপ ২: স্ক্যানারে ক্যামেরা শুধু ফ্রেমের ভেতরে, PIN কনফার্ম বার (বিকাশ স্টাইল)
+   ===================================================================== */
+Object.assign(T.bn, {pinok: "পিন কনফার্ম করুন"});
+Object.assign(T.en, {pinok: "Confirm PIN"});
+function scanHtml(s) {
+  const nat = !!(cap().BarcodeScanner && cap().BarcodeScanner.startScan);
+  return `<div class="sh scanx${s.fresh ? "" : " re"}"><div class="box">
+    <div class="sct"><button class="pb" aria-label="${t("back")}" onclick="closeS()">${ic("back")}</button><b>${t("scanqr")}</b><button class="pb tq${s.torch ? " on" : ""}" aria-label="Flash" onclick="toggleTorch()">${ic("bolt")}</button></div>
+    <div class="scm"><div class="scf" id="scf"><i class="k1"></i><i class="k2"></i><i class="k3"></i><i class="k4"></i><span class="sl"></span><div class="sck">${tickSvg}</div></div>
+      <p class="scp">${t(s.denied ? "camd" : nat ? "sc1" : "noscan")}</p>
+      ${s.denied ? `<button class="pill" onclick="askCam()">${t("camb")}</button><button class="pill ghost" onclick="scanQRGoogle()">${t("gscan")}</button>` : ""}</div>
+    <div class="scbg"><i class="b1"></i><i class="b2"></i>${[1, 2, 3, 4].map(n => `<img class="wm w${n}" src="icons/logo.png" alt="">`).join("")}</div>
+    <div class="scb"><div class="sctabs"><button class="on">${t("scn3")}</button><button onclick="qTab('my')">${t("myqr")}</button></div><button class="lnk2" onclick="manualSend()">${t("scn2")}</button></div></div></div>`;
+}
+/* v2.25 — বিকাশ স্টাইল নিজস্ব সংখ্যা কিবোর্ড: সব PIN ঘরে ফোনের কিবোর্ড নয়, অ্যাপের নিজের কিপ্যাড ওঠে (ওপরে "পিন কনফার্ম করুন ➜" বার) */
+(function () {
+  let kp = null, bar = null, cur = null, hideT = 0;
+  const SEL = 'input[type="password"][inputmode="numeric"],input[data-kp="1"]';
+  const isPin = (e) => e && e.tagName === "INPUT" && e.getAttribute("data-kp") === "1";
+  const fix = (root) => {
+    (root || document).querySelectorAll(SEL).forEach((e) => {
+      if (e.getAttribute("data-kp") === "1") return;
+      e.setAttribute("data-kp", "1"); e.setAttribute("inputmode", "none"); e.readOnly = true;
+    });
+  };
+  const ARW = '<svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>';
+  const mk = () => {
+    if (kp) return kp;
+    kp = document.createElement("div"); kp.id = "kpad";
+    const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "d", "0", "ok"].map((k) =>
+      k === "d" ? `<button class="kd" data-k="d" aria-label="delete"><svg viewBox="0 0 40 28"><path d="M13 1h24a2 2 0 0 1 2 2v22a2 2 0 0 1-2 2H13L1 14z"/><path d="M19 9l10 10M29 9L19 19"/></svg></button>`
+        : k === "ok" ? `<button class="kk" data-k="ok" aria-label="ok"><i><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></button>`
+        : `<button data-k="${k}">${k}</button>`).join("");
+    kp.innerHTML = `<div class="kpb"><span></span>${ARW}</div><div class="kpg">${keys}</div>`;
+    bar = kp.firstChild;
+    kp.addEventListener("pointerdown", (ev) => {
+      const b = ev.target.closest("button,.kpb"); if (!b) return;
+      ev.preventDefault();
+      press(b.classList.contains("kpb") ? "ok" : b.getAttribute("data-k"));
+    });
+    document.body.appendChild(kp); return kp;
+  };
+  const upd = () => { if (!kp || !cur) return; bar.firstChild.textContent = t("pinok"); const r = digs(cur.value, 6).length >= 6; kp.classList.toggle("on", r); };
+  const press = (k) => {
+    const e = cur; if (!e) return;
+    if (k === "ok") return go();
+    let v = digs(e.value, 6);
+    if (k === "d") { if (!v) return; v = v.slice(0, -1); hap(); } else if (v.length < 6) v += k; else return;
+    e.value = v; e.dispatchEvent(new Event("input", {bubbles: true})); upd();
+  };
+  const go = () => {
+    const e = cur; if (!e || !kp) return;
+    if (digs(e.value, 6).length < 6) return;
+    hap("MEDIUM");
+    if (e.id === "rk") { const n = document.getElementById("rk2"); if (n) { n.focus(); return; } }
+    if (/Enter/.test(e.getAttribute("onkeydown") || "")) { e.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", bubbles: true, cancelable: true})); return; }
+    const b = (e.closest(".sh,.kw,#app") || document).querySelector(".pfoot .btn,.kbtn,.btn"); if (b) b.click();
+  };
+  const hide = () => { if (kp) kp.classList.remove("show"); document.documentElement.classList.remove("pinkb"); cur = null; };
+  document.addEventListener("focusin", (ev) => {
+    fix(ev.target.parentNode || document);
+    if (!isPin(ev.target)) return;
+    clearTimeout(hideT); cur = ev.target; mk(); upd();
+    requestAnimationFrame(() => {
+      kp.classList.add("show"); document.documentElement.classList.add("pinkb");
+      document.documentElement.style.setProperty("--kph", kp.offsetHeight + "px");
+      try { cur && cur.scrollIntoView({block: "center", behavior: "smooth"}); } catch (e) {}
+    });
+  });
+  document.addEventListener("focusout", () => {
+    clearTimeout(hideT);
+    hideT = setTimeout(() => { if (isPin(document.activeElement)) return; hide(); }, 160);
+  });
+  document.addEventListener("input", (ev) => { if (ev.target === cur) upd(); });
+  /* নতুন পেজ আঁকলেই PIN ঘরগুলো আগে থেকে "কিবোর্ড-বন্ধ" করে দেয়; ঘর মুছে গেলে কিপ্যাডও নেমে যায় */
+  try {
+    new MutationObserver(() => { fix(); if (cur && !document.contains(cur)) hide(); }).observe(document.documentElement, {childList: true, subtree: true});
+  } catch (e) {}
+  fix();
+})();
+
+/* =====================================================================
+   v2.24 — গ্রুপ ৩: সেন্ড মানি (বিকাশ স্টাইল), নিশ্চিত পেজ (লোগো টিপে ধরা), কন্টাক্ট + ইনভাইট,
+   শুভেচ্ছা কার্ড, ১০ প্রিয় নাম্বার, গ্রুপ সেন্ড   (SQL: backend/update-v2.24.sql)
+   ===================================================================== */
+Object.assign(T.bn, {g_rcp: "প্রাপক", g_ref: "রেফারেন্স", g_note: "নোট লিখতে ট্যাপ করুন", g_cfm: "নিশ্চিত করুন", g_nochg: "+ চার্জ প্রযোজ্য নয়",
+  g_hold: "করতে লোগো টিপে ধরে রাখুন", g_favnote: "প্রিয় নাম্বারে সেন্ড মানি'তে কোনো চার্জ নেই।", g_fav: "প্রিয় নাম্বার", g_favmax: "সর্বোচ্চ ১০টি প্রিয় নাম্বার রাখা যায়",
+  g_cont: "কন্টাক্ট", g_grp: "গ্রুপ সেন্ড", g_card: "শুভেচ্ছা কার্ড", g_cardadd: "শুভেচ্ছা কার্ড যোগ করুন", g_cards: "শুভেচ্ছা কার্ডসমূহ", g_cardsv: "সেভ করে এগিয়ে যান",
+  g_prev: "প্রিভিও", g_cnote: "নোট/স্বাক্ষর যোগ করুন", g_camt: "পরিমাণ", g_cdel: "কার্ড বাদ দিন", g_nocont: "এই ফোনে কন্টাক্ট পড়া যাচ্ছে না",
+  g_contperm: "কন্টাক্ট দেখার অনুমতি দিন", g_srcc: "নাম বা নম্বর খুঁজুন", g_nocon0: "কোনো কন্টাক্ট পাওয়া যায়নি", g_noacc: "এই নম্বরে FuNPaY একাউন্ট নেই",
+  g_invh: "FuNPaY-তে নেই", g_invb: "আমন্ত্রণ পাঠান", g_invtxt: "আমি FuNPaY অ্যাপ ব্যবহার করছি। তুমিও FuNPaY একাউন্ট খুলে নাও, তাহলে সহজেই টাকা পাঠানো-নেওয়া যাবে। আমার FuNPaY নম্বর: ",
+  g_people: "জন", g_next: "পরবর্তী", g_grpneed: "কমপক্ষে ২ জন বাছুন (সর্বোচ্চ ১০)", g_each: "প্রত্যেককে", g_gtot: "মোট", g_gdone: "গ্রুপ সেন্ড", g_exit: "বাতিল", g_cdone: "কার্ডসহ",
+  g_c_abh: "অভিনন্দন", g_c_bd: "জন্মদিন", g_c_biye: "বিয়ে", g_c_dhn: "ধন্যবাদ", g_c_shub: "শুভকামনা", g_c_bnd: "বন্ধু", g_c_ann: "অ্যানিভার্সারি", g_selc: "নির্বাচিত", favmax: "সর্বোচ্চ ১০টি প্রিয় নাম্বার রাখা যায়", grpcnt: "গ্রুপে ২ থেকে ১০ জন থাকতে হবে"});
+Object.assign(T.en, {g_rcp: "Recipient", g_ref: "Reference", g_note: "Tap to write a note", g_cfm: "Confirm", g_nochg: "+ No charge applicable",
+  g_hold: "— press and hold the logo", g_favnote: "No charge on Send Money to favorite numbers.", g_fav: "Favorite numbers", g_favmax: "You can keep up to 10 favorite numbers",
+  g_cont: "Contacts", g_grp: "Group Send", g_card: "Greeting card", g_cardadd: "Add a greeting card", g_cards: "Greeting cards", g_cardsv: "Save and continue",
+  g_prev: "Preview", g_cnote: "Add a note / signature", g_camt: "Amount", g_cdel: "Remove card", g_nocont: "Cannot read contacts on this phone",
+  g_contperm: "Please allow contacts access", g_srcc: "Search name or number", g_nocon0: "No contacts found", g_noacc: "No FuNPaY account on this number",
+  g_invh: "Not on FuNPaY yet", g_invb: "Send invite", g_invtxt: "I use the FuNPaY app. Open a FuNPaY account too so we can send and receive money easily. My FuNPaY number: ",
+  g_people: "people", g_next: "Next", g_grpneed: "Pick at least 2 people (max 10)", g_each: "To each", g_gtot: "Total", g_gdone: "Group Send", g_exit: "Cancel", g_cdone: "with card",
+  g_c_abh: "Congrats", g_c_bd: "Birthday", g_c_biye: "Wedding", g_c_dhn: "Thanks", g_c_shub: "Best wishes", g_c_bnd: "Friends", g_c_ann: "Anniversary", g_selc: "Selected", favmax: "You can keep up to 10 favorite numbers", grpcnt: "A group needs 2 to 10 people"});
+
+const STAR = '<svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"/></svg>';
+const IC_BOOK = '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2"/><circle cx="12" cy="10" r="2.4"/><path d="M8 16.5c.8-2 2.3-2.6 4-2.6s3.2.6 4 2.6M3 8h2M3 12h2M3 16h2"/></svg>';
+const IC_GRP = '<svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3"/><circle cx="17" cy="9.5" r="2.3"/><path d="M3.5 19c.5-3.2 2.8-5 5.5-5s5 1.8 5.5 5M15.5 14.4c2.4-.3 4.4 1 5 3.6"/></svg>';
+const IC_GIFT2 = '<svg class="i" viewBox="0 0 24 24"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M12 9v11M3.5 13h17M12 9c-2.6-4.5-6-1.5-3.5 0M12 9c2.6-4.5 6-1.5 3.5 0"/></svg>';
+const IC_PEN = '<svg class="i" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19z"/></svg>';
+const IC_LOCK = '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.4" fill="currentColor"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none"/></svg>';
+const normPh = (x) => { let d = en(x).replace(/\D/g, ""); if (d.startsWith("880")) d = d.slice(2); if (d.length === 10 && d[0] === "1") d = "0" + d; return /^01\d{9}$/.test(d) ? d : ""; };
+const avSt = (nm, ph) => `<span class="avs">${avatar(nm, ph)}${isFav(ph) ? `<i class="stf">${STAR}</i>` : ""}</span>`;
+function rer() { const b = document.querySelector("#sheet .pbody"), y = b ? b.scrollTop : 0; renderSheet(); const b2 = document.querySelector("#sheet .pbody"); if (b2) b2.scrollTop = y; }
+
+/* ---------- প্রিয় নাম্বার (সর্বোচ্চ ১০) ---------- */
+S.fav = S.fav || []; S.contacts = S.contacts || [];
+const isFav = (p) => S.fav.some(f => f.phone === p);
+async function loadFav() { try { const r = await api("/rest/v1/rpc/fav_list", {m: "POST", b: {}}); S.fav = Array.isArray(r) ? r : []; const s = S.sheet; if (s && s.id === "send" && s.step === 1 && !s.busy) rer(); } catch (e) {} }
+async function toggleFav(p, ev) {
+  if (ev) { ev.stopPropagation(); ev.preventDefault(); } hap();
+  if (!isFav(p) && S.fav.length >= 10) { toast(t("favmax")); return; }
+  try {
+    if (isFav(p)) { await api("/rest/v1/rpc/fav_remove", {m: "POST", b: {p_phone: p}}); S.fav = S.fav.filter(f => f.phone !== p); }
+    else { await api("/rest/v1/rpc/fav_add", {m: "POST", b: {p_phone: p}}); S.fav.push({phone: p, name: ""}); loadFav(); }
+  } catch (e) { toast(errMsg(e)); }
+  const l = document.getElementById("clist"); if (l && S.sheet) l.innerHTML = contactRows(S.sheet); else if (S.sheet) rer();
+}
+
+/* ---------- কন্টাক্ট + ইনভাইট ---------- */
+async function openContacts() {
+  hap(); const C = cap().Contacts, s = S.sheet; if (!s) return;
+  if (!C || !C.getContacts) { toast(t("g_nocont")); return; }
+  try {
+    let p = await C.checkPermissions(); if (p.contacts !== "granted") p = await C.requestPermissions();
+    if (p.contacts !== "granted") { toast(t("g_contperm")); return; }
+    const r = await C.getContacts({projection: {name: true, phones: true}}), m = new Map(), me = S.me ? S.me.phone : "";
+    (r.contacts || []).forEach(c => {
+      const nm = (c.name && (c.name.display || [c.name.given, c.name.family].filter(Boolean).join(" "))) || "";
+      (c.phones || []).forEach(q => { const ph = normPh(q.number); if (ph && ph !== me && !m.has(ph)) m.set(ph, nm); });
+    });
+    S.contacts = [...m].map(([ph, nm]) => ({ph, nm})).sort((a, b) => (a.nm || a.ph).localeCompare(b.nm || b.ph));
+    s.cview = true; s.v = ""; s.err = ""; s.fxs = true; renderSheet();
+  } catch (e) { toast(t("g_contperm")); }
+}
+async function pickContactI(i) {
+  const c = S.contacts[i], s = S.sheet; if (!c || !s || s.busy) return; hap();
+  s.busy = true; setBusy(true);
+  try {
+    const r = await api("/rest/v1/rpc/lookup_phone", {m: "POST", b: {p_phone: c.ph}});
+    s.busy = false; setBusy(false); if (S.sheet !== s) return;
+    if (!r.length) { s.inv = {ph: c.ph, nm: c.nm}; rer(); return; }
+    s.v = c.ph; s.rn = r[0].pname || c.nm || ""; s.step = 2; s.fxs = true; s.err = ""; s.cview = false; renderSheet();
+  } catch (e) { s.busy = false; setBusy(false); toast(errMsg(e)); }
+}
+function closeInv() { const s = S.sheet; if (s) { s.inv = null; rer(); } }
+function shareInvite() {
+  hap(); const txt = t("g_invtxt") + (S.me ? S.me.phone : ""), Sh = cap().Share;
+  try { if (Sh && Sh.share) { Sh.share({text: txt, dialogTitle: "FuNPaY"}).catch(() => {}); return; } if (navigator.share) { navigator.share({text: txt}).catch(() => {}); return; } } catch (e) {}
+  copyTxt(txt);
+}
+
+/* ---------- শুভেচ্ছা কার্ড (নিজস্ব ডিজাইন, ছবি ফাইল লাগে না) ---------- */
+const GC_CATS = ["abh", "bd", "biye", "dhn", "shub", "bnd", "ann"];
+const GC_TITLE = {abh: "অভিনন্দন", bd: "শুভ জন্মদিন", biye: "শুভ বিবাহ", dhn: "ধন্যবাদ", shub: "শুভকামনা", bnd: "বন্ধু দিবসের শুভেচ্ছা", ann: "শুভ বর্ষপূর্তি"};
+const GC_DECO = {
+  flower: '<g transform="translate(60 78)">' + [0, 72, 144, 216, 288].map(r => `<ellipse cx="0" cy="-17" rx="9" ry="16" fill="#ff8fb8" transform="rotate(${r})"/>`).join("") + '<circle r="9" fill="#ffd34d"/></g><g transform="translate(140 86) scale(.7)">' + [0, 72, 144, 216, 288].map(r => `<ellipse cx="0" cy="-17" rx="9" ry="16" fill="#fff" opacity=".85" transform="rotate(${r})"/>`).join("") + '<circle r="9" fill="#f08a1c"/></g><path d="M60 95c-6 10-16 14-28 14M60 95c6 10 16 14 28 14" stroke="#2e9b5a" stroke-width="3" fill="none"/>',
+  star: [[40, 70, 16], [100, 52, 22], [160, 78, 14], [70, 100, 10], [140, 104, 12]].map(([x, y, r]) => `<path d="M${x} ${y - r}l${r * .3} ${r * .7} ${r * .75}.1-${r * .6} ${r * .5} ${r * .22} ${r * .8}-${r * .67}-${r * .45}-${r * .67} ${r * .45} ${r * .22}-${r * .8}-${r * .6}-${r * .5} ${r * .75}-.1z" fill="#fff" opacity=".9"/>`).join(""),
+  conf: [[20, 60, "#ffd34d"], [50, 90, "#fff"], [80, 55, "#ff5fa2"], [110, 95, "#7be0ff"], [140, 62, "#ffd34d"], [170, 92, "#fff"], [35, 108, "#ff5fa2"], [95, 76, "#fff"], [155, 40, "#7be0ff"], [185, 66, "#ffd34d"]].map(([x, y, c], i) => i % 2 ? `<rect x="${x}" y="${y}" width="9" height="5" rx="1.5" fill="${c}" transform="rotate(${i * 25} ${x} ${y})"/>` : `<circle cx="${x}" cy="${y}" r="4.5" fill="${c}"/>`).join(""),
+  balloon: [[50, 58, "#ff5fa2"], [100, 48, "#ffd34d"], [150, 60, "#7be0ff"]].map(([x, y, c]) => `<ellipse cx="${x}" cy="${y}" rx="17" ry="21" fill="${c}"/><path d="M${x} ${y + 21}l-3 5h6zM${x} ${y + 26}c-6 14 6 24 0 34" stroke="#fff" stroke-width="1.6" fill="none" opacity=".85"/>`).join(""),
+  cake: '<rect x="62" y="70" width="76" height="34" rx="7" fill="#fff"/><rect x="62" y="70" width="76" height="12" rx="6" fill="#ff8fb8"/><rect x="72" y="52" width="56" height="20" rx="6" fill="#ffe3ef"/><path d="M84 52v-12M100 52v-14M116 52v-12" stroke="#ffd34d" stroke-width="4" stroke-linecap="round"/><path d="M84 36c-3-4 3-6 0-10 4 2 4 7 0 10zM100 34c-3-4 3-6 0-10 4 2 4 7 0 10zM116 36c-3-4 3-6 0-10 4 2 4 7 0 10z" fill="#ff7a3c"/>',
+  heart: [[60, 80, 1], [100, 62, 1.5], [146, 84, .9]].map(([x, y, k]) => `<path transform="translate(${x} ${y}) scale(${k})" d="M0 12C-22-4-12-22 0-10 12-22 22-4 0 12z" fill="#ff5f8f" stroke="#fff" stroke-width="1.5"/>`).join(""),
+  gift: '<rect x="68" y="62" width="64" height="44" rx="5" fill="#ffd9a6"/><rect x="62" y="50" width="76" height="16" rx="5" fill="#ffecd0"/><path d="M100 50v56" stroke="#e2136e" stroke-width="7"/><path d="M100 50c-8-18-26-12-18-4 6 5 14 4 18 4zM100 50c8-18 26-12 18-4-6 5-14 4-18 4z" fill="#e2136e"/>',
+  sun: '<circle cx="100" cy="86" r="22" fill="#ffd34d"/>' + [0, 40, 80, 120, 160, 200, 240, 280, 320].map(r => `<path d="M100 54v-12" stroke="#ffd34d" stroke-width="5" stroke-linecap="round" transform="rotate(${r} 100 86)"/>`).join("")
+};
+const GC = [];
+[["abh", [["#d85aa8", "#b53b95", "flower"], ["#ffd34d", "#ffb300", "star", "#8a1450"], ["#2b3a8f", "#1b2466", "conf"]]],
+ ["bd", [["#ff7aa8", "#e2136e", "cake"], ["#7a4cd0", "#4f2aa3", "balloon"], ["#fff1b0", "#ffd34d", "gift", "#a3105a"]]],
+ ["biye", [["#ffe066", "#f5c400", "heart", "#d6105f"], ["#7a2a8c", "#561a6a", "star"], ["#ffd6e5", "#ffb3cf", "flower", "#a3105a"]]],
+ ["dhn", [["#1fa87a", "#0c7d5a", "flower"], ["#ff9a5c", "#f06a1c", "sun"], ["#4b6fe0", "#2c47b3", "heart"]]],
+ ["shub", [["#35b6d8", "#1b86ad", "sun"], ["#e2136e", "#b00c58", "star"], ["#8fd36b", "#4fa83a", "flower", "#14532d"]]],
+ ["bnd", [["#e2136e", "#c40f5e", "conf"], ["#ffe066", "#ffc400", "balloon", "#a3105a"], ["#5b7cf0", "#3550c4", "star"]]],
+ ["ann", [["#b5174f", "#7e0e38", "heart"], ["#f5c76b", "#e0a030", "gift", "#6b0f3a"], ["#2c2c54", "#1a1a3a", "star"]]]
+].forEach(([c, a]) => a.forEach((x, i) => GC.push({id: c + (i + 1), cat: c, a: x[0], b: x[1], d: x[2], ink: x[3] || "#fff"})));
+const gcOf = (id) => GC.find(c => c.id === id);
+function cardArt(c, amt, note, small) {
+  if (!c) return "";
+  if (small) return `<div class="gc sm" style="background:linear-gradient(160deg,${c.a},${c.b})"><b style="color:${c.ink}">${GC_TITLE[c.cat]}</b><svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax meet">${GC_DECO[c.d]}</svg></div>`;
+  return `<div class="gc" style="background:linear-gradient(160deg,${c.a},${c.b});color:${c.ink}"><div class="gct">${GC_TITLE[c.cat]}</div>${amt != null ? `<div class="gca">${t("g_camt")}: ${money2(amt)}</div>` : ""}${note ? `<div class="gcn">${esc(note)}</div>` : ""}<svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax meet">${GC_DECO[c.d]}</svg></div>`;
+}
+function openCards() { const s = S.sheet; if (!s) return; sync(); hap(); s.cardPick = true; s.ctmp = s.card || GC[0].id; s.ccat = (gcOf(s.ctmp) || GC[0]).cat; s.cprev = false; s.fxs = true; renderSheet(); }
+function cardsHtml(s) {
+  const c = gcOf(s.ctmp) || GC[0], n = s.grp ? s.grp.sel.length : 1, amt = (parseFloat(s.a) || 0);
+  const tabs = GC_CATS.map(k => `<button class="${s.ccat === k ? "on" : ""}" onclick="cardCat('${k}')">${t("g_c_" + k)}</button>`).join("");
+  const th = GC.filter(x => x.cat === s.ccat).map(x => `<button class="gth${x.id === s.ctmp ? " on" : ""}" onclick="cardPick('${x.id}')">${cardArt(x, null, "", true)}</button>`).join("");
+  return `<div class="sh pgx cgx${s.fresh ? "" : " re"}"><div class="box"><div class="ph"><button class="pb" aria-label="${t("back")}" onclick="cardBack()">${ic("back")}</button><b>${t("g_cards")}</b><img src="icons/logo.png" alt=""></div>
+    <div class="pbody"><div class="gcw"><div class="gcbox">${cardArt(c, amt || null, "", false)}<label class="gcin"><input id="cnote" maxlength="40" placeholder="${t("g_cnote")}" value="${esc(s.note || "")}" oninput="cardNote(this)">${IC_PEN}</label></div>
+      <div class="gbt"><button class="btn l" onclick="cardPrev(true)">${ic("eye")}<span>${t("g_prev")}</span></button>${s.card ? `<button class="btn l" onclick="cardDel()"><span>${t("g_cdel")}</span></button>` : ""}</div></div>
+      <div class="gtabs">${tabs}</div><div class="gths">${th}</div></div>
+    <div class="pfoot"><button class="btn" onclick="cardSave()">${t("g_cardsv")}</button></div>
+    ${s.cprev ? `<div class="gprv" onclick="cardPrev(false)">${cardArt(c, amt || null, s.note || "", false)}</div>` : ""}</div></div>`;
+}
+function cardCat(k) { const s = S.sheet; if (!s) return; hap(); s.ccat = k; const f = GC.find(x => x.cat === k); if (f && !GC.some(x => x.cat === k && x.id === s.ctmp)) s.ctmp = f.id; rer(); }
+function cardPick(id) { const s = S.sheet; if (!s) return; hap(); s.ctmp = id; rer(); }
+function cardNote(el) { const s = S.sheet; if (s) s.note = el.value.slice(0, 40); }
+function cardPrev(on) { const s = S.sheet; if (!s) return; hap(); s.cprev = !!on; rer(); }
+function cardBack() { const s = S.sheet; if (!s) return; hap(); s.cardPick = false; s.fxs = true; renderSheet(); }
+function cardSave() { const s = S.sheet; if (!s) return; hap("MEDIUM"); s.card = s.ctmp; s.cardPick = false; s.fxs = true; renderSheet(); }
+function cardDel() { const s = S.sheet; if (!s) return; hap(); s.card = ""; s.cardPick = false; s.fxs = true; renderSheet(); }
+
+/* ---------- ধাপ ১: কাকে পাঠাবেন (কন্টাক্ট / প্রিয় / সাম্প্রতিক / গ্রুপ) ---------- */
+function sendRows(s) {
+  const q = (s.v || "").trim(), g = s.grp, ql = q.toLowerCase();
+  const m = (ph, nm) => !ql || ph.includes(ql) || String(nm || "").toLowerCase().includes(ql);
+  const star = (ph) => `<button class="stb${isFav(ph) ? " on" : ""}" aria-label="fav" onclick="toggleFav('${ph}',event)">${STAR}</button>`;
+  const ck = (ph) => `<i class="ck${g && g.sel.includes(ph) ? " on" : ""}">${tickSvg}</i>`;
+  const R = (ph, nm, clk) => { if (g && nm) g.names[ph] = nm; return `<div class="rr" onclick="${g ? `grpTog('${ph}')` : clk}">${avSt(nm, ph)}<div><b>${esc(nm || ph)}</b><span>${nm ? esc(ph) : ""}</span></div>${g ? ck(ph) : star(ph)}</div>`; };
+  if (s.cview) {
+    const l = S.contacts.map((c, i) => [c, i]).filter(([c]) => m(c.ph, c.nm)).slice(0, 250);
+    return l.length ? l.map(([c, i]) => R(c.ph, c.nm, `pickContactI(${i})`)).join("") : `<p class="em">${t(S.contacts.length ? "nomatch" : "g_nocon0")}</p>`;
+  }
+  const favSet = new Set(S.fav.map(f => f.phone)), favs = S.fav.filter(f => m(f.phone, f.name)), rec = peopleFor("send").filter(f => !favSet.has(f[0]) && m(f[0], f[1]));
+  let h = "";
+  if (isPh(q) && !favSet.has(q) && !rec.some(f => f[0] === q)) h += R(q, "", `pickNum('${q}')`);
+  if (favs.length) h += `<p class="lh2">${t("g_fav")} · ${S.fav.length}/10</p>` + favs.map(f => R(f.phone, f.name, `pickNum('${f.phone}')`)).join("");
+  if (rec.length) h += `<p class="lh2">${t("rcnt")}</p>` + rec.map(f => R(f[0], f[1], `pickNum('${f[0]}')`)).join("");
+  return h || `<p class="em">${t(q ? "nomatch" : "nosend2")}</p>`;
+}
+const _cr0 = contactRows;
+contactRows = function (s) { return s.id === "send" ? sendRows(s) : _cr0(s); };
+function sbBack() { const s = S.sheet; if (!s) return; if (s.inv) { closeInv(); return; } if (s.cview) { hap(); s.cview = false; s.v = ""; s.fxs = true; renderSheet(); return; } if (s.grp) { grpOff(); return; } backStep(); }
+function grpOn() { const s = S.sheet; if (!s) return; hap(); s.grp = {sel: [], names: {}}; s.v = ""; s.cview = false; s.fxs = true; renderSheet(); }
+function grpOff() { const s = S.sheet; if (!s) return; hap(); s.grp = null; s.v = ""; s.fxs = true; renderSheet(); }
+function grpTog(ph) {
+  const s = S.sheet; if (!s || !s.grp) return; hap(); const a = s.grp.sel, i = a.indexOf(ph);
+  if (i >= 0) a.splice(i, 1); else if (a.length >= 10) { toast(t("grpneed2")); return; } else a.push(ph);
+  rer();
+}
+Object.assign(T.bn, {grpneed2: "গ্রুপে সর্বোচ্চ ১০ জন"}); Object.assign(T.en, {grpneed2: "Max 10 people in a group"});
+function sendStep1(s) {
+  const g = s.grp, cv = s.cview, n = g ? g.sel.length : 0;
+  const search = `<div class="pcard srcc"><div class="fld sf">${ic("srch")}<input id="f1" maxlength="20" placeholder="${t(cv ? "g_srcc" : "sname")}" value="${esc(s.v)}" autocomplete="off" oninput="srchIn(this)"></div><div class="err" id="er">${esc(s.err)}</div></div>`;
+  const tl = (ico, lbl, js) => `<button class="tl" onclick="${js}"><span>${ico}</span><b>${lbl}</b></button>`;
+  const tiles = (g || cv) ? (g ? `<div class="gsel"><b>${t("g_selc")}: ${n}/10</b><button onclick="grpOff()">${t("g_exit")}</button></div>${n ? `<div class="gchips">${g.sel.map(p => `<span onclick="grpTog('${p}')">${esc(g.names[p] || p)} ✕</span>`).join("")}</div>` : ""}` : "")
+    : `<div class="tl4">${tl(IC_BOOK, t("g_cont"), "openContacts()")}${tl(ic("qr"), t("scanqr"), "openQR('scan','send')")}${tl(ic("qr"), t("myqr"), "openQR('my')")}${tl(IC_GRP, t("g_grp"), "grpOn()")}</div>`;
+  const cvBtn = (g && !cv) ? `<button class="gcb" onclick="openContacts()">${IC_BOOK}<span>${t("g_cont")}</span></button>` : "";
+  const inv = s.inv ? `<div class="invd" onclick="if(event.target===this)closeInv()"><div class="invb"><div class="grip"></div>${avatar(s.inv.nm, s.inv.ph)}<b>${esc(s.inv.nm || s.inv.ph)}</b><span>${esc(s.inv.ph)}</span><p>${t("g_noacc")}</p><button class="btn" onclick="shareInvite()">${t("g_invb")}</button><button class="btn l" onclick="closeInv()">${t("close")}</button></div></div>` : "";
+  const foot = cv ? "" : `<button class="btn" onclick="nextStep()">${g ? t("g_next") + " (" + n + ")" : t("next")}${NXT}</button>`;
+  return wrapPage(s, g ? t("g_grp") : t("send"), "sbBack()", `${search}${tiles}${cvBtn}<div class="pcard lst"><div id="clist">${contactRows(s)}</div></div>${inv}`, foot);
+}
+/* ---------- ধাপ ২: টাকার পরিমাণ + শুভেচ্ছা কার্ড ---------- */
+function gtotU() { const s = S.sheet, e = document.getElementById("gtot"); if (s && s.grp && e) e.textContent = t("g_gtot") + ": " + money2((parseFloat(s.a) || 0) * s.grp.sel.length); }
+function sendStep2(s) {
+  const g = s.grp, n = g ? g.sel.length : 1, amt = parseFloat(s.a) || 0;
+  const who = g ? `<div class="bkp">${avatar(t("g_grp"), "grp")}<div><b>${t("g_grp")}</b><span>${n} ${t("g_people")}</span></div></div>` : `<div class="bkp">${avSt(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${s.rn ? esc(s.v) : ""}</span></div><i class="vf">${tickSvg}</i></div>`;
+  const chips = [500, 1000, 2000, 5000].map(k => `<button onclick="qAmt(${k});gtotU()">৳${k.toLocaleString("en-US")}</button>`).join("");
+  const cd = gcOf(s.card);
+  return wrapPage(s, g ? t("g_grp") : t("send"), "backStep()", `<div class="bk2"><p class="bkl">${t("g_rcp")}</p><div class="bkc">${who}</div>
+    ${!g && s.v && !recents().some(f => f[0] === s.v) && !isFav(s.v) ? `<p class="tw" style="margin:8px 0 0">${t("chkn")}</p>` : ""}
+    <p class="bkl" style="margin-top:14px">${g ? t("g_each") : t("amt")}</p><div class="bkc"><div class="fld big bka"><u>৳</u><input id="f2" inputmode="decimal" placeholder="0" value="${esc(s.a)}" oninput="amtIn(this);gtotU()"></div>
+      <div class="avl">${t("avl")}: <b>${money(S.bal)}</b>${g ? ` · <b id="gtot">${t("g_gtot")}: ${money2(amt * n)}</b>` : ""}</div><div class="qa">${chips}</div><div class="err" id="er">${esc(s.err)}</div></div>
+    <button class="gadd" onclick="openCards()">${cd ? `<span class="gmini">${cardArt(cd, null, "", true)}</span><div><b>${t("g_card")}</b><em>${GC_TITLE[cd.cat]}</em></div>` : `${IC_GIFT2}<b>${t("g_cardadd")}</b>`}<i>›</i></button></div>`,
+    `<button class="btn" onclick="nextStep()">${t("go2")}${NXT}</button>`);
+}
+/* ---------- ধাপ ৩: বিকাশ স্টাইল (প্রাপক · পরিমাণ/চার্জ/সর্বমোট · রেফারেন্স · PIN) ---------- */
+function totals(s) {
+  const c = cfg(s.id), d = c.d || -1, n = s.grp ? s.grp.sel.length : 1, amt = parseFloat(s.a) || 0, fee = feeOf(c, amt), dsc = s.id === "pay" ? cpDisc(s.cp, amt) : 0;
+  return {c, d, n, amt: amt * n, fee, dsc, tot: d < 0 ? amt * n + fee - dsc : amt * n};
+}
+function bkWho(s) {
+  if (s.grp) return `<div class="bkp">${avatar(t("g_grp"), "grp")}<div><b>${t("g_grp")}</b><span>${s.grp.sel.length} ${t("g_people")}</span></div></div>`;
+  if (!PERSON.includes(s.id)) return "";
+  return `<div class="bkp">${avSt(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${s.rn ? esc(s.v) : ""}</span></div></div>`;
+}
+function noteIn(el) { const s = S.sheet; if (!s) return; s.note = el.value.slice(0, 50); const e = document.getElementById("ncnt"); if (e) e.textContent = s.note.length + "/50"; }
+function bkStep3(s) {
+  const T3 = totals(s), cd = gcOf(s.card);
+  return wrapPage(s, t(s.id), "backStep()", `<div class="bk3"><p class="bkl">${t("g_rcp")}</p><div class="bkc">${bkWho(s)}</div>
+    <div class="bk3t"><div><span>${t("amtl")}</span><b>${money2(T3.amt)}</b></div><div><span>${t("feel")}</span><b>+ ${money2(T3.fee)}</b></div><div><span>${t("total")}</span><b>${money2(T3.tot)}</b></div></div>
+    ${s.id === "send" ? `<div class="bkref"><div><span>${t("g_ref")}</span><em id="ncnt">${(s.note || "").length}/50</em></div><input id="snote" maxlength="50" placeholder="${t("g_note")}" value="${esc(s.note || "")}" oninput="noteIn(this)" autocomplete="off"></div>${cd ? `<div class="gmrow"><span class="gmini">${cardArt(cd, null, "", true)}</span><b>${t("g_card")} · ${GC_TITLE[cd.cat]}</b></div>` : ""}` : ""}
+    <div class="pinrow bkpin">${IC_LOCK}<input id="spin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(s.pin)}" oninput="spIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();spGo()}"><button class="fpb" aria-label="fingerprint" onclick="txBio()">${ic("fp")}</button></div>
+    <div class="err c" id="er" style="text-align:center;margin-top:8px">${esc(s.err)}</div></div>`, `<button class="btn" id="spgo" onclick="spGo()">${t("ok")}</button>`);
+}
+/* ---------- ধাপ ৪: নিশ্চিত করুন — লোগো টিপে ধরে রাখলে এগোয় ---------- */
+function bkStep4(s) {
+  const T3 = totals(s), nb = T3.d < 0 ? S.bal - T3.tot : S.bal + T3.amt, cd = gcOf(s.card);
+  const cell = (l, v, sub) => `<div><span>${l}</span><b>${v}</b>${sub ? `<small>${sub}</small>` : ""}</div>`;
+  const rows = [!PERSON.includes(s.id) && s.v ? cell(t(cfg(s.id).f), esc(s.v)) : "", !PERSON.includes(s.id) && s.ch ? cell(t("opr"), t(s.ch)) : ""].join("");
+  return `<div class="sh pgx c4${s.fresh ? "" : " re"}"><div class="box"><div class="c4h"><b><em>${t(s.id)}</em> ${t("g_cfm")}</b><button class="c4x" aria-label="${t("close")}" onclick="closeS()"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
+    <div class="c4b"><div class="stp${s.fxs ? " go" : ""}">${bkWho(s) ? `<div class="c4w">${bkWho(s)}</div>` : ""}
+      <div class="c4g">${cell(t("total"), money2(T3.tot), T3.fee ? "+ " + t("feel") + " " + money2(T3.fee) : t("g_nochg"))}${cell(t("nbl"), money2(nb))}${rows}${s.id === "send" ? cell(t("g_ref"), esc(s.note || "—")) : ""}${cd ? `<div class="wide"><span>${t("g_card")}</span><b>${GC_TITLE[cd.cat]}</b></div>` : ""}</div>
+      ${s.id === "send" && !s.grp && isFav(s.v) ? `<div class="c4n"><svg class="stn" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"/></svg><p>${t("g_favnote")}</p></div>` : ""}
+      ${s.grp ? `<div class="c4n"><p>${T3.n} ${t("g_people")}${s.grp.diff ? "" : " × " + money2(parseFloat(s.a) || 0)}</p></div>` : ""}
+      <div class="err c" id="c4e" style="text-align:center;margin-top:10px">${esc(s.err)}</div></div></div>
+    <div class="c4f"><div id="lgh" class="lgh" onpointerdown="lgStart(event)" onpointerup="lgEnd()" onpointerleave="lgEnd()" onpointercancel="lgEnd()" oncontextmenu="return false"><svg viewBox="0 0 100 100"><circle class="r0" cx="50" cy="50" r="46"/><circle class="r1" cx="50" cy="50" r="46"/></svg><img src="icons/logo.png" alt=""></div><p>${t(s.id)} ${t("g_hold")}</p></div></div></div>`;
+}
+let lgT = 0;
+function lgStart(e) { const b = document.getElementById("lgh"); if (!b || lgT || b.classList.contains("ld")) return; if (e && e.preventDefault) e.preventDefault(); hap(); b.classList.add("hd"); lgT = setTimeout(() => { lgT = 0; b.classList.remove("hd"); b.classList.add("ld"); hap("MEDIUM"); confirmTx(); }, 1000); }
+function lgEnd() { if (!lgT) return; clearTimeout(lgT); lgT = 0; const b = document.getElementById("lgh"); if (b) b.classList.remove("hd"); toast(t("holdh")); }
+
+/* ---------- রাউটার: সেন্ড/পেমেন্ট/ক্যাশ আউটের ধাপ ৩-৪ বিকাশ স্টাইল, সেন্ডের ধাপ ১-২ নতুন ---------- */
+function sheetHtml() {
+  const s = S.sheet;
+  if (s && !s.done && PERSON.includes(s.id)) {
+    if (s.id === "send" && s.cardPick) return cardsHtml(s);
+    if (s.id === "send" && s.step === 1) return sendStep1(s);
+    if (s.step === 2) return bkStep2(s);
+    if (s.step === 1 && s.id !== "send") return bkStep1(s);
+    if (s.step === 3) return bkStep3(s);
+    if (s.step === 4) return bkStep4(s);
+  }
+  return sheetHtml0();
+}
+/* গ্রুপ সেন্ডের যাচাই; বাকি সব আগের মতো */
+async function nextStep() {
+  const s = S.sheet;
+  if (!s || s.id !== "send" || !s.grp) return nextStep0();
+  sync(); if (s.busy) return; let e = "";
+  if (s.step === 1) {
+    const n = s.grp.sel.length;
+    if (n < 2 || n > 10) e = t("g_grpneed");
+    else {
+      s.busy = true; setBusy(true);
+      try { const rs = await Promise.all(s.grp.sel.map(p => api("/rest/v1/rpc/lookup_phone", {m: "POST", b: {p_phone: p}}))); const bad = s.grp.sel.filter((p, i) => !rs[i].length); if (bad.length) e = t("g_noacc") + ": " + bad.join(", "); }
+      catch (x) { e = errMsg(x); }
+      s.busy = false; setBusy(false); if (S.sheet !== s) return;
+    }
+  } else if (s.step === 2) {
+    const amt = parseFloat(s.a), n = s.grp.sel.length;
+    if (s.grp.diff) { const am = s.grp.sel.map(p => parseFloat((s.grp.amts || {})[p]) || 0); if (am.some(x => !(x > 0))) e = t("bada"); else if (am.reduce((a, b) => a + b, 0) > S.bal) e = t("low"); }
+    else if (!(amt > 0)) e = t("bada"); else if (amt * n > S.bal) e = t("low"); else s.a = String(Math.round(amt * 100) / 100);
+  }
+  s.err = e; if (!e) { s.step++; s.fxs = true; s.pin = ""; hap(); } renderSheet(); if (e) shakeBox();
+}
+function openS(id, pre, rn) { openS0(id, pre, rn); if (id === "send" && S.sheet && S.sheet.id === "send") loadFav(); }
+function errMsg(e) { const m = (e && e.message) || ""; if (m === "FAVMAX") return t("favmax"); if (m === "BADCNT") return t("grpcnt"); return errMsg0(e); }
+/* লেনদেনের বিস্তারিতে কার্ড ও রেফারেন্স দেখানো */
+function trdHtml() {
+  const h = trdHtml0(), s = S.sheet, x = s && s.x; if (!x || (!x.card && !x.note)) return h;
+  const cd = gcOf(x.card), blk = (cd ? `<div class="gcd">${cardArt(cd, x.amount, x.note, false)}</div>` : "") + (!cd && x.note ? `<p class="tnote"><span>${t("g_ref")}</span> ${esc(x.note)}</p>` : "");
+  return h.replace('<div class="tgrid">', blk + '<div class="tgrid">');
+}
+
+
+/* =====================================================================
+   v2.25 — ভেরিফিকেশন পাতা: ৩টি লেখা সরিয়ে লোগো + "KYC করার জন্য ধন্যবাদ"
+   ===================================================================== */
+Object.assign(T.bn, {k_thx: "KYC করার জন্য ধন্যবাদ"});
+Object.assign(T.en, {k_thx: "Thank you for completing KYC"});
+function kSumHtml() {
+  const m = K.sum; if (!m) return "";
+  const cap = ["k_c1", "k_c2", "k_c3"];
+  const th = (src, i) => `<div class="kx3"><div class="kxi"><img src="${src}" alt=""><i>${kTickI}</i></div><span>${t(cap[i])}</span></div>`;
+  return `<div class="kxs"><div class="kx3s">${m.th.map(th).join("")}</div><div class="kxth"><img src="icons/logo.png" alt=""><b>${t("k_thx")}</b></div></div>`;
+}
+
+
+/* =====================================================================
+   v2.25 — পেমেন্ট/ক্যাশ আউট/সেন্ডের পরিমাণ পাতা (বিকাশ স্টাইল), লেনদেনের PIN এ ফিঙ্গারপ্রিন্ট,
+   গ্রুপ সেন্ডে আলাদা আলাদা পরিমাণ   (SQL: backend/update-v2.25.sql — শুধু আলাদা পরিমাণের জন্য)
+   ===================================================================== */
+Object.assign(T.bn, {g_diff: "আলাদা আলাদা পরিমাণ", fpoff: "আগে প্রোফাইল থেকে ফিঙ্গারপ্রিন্ট চালু করুন", fpbad: "ফিঙ্গারপ্রিন্ট মেলেনি, PIN দিন"});
+Object.assign(T.en, {g_diff: "Different amounts", fpoff: "Turn on fingerprint from your profile first", fpbad: "Fingerprint did not match, enter your PIN"});
+const gSum = (s) => s.grp.sel.reduce((a, p) => a + (parseFloat((s.grp.amts || {})[p]) || 0), 0);
+function gtotU() {
+  const s = S.sheet, e = document.getElementById("gtot");
+  if (s && s.grp && e) e.textContent = t("g_gtot") + ": " + money2(s.grp.diff ? gSum(s) : (parseFloat(s.a) || 0) * s.grp.sel.length);
+}
+function totals(s) {
+  const c = cfg(s.id), d = c.d || -1, n = s.grp ? s.grp.sel.length : 1, a0 = parseFloat(s.a) || 0, df = !!(s.grp && s.grp.diff);
+  const amt = df ? gSum(s) : a0 * n, fee = df ? 0 : feeOf(c, a0), dsc = s.id === "pay" ? cpDisc(s.cp, a0) : 0;
+  return {c, d, n, amt, fee, dsc, tot: d < 0 ? amt + fee - dsc : amt};
+}
+function grpDiff() {
+  const s = S.sheet; if (!s || !s.grp) return; sync(); hap();
+  const g = s.grp; g.diff = !g.diff; g.amts = g.amts || {};
+  if (g.diff) { const a = parseFloat(s.a) || 0; if (a > 0) g.sel.forEach((p) => { if (!g.amts[p]) g.amts[p] = String(a); }); }
+  s.err = ""; s.fxs = false; renderSheet();
+}
+function grpAmt(ph, el) {
+  const s = S.sheet; if (!s || !s.grp) return;
+  let v = en(el.value).replace(/[^0-9.]/g, ""); const q = v.split(".");
+  if (q.length > 1) v = q[0] + "." + q.slice(1).join("").slice(0, 2);
+  v = v.replace(/^0+(?=\d)/, "").slice(0, 9); if (el.value !== v) el.value = v;
+  s.grp.amts = s.grp.amts || {}; s.grp.amts[ph] = v; s.err = "";
+  const er = document.getElementById("er"); if (er) er.textContent = ""; gtotU();
+}
+function bkStep2(s) {
+  const g = s.grp, n = g ? g.sel.length : 1, amt = parseFloat(s.a) || 0, c = cfg(s.id), fee = feeOf(c, amt), diff = !!(g && g.diff), isSend = s.id === "send";
+  const who = g ? `<div class="bkp">${avatar(t("g_grp"), "grp")}<div><b>${t("g_grp")}</b><span>${n} ${t("g_people")}</span></div></div>`
+    : `<div class="bkp">${avSt(s.rn, s.v)}<div><b>${esc(s.rn || s.v)}</b><span>${s.rn ? esc(s.v) : ""}</span></div><i class="vf">${tickSvg}</i></div>`;
+  const chips = [500, 1000, 2000, 5000].map(k => `<button onclick="qAmt(${k});gtotU()">৳${k.toLocaleString("en-US")}</button>`).join("");
+  const cd = gcOf(s.card), lk = s.id === "cash" ? "lag" : s.id === "pay" ? "lmr" : "lrcv";
+  const tot = `<b id="gtot">${t("g_gtot")}: ${money2(diff ? gSum(s) : amt * n)}</b>`;
+  const amtBox = diff
+    ? `<div class="gdl">${g.sel.map(p => `<div class="gdr"><span>${esc(g.names[p] || p)}${g.names[p] ? `<small>${esc(p)}</small>` : ""}</span><div class="gdi"><u>৳</u><input inputmode="decimal" placeholder="0" value="${esc((g.amts || {})[p] || "")}" oninput="grpAmt('${p}',this)"></div></div>`).join("")}</div>
+       <div class="avl">${t("avl")}: <b>${money(S.bal)}</b> · ${tot}</div><div class="err" id="er">${esc(s.err)}</div>`
+    : `<div class="fld big bka"><u>৳</u><input id="f2" inputmode="decimal" placeholder="0" value="${esc(s.a)}" oninput="amtIn(this);gtotU()"></div>
+       <div class="avl">${t("avl")}: <b>${money(S.bal)}</b>${g ? ` · ${tot}` : ""}</div><div class="fee" id="fl">${c.fee && !g ? t("feel") + ": " + money(fee) : ""}</div>
+       <div class="qa">${chips}</div><div class="err" id="er">${esc(s.err)}</div>`;
+  return wrapPage(s, g ? t("g_grp") : t(s.id), "backStep()", `<div class="bk2"><p class="bkl">${g ? t("g_rcp") : t(lk)}</p><div class="bkc">${who}</div>
+    ${g ? `<button class="gdf${diff ? " on" : ""}" onclick="grpDiff()"><span>${t("g_diff")}</span><i></i></button>` : ""}
+    ${isSend && !g && s.v && !recents().some(f => f[0] === s.v) && !isFav(s.v) ? `<p class="tw" style="margin:8px 0 0">${t("chkn")}</p>` : ""}
+    <p class="bkl" style="margin-top:14px">${g && !diff ? t("g_each") : t("amt")}</p><div class="bkc">${amtBox}</div>
+    ${s.id === "pay" ? `<div class="pcard cpcard" id="cpbox" style="margin:12px 0 0">${cpHtml(s)}</div>` : ""}
+    ${isSend ? `<button class="gadd" onclick="openCards()">${cd ? `<span class="gmini">${cardArt(cd, null, "", true)}</span><div><b>${t("g_card")}</b><em>${GC_TITLE[cd.cat]}</em></div>` : `${IC_GIFT2}<b>${t("g_cardadd")}</b>`}<i>›</i></button>` : ""}</div>`,
+    `<button class="btn" onclick="nextStep()">${t("go2")}${NXT}</button>`);
+}
+/* লেনদেনের PIN ঘরের পাশে ফিঙ্গারপ্রিন্ট (প্রোফাইল থেকে চালু করা থাকলে) */
+async function txBio() {
+  const s = S.sheet, N = cap().NativeBiometric; hap();
+  if (!s || s.busy || s.step !== 3) return;
+  if (!N || !bioOn()) { toast(t("fpoff")); return; }
+  try {
+    await N.verifyIdentity({reason: t("bioR"), title: "FuNPaY", useFallback: true});
+    const c = await N.getCredentials({server: BIO_SERVER});
+    if (S.sheet !== s || s.step !== 3) return;
+    s.pin = digs(c.password, 6); verifyPin();
+  } catch (e) { if (S.sheet === s) toast(t("fpbad")); }
+}
+
+/* পেমেন্ট / ক্যাশ আউটের ধাপ ১ (মার্চেন্ট / এজেন্ট বাছাই) — সেন্ড মানির মতো বিকাশ স্টাইল */
+function bkStep1(s) {
+  const cash = s.id === "cash";
+  const tabs = cash ? `<div class="seg2" style="margin:0 0 10px"><button class="on">${t("agent")}</button><button onclick="hap();toast(t('soon'))">${t("atm")}</button></div>` : "";
+  const search = `<div class="pcard srcc"><div class="fld sf">${ic("srch")}<input id="f1" maxlength="20" placeholder="${t(cash ? "sag" : "smr")}" value="${esc(s.v)}" autocomplete="off" oninput="srchIn(this)"></div><div class="err" id="er">${esc(s.err)}</div></div>`;
+  const tl = (ico, lbl, js) => `<button class="tl" onclick="${js}"><span>${ic(ico)}</span><b>${lbl}</b></button>`;
+  const tiles = `<div class="tl3">${tl("srch", t("tnum"), "document.getElementById('f1').focus()")}${tl("qr", t("scanqr"), `openQR('scan','${s.id}')`)}</div>`;
+  return wrapPage(s, t(s.id), "backStep()", `${tabs}${search}${tiles}<div class="pcard lst"><p class="lh">${t(cash ? "lagent" : "lpay")}</p><div id="clist">${contactRows(s)}</div></div>`,
+    `<button class="btn" onclick="nextStep()">${t("next")}${NXT}</button>`);
 }
