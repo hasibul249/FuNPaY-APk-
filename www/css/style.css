@@ -3453,3 +3453,26 @@ html.lowend .pgx .stp.go,html.lowend .pgx .stp.go.bw{animation-duration:.2s!impo
 html #kpad:not(.show){transition:transform var(--t-out) var(--mo)!important}
 html #kbar:not(.show):not(.nt){transition:transform var(--t-out) var(--mo),opacity .16s ease}
 html.lowend #kpad:not(.show){transition:none!important}
+
+/* =====================================================================
+   v3.05 — KYC পাতা বদলে ঝিলিক বন্ধ
+   (১) আগে পুরনো-নতুন দুটো পাতা একসাথে ফেড হত: মাঝে দুটোই আধা-স্বচ্ছ, ফাঁকা দেখাত; আর পুরনো পাতার কার্ডগুলোর ঢোকার
+       অ্যানিমেশন আবার চলে ভূতের মতো ভেসে উঠত। এখন ফেড নয়, iOS-এর মতো ঠেলে ঢোকা: নতুন পাতা পুরো ঢাকা অবস্থায় (opacity ১) ডান
+       থেকে এসে পুরনোর ওপর বসে; ফেরার সময় বর্তমান পাতা ডানে সরে নিচের আগের পাতা দেখায়।
+   (২) KYC চালু থাকলে পেছনের অ্যাপ (হোম) লুকানো (html.kycon, kycRender/kycClose এ বসে/সরে); ফিরে আসার সময় হোম ঝলকাত।
+   সময়/বক্ররেখা সেই --t-in --t-out --mi --mo থেকেই আসে (v3.03)।
+   ===================================================================== */
+html.kycon #app{visibility:hidden}
+@keyframes kpSf{from{transform:translate3d(100%,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes kpSb{from{transform:translate3d(-24%,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes kpDf{from{transform:translate3d(0,0,0)}to{transform:translate3d(-24%,0,0)}}
+@keyframes kpDb{from{transform:translate3d(0,0,0)}to{transform:translate3d(100%,0,0)}}
+html #kyc .kpi-f{animation:kpSf var(--t-in) var(--mi) both!important;z-index:81;background-color:#f3f1f4;box-shadow:-12px 0 28px rgba(60,0,30,.14);will-change:transform}
+html #kyc .kpo-f{animation:kpDf var(--t-in) var(--mi) both!important;z-index:79;will-change:transform}
+html #kyc .kpi-b{animation:kpSb var(--t-in) var(--mi) both!important;z-index:79;background-color:#f3f1f4;will-change:transform}
+html #kyc .kpo-b{animation:kpDb var(--t-out) var(--mo) both!important;z-index:82;box-shadow:-12px 0 28px rgba(60,0,30,.14);will-change:transform}
+/* নতুন পাতার ভেতরের জিনিস আলাদা করে ফেড-ইন করে না (পাতার সাথে একসাথেই আসে); নইলে ঢোকার মুহূর্তে ফাঁকা দেখায় */
+html #kyc .kpi-f .kcard,html #kyc .kpi-b .kcard,html #kyc .kpi-f .kwr:not(.pv),html #kyc .kpi-b .kwr:not(.pv),html #kyc .kpi-f .klg,html #kyc .kpi-b .klg{animation:none!important;opacity:1!important}
+html #kyc .kpi-b .kshield,html #kyc .kpi-b .kt2{animation:none!important}
+html.lowend #kyc .kpi-f,html.lowend #kyc .kpi-b,html.lowend #kyc .kpo-f{animation-duration:.2s!important}
+html.lowend #kyc .kpo-b{animation-duration:.16s!important}

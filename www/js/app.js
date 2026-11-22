@@ -1769,7 +1769,7 @@ function kycSync() {
   if (!K.open || K.step === "wait") { K.step = "intro"; kycRender(); }
 }
 function kycClose(wipe) {
-  window.__kyc = false; kcamStop();
+  window.__kyc = false; kcamStop(); document.documentElement.classList.remove("kycon"); KLAST = null;
   const e = document.getElementById("kyc"); if (e) e.remove();
   K.open = false; K.flow = false; K.step = "intro"; K.pv = ""; K.busy = false; K.reading = false; K.auto = false; K.vbusy = false; clearTimeout(K.at);
   if (wipe) { kWorkerStop(); if (KFL) { try { KFL.close(); } catch (e) {} KFL = null; KFLp = null; } K.pre = {}; K.front = K.back = K.selfie = ""; K.d = {name:"", name_bn:"", father:"", mother:"", dob:"", nid:"", addr:"", blood:"N.A.", division:"", district:"", upazila:"", postoffice:"", postcode:"", gender:"", incsrc:"", income:"", occ:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.lk = {}; K.ft = 0; K.redo = false; K.manual = false; K.rep = null; K.sum = null; }
@@ -4483,18 +4483,27 @@ function kycRender() {
   const el = kEl(), want = K.step === "face" ? "user" : (K.step === "front" || K.step === "back") ? "environment" : "";
   kcamStop(!!want && !!KS && KSf === want && !K.pv && !K.galOpen);
   window.__kyc = true; const first = !K.open; K.open = true;
+  document.documentElement.classList.add("kycon");
   el.className = first ? "kin" : "";
   const changed = !first && KLAST && KLAST !== K.step, dir = changed ? (KORD.indexOf(K.step) >= KORD.indexOf(KLAST) ? 1 : -1) : 0;
+  /* v3.05: আগের পাতার ছেড়ে যাওয়া কপি (যদি থাকে) আগে মুছে ফেলা */
+  [].slice.call(el.children).forEach(c => { if (c.classList.contains("kpo")) c.remove(); });
   let old = null;
   if (changed && el.firstElementChild) {
-    old = el.firstElementChild; el.removeChild(old);
+    /* v3.05: পুরনো পাতা DOM থেকে না সরিয়ে যেখানে আছে সেখানেই রাখি। আগে সরিয়ে আবার বসালে ভেতরের সব কার্ডের
+       ঢোকার অ্যানিমেশন (opacity ০ থেকে) আবার চলত; ফলে পুরনো পাতা ফাঁকা হয়ে ভূতের মতো ভেসে উঠত (ঝিলিক) */
+    old = el.firstElementChild;
     old.querySelectorAll("[id]").forEach(n => n.removeAttribute("id"));
     old.querySelectorAll("video").forEach(v => { try { v.pause(); } catch (e) {} });
+    const h = document.createElement("div"); h.innerHTML = kHtml();
+    const nw = h.firstElementChild;
+    K.galOpen = 0;
+    if (nw) { nw.classList.add(dir > 0 ? "kpi-f" : "kpi-b"); el.insertBefore(nw, el.firstChild); }
     old.classList.add("kpo", dir > 0 ? "kpo-f" : "kpo-b");
+    setTimeout(() => { try { old.remove(); } catch (e) {} }, 360);
+  } else {
+    el.innerHTML = kHtml();
   }
-  el.innerHTML = kHtml();
-  if (changed) { K.galOpen = 0; const nw = el.firstElementChild; if (nw) nw.classList.add(dir > 0 ? "kpi-f" : "kpi-b"); }
-  if (old) { el.appendChild(old); setTimeout(() => { try { old.remove(); } catch (e) {} }, 360); }
   KLAST = K.step;
   if (K.step === "back") kPreload(); if (K.step === "face") setTimeout(kPreloadFA, 2500);
   kSb();
