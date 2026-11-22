@@ -1,12 +1,13 @@
 /* v2.47 — কিবোর্ড নিজে খুলবে না: ঘরে ইউজারের আঙুল/টাইপ ছাড়া কোড দিয়ে focus() করলে ব্লক (ট্যাপের সাথে সাথের focus চলে) */
 (function () {
   try {
-    let gt = 0; const mark = () => { gt = performance.now(); };
+    let gt = 0; const mark = () => { gt = performance.now(); }; window.__fpOkFocus = mark;
     ["pointerdown", "touchstart", "touchend", "mousedown", "click", "keydown", "keyup", "beforeinput", "input"].forEach((e) => document.addEventListener(e, mark, true));
     const of = HTMLElement.prototype.focus;
     HTMLElement.prototype.focus = function () {
       const n = this.tagName;
-      if ((n === "INPUT" || n === "TEXTAREA") && !this.readOnly && performance.now() - gt > 150) return;
+      const kpf = n === "INPUT" && this.getAttribute && this.getAttribute("data-kp") === "1";
+      if ((n === "INPUT" || n === "TEXTAREA") && (!this.readOnly || kpf) && performance.now() - gt > 150) return;
       return of.apply(this, arguments);
     };
   } catch (e) {}
@@ -41,7 +42,10 @@ P.ok2 = '<circle cx="12" cy="12" r="9.5"/><path d="M7.5 12.4l3 3 6-6.4"/>';
 P.copy = '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>';
 P.shr = '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/>';
 P.eye = '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'; P.eyeo = '<path d="M3 3l18 18M10.6 6.2A9.6 9.6 0 0112 6c6 0 10 6 10 6a17 17 0 01-3.2 3.8M6.5 7.6C3.9 9.3 2 12 2 12s4 7 10 7c1.5 0 2.9-.4 4.1-1"/>';
-const ic = (k) => `<svg class="i" viewBox="0 0 24 24">${P[k]}</svg>`;
+/* v2.49 — ফিঙ্গারপ্রিন্ট আইকন (বিকাশের মতো): চৌকো ফ্রেমের ভেতরে মুখ ↔ আঙুলের ছাপ নিজে নিজে বদলায়; ফ্রেমের কোণ ছড়িয়ে আবার জোড়া লাগে।
+   সব জায়গায় ic("fp") এই একটাই আইকন দেয়। */
+const FPX = '<svg class="i fpx" viewBox="0 0 32 32" aria-hidden="true"><g class="fc"><path class="c1" d="M4 11V8.5A4.5 4.5 0 0 1 8.5 4H11"/><path class="c2" d="M21 4h2.5A4.5 4.5 0 0 1 28 8.5V11"/><path class="c3" d="M28 21v2.5a4.5 4.5 0 0 1-4.5 4.5H21"/><path class="c4" d="M11 28H8.5A4.5 4.5 0 0 1 4 23.5V21"/></g><g class="ff"><path d="M12.2 12.4v2.6M19.8 12.4v2.6M16 12.2v5.2h-1.6M11.7 20.9c2.6 2.5 6 2.5 8.6 0"/></g><g class="fg"><g transform="translate(16 16) scale(.6) translate(-12 -12)">' + P.fp + '</g></g></svg>';
+const ic = (k) => k === "fp" ? FPX : `<svg class="i" viewBox="0 0 24 24">${P[k]}</svg>`;
 Object.assign(P, {
   filt:'<path d="M4 6h16M7 12h10M10 18h4"/>', stmt:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
   lim:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', help:'<path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',
@@ -910,6 +914,7 @@ function viewDir(a, b) {
   return (VDEP[b] || 0) >= (VDEP[a] || 0) ? 1 : -1;
 }
 function vGhost(ap, old, dir, sc) {
+  return; /* v2.48: আগের পেজের ঘোস্ট কপি বন্ধ — দুই পেজ একটার ওপর আরেকটা আর আসবে না */
   try {
     if (!old) return;
     const g = document.createElement("div"), r = ap.getBoundingClientRect(), c = old.cloneNode(true);
@@ -3066,7 +3071,7 @@ function scanHtml(s) {
 /* v2.28 — অ্যাপের নিজস্ব সংখ্যা কিপ্যাড: PIN, টাকার পরিমাণ, মোবাইল নম্বর, OTP, NID — সব সংখ্যার ঘরে ফোনের কিবোর্ড নয়।
    শুধু লেখার ঘরে (নাম, নোট, সার্চ ইত্যাদি) ফোনের কিবোর্ড ওঠে। কিপ্যাডে কোনো অ্যানিমেশন নেই, যাতে ফোন ল্যাগ না করে। */
 (function () {
-  let kp = null, bar = null, cur = null, hideT = 0, mq = 0;
+  let kp = null, cur = null, hideT = 0, mq = 0;
   const SEL = 'input[type="password"][inputmode="numeric"],input[data-kp="1"]'; /* v2.33: শুধু PIN এ অ্যাপের কিপ্যাড; নাম্বার/পরিমাণে ফোনের কিবোর্ড */
   const isPin = (e) => e && e.tagName === "INPUT" && e.getAttribute("data-kp") === "1";
   const fix = (root) => {
@@ -3085,12 +3090,11 @@ function scanHtml(s) {
     const n = (k) => `<button data-k="${k}">${k}</button>`;
     const pn = ["1", "2", "3", "4", "5", "6", "7", "8", "9"].map(n).join("") + DEL + n("0") + OKB;
     const dc = ["1", "2", "3", "4", "5", "6", "7", "8", "9"].map(n).join("") + n(".") + n("0") + DEL;
-    kp.innerHTML = `<div class="kpb"><span></span>${ARW}</div><div class="kpg pn">${pn}</div><div class="kpg dc">${dc}</div>`;
-    bar = kp.firstChild;
+    kp.innerHTML = `<div class="kpg pn">${pn}</div><div class="kpg dc">${dc}</div>`;
     kp.addEventListener("pointerdown", (ev) => {
-      const b = ev.target.closest("button,.kpb"); if (!b) return;
+      const b = ev.target.closest("button"); if (!b) return;
       ev.preventDefault();
-      press(b.classList.contains("kpb") ? "ok" : b.getAttribute("data-k"));
+      press(b.getAttribute("data-k"));
     });
     document.body.appendChild(kp); return kp;
   };
@@ -3104,8 +3108,8 @@ function scanHtml(s) {
   const upd = () => {
     if (!kp || !cur) return; const m = mode(cur);
     kp.classList.toggle("dec", m === "dec");
-    bar.firstChild.textContent = t(m === "pin" ? "pinok" : m === "dec" ? "go2" : "cont");
     kp.classList.toggle("on", ready(cur));
+    dkQs();
   };
   const press = (k) => {
     const e = cur; if (!e) return;
@@ -3125,52 +3129,122 @@ function scanHtml(s) {
     if (e.id === "otpin") return;
     if (e.id === "rk") { const n = document.getElementById("rk2"); if (n) { n.focus(); return; } }
     if (/Enter/.test(e.getAttribute("onkeydown") || "")) { e.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", bubbles: true, cancelable: true})); return; }
-    const b = (e.closest(".sh,.kw,#app") || document).querySelector(".pfoot .btn,.kbtn,.btn"); if (b) b.click();
+    const b = footBtn(e); if (b) b.click();
   };
-  /* ---- v2.33: ফোনের কিবোর্ডের ঠিক ওপরে "পরবর্তী/এগিয়ে যান" বার (নাম্বার ও পরিমাণের ঘরে) ---- */
-  let fb = null, fbc = null, fbT = 0;
-  const isPhoneK = (e) => e && e.tagName === "INPUT" && !isPin(e) && e.id !== "otpin" && e.id !== "lp" && e.id !== "rp" && !e.readOnly && (/^(numeric|decimal)$/.test(e.getAttribute("inputmode") || "") || e.type === "tel");
-  const footBtn = (e) => (e.closest(".sh,.kw,#app") || document).querySelector(".pfoot .btn,.kbtn,.btn");
+  /* ---- v2.49 — এক স্থায়ী বার: "পরবর্তী / এগিয়ে যান / পিন কনফার্ম করুন" (বিকাশের মতো) ----
+     পেজে সংখ্যা বা পিনের ঘর থাকলে বারটা সবসময় নিচে থাকে। ফোনের কিবোর্ড বা অ্যাপের কিপ্যাড উঠলে বারটা তার ঠিক ওপরে উঠে বসে,
+     কিবোর্ড নামলে গায়েব না হয়ে ধীরে নিচে নেমে আসে। লেখা আসে ওই পেজের নিজের বাটন থেকে, তাই যে পেজে যাবে সেই অনুযায়ী বদলায়। */
+  const DE = document.documentElement;
+  let fb = null, dkOwn = null, dkIns = [], dkQ = 0;
+  const isPhoneK = (e) => e && e.tagName === "INPUT" && !isPin(e) && e.id !== "otpin" && e.id !== "lp" && e.id !== "rp" && !e.readOnly && (/^(numeric|decimal)$/.test(e.getAttribute("inputmode") || "") || e.type === "tel" || e.id === "f1");
+  const FOOT = ".pfoot button,.kbtm button,.kbtn";
+  const footBtn = (e) => { const r = e.closest(".sh,.kw,#app") || document; return r.querySelector(FOOT) || r.querySelector(".pfoot .btn,.kbtn,.btn"); };
   const readyP = (e) => {
+    if (e.id === "f1") { const v = (e.value || "").trim(); return digs(v, 20).length >= 11 || v.replace(/[0-9\s]/g, "").length >= 2; } /* সেন্ড মানির "নাম বা নাম্বার" ঘর */
     if (e.getAttribute("inputmode") === "decimal") return (parseFloat(e.value) || 0) > 0;
     const need = e.id === "lp" ? 11 : Math.min(e.maxLength > 0 ? e.maxLength : 10, 10);
     return digs(e.value, 20).length >= need;
   };
+  const vvH = () => { const v = window.visualViewport; return v ? v.height : window.innerHeight; };
+  let fullH = Math.max(window.innerHeight, vvH()), fullW = window.innerWidth;
   const kbo = () => { const v = window.visualViewport; return v ? Math.max(0, Math.round(window.innerHeight - v.height - v.offsetTop)) : 0; };
+  const kbH = () => Math.max(0, Math.round(fullH - vvH()));
   const mkb = () => {
     if (fb) return fb;
-    fb = document.createElement("div"); fb.id = "kbar"; fb.innerHTML = "<span></span>" + ARW;
-    fb.addEventListener("pointerdown", (ev) => { ev.preventDefault(); if (fbc) go(fbc); });
+    fb = document.createElement("div"); fb.id = "kbar"; fb.className = "nt"; fb.innerHTML = "<span></span>" + ARW;
+    fb.addEventListener("pointerdown", (ev) => { ev.preventDefault(); dkTap(); });
     document.body.appendChild(fb); return fb;
   };
-  const updB = () => {
-    if (!fb || !fbc) return;
-    const b = footBtn(fbc), lbl = b ? (b.textContent || "").trim() : "";
-    fb.firstChild.textContent = lbl || t("cont");
-    fb.classList.toggle("on", readyP(fbc)); fb.style.bottom = kbo() + "px";
+  /* সবচেয়ে ওপরের পেজ (#sheet2 এর স্তর আগে), যেটা বন্ধ হচ্ছে না */
+  const topPage = () => {
+    const a = document.querySelectorAll("#sheet2 .sh.pgx:not(.out)"); if (a.length) return a[a.length - 1];
+    const b = document.querySelectorAll("#sheet .sh.pgx:not(.out)"); return b.length ? b[b.length - 1] : null;
   };
-  const showB = (e) => {
-    if (!footBtn(e)) return hideB();
-    clearTimeout(fbT); fbc = e; mkb(); updB();
-    requestAnimationFrame(() => { fb.classList.add("show"); document.documentElement.classList.add("phkb"); });
+  const drivers = (pg) => {
+    fix(pg);
+    const a = [].slice.call(pg.querySelectorAll("input")).filter((e) => !e.disabled && (isPin(e) || isPhoneK(e)));
+    const p = a.filter(isPin); return p.length ? p : a;
   };
-  const hideB = () => { if (fb) fb.classList.remove("show"); document.documentElement.classList.remove("phkb"); fbc = null; };
-  try { if (window.visualViewport) { window.visualViewport.addEventListener("resize", updB); window.visualViewport.addEventListener("scroll", updB); } } catch (e) {}
-  document.addEventListener("input", (ev) => { if (ev.target === fbc) updB(); });
-  const hide = () => { if (kp) kp.classList.remove("show"); document.documentElement.classList.remove("pinkb"); cur = null; };
+  const isRdy = (e) => (isPin(e) ? ready(e) : readyP(e));
+  const sbPx = () => { try { return parseFloat(getComputedStyle(fb).paddingBottom) || 0; } catch (e) { return 0; } };
+  const dkHide = () => {
+    if (dkOwn) { dkOwn.classList.remove("dkp"); dkOwn = null; }
+    dkIns = [];
+    if (fb && fb.classList.contains("show")) fb.classList.remove("show");
+    if (DE.classList.contains("phkb")) DE.classList.remove("phkb");
+  };
+  const dkSync = () => {
+    dkQ = 0;
+    const pg = topPage(), ae = document.activeElement, kpUp = !!(kp && cur && kp.classList.contains("show")), kbUp = kbH() > 80;
+    let own = null, ins = [], btn = null, tr = null;
+    if (pg) { const d = drivers(pg), b = footBtn(pg); if (d.length && b) { own = pg; ins = d; btn = b; } }
+    if (!own) {
+      if (kpUp) { tr = cur; ins = [cur]; btn = footBtn(cur); }
+      else if (kbUp && ae && isPhoneK(ae) && footBtn(ae)) { tr = ae; ins = [ae]; btn = footBtn(ae); }
+    }
+    if (!own && !tr) return dkHide();
+    mkb();
+    if (dkOwn && dkOwn !== own) dkOwn.classList.remove("dkp");
+    if (own && !own.classList.contains("dkp")) own.classList.add("dkp");
+    dkOwn = own; dkIns = ins;
+    const pin = ins.some((e) => isPin(e) && mode(e) === "pin");
+    const lbl = pin ? t("pinok") : (tr && kpUp && !(btn && (btn.textContent || "").trim())) ? t(mode(tr) === "dec" ? "go2" : "cont") : ((btn && (btn.textContent || "").trim()) || t("cont"));
+    if (fb.firstChild.textContent !== lbl) fb.firstChild.textContent = lbl;
+    const on = ins.every(isRdy), ld = !!(btn && btn.classList.contains("ld"));
+    if (fb.classList.contains("on") !== on) fb.classList.toggle("on", on);
+    if (fb.classList.contains("ld") !== ld) fb.classList.toggle("ld", ld);
+    if (kp && kp.classList.contains("on") !== on && kpUp) kp.classList.toggle("on", on);
+    const kpH = kpUp ? kp.offsetHeight : 0, sys = kbo(), off = Math.max(sys, kpH), sb = sbPx();
+    const y = off > 0 ? Math.max(0, off - sb) : 0;
+    if (fb.style.getPropertyValue("--dko") !== y + "px") fb.style.setProperty("--dko", y + "px");
+    DE.style.setProperty("--kbo", sys + "px");
+    if (kpUp) DE.style.setProperty("--kph", (kpH + (own ? 0 : 52)) + "px");
+    if (sys > 0) { if (!DE.classList.contains("phkb")) DE.classList.add("phkb"); } else if (DE.classList.contains("phkb")) DE.classList.remove("phkb");
+    if (!fb.classList.contains("show")) {
+      fb.classList.add("nt"); void fb.offsetHeight; fb.classList.add("show");
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (fb) fb.classList.remove("nt"); }));
+    }
+  };
+  const dkQs = () => { if (!dkQ) { dkQ = 1; (window.queueMicrotask || ((f) => Promise.resolve().then(f)))(dkSync); } };
+  const dkTap = () => {
+    if (!dkIns.length) return;
+    const e = (cur && dkIns.indexOf(cur) >= 0) ? cur : dkIns[0];
+    if (!dkIns.every(isRdy)) { fb.classList.remove("sk"); void fb.offsetWidth; fb.classList.add("sk"); hap(); return; }
+    go(e);
+  };
+  const onVV = () => {
+    const ae = document.activeElement, kbUp = kbH() > 80;
+    if (!ae || ae === document.body || !/^(INPUT|TEXTAREA)$/.test(ae.tagName)) { if (!kbUp) fullH = Math.max(window.innerHeight, vvH()); }
+    dkSync();
+  };
+  try { if (window.visualViewport) { window.visualViewport.addEventListener("resize", onVV); window.visualViewport.addEventListener("scroll", onVV); } } catch (e) {}
+  window.addEventListener("resize", () => { if (Math.abs(window.innerWidth - fullW) > 80) { fullW = window.innerWidth; fullH = Math.max(window.innerHeight, vvH()); } onVV(); });
+  /* ফোনের স্ক্রিন নিজেই ছোট/বড় হলে (কিবোর্ড ওঠা-নামা) বার লাফ না দিয়ে মসৃণ গড়িয়ে নতুন জায়গায় বসে */
+  let lastIH = window.innerHeight;
+  window.addEventListener("resize", () => {
+    const h = window.innerHeight, d = lastIH - h; lastIH = h;
+    if (Math.abs(d) < 60 || !fb || !fb.classList.contains("show")) return;
+    try { fb.animate([{transform: "translate3d(0," + d + "px,0)"}, {transform: "translate3d(0,0,0)"}], {duration: 260, easing: "cubic-bezier(.2,.8,.2,1)"}); } catch (e) {}
+  });
+  document.addEventListener("input", () => dkQs());
+  try {
+    new MutationObserver((rs) => {
+      for (let i = 0; i < rs.length; i++) { const m = rs[i]; if (m.type === "attributes" && !(m.target.classList && m.target.classList.contains("pgx"))) continue; dkQs(); return; }
+    }).observe(document.documentElement, {childList: true, subtree: true, attributes: true, attributeFilter: ["class"]});
+  } catch (e) {}
+  const hide = () => { if (kp) kp.classList.remove("show"); document.documentElement.classList.remove("pinkb"); cur = null; dkSync(); };
   document.addEventListener("focusin", (ev) => {
     fix(ev.target.parentNode || document);
-    if (!isPin(ev.target)) { if (isPhoneK(ev.target)) showB(ev.target); else { clearTimeout(fbT); fbT = setTimeout(hideB, 120); } return; }
-    hideB();
+    if (!isPin(ev.target)) { dkQs(); return; }
     clearTimeout(hideT); cur = ev.target; mk(); upd();
     requestAnimationFrame(() => {
       kp.classList.add("show"); document.documentElement.classList.add("pinkb");
-      document.documentElement.style.setProperty("--kph", kp.offsetHeight + "px");
+      dkSync();
       try { if (cur && !cur.closest(".pinp")) cur.scrollIntoView({block: "nearest"}); } catch (e) {}
     });
   });
   document.addEventListener("focusout", (ev) => {
-    if (fbc && ev.target === fbc) { clearTimeout(fbT); fbT = setTimeout(() => { if (!isPhoneK(document.activeElement)) hideB(); }, 160); }
+    setTimeout(dkSync, 170);
     clearTimeout(hideT);
     const r = ev.relatedTarget; /* বাটন (যেমন ৳500 চিপ) চাপলে কিপ্যাড নামে না */
     if (r && r.tagName !== "INPUT" && r.closest && r.closest("#sheet,#app")) return;
@@ -3181,7 +3255,7 @@ function scanHtml(s) {
   try {
     new MutationObserver(() => {
       if (mq) return;
-      mq = requestAnimationFrame(() => { mq = 0; fix(); if (cur && !document.contains(cur)) hide(); if (fbc && !document.contains(fbc)) hideB(); });
+      mq = requestAnimationFrame(() => { mq = 0; fix(); if (cur && !document.contains(cur)) hide(); });
     }).observe(document.documentElement, {childList: true, subtree: true});
   } catch (e) {}
   fix();
@@ -3909,17 +3983,24 @@ function subQ(el) { const s = subTop(); if (!s) return; s.q = el.value; const l 
 
 /* ---------- কন্টাক্ট লোড (অনুমতি চেয়ে, দুই ধরনের প্লাগইন ফরম্যাটই পড়ে) ---------- */
 const cName = (ph) => S.cmap.get(ph) || "";
+const cpGot = (v) => { try { if (v === undefined) return localStorage.getItem("fpcg") === "1"; if (v) localStorage.setItem("fpcg", "1"); else localStorage.removeItem("fpcg"); } catch (e) {} return false; };
 async function loadContacts(force) {
   if (S.cst === "loading" || (S.cst === "ok" && !force)) return;
   const C = cap().Contacts;
   if (!C || !C.getContacts) { S.cst = "none"; cstRefresh(); return; }
   S.cst = "loading"; S.cerr = ""; cstRefresh();
   try {
-    let p = {}; try { p = await C.checkPermissions(); } catch (e) {}
-    let g = p.contacts || p.readContacts;
-    if (g !== "granted") { try { p = await C.requestPermissions(); } catch (e) { p = {}; } g = p.contacts || p.readContacts; }
-    if (g !== "granted") { S.cst = "denied"; cstRefresh(); return; }
-    let r; try { r = await C.getContacts({projection: {name: true, phones: true}}); } catch (e1) { r = await C.getContacts({projection: {name: true, phones: true, image: false}}); }
+    /* v2.48: অনুমতির উত্তরের ধরন (contacts / readContacts) যা-ই হোক, আগে সরাসরি পড়ার চেষ্টা; পড়া গেলে আর অনুমতি চাওয়া নয় */
+    const anyG = (q) => !!q && Object.keys(q).some((k) => q[k] === "granted");
+    const rd = async () => { try { return await C.getContacts({projection: {name: true, phones: true}}); } catch (e1) { return await C.getContacts({projection: {name: true, phones: true, image: false}}); } };
+    let r = null, p = {}; try { p = await C.checkPermissions(); } catch (e) {}
+    if (anyG(p) || cpGot()) { try { r = await rd(); } catch (e) { r = null; } }
+    if (!r) {
+      try { p = await C.requestPermissions(); } catch (e) { p = {}; }
+      try { r = await rd(); } catch (e) { r = null; }
+      if (!r) { cpGot(0); S.cst = "denied"; cstRefresh(); return; }
+    }
+    cpGot(1);
     const m = new Map(), me = S.me ? S.me.phone : "";
     (r.contacts || []).forEach(c => {
       const nm = (c.name && (c.name.display || [c.name.given, c.name.family].filter(Boolean).join(" "))) || c.displayName || "";
@@ -3983,7 +4064,7 @@ function sendStep1(s) {
   const qr = g ? "" : `<button class="qrbtn v3q" onclick="openQR('scan','send')">${ic("qr")}<span>${t("qrtap")}</span></button>`;
   const row = g ? `<div class="gsel"><b>${t("g_selc")}: ${n}/10</b><button onclick="grpOff()">${t("g_exit")}</button></div>${n ? `<div class="gchips">${g.sel.map(p => `<span onclick="grpTog('${p}')">${esc(g.names[p] || p)} ✕</span>`).join("")}</div>` : ""}`
     : `<div class="v3tr">${tl(IC_FAVT, `${t("g_fav")} (${S.fav.length})`, "favOpen()")}${tl(IC_REQ, t("v_rq"), "rqHome()")}${tl(IC_AUTO, t("autop") === "autop" ? "অটো পে" : t("autop"), "hap();toast(t('soon'))")}${tl(IC_GRP, t("g_grp"), "grpOn()")}</div>`;
-  const h = wrapPage(s, g ? t("g_grp") : t("send"), "sbBack()", `${search}${qr}${row}<div class="pcard lst v3l"><div id="clist">${contactRows(s)}</div></div>${g ? "" : `<button class="v3fab" onclick="v3num()">${PLUS}<span>${t("v_add")}</span></button>`}`,
+  const h = wrapPage(s, g ? t("g_grp") : t("send"), "sbBack()", `${search}${qr}${row}<div class="pcard lst v3l"><div id="clist">${contactRows(s)}</div></div>`,
     `<button class="btn" onclick="nextStep()">${g ? t("g_next") + " (" + n + ")" : t("next")}${NXT}</button>`);
   return h.replace('class="sh pgx', 'class="sh pgx v3s1' + (g ? " v3g" : ""));
 }
@@ -4002,7 +4083,25 @@ function favUsed() {
 }
 function favOpen() { hap(); loadFav(); subOpen({id: "favs"}); }
 function favInfo() { hap(); toast(t("v_info")); }
-function favAdd() { if (S.fav.length >= 10) { toast(t("favmax")); return; } loadContacts(); subOpen({id: "clp", mode: "fav", title: t("g_fav"), q: "", list: (x) => cRows(x.q)}); }
+function favAdd() { if (S.fav.length >= 10) { toast(t("favmax")); return; } loadContacts(); subOpen({id: "favnum", v: "", err: "", focus: "fnum"}); }
+function favPickC() { loadContacts(); subOpen({id: "clp", mode: "fav", title: t("g_fav"), q: "", list: (x) => cRows(x.q)}); }
+/* v2.48: প্রিয় নাম্বার যোগ — নাম্বার দিন (১১ ডিজিট হলেই পিন চাইবে) অথবা কন্টাক্ট থেকে বাছুন */
+Object.assign(T.bn, {fn_t: "প্রিয় নাম্বার যোগ করুন", fn_h: "মোবাইল নাম্বার দিন", fn_c: "কন্টাক্ট থেকে বাছুন", fn_bad: "সঠিক ১১ ডিজিটের নাম্বার দিন"});
+Object.assign(T.en, {fn_t: "Add favorite number", fn_h: "Enter mobile number", fn_c: "Choose from contacts", fn_bad: "Enter a valid 11-digit number"});
+SUBR.favnum = (s) => subShell(s, t("fn_t"), `<div class="v3ac"><p class="v3nl">${t("fn_h")}</p><div class="v3cd"><div class="fld big bka"><input id="fnum" type="tel" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" value="${esc(s.v)}" autocomplete="off" oninput="favNumIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();favNumGo()}"></div><div class="err" id="fnerr">${esc(s.err)}</div></div><button class="v3t v3fc" onclick="favPickC()"><span>${IC_BOOK}</span><b>${t("fn_c")}</b></button></div>`,
+  `<button class="btn" onclick="favNumGo()">${t("next")}${NXT}</button>`);
+function favNumIn(el) {
+  const s = subTop(); if (!s || s.id !== "favnum") return;
+  const v = digs(el.value, 11); if (el.value !== v) el.value = v; s.v = v; s.err = ""; const e = document.getElementById("fnerr"); if (e) e.textContent = "";
+  if (v.length === 11) { clearTimeout(s.tm); s.tm = setTimeout(() => { if (subTop() === s && s.v.length === 11) favNumGo(); }, 220); }
+}
+function favNumGo() {
+  const s = subTop(); if (!s || s.id !== "favnum" || s.go) return;
+  const f = document.getElementById("fnum"); if (f) s.v = digs(f.value, 11);
+  if (!isPh(s.v)) { s.err = t("fn_bad"); const e = document.getElementById("fnerr"); if (e) e.textContent = s.err; v3shake(s); return; }
+  s.go = true; try { if (f) f.blur(); } catch (e) {}
+  Promise.resolve(favAsk("add", s.v)).finally(() => { setTimeout(() => { s.go = false; }, 700); });
+}
 SUBR.favs = (s) => {
   const nm = (f) => f.name || cName(f.phone);
   const rows = S.fav.length ? S.fav.map(f => `<div class="v3fr">${v3av(nm(f), f.phone)}<div><b>${esc(nm(f) || f.phone)}</b><span>${nm(f) ? esc(f.phone) : ""}</span></div><button class="v3rm" onclick="favAsk('rm','${f.phone}')">${t("v_rm")}</button></div>`).join("") : `<p class="em">${t("v_nofav")}</p>`;
@@ -4461,8 +4560,6 @@ Object.assign(T.en, {otph1: "Verify your", otph2: "mobile number", otpl: "Verifi
     document.querySelectorAll(DOCK).forEach((el) => {
       try { el.animate([{transform: "translateY(" + d + "px)"}, {transform: "translateY(0)"}], {duration: 300, easing: EASE}); } catch (e) {}
     });
-    const kb = document.getElementById("kbar");
-    if (kb && kb.classList.contains("show")) { try { kb.animate([{transform: "translate3d(0," + d + "px,0)"}, {transform: "translate3d(0,0,0)"}], {duration: 300, easing: EASE}); } catch (e) {} }
   }
   let kbOpen = lastH < (window.screen && window.screen.height ? window.screen.height * .75 : 0);
   document.addEventListener("focusin", (ev) => {
@@ -4732,3 +4829,33 @@ function kFaceFinish() {
   const a = document.getElementById("kfarr"); if (a) a.className = "kfarr h";
   setTimeout(() => { if (K.step === "face") { K.pv = ""; K.step = "match"; K.err = ""; kycRender(); } }, 550);
 }
+
+/* =====================================================================
+   v2.49 — ফোনের ক্ষমতা অনুযায়ী ৩ ধাপ: html.lowend (কম RAM/ধীর ফোন: কম অ্যানিমেশন, সাধারণ সলিড),
+   সাধারণ (মাঝারি), html.hiend (ভালো ফোন: পুরো কাচ + পুরো শক্তির মসৃণ অ্যানিমেশন)
+   ===================================================================== */
+(function () {
+  try {
+    const de = document.documentElement; let st = null;
+    try { st = localStorage.getItem("fptier"); } catch (e) {}
+    const set = (tier) => { de.classList.toggle("lowend", tier === "low"); de.classList.toggle("hiend", tier === "hi"); };
+    const m = navigator.deviceMemory || 0, c = navigator.hardwareConcurrency || 0;
+    const guess = ((m && m <= 3) || (c && c <= 4)) ? "low" : ((m >= 6 && c >= 8) ? "hi" : "mid");
+    set(st === "low" || st === "mid" || st === "hi" ? st : guess);
+    if (!st) {
+      /* একবার ফ্রেম-রেট মেপে ঠিক করা (ফলাফল মনে রাখে) */
+      setTimeout(() => {
+        let n = 0, t0 = 0, done = false;
+        const fin = (fps) => {
+          if (done) return; done = true; if (!fps) return;
+          let tier = fps < 38 ? "low" : fps >= 55 && guess !== "low" && (m >= 6 || c >= 8) ? "hi" : "mid";
+          if (guess === "low" && tier === "hi") tier = "mid";
+          try { localStorage.setItem("fptier", tier); localStorage.setItem("fplow", tier === "low" ? "1" : "0"); } catch (e) {}
+          set(tier);
+        };
+        const f = (t) => { if (done) return; if (!t0) t0 = t; n++; if (t - t0 < 1400) requestAnimationFrame(f); else fin(n * 1000 / (t - t0)); };
+        requestAnimationFrame(f); setTimeout(() => fin(0), 4000);
+      }, 3500);
+    }
+  } catch (e) {}
+})();

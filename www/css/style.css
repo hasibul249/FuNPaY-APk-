@@ -2251,12 +2251,7 @@ nav.fx{animation:none!important}
    v2.33 — ভাগ ২ (এই ব্লক সবার শেষে)
    ===================================================================== */
 /* ফোনের কিবোর্ডের ওপরের বার (নাম্বার/পরিমাণ ঘর) */
-#kbar{position:fixed;left:0;right:0;bottom:0;z-index:96;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#9e9a9f;color:#fff;font-weight:700;font-size:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;transform:translate3d(0,110%,0);opacity:0;pointer-events:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),opacity .15s ease,background-color .2s ease;will-change:transform}
-#kbar.show{transform:translate3d(0,0,0);opacity:1;pointer-events:auto}
-#kbar.on{background:linear-gradient(90deg,#e2136e,#f0549a)}
-#kbar svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-html.phkb .pgx .pfoot,html.phkb .v3fab{display:none!important}
-html.phkb .pgx .pbody{padding-bottom:64px}
+
 html.pinkb .v3fab{display:none!important}
 /* স্ট্যাক পেজ */
 .v3p .box,.v3s1 .box{position:relative}
@@ -2550,8 +2545,6 @@ html.pinkb .v3fab{display:none!important}
 /* ---- PIN কিপ্যাড: নিচ থেকে নরমভাবে ওঠে ও নামে ---- */
 #kpad{transition:transform .36s var(--ease)!important;will-change:transform}
 #kpad:not(.show){transition-duration:.26s!important;transition-timing-function:cubic-bezier(.4,0,1,1)!important}
-#kbar{transition:transform .34s var(--ease),opacity .22s ease,background-color .2s ease}
-#kbar:not(.show){transition-duration:.24s,.2s,.2s}
 /* কিপ্যাড ওঠার সময় নিচের বাটন-বার হঠাৎ মুছে না গিয়ে গুটিয়ে যায় */
 .pgx .pfoot{max-height:160px;overflow:hidden;transition:max-height .32s var(--ease),padding .32s var(--ease),opacity .22s ease,box-shadow .3s}
 html.pinkb .pgx .pfoot{display:block;max-height:0;padding-top:0;padding-bottom:0;opacity:0;box-shadow:none;pointer-events:none}
@@ -2840,3 +2833,168 @@ html:has(.fl.light),html:has(.fl.light) body{background:#f7f5f7!important}
   mask:linear-gradient(#000,#000) 0 0/13px 13px no-repeat,linear-gradient(#000,#000) 100% 0/13px 13px no-repeat,linear-gradient(#000,#000) 0 100%/13px 13px no-repeat,linear-gradient(#000,#000) 100% 100%/13px 13px no-repeat}
 .fl.pinp .bkfp svg{width:26px!important;height:26px!important}
 .fl.pinp .bkfp:active{background:#e2136e14!important}
+
+/* =====================================================================
+   v2.48 — পেজ বদল স্থির (ঘোস্ট নেই), নিচের বার কাচের মতো (বিকাশের ধাঁচে), স্ক্যানারে ক্যামেরা দেখা, প্রিয় নাম্বার যোগ পেজ
+   ===================================================================== */
+/* ১) পেজ বদল: পুরনো পেজের কপি/ফেড নেই; ট্যাব বদল সরাসরি, ভেতরের জিনিস একটা একটা করে ওঠা নেই */
+.vgh{display:none!important}
+.pg.vtf,.pg.vtb,.pg.vtn,.pg.in,.pg.in.vtf,.pg.in.vtb,.pg.in.vtn{animation:none!important}
+.pg.in>*,.pg.in :is(.it,.tr,.mr,.nf,.fc,.tri div,.wsheet,.sec,.msec,.prof,.balc,.nt,.pcard){animation:none!important}
+.fl.vtf,.fl.vtb,.fl.vtn{animation:fp48fl .16s ease-out both!important}
+@keyframes fp48fl{from{opacity:.4}to{opacity:1}}
+/* ২) হাত দিলে পেজ নড়ে না: শুধু ওপর-নিচ স্ক্রল, পাশে টান নেই; বড় কার্ড চাপলে ছোট/বড় হয় না; পেজ খোলা থাকলে নিচের পেজ স্ক্রল হয় না */
+#app,.sh .box,.pbody{touch-action:pan-y}
+.pbody{overscroll-behavior:contain}
+.bn:active,.fc:active,.sec:active,.pcard:active,.wsheet:active,.msec:active,.prof:active,.balc:active{transform:none!important}
+html:has(.sh.pgx:not(.out)) #app{overflow:hidden}
+
+/* ৩) নিচের বার: কাচের মতো (পেছনের রং ঝাপসা দেখা যায়), বিকাশের মতো পুরো-প্রস্থ বার */
+nav,nav.fx{bottom:0!important;width:100%!important;max-width:430px!important;height:calc(60px + var(--sb,0px))!important;padding-bottom:var(--sb,0px)!important;border-radius:0!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.70),rgba(255,255,255,.58))!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.9)!important;backdrop-filter:blur(18px) saturate(1.9)!important;
+  border-top:1px solid rgba(255,255,255,.75)!important;box-shadow:0 -1px 0 rgba(150,20,90,.07),0 -10px 26px rgba(170,20,95,.08)!important}
+nav .qrb .ni{margin-top:-14px;box-shadow:0 6px 16px rgba(226,19,110,.38),0 0 0 4px rgba(255,255,255,.55)!important}
+/* কম শক্তির ফোন: কাচ নেই, সাধারণ সাদা বার ও সাধারণ কার্ড, ঝাপসা (blur) পুরো বন্ধ — স্বাভাবিক গতিতে চলে */
+html.lowend *,html.lowend *:before,html.lowend *:after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html.lowend nav,html.lowend nav.fx{background:rgba(255,255,255,.97)!important;box-shadow:0 -1px 0 rgba(150,20,90,.10),0 -4px 14px rgba(170,20,95,.08)!important}
+html.lowend .wsheet,html.lowend .sec,html.lowend .pcard,html.lowend .msec,html.lowend .prof,html.lowend .balc,html.lowend .nt,html.lowend .pg>.seg,html.lowend .pg>.srch,html.lowend .pg>.note,html.lowend .fc,html.lowend .bp{background:#fff!important;box-shadow:0 2px 10px rgba(170,20,95,.07)!important}
+html.lowend .sh.dlg .box{background:#fff!important}
+html.lowend .sh:not(.pgx):not(.scanx){background:rgba(48,8,30,.45)!important}
+html.lowend nav button.on .ni{animation:none}
+html.lowend .sh.pgx .box{box-shadow:none}
+
+/* ৪) স্ক্যানার: ক্যামেরার ছবি দেখা যায় না কারণ পেছনের html/body গাঢ় রঙে আটকানো ছিল (v2.47) — স্ক্যান চলাকালীন স্বচ্ছ */
+html.scanning,html.scanning body,html.scanning #app,html.scanning:has(#app.au),html.scanning:has(#app.au) body,html.scanning:has(#app),html.scanning:has(#app) body{background:transparent!important}
+
+/* ৫) প্রিয় নাম্বার যোগ পেজ */
+#fnum{width:100%;border:0;background:none;outline:0;font-size:22px;font-weight:700;letter-spacing:.6px;color:#2a1020;padding:6px 2px}
+.v3fc{display:flex!important;flex-direction:row!important;align-items:center;gap:12px;width:100%;margin-top:18px;padding:12px 14px;background:#fff;border:1px solid #f0dbe6;border-radius:14px;text-align:left}
+.v3fc span{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#fdeaf3;color:#e2136e}
+.v3fc span svg{width:22px;height:22px}
+.v3fc b{font-size:15px;font-weight:700;color:#2a1020}
+.v3fc b{flex:1;text-align:left}
+.v3ac .v3nl{padding-left:16px}
+#fnum{padding-left:16px;text-align:left}
+
+
+/* =====================================================================
+   v2.49 — লগইনের ব্যাকগ্রাউন্ডে ৩টি বড় স্থির লোগো (বামে, ডানে, নিচে), কিবোর্ড-বার, ফোনের ক্ষমতা অনুযায়ী অ্যানিমেশন
+   ===================================================================== */
+/* ১) পিন লগইনের সাদা অংশ: ছোট ছোট অনেক লোগোর বদলে ৩টি বড় লোগো, কোনোটা নড়ে না */
+.fl.pinp .psheet.bkl{
+  background:
+    linear-gradient(rgba(255,255,255,.90),rgba(255,255,255,.90)),
+    url(/icons/logo-pink.png) no-repeat left -78px top 34%/200px 200px,
+    url(/icons/logo-pink.png) no-repeat right -84px top 52%/210px 210px,
+    url(/icons/logo-pink.png) no-repeat left 50% bottom 6px/180px 180px,
+    #fff!important;
+  background-attachment:scroll!important;
+}
+/* ২) আমার QR ও স্ক্যান পাতা: ছোট ভাসমান লোগো বাদ, ৩টি বড় স্থির লোগো */
+.qdeco .qwm{display:none!important}
+.qdeco:before,.qdeco:after,.qdeco .qwm.q1,.qdeco .qwm.q2,.qdeco .qwm.q3{display:block!important}
+.qdeco .qwm.q4,.qdeco .qwm.q5,.qdeco .qwm.q6{display:none!important}
+.qdeco .qwm.q1,.qdeco .qwm.q2,.qdeco .qwm.q3{animation:none!important;width:150px!important;height:150px!important;opacity:.13!important}
+.qdeco .qwm.q1{left:-52px!important;right:auto!important;top:auto!important;bottom:34%!important;transform:rotate(-14deg)!important}
+.qdeco .qwm.q2{right:-52px!important;left:auto!important;top:auto!important;bottom:46%!important;transform:rotate(14deg)!important}
+.qdeco .qwm.q3{left:calc(50% - 75px)!important;right:auto!important;top:auto!important;bottom:-34px!important;transform:rotate(6deg)!important}
+.sh.scanx .scbg .wm{display:none!important;animation:none!important}
+.sh.scanx .scbg .wm.w1,.sh.scanx .scbg .wm.w2,.sh.scanx .scbg .wm.w3{display:block!important;width:150px!important;height:150px!important;opacity:.22!important}
+.sh.scanx .scbg .wm.w1{left:-54px!important;right:auto!important;top:36%!important;bottom:auto!important;transform:rotate(-14deg)!important}
+.sh.scanx .scbg .wm.w2{right:-54px!important;left:auto!important;top:36%!important;bottom:auto!important;transform:rotate(14deg)!important}
+.sh.scanx .scbg .wm.w3{left:calc(50% - 75px)!important;right:auto!important;top:auto!important;bottom:-36px!important;transform:rotate(6deg)!important}
+.sh.scanx .scbg .wm.w4{display:none!important}
+
+/* ৩) ফোনের কিবোর্ডের ওপরের বার: কিবোর্ড উঠে যাওয়ার পরই দেখায়, তাই ফাঁক থাকে না; নামলে সাথে সাথে সরে */
+
+/* ৪) ফোনের ক্ষমতা অনুযায়ী অ্যানিমেশন: কম RAM → কম অ্যানিমেশন, ভালো ফোন → পুরো শক্তিতে মসৃণ */
+html.lowend .orb,html.lowend .fps-orb,html.lowend .fpa-ry,html.lowend .fpa-rp,html.lowend .fpa-spin,
+html.lowend .otwarn svg,html.lowend button.hold,html.lowend .qdeco .qwm{animation:none!important}
+html.lowend .fpa-dt{animation:none!important}
+html.lowend .fpa-ry{opacity:1!important}
+html.lowend .fpa-ct{animation:none!important;opacity:1!important}
+html.lowend .fpa-rg{animation:none!important;opacity:.55!important}
+html.lowend .pg.in>*,html.lowend .pg.in .it,html.lowend .pg.in .tr,html.lowend .pg.in .mr,html.lowend .pg.in .tri div{animation:none!important}
+html.lowend .fl.vtf,html.lowend .fl.vtb,html.lowend .fl.vtn,html.lowend .pg.vtf,html.lowend .pg.vtb,html.lowend .pg.vtn{animation-duration:.14s!important}
+html.lowend #kpad{transition-duration:.14s!important}
+html.lowend .sh .box{transition-duration:.18s!important}
+html.lowend *{scroll-behavior:auto!important}
+html.hiend #kpad{transition:transform .38s cubic-bezier(.22,1,.36,1)!important}
+html.hiend .pg.in>*{animation-timing-function:cubic-bezier(.22,1,.36,1)}
+html.hiend .fpa-spin{animation-duration:20s}
+
+/* ফোন নম্বর / কোড / নতুন অ্যাকাউন্ট পেজ (.fl.light): ছোট ছোট অনেক লোগোর বদলে ৩টি বড় স্থির লোগো (বামে, ডানে, নিচে) */
+.fl.light{
+  background:
+    linear-gradient(rgba(247,245,247,.90),rgba(247,245,247,.90)),
+    url(/icons/logo-pink.png) no-repeat left -78px top 30%/200px 200px,
+    url(/icons/logo-pink.png) no-repeat right -84px top 50%/210px 210px,
+    url(/icons/logo-pink.png) no-repeat left 50% bottom 90px/180px 180px,
+    #f7f5f7!important;
+  background-attachment:scroll!important;
+}
+.fl.light::after{display:none!important}
+
+
+/* =====================================================================
+   v2.49 — এক স্থায়ী বার (পরবর্তী / এগিয়ে যান / পিন কনফার্ম) + বিকাশ স্টাইল ফিঙ্গারপ্রিন্ট আইকন
+   ===================================================================== */
+#kbar{position:fixed;left:0;right:0;bottom:0;z-index:96;box-sizing:border-box;height:calc(52px + var(--sb,0px));padding:0 20px var(--sb,0px);display:flex;align-items:center;justify-content:space-between;background:#9e9a9f;color:#fff;font-weight:700;font-size:16px;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;touch-action:manipulation;overflow:hidden;
+  transform:translate3d(0,calc(100% + 6px),0);opacity:0;pointer-events:none;will-change:transform;
+  transition:transform .26s cubic-bezier(.2,.8,.2,1),opacity .18s ease}
+#kbar.show{transform:translate3d(0,calc(var(--dko,0px) * -1),0);opacity:1;pointer-events:auto}
+#kbar.nt{transition:none!important}
+#kbar::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#e2136e,#f0549a);opacity:0;transition:opacity .22s ease}
+#kbar.on::before{opacity:1}
+#kbar>*{position:relative;z-index:1}
+#kbar svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+#kbar.on svg{transform:translateX(3px)}
+#kbar:active{filter:brightness(.94)}
+#kbar.sk>*{animation:shake .4s}
+#kbar.ld{pointer-events:none}
+#kbar.ld>*{visibility:hidden}
+#kbar.ld::after{content:"";position:absolute;left:50%;top:26px;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;background:#fff url(../icons/logo-pink.png) center/26px no-repeat;animation:lgspin .9s linear infinite}
+/* বারের সাথে থাকা পেজে নিজের নিচের বাটন লুকানো থাকে (জায়গা ধরে রাখে), বার নিজেই সেই জায়গায় বসে */
+html .pgx.dkp .pfoot{display:block!important;visibility:hidden!important;height:calc(52px + var(--sb,0px))!important;min-height:0!important;max-height:none!important;padding:0!important;margin:0!important;overflow:hidden!important;opacity:1!important;box-shadow:none!important;pointer-events:none!important}
+html.phkb .pgx.dkp .pbody{padding-bottom:calc(var(--kbo,0px) + 16px)}
+html.pinkb .pgx.dkp .pbody{padding-bottom:calc(var(--kph,300px) + 16px)!important}
+/* অ্যাপের কিপ্যাড: নিজের বার নেই, বারটা ওপরে আলাদা; ওঠা-নামা বারের সাথে একই গতিতে */
+#kpad{border-radius:0;transition:transform .26s cubic-bezier(.2,.8,.2,1)!important}
+html.lowend #kpad{transition:none!important}
+html.lowend #kbar{transition:transform .18s ease-out,opacity .12s ease}
+#kpad .kpb{display:none}
+html.phkb .v3fab{display:none!important}
+
+/* ---- ফিঙ্গারপ্রিন্ট আইকন: ফ্রেম + (মুখ ↔ আঙুলের ছাপ) ---- */
+svg.fpx{overflow:visible;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+svg.fpx *{fill:none}
+svg.fpx .fc path{stroke-width:2.3;transform-box:fill-box;transform-origin:center;animation:fpCor 6s cubic-bezier(.45,0,.2,1) infinite}
+svg.fpx .c1{--dx:-1;--dy:-1}svg.fpx .c2{--dx:1;--dy:-1}svg.fpx .c3{--dx:1;--dy:1}svg.fpx .c4{--dx:-1;--dy:1}
+svg.fpx .ff{stroke-width:2.2;transform-box:fill-box;transform-origin:center;animation:fpFace 6s cubic-bezier(.45,0,.2,1) infinite}
+svg.fpx .fg{stroke-width:2.9;transform-box:fill-box;transform-origin:center;opacity:0;animation:fpPrint 6s cubic-bezier(.45,0,.2,1) infinite}
+@keyframes fpCor{0%,38%{transform:none}45%{transform:translate(calc(var(--dx) * 2.8px),calc(var(--dy) * 2.8px))}53%,88%{transform:none}94%{transform:translate(calc(var(--dx) * 2.8px),calc(var(--dy) * 2.8px))}100%{transform:none}}
+@keyframes fpFace{0%,38%{opacity:1;transform:none}44%{opacity:0;transform:rotate(-10deg) scale(.7)}48%,90%{opacity:0;transform:scale(.7)}96%{opacity:1;transform:rotate(8deg) scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes fpPrint{0%,40%{opacity:0;transform:scale(.55)}48%{opacity:1;transform:scale(1.14)}56%{opacity:1;transform:scale(.9)}62%,86%{opacity:1;transform:none}92%,100%{opacity:0;transform:scale(.55)}}
+html.lowend svg.fpx *,.fpx.still *{animation:none!important}
+html.lowend svg.fpx .ff,.fpx.still .ff{opacity:0}
+html.lowend svg.fpx .fg,.fpx.still .fg{opacity:1}
+@media (prefers-reduced-motion:reduce){svg.fpx *{animation:none!important}svg.fpx .ff{opacity:0}svg.fpx .fg{opacity:1}}
+/* বিকাশের মতো: বাটনে বাক্স/বর্ডার নেই, শুধু বড় আইকন */
+html .fpb,html .bk3 .bkpin .fpb,html .v3pr .fpb{width:50px!important;height:50px!important;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:14px!important;color:#e2136e}
+html .fpb:active,html .bkfp:active{background:#e2136e14!important}
+html .fpb svg.fpx,html .bk3 .bkpin .fpb svg.fpx,html .v3pr .fpb svg.fpx{width:36px!important;height:36px!important}
+html .bkfp svg.fpx{width:38px!important;height:38px!important;fill:none!important;stroke:#e2136e}
+html .bkfp.on svg.fpx .fg{animation-duration:6s}
+html .fl.pinp .bkfp,html .fl.pinp .bkfp.on{width:48px!important;height:48px!important;border:0!important;background:none!important;border-radius:14px!important;box-shadow:none!important;animation:none!important}
+html .fl.pinp .bkfp::after,html .fl.pinp .bkfp::before{display:none!important;content:none!important}
+html .fl.pinp .bkfp svg.fpx{width:38px!important;height:38px!important}
+.v3fi{color:#e2136e}
+.v3fi svg.fpx{width:30px;height:30px;stroke:#e2136e}
+.ok .tick svg.fpx{width:46px;height:46px;stroke:#fff;fill:none}
+.mic svg.fpx{width:24px;height:24px}
+svg.fpx{stroke:currentColor}
+.fpb svg.fpx,.v3pr .fpb svg.fpx,.bk3 .bkpin .fpb svg.fpx{stroke:#e2136e!important;fill:none!important}
+.ok .tick svg.fpx{stroke:#fff!important}
+/* কিপ্যাড উঠলে লগইন/রেজিস্ট্রেশনের নিজের নিচের বাটন লুকায় (ওপরের স্থায়ী বারটাই কাজ করে), তাই কিপ্যাডের নিচ দিয়ে ঝাপসা দেখা যায় না */
+html.pinkb .fl .nbar,html.pinkb .fl .lpanel{opacity:0!important;pointer-events:none!important}
