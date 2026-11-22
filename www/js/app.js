@@ -168,7 +168,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.36"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.37"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -291,7 +291,7 @@ function numIn(el) { const v = digs(el.value, 11); if (el.value !== v) el.value 
 function pinOnly(el) { const v = digs(el.value, 6); if (el.value !== v) el.value = v; }
 const isPh = (x) => /^01\d{9}$/.test(String(x));
 const isPin = (x) => /^\d{6}$/.test(String(x));
-const t = (k) => en(((window.__kyc || /^k_/.test(k)) && T.en[k]) || T[S.lang][k] || k);
+const t = (k) => en(((window.__kyc || /^k_/.test(k)) ? (S.lang === "bn" ? (T.bn[k] || T.en[k]) : T.en[k]) : null) || T[S.lang][k] || k);
 const money = (n) => "৳ " + Number(n).toLocaleString("en-US", {maximumFractionDigits: 2});
 const TK = (x, y, s, c) => `<text x="${x}" y="${y}" font-size="${s}" font-weight="800" fill="${c}" text-anchor="middle" font-family="system-ui,'Noto Sans Bengali',sans-serif">৳</text>`;
 /* রঙিন সার্ভিস আইকন (বিকাশের মতো) */
@@ -357,7 +357,7 @@ function errMsg0(e) {
   const sid = S.sheet && S.sheet.id;
   const k = {LOW:"low", NOUSER:sid === "cash" ? "noagn" : sid === "pay" ? "nomrc" : "nouser", NOAGENT:"noagn", SELF:"self", NET:"neterr", BADAMT:"bada", CONFIRM:"conf1", SESS:"sess", BADCPN:"cpbad", BADCODE:"cpwrong", HAVE:"cpexh", OTPBAD:"otpbad", OTPEXP:"otpexp", OTPMANY:"otpmany", OTPWAIT:"otpwait", OTPLIM:"otplim", OTPSMS:"otpsms", BADPHONE:"badn", KYC:"k_lock", BADNID:"k_badnid", NIDUSED:"k_used", UPLOAD:"k_upf", KYCSTATE:"k_state", BADDATA:"k_bad", KYCLIMIT:"k_limit"}[m];
   if (k) return t(k);
-  if (/could not find the function|schema cache|PGRST202/i.test(m)) return t("dbold");
+  if (/could not find the function|schema cache|PGRST202|notices_kind_check|check constraint/i.test(m)) return t("dbold");
   if (/invalid login/i.test(m)) return t("wp");
   if (/already registered|already been registered|saving new user/i.test(m)) return t("exists");
   console.log(m);
@@ -583,7 +583,7 @@ function fpRing(k) {
     const a = i * Math.PI / 6 + .26, c = Math.cos(a), s = Math.sin(a);
     r += `<line class="fpa-ry" x1="${(100 + 80 * c).toFixed(1)}" y1="${(100 + 80 * s).toFixed(1)}" x2="${(100 + 93 * c).toFixed(1)}" y2="${(100 + 93 * s).toFixed(1)}" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>`;
   }
-  return `<svg class="lglogo fpa${live ? "" : " fpa-s"}" viewBox="0 0 200 200" style="--k:${K}" role="img" aria-label="FuNPaY"><circle class="fpa-rp" cx="100" cy="100" r="64" fill="none" stroke="#fff" stroke-width="3"/><circle class="fpa-rg" cx="100" cy="100" r="64" fill="none" stroke="#fff" stroke-width="4"/>${r}<g class="fpa-spin">${d}</g><g class="fpa-ct"><circle cx="100" cy="100" r="42" fill="#fff"/><text class="fpa-tk" x="100" y="104">৳</text></g></svg>`;
+  return `<svg class="lglogo fpa${live ? "" : " fpa-s"}" viewBox="0 0 200 200" style="--k:${K}" role="img" aria-label="FuNPaY"><circle class="fpa-rp" cx="100" cy="100" r="64" fill="none" stroke="#fff" stroke-width="3"/><circle class="fpa-rg" cx="100" cy="100" r="64" fill="none" stroke="#fff" stroke-width="4"/>${r}<g class="fpa-spin">${d}</g><g class="fpa-ct"><circle cx="100" cy="100" r="42" fill="#fff"/><text class="fpa-tk" x="100" y="101">৳</text></g></svg>`;
 }
 /* PIN ঘর: চিকন লম্বা বক্স, টাইপ করলে সংখ্যা একটু দেখায়, তারপর • হয়ে যায় */
 function pinFill(sel, pin, d) {
@@ -600,7 +600,21 @@ function fpSplash() {
   const el = document.createElement("div"); el.id = "fpsplash";
   const nm = [...("FuNPaY")].map((c, i) => `<span class="fpa-ch" style="animation-delay:${(.5 + i * .06).toFixed(2)}s">${c}</span>`).join("");
   el.innerHTML = `<div class="fps-orb fps-o1"></div><div class="fps-orb fps-o2"></div><div class="fps-lg">${fpRing(0)}</div><div class="fps-txt"><div class="fps-name">${nm}</div><div class="fps-tag">${t("tag")}</div></div><div class="fps-ld"><i></i><i></i><i></i></div>`;
-  const end = () => { if (!el.parentNode) return; el.classList.add("out"); setTimeout(() => el.remove(), 500); };
+  const end = () => {
+    if (!el.parentNode || el.dataset.go) return; el.dataset.go = "1";
+    const lg = el.querySelector(".fps-lg"), tg = document.querySelector(".lhero .lglogo");
+    const fade = () => { el.classList.add("out"); setTimeout(() => el.remove(), 520); };
+    if (!lg || !tg || !lg.animate) { fade(); return; }
+    try {
+      const a = lg.getBoundingClientRect(), b = tg.getBoundingClientRect();
+      if (!b.width) { fade(); return; }
+      const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2), sc = b.width / a.width;
+      tg.style.opacity = "0"; el.classList.add("fly");
+      const an = lg.animate([{transform: "translate(0,0) scale(1)"}, {transform: "translate(" + dx + "px," + dy + "px) scale(" + sc + ")"}], {duration: 780, easing: "cubic-bezier(.22,1,.36,1)", fill: "forwards"});
+      an.onfinish = () => { tg.style.transition = "none"; tg.style.opacity = ""; el.remove(); };
+      setTimeout(() => { if (el.parentNode) { tg.style.opacity = ""; el.remove(); } }, 1400);
+    } catch (e) { fade(); }
+  };
   el.onclick = end; document.body.appendChild(el); setTimeout(end, 2200);
 }
 
@@ -856,7 +870,7 @@ function sbar() {
     const B = cap().StatusBar; if (!B) return;
     const scn = !!(S.sheet && S.sheet.id === "qrs" && S.sheet.tab === "scan");
     const light = !S.auth && CONFIGURED && (S.view === "ph" || S.view === "reg" || S.view === "otp") && !S.phone;
-    const col = scn ? "#12050c" : light ? "#f7f5f7" : "#e2136e";
+    const col = scn ? "#12050c" : light ? "#fdeef4" : "#e2136e";
     Promise.resolve(B.setBackgroundColor({color: col})).catch(() => {});
     Promise.resolve(B.setStyle({style: light && !scn ? "LIGHT" : "DARK"})).catch(() => {});
     const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", col);
@@ -1727,8 +1741,8 @@ function kycClose(wipe) {
 function kSb() {
   try {
     const B = cap().StatusBar; if (!B) return;
-    const dark = ["front", "back", "face"].includes(K.step), col = dark ? "#12050c" : "#e2136e";
-    Promise.resolve(B.setBackgroundColor({color: col})).catch(() => {}); Promise.resolve(B.setStyle({style: "DARK"})).catch(() => {});
+    const dark = K.step === "face", cardPg = K.step === "front" || K.step === "back", col = dark ? "#12050c" : cardPg ? "#fff4fa" : "#e2136e";
+    Promise.resolve(B.setBackgroundColor({color: col})).catch(() => {}); Promise.resolve(B.setStyle({style: cardPg ? "LIGHT" : "DARK"})).catch(() => {});
     const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", col);
   } catch (e) {}
 }
@@ -2620,12 +2634,12 @@ async function kVal() {
 
 /* ---- NID স্ক্যান পাতা: চার পাশে UI রঙ + লোগো, ক্যামেরা শুধু কার্ডের ঘরে ---- */
 const kBg = () => `<div class="kbg"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>`;
-const kLogo = () => `<div class="klg"><img src="icons/logo-pink.png" alt=""><b>FuNPaY</b></div>`;
+const kLogo = (ti) => `<div class="klg"><img src="icons/logo-pink.png" alt=""><b>FuNPaY</b>${ti ? `<strong>${ti}</strong>` : ""}</div>`;
 function kScan(side) {
   const fr = side === "front", pv = K.pv;
   const chip = pv && K.vbusy ? `<div class="kchk"><i class="kspin"></i><span>${t("k_chk2")}</span></div>` : pv && K.auto ? `<div class="kchk gd">${tickSvg}<span>${t("k_got")}</span></div>` : "";
   return `<div class="kcam kn">${kBg()}
-    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t(fr ? "k_front" : "k_back")}</b><em>${fr ? 1 : 2}/2</em></div>${kLogo()}
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b></b><em>${fr ? 1 : 2}/2</em></div>${kLogo(t(fr ? "k_front" : "k_back"))}
     <div class="kwr${pv ? " pv" : ""}"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid()}</div>
       <div class="kfr${pv && !K.vbusy ? " dn" : ""}"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>${pv ? "" : '<u class="kln"></u>'}</div></div>${chip}
     <div class="kbt">${pv ? "" : `<p id="kst">${t("k_auto")}</p>`}
@@ -2936,8 +2950,10 @@ function kDobParse(s) {
   m = s.match(/(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/); if (m) return {d: +m[1], m: Math.max(0, Math.min(11, +m[2] - 1)), y: +m[3]};
   return null;
 }
+function kDobNorm(v) { const o = kDobParse(v); return o ? String(o.d).padStart(2, "0") + "/" + String(o.m + 1).padStart(2, "0") + "/" + o.y : (v || ""); }
 function kInfo() {
   if (K.reading) return kInfoOld();
+  if (K.d.dob) K.d.dob = kDobNorm(K.d.dob);
   const n = kOkN(), tot = KF.length;
   const rows = KF.map(([k, lb, ik], i) => {
     const v = K.d[k] || "", ok = KV[k](v), lock = K.lk && K.lk[k];
@@ -2998,7 +3014,7 @@ function kDobClose() { const o = document.getElementById("kdw"); if (!o) return;
 function kDobOk() {
   const g = (id) => kWheelIdx(document.getElementById("kwl_" + id)), y = +document.getElementById("kwl_y").children[g("y")].textContent, mo = g("m");
   const dim = new Date(y, mo + 1, 0).getDate(), d = Math.min(g("d") + 1, dim);
-  K.d.dob = String(d).padStart(2, "0") + " " + KMON[mo] + " " + y;
+  K.d.dob = String(d).padStart(2, "0") + "/" + String(mo + 1).padStart(2, "0") + "/" + y;
   hap("MEDIUM"); kDobClose();
   const s = document.getElementById("kv_dob"); if (s) s.textContent = K.d.dob;
   const row = s && s.closest(".kf"); if (row) { row.classList.add("gd"); row.classList.remove("bd"); const tk = row.querySelector(".kt2"); if (tk) { tk.className = "kt2 gd"; tk.innerHTML = kTickI; } }
@@ -4332,14 +4348,14 @@ function kAutoTick() {
 
 /* ----- স্ক্যান পাতা: গ্যালারি বোতাম ক্যামেরা বন্ধ করে; যাচাই চলার সময় লাইভ তালিকা ----- */
 function kBusyHtml() {
-  const rows = ["k_pb1", "k_pb2", "k_pb3", "k_pb4", "k_pb5"].map((k, i) => `<div class="ri pn" style="--n:${i}"><i><b class="kspin"></b></i><span>${t(k)}</span></div>`).join("");
+  const rows = ["k_pb2", "k_pb3", "k_pb4", "k_pb5"].map((k, i) => `<div class="ri pn" style="--n:${i}"><i><b class="kspin"></b></i><span>${t(k)}</span></div>`).join("");
   return `<div class="krep busy"><div class="rh"><i class="rc bz"><b class="kspin"></b></i><div><b>${t(K.repSrc === "gal" ? "k_rp_gal" : "k_rp_cam")}</b><small>${t("k_chk2")}</small></div></div><div class="rg">${rows}</div></div>`;
 }
 function kScan(side) {
   const fr = side === "front", pv = K.pv;
   const chip = pv && K.vbusy ? `<div class="kchk"><i class="kspin"></i><span>${t("k_chk2")}</span></div>` : pv && K.auto ? `<div class="kchk gd">${tickSvg}<span>${t("k_got")}</span></div>` : "";
   return `<div class="kcam kn">${kBg()}
-    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t(fr ? "k_front" : "k_back")}</b><em>${fr ? 1 : 2}/2</em></div>${kLogo()}
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b></b><em>${fr ? 1 : 2}/2</em></div>${kLogo(t(fr ? "k_front" : "k_back"))}
     <div class="kwr${pv ? " pv" : ""}"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid()}</div>
       <div class="kfr${pv && !K.vbusy ? " dn" : ""}"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>${pv ? "" : '<u class="kln"></u>'}</div></div>${chip}
     <div class="kbt">${pv ? "" : `<p id="kst">${t("k_auto")}</p>`}
@@ -4388,13 +4404,48 @@ Object.assign(T.en, {otph1: "Verify your", otph2: "mobile number", otpl: "Verifi
 
   /* ---- কিবোর্ড ওঠা/নামার সময় নিচের বারগুলো কিবোর্ডের সাথে গড়িয়ে ওঠে/নামে (বিকাশের মতো) ---- */
   const DOCK = ".nbar,.pfoot,.bknx,.kbtm,.lpanel";
+  /* v2.37: ফোকাস করলেই বার কিবোর্ডের সাথে উঠতে শুরু করে (আগে থেকেই), পরে ফোনের স্ক্রিন ছোট হলে ঝাঁকুনি ছাড়াই ঠিক জায়গায় বসে */
+  const pre = {on: 0, h: 0};
+  const dockEls = () => document.querySelectorAll(DOCK);
+  const savedKb = () => { let v = 0; try { v = Number(localStorage.getItem("fpkb")) || 0; } catch (e) {} return v > 120 ? v : Math.round(window.innerHeight * .38); };
+  function preMove(sign) {
+    const h = savedKb(); pre.on = sign; pre.h = h;
+    dockEls().forEach((el) => { el.style.transition = "transform .3s " + EASE; el.style.willChange = "transform"; el.style.transform = "translate3d(0," + (sign * -h) + "px,0)"; });
+  }
+  function settle(d) {
+    /* d>0 কিবোর্ড উঠেছে, d<0 নেমেছে. ভবিষ্যদ্বাণী যা ছিল তা আসল মাপের সাথে মিলিয়ে অবশিষ্ট ফারাকটুকু নরমে মেটানো */
+    const T0 = d > 0 ? pre.h * -1 : pre.h, resid = T0 + d;
+    dockEls().forEach((el) => {
+      el.style.transition = "none"; el.style.transform = "translate3d(0," + resid + "px,0)"; void el.offsetHeight;
+      el.style.transition = "transform .16s " + EASE; el.style.transform = "";
+      setTimeout(() => { el.style.transition = ""; el.style.willChange = ""; }, 200);
+    });
+    pre.on = 0;
+  }
   function glide(d) {
+    if (pre.on && ((pre.on === 1 && d > 0) || (pre.on === -1 && d < 0))) { settle(d); return; }
+    pre.on = 0;
     document.querySelectorAll(DOCK).forEach((el) => {
       try { el.animate([{transform: "translateY(" + d + "px)"}, {transform: "translateY(0)"}], {duration: 300, easing: EASE}); } catch (e) {}
     });
     const kb = document.getElementById("kbar");
     if (kb && kb.classList.contains("show")) { try { kb.animate([{transform: "translate3d(0," + d + "px,0)"}, {transform: "translate3d(0,0,0)"}], {duration: 300, easing: EASE}); } catch (e) {} }
   }
+  let kbOpen = lastH < (window.screen && window.screen.height ? window.screen.height * .75 : 0);
+  document.addEventListener("focusin", (ev) => {
+    const e = ev.target; if (!e || !/^(INPUT|TEXTAREA)$/.test(e.tagName) || e.closest("#kpad") || e.readOnly) return;
+    if (pre.on === -1) { settle(-1); }
+    if (!pre.on && Math.abs(window.innerHeight - (window.__fpFull || lastH)) < 60) preMove(1);
+  }, true);
+  document.addEventListener("focusout", () => {
+    setTimeout(() => {
+      const a = document.activeElement; if (a && /^(INPUT|TEXTAREA)$/.test(a.tagName) && !a.readOnly) return;
+      if (pre.on === 1 && window.innerHeight < (window.__fpFull || lastH + 1) - 60) preMove(-1);
+      else if (pre.on === 1) { dockEls().forEach((el) => { el.style.transform = ""; }); pre.on = 0; }
+    }, 90);
+  }, true);
+  window.__fpFull = window.innerHeight;
+  window.addEventListener("resize", () => { if (window.innerHeight > (window.__fpFull || 0)) window.__fpFull = window.innerHeight; });
   function onResize() {
     const h = window.innerHeight, d = lastH - h; lastH = h;
     if (Math.abs(d) < 60) return;
@@ -4437,3 +4488,30 @@ Object.assign(T.en, {otph1: "Verify your", otph2: "mobile number", otpl: "Verifi
     }
   }).observe(de, {attributes: true, attributeFilter: ["class"]});
 })();
+
+/* =====================================================================
+   v2.37 — KYC বাংলা, কোড পেজ সাজানো, কিবোর্ডের সাথে বার, স্ট্যাটাস বার, স্প্ল্যাশ থেকে লগইন অ্যানিমেশন
+   ===================================================================== */
+Object.assign(T.bn, {
+  k_m_rvs2: "আমাদের সাপোর্ট টিম আপনার তথ্য দেখে খুব তাড়াতাড়ি ফল জানাবে।",
+  k_m_finh: "মিল খুব কম",
+  k_m_finp: "আপনার মুখ NID কার্ডের সাথে খুব কম মিলেছে ({p}%)। আমাদের সাপোর্ট টিম হাতে দেখে খুব তাড়াতাড়ি ফল জানাবে।",
+  k_m_fin0: "আপনার মুখ NID কার্ডের সাথে মেলানো যায়নি। আমাদের সাপোর্ট টিম হাতে দেখে খুব তাড়াতাড়ি ফল জানাবে।",
+  k_m_pct: "মিল",
+  k_err2: "কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+  k_galh: "গ্যালারির অনুমতি দিন",
+  k_gald: "গ্যালারি থেকে ছবি বাছতে FuNPaY-কে আপনার ছবিতে ঢোকার অনুমতি লাগবে।",
+  k_galb: "অনুমতি দিন",
+  k_galn: "এখন নয়",
+  otwa: "আপনার FuNPaY পিন ও কোড কাউকে দিবেন না",
+  otwb: "FuNPaY থেকে কেউ কখনো পিন বা কোড চাইবে না"
+});
+Object.assign(T.en, {otwa: "Never share your PIN or code with anyone", otwb: "No one from FuNPaY will ever ask for them"});
+/* লগইন ঘর থেকে কিবোর্ড সরলে/এলে পেজ আবার আঁকলে বারের ঢোকার অ্যানিমেশন যেন আবার না চলে */
+(function () {
+  const de = document.documentElement;
+  de.classList.add("v237");
+  /* কোড পেজ: ঘর ভরলে সাইজ বদলায় না */
+  window.addEventListener("load", () => { try { window.__fpFull = Math.max(window.__fpFull || 0, window.innerHeight); } catch (e) {} });
+})();
+

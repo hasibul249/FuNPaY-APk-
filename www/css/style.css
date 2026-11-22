@@ -2621,3 +2621,45 @@ html.rkp .regv .lb2{opacity:0;pointer-events:none}
 .mr.out span{color:#e5324b;font-weight:700}
 .mr.out:before{display:block}
 @media(prefers-reduced-motion:reduce){.fl.vtf,.fl.vtb,.fl.vtn,.pg.vtf,.pg.vtb,.pg.vtn{animation-duration:.01s}.vgh{display:none}}
+
+/* =====================================================================
+   v2.37 — কোড পেজ, সতর্কতা ব্যানার, স্ট্যাটাস বারের সাথে মেলানো পেজ, KYC বাংলা লেআউট, কাঁপা কমানো
+   ===================================================================== */
+/* ---- কাঁপা/লাফানো কমানো ---- */
+html{overflow-anchor:none;scroll-behavior:auto}
+#app,#kyc{-webkit-backface-visibility:hidden;backface-visibility:hidden;overflow-anchor:none}
+.nbar,.pfoot,.bknx,.kbtm{-webkit-backface-visibility:hidden;backface-visibility:hidden}
+/* নিচের বার পেজ বদলে/আবার আঁকলে নিচ থেকে লাফিয়ে ওঠে না, শুধু নরমে ফুটে ওঠে */
+@keyframes nbfade37{from{opacity:0}to{opacity:1}}
+.v237 .nbar,.v237 .pfoot,.v237 .bknx,.v237 .kbtm{animation:nbfade37 .28s ease both!important}
+.v237 .lpanel{animation:nbfade37 .4s ease .1s both!important}
+
+/* ---- স্ট্যাটাস বারের ঠিক নিচে পেজের ওপরের রং একই (সাদা ফালি দেখা যায় না) ---- */
+:root{--sbc:#fdeef4}
+body:before{background:linear-gradient(180deg,#fdeef4 0,#fdeef4 4px,rgba(253,238,244,0) 140px),radial-gradient(70vmax 46vmax at 96% -6%,rgba(226,19,110,.24),transparent 62%),radial-gradient(54vmax 44vmax at -14% 40%,rgba(150,95,235,.14),transparent 62%),radial-gradient(56vmax 40vmax at 104% 86%,rgba(255,140,175,.22),transparent 62%),linear-gradient(180deg,#fcedf4,#f6eff6 46%,#f5f0f5)!important}
+
+/* ---- কোড যাচাই পেজ ---- */
+.otpv .otpb{width:100%;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}
+.otpv .otpb i,.otpv .otpb.ok i,.otpv .otpb.chk i,.otpv .otpb i.a,.otpv .otpb i.pp{width:auto!important;max-width:none!important;height:52px;transform:none!important;animation:none!important}
+.otpv .otpb.ok i{border-color:#2cc47c;background:#ecfaf3;color:#0f8a52;box-shadow:none;transition:background-color .35s,border-color .35s,color .35s}
+.otpv .otpb.chk i{border-color:#f3b9d3;background:#fff7fb}
+/* "যাচাই হয়েছে" বামে, "কোড পেস্ট করুন" ডানে, দুটোই এক লাইনে ঠিক মাঝ বরাবর */
+.otpv .otpact{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;min-height:42px}
+.otpv .otpact .otst{order:0;flex:1 1 auto;min-width:0;margin:0;display:flex;align-items:center;justify-content:flex-start;gap:7px;text-align:left;white-space:nowrap;font-size:14px;line-height:1.2}
+.otpv .otpact .otst svg{width:19px;height:19px;flex:none}
+.otpv .otpact .otpp{order:1;flex:none;margin:0 0 0 auto;height:40px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;border:1.5px solid #f3b9d3;background:#fff7fb;color:var(--lp);border-radius:20px;font-size:13.5px;font-weight:800;line-height:1;box-shadow:0 4px 12px rgba(226,19,110,.10)}
+.otpv .otpact .otpp svg{display:block;flex:none;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:1}
+.otpv .otpact .otpp span{display:block;line-height:1;padding:0;margin:0;transform:none}
+/* সতর্কতা ব্যানার: ছোট, দুই লাইনের শিরোনাম, আরও সুন্দর */
+.otpv .otwarn{margin-top:20px;padding:14px 15px 14px 14px;gap:13px;border-radius:20px;background:linear-gradient(125deg,#ee2b7d 0%,#d0126a 45%,#a80b52 100%);box-shadow:0 12px 26px rgba(196,15,94,.28),inset 0 1px 0 rgba(255,255,255,.28),inset 0 0 0 1px rgba(255,255,255,.08)}
+.otpv .otwarn svg{box-sizing:border-box;width:46px;height:46px;padding:8px;border-radius:15px;background:rgba(255,255,255,.17);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.otpv .otwarn b{font-size:15px;line-height:1.3;font-weight:800;letter-spacing:0}
+.otpv .otwarn span{margin-top:4px;font-size:11.5px;line-height:1.4;color:rgba(255,255,255,.92)}
+
+/* ---- KYC পাতা: লোগোর নিচে শিরোনাম, ফর্মের লেখা সমান ---- */
+#kyc .klg strong{display:block;margin-top:3px;color:#2a1020;font-size:17px;font-weight:800;letter-spacing:.1px;line-height:1.3;text-align:center;white-space:nowrap}
+#kyc .kcam.kn .ktp b{display:none}
+#kyc .kdb{font-size:16px;font-weight:600;line-height:1.35}
+#kyc .kdb span{font-size:16px;font-weight:600;line-height:1.35;letter-spacing:0;color:#2a262b}
+#kyc .kfb input,#kyc .kfb textarea{font-size:16px;font-weight:600}
+#kyc .krep.busy .rg{grid-template-columns:1fr 1fr}
