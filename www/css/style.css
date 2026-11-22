@@ -3131,3 +3131,91 @@ html .c4n{margin:10px 0 0!important;border-radius:0!important;box-shadow:none!im
 html *,html input,html button,html textarea,html select{font-family:var(--fpfont)}
 html body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-kerning:normal;letter-spacing:0}
 html .pgx .avl,html .pgx .bkp,html .pgx .bkg,html .pgx .bk3t,html .tgrid,html .trdd .amt,#kbar,#kpad .kpg button,.bkc .fld.big input{font-variant-numeric:normal}
+
+/* ===== v2.52: NID তথ্যের নতুন ঘর ও বাছাই পপ-আপ ===== */
+#kyc .kshd{font-size:13px;font-weight:700;color:var(--p);margin:14px 4px 8px;letter-spacing:.2px}
+#kyc .kpick span.ph{color:#c1bac6;font-weight:500;font-size:14px}
+#kyc .kpick em{padding:3px 6px;line-height:0}
+#kyc .kpick em svg{width:18px;height:18px;fill:none;stroke:var(--p);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+#kyc .kpkw{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;justify-content:flex-end}
+#kyc .kpkb{position:absolute;inset:0;background:rgba(20,6,14,.5);opacity:0;transition:opacity .25s}
+#kyc .kpkw.in .kpkb{opacity:1}
+#kyc .kpks{position:relative;background:#fff;border-radius:26px 26px 0 0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));max-height:78vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+#kyc .kpkw.in .kpks{transform:none}
+#kyc .kpks::before{content:"";width:40px;height:4px;border-radius:4px;background:#e4dde8;margin:-4px auto 10px}
+#kyc .kpkh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#kyc .kpkh b{font-size:17px;font-weight:700;color:#2a262b}
+#kyc .kpkx{width:34px;height:34px;border:0;border-radius:50%;background:#f2eef3;display:grid;place-items:center;padding:0}
+#kyc .kpkx svg{width:16px;height:16px;fill:none;stroke:#5b505e;stroke-width:2.6;stroke-linecap:round}
+#kyc .kpkq{display:flex;align-items:center;gap:8px;background:#f6f2f7;border-radius:14px;padding:0 12px;margin-bottom:8px}
+#kyc .kpkq svg{width:18px;height:18px;fill:none;stroke:#9a8fa0;stroke-width:2.4;stroke-linecap:round;flex:none}
+#kyc .kpkq input{flex:1;border:0;outline:0;background:transparent;font-size:15px;font-weight:600;color:#2a262b;padding:12px 0;min-width:0}
+#kyc .kpkl{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;margin:0 -4px;padding:0 4px}
+#kyc .kpki{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;border:0;background:transparent;text-align:left;padding:13px 12px;border-radius:14px;font:inherit;color:#2a262b}
+#kyc .kpki:active{background:#fdeef5}
+#kyc .kpki b{display:block;font-size:15.5px;font-weight:600}
+#kyc .kpki small{display:block;font-size:12px;font-weight:500;color:#9a8fa0;margin-top:1px}
+#kyc .kpki.on{background:#fde7f1}
+#kyc .kpki.on b{color:var(--p);font-weight:700}
+#kyc .kpkc{width:24px;height:24px;border-radius:50%;background:var(--p);display:none;place-items:center;flex:none}
+#kyc .kpki.on .kpkc{display:grid}
+#kyc .kpkc svg{width:13px;height:13px}
+#kyc .kpku b{color:var(--p)}
+#kyc .kpke{text-align:center;color:#9a8fa0;font-size:14px;padding:22px 0;margin:0}
+
+/* =====================================================================
+   v2.54 — NID ছবির পরের অ্যানিমেশন: স্ক্যান-রেখা, সবুজ টিক, ঝলমলে ফ্রেম, নরম পাতা বদল
+   ===================================================================== */
+/* যাচাই চলার সময় ছবির ওপর স্ক্যান-রেখা */
+#kyc .kswp{position:absolute;left:0;right:0;top:-42%;height:42%;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(226,19,110,0),rgba(226,19,110,.22) 78%,rgba(255,255,255,.55) 98%,rgba(226,19,110,0));border-bottom:2px solid rgba(255,255,255,.85);box-shadow:0 6px 18px rgba(226,19,110,.45);animation:kswp 1.25s cubic-bezier(.45,0,.35,1) infinite}
+@keyframes kswp{0%{transform:translateY(0)}100%{transform:translateY(340%)}}
+#kyc .kwr.pv .kwin .kpvi{transition:filter .4s}
+/* সফল: সবুজ টিক */
+#kyc .kwr.okp .kwin::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.42);animation:kdfade .35s ease both;z-index:3}
+@keyframes kdfade{from{opacity:0}to{opacity:1}}
+#kyc .kwr.okp{animation:kwlift .7s cubic-bezier(.22,1,.36,1) both}
+@keyframes kwlift{0%{transform:translate(-50%,-50%) scale(1)}35%{transform:translate(-50%,-50%) scale(1.035)}100%{transform:translate(-50%,-50%) scale(1)}}
+#kyc .kdone{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;z-index:6;pointer-events:none}
+#kyc .kdone svg{position:relative;z-index:2;width:100%;height:100%;filter:drop-shadow(0 8px 20px rgba(18,161,91,.5))}
+#kyc .kdone .kdb{fill:#12a15b;transform-origin:40px 40px;animation:kdpop .55s cubic-bezier(.2,1.5,.4,1) both}
+#kyc .kdone .kdt{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:kdtk .42s .28s cubic-bezier(.4,0,.2,1) forwards}
+#kyc .kdone i{position:absolute;inset:4px;border-radius:50%;border:3px solid #12a15b;opacity:0;animation:kdrip 1s .12s ease-out both}
+#kyc .kdone i+i{animation-delay:.38s}
+@keyframes kdpop{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes kdtk{to{stroke-dashoffset:0}}
+@keyframes kdrip{0%{transform:scale(.8);opacity:.75}100%{transform:scale(2);opacity:0}}
+#kyc .kn .kfr.dn i{filter:drop-shadow(0 0 7px rgba(18,161,91,.55))}
+#kyc .kn .kfr.dn.wn i{border-color:#e8a20c;filter:drop-shadow(0 0 7px rgba(232,162,12,.5))}
+#kyc .kwr.okp .kfr i{border-color:#12a15b}
+/* একটি লাইনের সতর্কতা (তালিকার বদলে) */
+#kyc .kwn{display:flex;align-items:center;gap:9px;background:#fff6e0;color:#8a5a00;border:1.5px solid #f3d899;border-radius:14px;padding:9px 12px;margin:0 0 10px;font-size:13.5px;font-weight:700;line-height:1.3;text-align:left;animation:krin .4s cubic-bezier(.2,.9,.3,1.1) both}
+#kyc .kwn i{width:22px;height:22px;border-radius:50%;background:#e8a20c;color:#fff;display:grid;place-items:center;flex:none;font-style:normal;font-size:13px;font-weight:700}
+#kyc .kcam.kn .kwr.pv~.kbt .krow{animation:krin .45s cubic-bezier(.2,.9,.3,1.1) both}
+#kyc .kcam.kn .kgh,#kyc .kcam.kn .kgo{height:46px;font-size:15px}
+/* নতুন পাতায় (সামনে → পেছনে) ক্যামেরার ঘর নরমভাবে ভেসে আসে */
+#kyc .kpi-f .kwr:not(.pv),#kyc .kpi-b .kwr:not(.pv){animation:kwin .62s .1s cubic-bezier(.22,1,.36,1) backwards}
+@keyframes kwin{from{opacity:0;transform:translate(-50%,-46%) scale(.93)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+#kyc .kpi-f .klg,#kyc .kpi-b .klg{animation:kwlg .5s .05s cubic-bezier(.22,1,.36,1) backwards}
+@keyframes kwlg{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+#kyc .kpo-f,#kyc .kpo-b{animation-duration:.3s}
+
+/* =====================================================================
+   v2.55 — ফেস স্ক্যান: গোল ক্যামেরা + টিক-রিং (বাইরের সব আপনার রং ও লোগো)
+   ===================================================================== */
+#kyc .kcam.kn.kf3{--fw:min(76vw,290px)}
+#kyc .kcam.kn.kf3 .kwr.ov{aspect-ratio:1}
+#kyc .kcam.kn.kf3 .kwr.ov .kwin{inset:10.5%;border-radius:50%;box-shadow:0 0 0 4px #fff,0 0 0 5.5px rgba(226,19,110,.28),0 14px 40px rgba(226,19,110,.26)}
+#kyc .kcam.kn.kf3 .kov u{aspect-ratio:1;border-radius:50%}
+#kyc .kcam.kn.kf3 .krt{stroke-width:5!important;stroke-linecap:butt!important;stroke-dasharray:1.2 4.356!important;stroke:rgba(226,19,110,.2)}
+#kyc .kcam.kn.kf3 .krf{stroke-width:5!important;stroke-linecap:butt!important;stroke:var(--p)}
+#kyc .kcam.kn.kf3 .kra.on .krt{stroke:rgba(226,19,110,.5)!important;animation:none}
+#kyc .kcam.kn.kf3 .kra.on{filter:drop-shadow(0 0 4px rgba(226,19,110,.5))}
+#kyc .kcam.kn.kf3 .kra.on .krf{animation:krp 1.3s ease-in-out infinite}
+#kyc .kcam.kn.kf3 .kra.dn2 .krt{stroke:#12a15b}
+#kyc .kcam.kn.kf3 .kra.dn2 .krf{stroke:#12a15b}
+#kyc .kcam.kn.kf3 .kra.dn2{filter:drop-shadow(0 0 4px rgba(18,161,91,.55))}
+#kyc .kcam.kn.kf3 .kfarr.up{top:calc(46% - var(--fw) / 2 - 52px)}
+#kyc .kcam.kn.kf3 .kfarr.down,#kyc .kcam.kn.kf3 .kfarr.blink{top:calc(46% + var(--fw) / 2 + 10px)}
+#kyc .kcam.kn.kf3 .kfarr.right{right:1%}
+#kyc .kcam.kn.kf3 .kfarr.left{left:1%}
+#kyc .kcam.kn.kf3 .kwr.ov.burst::after{inset:2%;border-width:3px}

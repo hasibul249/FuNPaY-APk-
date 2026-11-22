@@ -1734,7 +1734,7 @@ Object.assign(T.en, {k_ok:"OK", k_auto:"Hold the card in the frame, the app will
 
 Object.assign(T.bn, {"k_sb": "পলক", "k_db": "দুইবার চোখের পলক ফেলুন", "k_frs": "সময় শেষ, ধাপগুলো আবার শুরু হলো", "k_m_h": "মুখ মেলানো হচ্ছে", "k_m_l1": "মুখ চেনার প্রস্তুতি চলছে (প্রথমবার একটু সময় লাগে)…", "k_m_l2": "NID কার্ডের ছবি থেকে মুখ খুঁজছি…", "k_m_l3": "সেলফির সাথে মিলিয়ে দেখছি…", "k_m_l4": "মুখ ঘোরানোর ছবিগুলো যাচাই হচ্ছে…", "k_m_okh": "মুখ মিলেছে", "k_m_oks": "NID-র ছবির সাথে আপনার মুখ মিলেছে। PIN দিলেই অ্যাকাউন্ট চালু হয়ে যাবে।", "k_m_rvh": "মিল ভালো, অ্যাডমিন দেখবে", "k_m_rvs": "মুখ মিলেছে, কিন্তু লাইভনেস পুরো যাচাই করা যায়নি। তাই অ্যাডমিন দেখে অ্যাকাউন্ট চালু করবে।", "k_m_lowh": "মুখ মেলেনি", "k_m_lows": "নিচের কারণগুলো ঠিক করে আবার সেলফি দিন।", "k_m_final": "২ বার চেষ্টা হয়েছে। এবার \"মেলেনি\" চিহ্নসহ অ্যাডমিনের কাছে পাঠানো হবে, অ্যাডমিন নিজে দেখে সিদ্ধান্ত নেবে।", "k_m_nmh": "স্বয়ংক্রিয় যাচাই হয়নি", "k_m_nm": "মুখ মেলানোর অংশ চালু করা যায়নি (নেট লাগে)। অ্যাডমিন হাতে মিলিয়ে দেখবে।", "k_m_try": "আবার সেলফি দিন", "k_m_card": "NID আবার তুলুন", "k_m_send": "অ্যাডমিনের কাছে পাঠান", "k_m_go": "এগিয়ে যান", "k_m_att": "চেষ্টা", "k_m_need": "চালু হতে লাগবে", "k_r_noface": "সেলফিতে মুখ পাওয়া যায়নি। মুখ ফ্রেমের মাঝখানে রাখুন।", "k_r_dark": "আলো কম, মুখ স্পষ্ট নয়। আলোর দিকে মুখ করে তুলুন।", "k_r_bright": "আলো খুব বেশি বা পেছন থেকে আসছে, মুখ সাদা হয়ে গেছে।", "k_r_blur": "ছবি ঝাপসা। ফোন স্থির রাখুন।", "k_r_far": "মুখ ছোট দেখাচ্ছে। ক্যামেরার আরও কাছে আসুন।", "k_r_cover": "মুখ ঢাকা বা অস্পষ্ট: চশমা, টুপি, মাস্ক বা হাত সরিয়ে নিন।", "k_r_card": "NID কার্ডের ছবিতে মুখ পাওয়া যায়নি। কার্ড পরিষ্কার করে আবার তুলুন, আলোর ঝলক যেন না পড়ে।", "k_r_cardq": "NID-র ছবির মুখ ঝাপসা, অন্ধকার বা ঝলকে ঢাকা। কার্ড আবার তুলুন।", "k_r_swap": "মুখ ঘোরানোর সময় একই মুখ পাওয়া যায়নি।", "k_r_live": "মুখ ঘোরানো ও চোখের পলক ঠিকমতো যাচাই হয়নি, আবার করুন।", "k_r_diff": "NID-র ছবির সাথে মুখের মিল কম। আলো ঠিক রেখে সরাসরি ক্যামেরার দিকে তাকান।", "k_limit": "আজ অনেকবার চেষ্টা হয়েছে, পরে আবার চেষ্টা করুন"});
 Object.assign(T.en, {"k_sb": "Blink", "k_db": "Blink your eyes twice", "k_frs": "Time is up, the steps start again", "k_m_h": "Matching your face", "k_m_l1": "Getting face matching ready (first time takes a moment)…", "k_m_l2": "Finding the face on your NID photo…", "k_m_l3": "Comparing with your selfie…", "k_m_l4": "Checking the photos from the head turns…", "k_m_okh": "Face matched", "k_m_oks": "Your face matches the photo on your NID. Enter your PIN and your account will be activated.", "k_m_rvh": "Good match, admin will review", "k_m_rvs": "Your face matched, but liveness could not be fully checked. The admin will review and activate your account.", "k_m_lowh": "Face did not match", "k_m_lows": "Fix the points below and take the selfie again.", "k_m_final": "You have tried twice. It will now go to the admin marked \"not matched\" and the admin will decide.", "k_m_nmh": "Automatic check not done", "k_m_nm": "Face matching could not start (needs internet). The admin will check by hand.", "k_m_try": "Take selfie again", "k_m_card": "Retake NID", "k_m_send": "Send to admin", "k_m_go": "Continue", "k_m_att": "Try", "k_m_need": "needed to activate", "k_r_noface": "No face found in the selfie. Keep your face in the middle of the frame.", "k_r_dark": "Too dark, your face is not clear. Face the light.", "k_r_bright": "Too bright or light from behind, your face is washed out.", "k_r_blur": "The photo is blurry. Hold the phone steady.", "k_r_far": "Your face looks small. Move closer to the camera.", "k_r_cover": "Face is covered or unclear: remove glasses, cap, mask or hand.", "k_r_card": "No face found on the NID photo. Retake the card clearly, with no glare.", "k_r_cardq": "The face on the NID is blurry, dark or hidden by glare. Retake the card.", "k_r_swap": "The same face was not found during the head turns.", "k_r_live": "Head turns and blink were not checked properly, try again.", "k_r_diff": "Low match with the NID photo. Keep good light and look straight at the camera.", "k_limit": "Too many tries today, please try again later"});
-const K = {open:false, step:"intro", flow:false, d:{name:"", name_bn:"", father:"", mother:"", dob:"", nid:"", addr:""}, front:"", back:"", selfie:"", pv:"", reason:"", busy:false, reading:false, fail:false, pg:{front:0, back:0}, msg:"", err:"", p1:null, p2:null, pre:{}, vbusy:false, auto:false, at:0,
+const K = {open:false, step:"intro", flow:false, d:{name:"", name_bn:"", father:"", mother:"", dob:"", nid:"", addr:"", blood:"N.A.", division:"", district:"", upazila:"", postoffice:"", postcode:"", gender:"", incsrc:"", income:"", occ:""}, front:"", back:"", selfie:"", pv:"", reason:"", busy:false, reading:false, fail:false, pg:{front:0, back:0}, msg:"", err:"", p1:null, p2:null, pre:{}, vbusy:false, auto:false, at:0,
   /* v2.20: মুখ মেলানো */ live:null, cardOnly:false, mres:null, mrun:false, mid:0, tries:0, cardDesc:null, cardThumb:"", cardQ:null, desc:null};
 let KS = null;
 const KI = {
@@ -1765,7 +1765,7 @@ function kycClose(wipe) {
   window.__kyc = false; kcamStop();
   const e = document.getElementById("kyc"); if (e) e.remove();
   K.open = false; K.flow = false; K.step = "intro"; K.pv = ""; K.busy = false; K.reading = false; K.auto = false; K.vbusy = false; clearTimeout(K.at);
-  if (wipe) { kWorkerStop(); if (KFL) { try { KFL.close(); } catch (e) {} KFL = null; KFLp = null; } K.pre = {}; K.front = K.back = K.selfie = ""; K.d = {name:"", name_bn:"", father:"", mother:"", dob:"", nid:"", addr:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.lk = {}; K.ft = 0; K.redo = false; K.manual = false; K.rep = null; K.sum = null; }
+  if (wipe) { kWorkerStop(); if (KFL) { try { KFL.close(); } catch (e) {} KFL = null; KFLp = null; } K.pre = {}; K.front = K.back = K.selfie = ""; K.d = {name:"", name_bn:"", father:"", mother:"", dob:"", nid:"", addr:"", blood:"N.A.", division:"", district:"", upazila:"", postoffice:"", postcode:"", gender:"", incsrc:"", income:"", occ:""}; K.p1 = K.p2 = null; K.reason = ""; K.err = ""; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.lk = {}; K.ft = 0; K.redo = false; K.manual = false; K.rep = null; K.sum = null; }
   sbar();
 }
 function kSb() {
@@ -1982,7 +1982,7 @@ function kDecide(reads) {
   }
   out.done = out.nidOk && out.nameOk; return out;
 }
-async function kStrictFront(img, pre) {
+async function kStrictFrontLocal(img, pre) {
   const reads = []; let txt = String(pre || "");
   if (pre) reads.push(kReadOf(null, pre));
   KPS = {i: 0, n: 3};
@@ -2043,6 +2043,22 @@ function kParse(raw, side) {
       for (let j = i + 1; j < L.length && j < i + 4; j++) { if (/রক্ত|Blood|জন্মস্থান|Place|মুদ্রণ|Principal|Issuing|Date/i.test(L[j])) break; parts.push(L[j]); }
       o.addr = kClean(parts.join(", "));
     }
+    /* v2.52: ব্লাড গ্রুপ, পোস্ট কোড, ডাকঘর, জেলা (ভুল হলে ইউজার বদলাতে পারবে) */
+    try {
+      const bm = txt.match(/(?:Blood\s*Group|রক্তের\s*গ্রুপ)\s*[:;.\-]?\s*(AB|A|B|O)\s*([+\-\u2212])/i);
+      if (bm) o.blood = bm[1].toUpperCase() + (bm[2] === "+" ? "+" : "-");
+      const pm = txt.match(/ডাকঘর\s*[:;.\-]?\s*([ঀ-৿][ঀ-৿ ]{1,}?)\s*[\-\u2013\u2014]?\s*(\d{4})(?!\d)/);
+      if (pm) { o.postoffice = kClean(pm[1]); o.postcode = pm[2]; }
+      const ai = L.findIndex(l => /ঠিকানা/.test(l)), at = (ai >= 0 ? L.slice(ai, ai + 5) : L).join(" ");
+      let best = "", bi = -1;
+      Object.keys(KDISTBN).forEach(dn => { const bn = KDISTBN[dn], ix = at.lastIndexOf(bn); if (ix > bi || (ix === bi && ix >= 0 && bn.length > KDISTBN[best].length)) { bi = ix; best = ix >= 0 ? dn : best; } });
+      if (best && bi >= 0) {
+        o.district = best;
+        const dv = Object.keys(KGEO).find(x => KGEO[x][best]), ups = dv ? KGEO[dv][best] : [];
+        const sd = ups.filter(u => /Sadar$/.test(u));
+        if (sd.length === 1 && at.indexOf(KDISTBN[best] + " সদর") >= 0) o.upazila = sd[0];
+      }
+    } catch (e) {}
   }
   Object.keys(o).forEach(k => { if (!o[k]) delete o[k]; });
   return o;
@@ -2060,7 +2076,9 @@ async function kInfoStart() {
     K.manual = true;
   }
   if (engineFail) K.manual = true;
-  [b, a].forEach(r => { if (r && !r.fail) ["father", "mother", "name_bn", "dob", "addr"].forEach(k => { if (r[k]) K.d[k] = r[k]; }); });
+  [b, a].forEach(r => { if (r && !r.fail) ["father", "mother", "name_bn", "dob", "addr", "blood", "postcode", "postoffice", "district", "upazila"].forEach(k => { if (r[k]) K.d[k] = r[k]; }); });
+  /* v2.52: জেলা পাওয়া গেলে বিভাগ নিজে বসে; না মিললে ফাঁকা থাকে, ইউজার বাছবে */
+  try { const dn = K.d.district; if (dn && KDISTBN[dn]) { const dv = Object.keys(KGEO).find(x => KGEO[x][dn]); if (dv) K.d.division = dv; } if (!KV.district(K.d.district)) { K.d.district = ""; K.d.upazila = ""; } } catch (e) {}
   if (a && !a.fail && a.nid) { K.d.nid = a.nid; K.lk.nid = true; }
   if (a && !a.fail && a.name) { K.d.name = a.name; K.lk.name = true; }
   K.fail = !!K.manual;
@@ -2073,7 +2091,25 @@ function kFrontRedo() {
   K.redo = true; K.step = "front"; hap("HEAVY"); kycRender();
   setTimeout(() => { if (K.step === "front" && K.redo) kPop(t("k_sb_h"), t("k_sb_m")); }, 350);
 }
-const KF = [["name", "k_nm", "kn"], ["father", "k_fa", "kf"], ["mother", "k_mo", "kf"], ["dob", "k_dob", "kd"], ["nid", "k_nid", "ki"], ["addr", "k_ad", "ka"]];
+/* ===== v2.52: NID তথ্যের অতিরিক্ত ঘর (বিভাগ → জেলা → উপজেলা, ব্লাড গ্রুপ, পোস্ট কোড, পেশা ইত্যাদি) ===== */
+const KGEO = {"Barishal":{"Barguna":["Amtali","Bamna","Barguna Sadar","Betagi","Patharghata","Taltali"],"Barishal":["Agailjhara","Babuganj","Bakerganj","Banaripara","Gaurnadi","Hizla","Barishal Sadar","Mehendiganj","Muladi","Wazirpur"],"Bhola":["Bhola Sadar","Burhanuddin","Char Fasson","Daulatkhan","Lalmohan","Manpura","Tazumuddin"],"Jhalokati":["Jhalokati Sadar","Kathalia","Nalchity","Rajapur"],"Patuakhali":["Bauphal","Dashmina","Galachipa","Kalapara","Mirzaganj","Patuakhali Sadar","Rangabali","Dumki"],"Pirojpur":["Bhandaria","Kawkhali","Mathbaria","Nazirpur","Pirojpur Sadar","Nesarabad (Swarupkati)","Zianagar"]},"Chattogram":{"Bandarban":["Ali Kadam","Bandarban Sadar","Lama","Naikhongchhari","Rowangchhari","Ruma","Thanchi"],"Brahmanbaria":["Akhaura","Bancharampur","Brahmanbaria Sadar","Kasba","Nabinagar","Nasirnagar","Sarail","Ashuganj","Bijoynagar"],"Chandpur":["Chandpur Sadar","Faridganj","Haimchar","Haziganj","Kachua","Matlab Dakshin","Matlab Uttar","Shahrasti"],"Chattogram":["Anwara","Banshkhali","Boalkhali","Chandanaish","Fatikchhari","Hathazari","Karnaphuli","Lohagara","Mirsharai","Patiya","Rangunia","Raozan","Sandwip","Satkania","Sitakunda","Bandar","Chandgaon","Double Mooring","Kotwali","Pahartali","Panchlaish","Bhujpur"],"Cumilla":["Barura","Brahmanpara","Burichang","Chandina","Chauddagram","Daudkandi","Debidwar","Homna","Laksam","Muradnagar","Nangalkot","Cumilla Adarsha Sadar","Meghna","Titas","Monohargonj","Cumilla Sadar Dakshin"],"Cox's Bazar":["Chakaria","Cox's Bazar Sadar","Kutubdia","Maheshkhali","Ramu","Teknaf","Ukhia","Pekua"],"Feni":["Chhagalnaiya","Daganbhuiyan","Feni Sadar","Parshuram","Sonagazi","Fulgazi"],"Khagrachhari":["Dighinala","Khagrachhari Sadar","Lakshmichhari","Mahalchhari","Manikchhari","Matiranga","Panchhari","Ramgarh"],"Lakshmipur":["Lakshmipur Sadar","Raipur","Ramganj","Ramgati","Kamalnagar"],"Noakhali":["Begumganj","Noakhali Sadar","Chatkhil","Companiganj","Hatiya","Senbagh","Sonaimuri","Subarnachar","Kabirhat"],"Rangamati":["Bagaichhari","Barkal","Kawkhali (Betbunia)","Belaichhari","Kaptai","Juraichhari","Langadu","Naniyachar","Rajasthali","Rangamati Sadar"]},"Dhaka":{"Dhaka":["Dhamrai","Dohar","Keraniganj","Nawabganj","Savar","Adabor","Badda","Bangshal","Cantonment","Dhanmondi","Demra","Gulshan","Hazaribagh","Jatrabari","Kadamtali","Kafrul","Khilgaon","Khilkhet","Kotwali","Lalbagh","Mirpur","Mohammadpur","Motijheel","New Market","Pallabi","Ramna","Sabujbagh","Shah Ali","Shahbagh","Sher-e-Bangla Nagar","Tejgaon","Uttara","Uttara West","Vatara","Wari"],"Gazipur":["Gazipur Sadar","Kaliakair","Kaliganj","Kapasia","Sreepur"],"Gopalganj":["Gopalganj Sadar","Kashiani","Kotalipara","Muksudpur","Tungipara"],"Kishoreganj":["Austagram","Bajitpur","Bhairab","Hossainpur","Itna","Karimganj","Katiadi","Kishoreganj Sadar","Kuliarchar","Mithamain","Nikli","Pakundia","Tarail"],"Madaripur":["Rajoir","Madaripur Sadar","Kalkini","Shibchar"],"Manikganj":["Daulatpur","Ghior","Harirampur","Manikganj Sadar","Saturia","Shivalaya","Singair"],"Munshiganj":["Gazaria","Lohajang","Munshiganj Sadar","Sirajdikhan","Sreenagar","Tongibari"],"Narayanganj":["Araihazar","Bandar","Narayanganj Sadar","Rupganj","Sonargaon"],"Rajbari":["Baliakandi","Goalandaghat","Pangsha","Rajbari Sadar","Kalukhali"],"Shariatpur":["Bhedarganj","Damudya","Gosairhat","Naria","Shariatpur Sadar","Zajira","Shakhipur"],"Faridpur":["Alfadanga","Bhanga","Boalmari","Charbhadrasan","Faridpur Sadar","Madhukhali","Nagarkanda","Sadarpur","Saltha"],"Tangail":["Gopalpur","Basail","Bhuapur","Delduar","Ghatail","Kalihati","Madhupur","Mirzapur","Nagarpur","Sakhipur","Dhanbari","Tangail Sadar"],"Narsingdi":["Narsingdi Sadar","Belabo","Monohardi","Palash","Raipura","Shibpur"]},"Khulna":{"Bagerhat":["Bagerhat Sadar","Chitalmari","Fakirhat","Kachua","Mollahat","Mongla","Morrelganj","Rampal","Sarankhola"],"Chuadanga":["Alamdanga","Chuadanga Sadar","Damurhuda","Jibannagar"],"Jashore":["Abhaynagar","Bagherpara","Chaugachha","Jhikargachha","Keshabpur","Jashore Sadar","Manirampur","Sharsha"],"Jhenaidah":["Harinakunda","Jhenaidah Sadar","Kaliganj","Kotchandpur","Maheshpur","Shailkupa"],"Khulna":["Batiaghata","Dacope","Dumuria","Dighalia","Koyra","Paikgachha","Phultala","Rupsha","Terokhada","Daulatpur","Khalishpur","Khan Jahan Ali","Kotwali","Sonadanga","Harintana"],"Kushtia":["Bheramara","Daulatpur","Khoksa","Kumarkhali","Kushtia Sadar","Mirpur"],"Magura":["Magura Sadar","Mohammadpur","Shalikha","Sreepur"],"Meherpur":["Gangni","Meherpur Sadar","Mujibnagar"],"Narail":["Kalia","Lohagara","Narail Sadar","Naragati"],"Satkhira":["Assasuni","Debhata","Kalaroa","Kaliganj","Satkhira Sadar","Shyamnagar","Tala"]},"Mymensingh":{"Netrokona":["Atpara","Barhatta","Durgapur","Khaliajuri","Kalmakanda","Kendua","Madan","Mohanganj","Netrokona Sadar","Purbadhala"],"Sherpur":["Jhenaigati","Nakla","Nalitabari","Sherpur Sadar","Sreebardi"],"Jamalpur":["Baksiganj","Dewanganj","Islampur","Jamalpur Sadar","Madarganj","Melandaha","Sarishabari"],"Mymensingh":["Trishal","Dhobaura","Fulbaria","Gaffargaon","Gauripur","Haluaghat","Ishwarganj","Mymensingh Sadar","Muktagachha","Nandail","Phulpur","Bhaluka","Tara Khanda"]},"Rajshahi":{"Joypurhat":["Akkelpur","Joypurhat Sadar","Kalai","Khetlal","Panchbibi"],"Bogura":["Adamdighi","Bogura Sadar","Dhunat","Dhupchanchia","Gabtali","Kahaloo","Nandigram","Sariakandi","Shajahanpur","Sherpur","Shibganj","Sonatola"],"Naogaon":["Atrai","Badalgachhi","Manda","Dhamoirhat","Mohadevpur","Naogaon Sadar","Niamatpur","Patnitala","Porsha","Raninagar","Sapahar"],"Natore":["Bagatipara","Baraigram","Gurudaspur","Lalpur","Natore Sadar","Singra","Naldanga"],"Chapainawabganj":["Bholahat","Gomastapur","Nachole","Chapainawabganj Sadar","Shibganj"],"Pabna":["Ataikula","Atgharia","Bera","Bhangura","Chatmohar","Faridpur","Ishwardi","Pabna Sadar","Santhia","Sujanagar"],"Sirajganj":["Belkuchi","Chauhali","Kamarkhanda","Kazipur","Raiganj","Shahjadpur","Sirajganj Sadar","Tarash","Ullahpara"],"Rajshahi":["Bagha","Bagmara","Charghat","Durgapur","Godagari","Mohanpur","Paba","Puthia"]},"Rangpur":{"Dinajpur":["Birampur","Birganj","Biral","Bochaganj","Chirirbandar","Phulbari","Ghoraghat","Hakimpur","Kaharole","Khansama","Dinajpur Sadar","Nawabganj","Parbatipur"],"Gaibandha":["Phulchhari","Gaibandha Sadar","Gobindaganj","Palashbari","Sadullapur","Sughatta","Sundarganj"],"Kurigram":["Bhurungamari","Char Rajibpur","Chilmari","Phulbari","Kurigram Sadar","Nageshwari","Rajarhat","Raomari","Ulipur"],"Lalmonirhat":["Aditmari","Hatibandha","Kaliganj","Lalmonirhat Sadar","Patgram"],"Nilphamari":["Dimla","Domar","Jaldhaka","Kishoreganj","Nilphamari Sadar","Saidpur"],"Panchagarh":["Atwari","Boda","Debiganj","Panchagarh Sadar","Tetulia"],"Rangpur":["Badarganj","Gangachhara","Kaunia","Rangpur Sadar","Mithapukur","Pirgachha","Pirganj","Taraganj"],"Thakurgaon":["Baliadangi","Haripur","Pirganj","Ranisankail","Thakurgaon Sadar"]},"Sylhet":{"Habiganj":["Ajmiriganj","Bahubal","Baniyachong","Chunarughat","Habiganj Sadar","Lakhai","Madhabpur","Nabiganj","Sayestaganj"],"Moulvibazar":["Barlekha","Juri","Kamalganj","Kulaura","Moulvibazar Sadar","Rajnagar","Sreemangal"],"Sunamganj":["Bishwamvarpur","Chhatak","Dakshin Sunamganj","Derai","Dharamapasha","Dowarabazar","Jagannathpur","Jamalganj","Sullah","Sunamganj Sadar","Tahirpur"],"Sylhet":["Balaganj","Beanibazar","Bishwanath","Companigonj","Dakshin Surma","Fenchuganj","Golapganj","Gowainghat","Jaintiapur","Kanaighat","Osmani Nagar","Sylhet Sadar","Zakiganj"]}};
+const KDIVBN = {"Barishal":"বরিশাল","Chattogram":"চট্টগ্রাম","Dhaka":"ঢাকা","Khulna":"খুলনা","Mymensingh":"ময়মনসিংহ","Rajshahi":"রাজশাহী","Rangpur":"রংপুর","Sylhet":"সিলেট"};
+const KDISTBN = {"Barguna":"বরগুনা","Barishal":"বরিশাল","Bhola":"ভোলা","Jhalokati":"ঝালকাঠি","Patuakhali":"পটুয়াখালী","Pirojpur":"পিরোজপুর","Bandarban":"বান্দরবান","Brahmanbaria":"ব্রাহ্মণবাড়িয়া","Chandpur":"চাঁদপুর","Chattogram":"চট্টগ্রাম","Cumilla":"কুমিল্লা","Cox's Bazar":"কক্সবাজার","Feni":"ফেনী","Khagrachhari":"খাগড়াছড়ি","Lakshmipur":"লক্ষ্মীপুর","Noakhali":"নোয়াখালী","Rangamati":"রাঙ্গামাটি","Dhaka":"ঢাকা","Gazipur":"গাজীপুর","Gopalganj":"গোপালগঞ্জ","Kishoreganj":"কিশোরগঞ্জ","Madaripur":"মাদারীপুর","Manikganj":"মানিকগঞ্জ","Munshiganj":"মুন্সিগঞ্জ","Narayanganj":"নারায়ণগঞ্জ","Rajbari":"রাজবাড়ী","Shariatpur":"শরীয়তপুর","Faridpur":"ফরিদপুর","Tangail":"টাঙ্গাইল","Narsingdi":"নরসিংদী","Bagerhat":"বাগেরহাট","Chuadanga":"চুয়াডাঙ্গা","Jashore":"যশোর","Jhenaidah":"ঝিনাইদহ","Khulna":"খুলনা","Kushtia":"কুষ্টিয়া","Magura":"মাগুরা","Meherpur":"মেহেরপুর","Narail":"নড়াইল","Satkhira":"সাতক্ষীরা","Netrokona":"নেত্রকোণা","Sherpur":"শেরপুর","Jamalpur":"জামালপুর","Mymensingh":"ময়মনসিংহ","Joypurhat":"জয়পুরহাট","Bogura":"বগুড়া","Naogaon":"নওগাঁ","Natore":"নাটোর","Chapainawabganj":"চাঁপাইনবাবগঞ্জ","Pabna":"পাবনা","Sirajganj":"সিরাজগঞ্জ","Rajshahi":"রাজশাহী","Dinajpur":"দিনাজপুর","Gaibandha":"গাইবান্ধা","Kurigram":"কুড়িগ্রাম","Lalmonirhat":"লালমনিরহাট","Nilphamari":"নীলফামারী","Panchagarh":"পঞ্চগড়","Rangpur":"রংপুর","Thakurgaon":"ঠাকুরগাঁও","Habiganj":"হবিগঞ্জ","Moulvibazar":"মৌলভীবাজার","Sunamganj":"সুনামগঞ্জ","Sylhet":"সিলেট"};
+const KOPT = {"blood":["A+","A-","B+","B-","AB+","AB-","O+","O-","N.A."],"gender":[{"v":"Male","bn":"পুরুষ"},{"v":"Female","bn":"মহিলা"},{"v":"Other","bn":"অন্যান্য"}],"incsrc":[{"v":"Salary","bn":"বেতন"},{"v":"Business","bn":"ব্যবসা"},{"v":"Agriculture","bn":"কৃষি"},{"v":"Remittance","bn":"রেমিট্যান্স"},{"v":"Family support","bn":"পরিবার থেকে প্রাপ্ত"},{"v":"Pension","bn":"পেনশন"},{"v":"Savings / Investment","bn":"সঞ্চয় / বিনিয়োগ"},{"v":"Other","bn":"অন্যান্য"}],"income":[{"v":"Below 10,000","bn":"১০,০০০ টাকার কম"},{"v":"10,000 - 25,000","bn":"১০,০০০ - ২৫,০০০ টাকা"},{"v":"25,001 - 50,000","bn":"২৫,০০১ - ৫০,০০০ টাকা"},{"v":"50,001 - 100,000","bn":"৫০,০০১ - ১,০০,০০০ টাকা"},{"v":"Above 100,000","bn":"১,০০,০০০ টাকার বেশি"}],"occ":[{"v":"Government job","bn":"সরকারি চাকরি"},{"v":"Private job","bn":"বেসরকারি চাকরি"},{"v":"Business","bn":"ব্যবসা"},{"v":"Self-employed","bn":"আত্মকর্মসংস্থান"},{"v":"Student","bn":"শিক্ষার্থী"},{"v":"Housewife","bn":"গৃহিণী"},{"v":"Retired","bn":"অবসরপ্রাপ্ত"},{"v":"Unemployed","bn":"বেকার"},{"v":"Other","bn":"অন্যান্য"}]};
+const KPKEYS = ["blood", "division", "district", "upazila", "gender", "incsrc", "income", "occ"];
+const KPT = {blood: "k_gbl", division: "k_gdv", district: "k_gdt", upazila: "k_gut", gender: "k_ggn", incsrc: "k_gis", income: "k_gmi", occ: "k_goc"};
+const KSEC = {name: "k_gs1", addr: "k_gs2", gender: "k_gs3"};
+const KCHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10l4 4 4-4"/></svg>';
+Object.assign(T.bn, {"k_gs1":"ব্যক্তিগত তথ্য","k_gs2":"ঠিকানা","k_gs3":"আপনার সম্পর্কে আরও কিছু","k_gbl":"রক্তের গ্রুপ","k_gdv":"বিভাগ","k_gdt":"জেলা","k_gut":"উপজেলা / থানা","k_gpo":"পোস্ট অফিস","k_gpc":"পোস্ট কোড","k_ggn":"লিঙ্গ","k_gis":"আয়ের উৎস","k_gmi":"আনুমানিক মাসিক আয়","k_goc":"পেশা","k_gpick":"বাছুন","k_gsrch":"খুঁজুন","k_guse":"এটাই ব্যবহার করুন","k_gnone":"কিছু পাওয়া যায়নি","k_gpoph":"যেমন: সাতক্ষীরা সদর","k_gpcph":"৪ অঙ্কের কোড"});
+Object.assign(T.en, {"k_gs1":"Personal details","k_gs2":"Address","k_gs3":"A little more about you","k_gbl":"Blood group","k_gdv":"Division","k_gdt":"District","k_gut":"Upazila / Thana","k_gpo":"Post office","k_gpc":"Post code","k_ggn":"Gender","k_gis":"Source of income","k_gmi":"Estimated monthly income","k_goc":"Occupation","k_gpick":"Select","k_gsrch":"Search","k_guse":"Use this","k_gnone":"Nothing found","k_gpoph":"e.g. Satkhira Sadar","k_gpcph":"4-digit code"});
+Object.assign(KI, {
+  kb: '<path d="M12 3s6 6.4 6 11a6 6 0 01-12 0c0-4.6 6-11 6-11z"/>',
+  kj: '<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0110.5 4h3A1.5 1.5 0 0115 5.5V7M3 13h18"/>',
+  kw: '<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M16 14.5h2"/>'
+});
+const KF = [["name", "k_nm", "kn"], ["father", "k_fa", "kf"], ["mother", "k_mo", "kf"], ["dob", "k_dob", "kd"], ["nid", "k_nid", "ki"], ["blood", "k_gbl", "kb"], ["addr", "k_ad", "ka"],
+  ["division", "k_gdv", "ka"], ["district", "k_gdt", "ka"], ["upazila", "k_gut", "ka"], ["postoffice", "k_gpo", "ka"], ["postcode", "k_gpc", "ka"],
+  ["gender", "k_ggn", "kn"], ["incsrc", "k_gis", "kw"], ["income", "k_gmi", "kw"], ["occ", "k_goc", "kj"]];
 const KV = {
   name: (v) => /[A-Za-z]{2}/.test(String(v || "")) && String(v || "").trim().length >= 3,
   father: (v) => String(v || "").trim().length >= 2,
@@ -2085,6 +2121,18 @@ const KV = {
 const kTickI = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const kCrossI = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>';
 const kOkN = () => KF.filter(([k]) => KV[k](K.d[k])).length;
+Object.assign(KV, {
+  blood: (v) => KOPT.blood.includes(v),
+  division: (v) => !!KGEO[v],
+  district: (v) => !!(KGEO[K.d.division] && KGEO[K.d.division][v]),
+  upazila: (v) => String(v || "").trim().length >= 2,
+  postoffice: (v) => String(v || "").trim().length >= 2,
+  postcode: (v) => /^\d{4}$/.test(String(v || "")),
+  gender: (v) => KOPT.gender.some(o => o.v === v),
+  incsrc: (v) => KOPT.incsrc.some(o => o.v === v),
+  income: (v) => KOPT.income.some(o => o.v === v),
+  occ: (v) => KOPT.occ.some(o => o.v === v)
+});
 function kInfoOld() {
   if (K.reading) return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="krd"><div class="kscn"><svg viewBox="0 0 200 126" aria-hidden="true"><rect x="3" y="3" width="194" height="120" rx="14" fill="#fff" stroke="#e2136e" stroke-width="3"/><circle cx="44" cy="50" r="15" fill="#fde7f1"/><path d="M80 38h86M80 56h70M80 74h80M26 98h140" stroke="#f0a3c6" stroke-width="6" stroke-linecap="round"/></svg><u></u></div><b>${t("k_readd")}</b><span id="kpct">0%</span><div class="kbar"><i id="kbi"></i></div><small>${t("k_readw")}</small></div></div>`;
   const n = kOkN();
@@ -2239,7 +2287,7 @@ function kFA() {
   if (KFAbad >= 2) return Promise.resolve(null);
   if (!KFAp) KFAp = (async () => {
     try {
-      if (!window.faceapi) await new Promise((ok, no) => { const s = document.createElement("script"); s.src = KMB + "/dist/face-api.js"; s.onload = ok; s.onerror = () => no(new Error("FA")); document.head.appendChild(s); });
+      if (!window.faceapi) await kFAScript(); /* v2.53: একই স্ক্রিপ্ট একবারই নামে */
       const f = window.faceapi; if (!f) throw new Error("FA");
       try { await f.tf.setBackend("webgl"); } catch (e) {}
       try { await f.tf.ready(); } catch (e) {}
@@ -2414,6 +2462,8 @@ async function kSubmit() {
   } catch (e) { return fail(e); }
   kUpSet(4);
   try { if (r && r.id) api("/rest/v1/rpc/kyc_extra", {m: "POST", tries: 1, b: {p_id: r.id, p_mother: (K.d.mother || "").trim(), p_name_bn: (K.d.name_bn || "").trim()}}).catch(() => {}); } catch (e) {}
+  /* v2.52: অতিরিক্ত তথ্য (SQL চালানো না থাকলে চুপচাপ বাদ যায়, জমা আটকায় না) */
+  try { if (r && r.id) { const x = K.d; api("/rest/v1/rpc/kyc_extra2", {m: "POST", tries: 1, b: {p_id: r.id, p_data: {blood: x.blood || "", division: x.division || "", district: x.district || "", upazila: (x.upazila || "").trim(), post_office: (x.postoffice || "").trim(), post_code: x.postcode || "", gender: x.gender || "", income_source: x.incsrc || "", monthly_income: x.income || "", occupation: x.occ || ""}}}).catch(() => {}); } } catch (e) {}
   const auto = !!(r && typeof r === "object" && r.status === "approved");
   { const R0 = K.mres || {}, nd = String(K.d.nid || ""); K.sum = {th: [K.front, K.back, K.selfie], name: K.d.name, nid: nd ? "••••••" + nd.slice(-4) : "", pct: R0.d === null || R0.d === undefined || R0.pct >= KM.AUTO ? null : Math.round(R0.pct), auto}; }
   K.busy = false; K.flow = false; K.msg = ""; K.err = ""; K.front = K.back = K.selfie = ""; K.p1 = K.p2 = null; K.live = null; K.mres = null; K.desc = null; K.tries = 0; K.cardDesc = null; K.cardThumb = "";
@@ -2990,8 +3040,10 @@ function kInfo() {
     let body;
     if (k === "dob") body = `<button type="button" class="kdb" onclick="kDobOpen()"><span id="kv_dob">${v ? esc(v) : t("k_miss")}</span><em><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>${t("k_edit")}</em></button>`;
     else if (k === "addr") body = `<textarea id="kv_${k}" rows="2" placeholder="${t("k_miss")}" oninput="kSet('${k}',this)">${esc(v)}</textarea>`;
-    else body = `<input id="kv_${k}" value="${esc(v)}" placeholder="${k === "name" ? t("k_nmen") : t("k_miss")}" ${k === "nid" ? 'inputmode="numeric" maxlength="17"' : 'maxlength="80"'}${k === "name" ? ' autocapitalize="words" autocorrect="off" spellcheck="false"' : ""}${lock ? " readonly" : ""} oninput="kSet('${k}',this)">`;
-    return `<div class="kf ${ok ? "gd" : "bd"}${lock ? " lk" : ""}" style="--n:${i}"><div class="kfi">${kic(ik)}</div><div class="kfb"><label>${t(lb)}</label>${body}${lock ? `<small class="klk2">${t("k_lockd")}</small>` : ""}</div><i class="kt2 ${ok ? "gd" : "no"}">${ok ? kTickI : kCrossI}</i></div>`;
+    else if (KPKEYS.includes(k)) body = `<button type="button" class="kdb kpick" onclick="kPick('${k}')"><span id="kv_${k}"${v ? "" : ' class="ph"'}>${v ? esc(kLbl(k, v)) : t("k_gpick")}</span><em>${KCHEV}</em></button>`;
+    else body = `<input id="kv_${k}" value="${esc(v)}" placeholder="${k === "name" ? t("k_nmen") : k === "postcode" ? t("k_gpcph") : k === "postoffice" ? t("k_gpoph") : t("k_miss")}" ${k === "nid" ? 'inputmode="numeric" maxlength="17"' : k === "postcode" ? 'inputmode="numeric" maxlength="4"' : 'maxlength="80"'}${k === "name" ? ' autocapitalize="words" autocorrect="off" spellcheck="false"' : ""}${lock ? " readonly" : ""} oninput="kSet('${k}',this)">`;
+    const hd = KSEC[k] ? `<p class="kshd">${t(KSEC[k])}</p>` : "";
+    return hd + `<div class="kf ${ok ? "gd" : "bd"}${lock ? " lk" : ""}" style="--n:${Math.min(i, 6)}"><div class="kfi">${kic(ik)}</div><div class="kfb"><label>${t(lb)}</label>${body}${lock ? `<small class="klk2">${t("k_lockd")}</small>` : ""}</div><i class="kt2 ${ok ? "gd" : "no"}">${ok ? kTickI : kCrossI}</i></div>`;
   }).join("");
   return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="kbody"><div class="ksum"><div><b id="ksn">${n}/${tot}</b><span>${t("k_okc")}</span></div><div class="kbar"><i id="ksb2" style="width:${n * 100 / tot}%"></i></div></div>
     ${K.fail ? `<p class="ksubt">${t("k_ocrfail")}</p>` : ""}${rows}<div class="le kle">${esc(K.err)}</div></div>
@@ -3001,6 +3053,7 @@ function kSet(k, el) {
   let v = el.value;
   if (k === "nid") { v = digs(v, 17); }
   else if (k === "name") { v = v.replace(/[^A-Za-z .'\-]/g, "").replace(/\s{2,}/g, " "); }
+  else if (k === "postcode") { v = digs(v, 4); }
   if (el.value !== v) el.value = v;
   K.d[k] = v;
   const row = el.closest(".kf"), tk = row.querySelector(".kt2"), ok = KV[k](v);
@@ -3013,7 +3066,7 @@ function kInfoCount() {
 }
 function kInfoNext() {
   const d = K.d, le = document.querySelector(".kle");
-  const bad = ["name", "father", "mother", "dob", "addr"].some(k => !KV[k](d[k])) ? t("k_bad") : !KV.nid(d.nid) ? t("k_badnid") : "";
+  const bad = KF.some(([k]) => k !== "nid" && !KV[k](d[k])) ? t("k_bad") : !KV.nid(d.nid) ? t("k_badnid") : "";
   if (bad) { K.err = bad; if (le) le.textContent = bad; hap("HEAVY"); return; }
   hap(); K.err = ""; K.pv = ""; K.step = "face"; kycRender();
 }
@@ -3048,6 +3101,66 @@ function kDobOk() {
   hap("MEDIUM"); kDobClose();
   const s = document.getElementById("kv_dob"); if (s) s.textContent = K.d.dob;
   const row = s && s.closest(".kf"); if (row) { row.classList.add("gd"); row.classList.remove("bd"); const tk = row.querySelector(".kt2"); if (tk) { tk.className = "kt2 gd"; tk.innerHTML = kTickI; } }
+  kInfoCount();
+}
+
+
+/* ----- v2.52: সুন্দর পপ-আপ বাছাই (বিভাগ → জেলা → উপজেলা, ব্লাড গ্রুপ, পেশা ইত্যাদি) ----- */
+function kLbl(k, v) {
+  if (S.lang !== "bn") return v;
+  if (k === "division") return KDIVBN[v] || v;
+  if (k === "district") return KDISTBN[v] || v;
+  const o = (KOPT[k] || []).find(x => x && x.v === v); return o ? o.bn : v;
+}
+function kPkItems(key) {
+  const d = K.d, bn = S.lang === "bn";
+  if (key === "division") return Object.keys(KGEO).map(v => ({v, l: bn ? KDIVBN[v] : v, s: bn ? v : KDIVBN[v]}));
+  if (key === "district") return Object.keys(KGEO[d.division] || {}).map(v => ({v, l: bn ? KDISTBN[v] : v, s: bn ? v : KDISTBN[v]}));
+  if (key === "upazila") return ((KGEO[d.division] || {})[d.district] || []).map(v => ({v, l: v, s: ""}));
+  return (KOPT[key] || []).map(o => typeof o === "string" ? {v: o, l: o, s: ""} : {v: o.v, l: bn ? o.bn : o.v, s: bn ? o.v : o.bn});
+}
+function kPick(key) {
+  if (document.getElementById("kpk")) return;
+  const d = K.d;
+  if (key === "district" && !KGEO[d.division]) key = "division";
+  else if (key === "upazila" && !KV.district(d.district)) key = KGEO[d.division] ? "district" : "division";
+  hap();
+  const items = kPkItems(key), big = items.length > 8 || key === "upazila";
+  const o = document.createElement("div"); o.id = "kpk"; o.className = "kpkw"; o.dataset.k = key;
+  o.innerHTML = `<div class="kpkb" onclick="kPkClose()"></div><div class="kpks"><div class="kpkh"><b>${t(KPT[key])}</b><button type="button" class="kpkx" onclick="kPkClose()" aria-label="${t("k_cancel")}"><svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17"/></svg></button></div>
+    ${big ? `<div class="kpkq"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="kpkq" type="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="${t("k_gsrch")}" oninput="kPkFilter()"></div>` : ""}
+    <div class="kpkl" id="kpkl"></div></div>`;
+  o._items = items; kEl().appendChild(o); kPkFilter();
+  requestAnimationFrame(() => o.classList.add("in"));
+}
+function kPkFilter() {
+  const o = document.getElementById("kpk"); if (!o) return;
+  const key = o.dataset.k, qi = document.getElementById("kpkq"), raw = qi ? qi.value.replace(/[^A-Za-z .'\-()ঀ-৿]/g, "").trim().slice(0, 40) : "", q = raw.toLowerCase(), cur = K.d[key];
+  const list = o._items.filter(x => !q || (x.v + " " + x.l + " " + x.s).toLowerCase().includes(q));
+  let h = list.map(x => `<button type="button" class="kpki${x.v === cur ? " on" : ""}" data-v="${esc(x.v)}" onclick="kPkSel(this)"><span><b>${esc(x.l)}</b>${x.s ? `<small>${esc(x.s)}</small>` : ""}</span><i class="kpkc">${kTickI}</i></button>`).join("");
+  if (key === "upazila" && raw.length >= 2 && !o._items.some(x => x.v.toLowerCase() === q)) h += `<button type="button" class="kpki kpku" data-v="${esc(raw)}" onclick="kPkSel(this)"><span><b>${t("k_guse")}: ${esc(raw)}</b></span></button>`;
+  document.getElementById("kpkl").innerHTML = h || `<p class="kpke">${t("k_gnone")}</p>`;
+}
+function kPkSel(el) {
+  const o = document.getElementById("kpk"); if (!o) return;
+  const key = o.dataset.k, v = el.dataset.v, d = K.d; hap("MEDIUM");
+  if (key === "division") { if (d.division !== v) { d.division = v; if (!((KGEO[v] || {})[d.district])) { d.district = ""; d.upazila = ""; } } }
+  else if (key === "district") { if (d.district !== v) { d.district = v; d.upazila = ""; } }
+  else d[key] = v;
+  kPkClose(); kPkRows();
+  const nx = key === "division" && !KV.district(d.district) ? "district" : key === "district" && !KV.upazila(d.upazila) ? "upazila" : "";
+  if (nx) setTimeout(() => { if (K.step === "info") kPick(nx); }, 320);
+}
+function kPkClose() { const o = document.getElementById("kpk"); if (!o) return; o.classList.remove("in"); setTimeout(() => { if (o.parentNode) o.remove(); }, 260); }
+function kPkRows() {
+  KPKEYS.forEach(k => {
+    const s = document.getElementById("kv_" + k); if (!s) return;
+    const v = K.d[k], ok = KV[k](v);
+    s.textContent = v ? kLbl(k, v) : t("k_gpick"); s.classList.toggle("ph", !v);
+    const row = s.closest(".kf"); if (!row) return;
+    row.classList.toggle("gd", ok); row.classList.toggle("bd", !ok);
+    const tk = row.querySelector(".kt2"); if (tk) { tk.className = "kt2 " + (ok ? "gd" : "no"); tk.style.animation = "none"; tk.style.transform = "scale(1)"; tk.innerHTML = ok ? kTickI : kCrossI; }
+  });
   kInfoCount();
 }
 
@@ -3789,6 +3902,7 @@ function kToFront() {
   K.step = "front";
 }
 function kBack() {
+  if (document.getElementById("kpk")) { kPkClose(); return; }
   hap();
   if (K.busy && K.step !== "face") return;
   const s = K.step;
@@ -4866,3 +4980,313 @@ function kFaceFinish() {
     }
   } catch (e) {}
 })();
+
+
+/* =====================================================================
+   v2.53 — NID: (১) সার্ভার OCR (Google Vision, ফ্রি লিমিটে; ফোনের Tesseract শুধু বিকল্প)
+           (২) অটো-ছবি শুধু আসল কার্ড দেখলে: সামনে = ছবির মুখ + লেখার লাইন, পেছনে = বারকোড/লেখার লাইন
+           (৩) তোলার পর ছবিতে NID-র লেখা না পেলে ছবি বাতিল (কাপড়/দেয়ালের ছবি আর গ্রহণ হয় না)
+   ===================================================================== */
+Object.assign(T.bn, {k_notcard: "NID কার্ড পাওয়া যাচ্ছে না। কার্ডটি ফ্রেমের ভেতরে ধরুন।"});
+Object.assign(T.en, {k_notcard: "No ID card found. Place your NID card inside the frame."});
+
+/* ---- সার্ভারে লেখা পড়া (Supabase Edge Function: nid-ocr) ---- */
+const KSRV = {on: true};
+const KSV = {front: null, back: null};
+async function kSrvRead(img, side) {
+  if (!KSRV.on) return null;
+  const BASE = String(SUPA_URL).replace(/[\s"']/g, "").replace(/\/+$/, ""), KEY = String(SUPA_KEY).replace(/[\s"']/g, "");
+  if (!BASE || !KEY || !S.tok) return null;
+  const c = KSV[side]; if (c && c.img === img) return c.d;
+  try {
+    const cv = await kPrep(img, 1500, "none");
+    const b64 = cv.toDataURL("image/jpeg", .82).split(",")[1];
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 14000);
+    let r; try { r = await fetch(BASE + "/functions/v1/nid-ocr", {method: "POST", signal: ctl.signal, headers: {apikey: KEY, Authorization: "Bearer " + S.tok, "Content-Type": "application/json"}, body: JSON.stringify({image: b64, side})}); } finally { clearTimeout(tm); }
+    if (!r.ok) { if (r.status === 404 || r.status === 503) KSRV.on = false; console.log("srvocr", r.status); return null; }
+    const j = await r.json();
+    if (!j || !j.ok || typeof j.text !== "string") return null;
+    const d = {text: j.text, srv: 1, lines: (j.lines || []).map(l => ({text: l.t, words: (l.w || []).map(w => ({text: w[0], confidence: w[1]}))}))};
+    KSV[side] = {img, d}; return d;
+  } catch (e) { console.log("srvocr", e && e.message); return null; }
+}
+/* সামনের দিকের তথ্য: সার্ভারের পড়া পেলে সেটাই (ভরসা মান সহ), নইলে আগের ফোনের Tesseract পথ */
+async function kStrictFront(img, pre) {
+  const d = await kSrvRead(img, "front");
+  if (d) { const r = kReadOf(d), R = kDecide([r, r]); R.text = d.text || ""; KPS = {i: 0, n: 1}; return R; }
+  return kStrictFrontLocal(img, pre);
+}
+
+/* ---- যাচাই: সার্ভারের পড়ায় ID-র লেখা না পেলে কার্ড নয়; ফোনের পড়া ধীর/ঝাপসা হলে আগের নরম নিয়ম ---- */
+function kJudge(txt, side, geo, src) {
+  const like = !geo || geo.cardLike, ev = !!(K.gate && K.gate.s === side && K.gate.ok);
+  if (typeof txt !== "string") return (ev || like) ? "ok" : "notid";
+  const r = kClass2(txt);
+  if (side === "front" && r.c === "back" && r.bs >= 2) return "wrong:back";
+  if (side === "back" && r.c === "front" && r.fs >= 3 && r.bs === 0) return "wrong:front";
+  if (src === "srv") return r.any >= 2 ? "ok" : "notid";
+  if (r.c === "none") return (ev || like) ? "ok" : "notid";
+  return "ok";
+}
+async function kVal() {
+  const s = K.step, img = K.pv; let txt, geo = null, src = "loc";
+  try { geo = kGeoCv(await kPrep(img, 600)); } catch (e) {}
+  const d = await kSrvRead(img, s);
+  if (K.pv !== img || K.step !== s) return;
+  if (d) { txt = d.text || ""; src = "srv"; }
+  else {
+    try { const cv = await kPrep(img, 1200); txt = await Promise.race([kOcrText(cv, ""), kTO(14000)]); } catch (e) { txt = undefined; }
+    if (K.pv !== img || K.step !== s) return;
+  }
+  K.vbusy = false;
+  const j = kJudge(txt === undefined ? null : txt, s, geo, src); K.gate = null;
+  if (j === "notid") { kReject("k_notid", "k_notidm"); return; }
+  if (j.indexOf("wrong") === 0) { kReject("k_wrong", j === "wrong:front" ? "k_isf" : "k_isb"); return; }
+  if (typeof txt === "string" && txt) K.pre[s] = txt;
+  K.rep = kMakeRep(s, K.repSrc || "cam", geo, txt, img);
+  K.adv = (!K.rep.warn) ? img : "";
+  kycRender();
+  if (K.adv === img) K.at = setTimeout(() => { if (K.pv === img && K.step === s && K.adv === img) kUse(); }, 1100);
+}
+
+/* ---- কার্ড চেনার হালকা পরীক্ষা (ফোনের ভেতরে, ফ্রি, সার্ভার লাগে না) ---- */
+let KFSp = null;
+function kFAScript() {
+  if (window.faceapi) return Promise.resolve(window.faceapi);
+  if (!KFSp) KFSp = new Promise((ok, no) => { const s = document.createElement("script"); s.src = KMB + "/dist/face-api.js"; s.onload = () => ok(window.faceapi); s.onerror = () => { KFSp = null; no(new Error("FA")); }; document.head.appendChild(s); });
+  return KFSp;
+}
+let KTFp = null, KTFbad = 0;
+function kTiny() {
+  if (KFA) return Promise.resolve(KFA);
+  if (KTFbad >= 2) return Promise.resolve(null);
+  if (!KTFp) KTFp = (async () => {
+    try {
+      const f = await kFAScript(); if (!f) throw new Error("FA");
+      try { await f.tf.setBackend("webgl"); } catch (e) {}
+      try { await f.tf.ready(); } catch (e) {}
+      await f.nets.tinyFaceDetector.loadFromUri(KMB + "/model/");
+      return f;
+    } catch (e) { KTFbad++; KTFp = null; console.log("tiny", e && e.message); return null; }
+  })();
+  return KTFp;
+}
+function kFrameCv(v, W) {
+  const R = kRegion(v, 0) || {x: 0, y: 0, w: v.videoWidth, h: v.videoHeight}, H = Math.max(40, Math.round(W * R.h / R.w));
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  c.getContext("2d", {willReadFrequently: true}).drawImage(v, R.x, R.y, R.w, R.h, 0, 0, W, H); return c;
+}
+/* লেখার লাইন গোনা: কার্ডে সারি সারি লেখা থাকে (লাইন ও ফাঁক পর পর)। কাপড়/নকশা/ফাঁকা দেয়ালে এমন নিয়মিত সারি হয় না */
+function kBandsGr(gr, W, H, x0f, x1f) {
+  const x0 = Math.floor(W * x0f), x1 = Math.floor(W * x1f), raw = new Float32Array(H), rows = new Float32Array(H);
+  for (let y = 1; y < H - 1; y++) { let e = 0; for (let x = x0 + 1; x < x1 - 1; x++) { const i = y * W + x; if (Math.abs(gr[i + 1] - gr[i - 1]) > 26) e++; } raw[y] = e / Math.max(1, x1 - x0 - 2); }
+  let sum = 0; for (let y = 1; y < H - 1; y++) { rows[y] = (raw[y - 1] + raw[y] * 2 + raw[y + 1]) / 4; sum += rows[y]; }
+  const thr = Math.max(.04, sum / H * 1.2); let run = 0, bands = 0, ink = 0;
+  for (let y = 1; y < H - 1; y++) { if (rows[y] > thr) { run++; ink++; } else { if (run >= 3 && run <= 22) bands++; run = 0; } }
+  if (run >= 3 && run <= 22) bands++;
+  return {bands, ink: ink / Math.max(1, H - 2)};
+}
+function kBands(cv, x0f, x1f) {
+  const W = cv.width, H = cv.height, d = cv.getContext("2d", {willReadFrequently: true}).getImageData(0, 0, W, H).data, gr = new Uint8Array(W * H);
+  for (let i = 0, j = 0; j < W * H; i += 4, j++) gr[j] = (d[i] * 77 + d[i + 1] * 150 + d[i + 2] * 29) >> 8;
+  return kBandsGr(gr, W, H, x0f, x1f);
+}
+const kTextOk = (b) => b.bands >= 3 && b.bands <= 24 && b.ink > .18 && b.ink < .78;
+/* সামনের দিক: কার্ডের বাঁ পাশে ছবির মুখ (ছোট ফেস-ডিটেক্টর, ফোনের ভেতরে) */
+async function kFaceCheck(cv) {
+  const f = await kTiny(); if (!f) return null;
+  const all = await f.detectAllFaces(cv, new f.TinyFaceDetectorOptions({inputSize: 320, scoreThreshold: .5}));
+  const W = cv.width, H = cv.height;
+  for (const r of (all || [])) {
+    const b = r.box || (r.detection && r.detection.box); if (!b) continue;
+    const cx = (b.x + b.width / 2) / W, cy = (b.y + b.height / 2) / H, wf = b.width / W;
+    if (cx >= .03 && cx <= .55 && cy >= .18 && cy <= .88 && wf >= .07 && wf <= .38) return {ok: true};
+  }
+  return {ok: false};
+}
+/* পেছনের দিক: ফোনের ভেতরের ML Kit দিয়ে 2D বারকোড (PDF417/QR/DataMatrix) আছে কিনা */
+let KBCbad = 0;
+async function kBarcodeCheck(cv) {
+  const B = cap().BarcodeScanner, F = cap().Filesystem;
+  if (KBCbad >= 3 || !B || !B.readBarcodesFromImage || !F || !F.writeFile) return null;
+  try {
+    const b64 = cv.toDataURL("image/jpeg", .85).split(",")[1];
+    const w = await F.writeFile({path: "kgate.jpg", data: b64, directory: "CACHE"});
+    const r = await B.readBarcodesFromImage({path: w.uri});
+    const bs = (r && r.barcodes) || [];
+    return {ok: bs.some(b => /PDF|QR|DATA_?MATRIX|AZTEC/i.test(String(b.format || "")))};
+  } catch (e) { KBCbad++; console.log("bc", e && e.message); return null; }
+}
+async function kGate(v, s) {
+  const res = {s, ok: false};
+  if (s === "front") {
+    const b = kBands(kFrameCv(v, 360), .40, .98); res.b = b;
+    if (!kTextOk(b)) return res;
+    const fc = await kFaceCheck(kFrameCv(v, 480)); res.face = fc;
+    res.ok = fc === null ? b.bands >= 5 : fc.ok;   /* ফেস মডেল না এলে শুধু লেখার লাইনে; তোলার পর সার্ভার যাচাই তো আছেই */
+    return res;
+  }
+  const b = kBands(kFrameCv(v, 360), .04, .96); res.b = b;
+  if (!kTextOk(b)) return res;
+  const bc = await kBarcodeCheck(kFrameCv(v, 900)); res.bc = bc;
+  res.ok = bc ? (bc.ok || b.bands >= 6) : b.bands >= 5;
+  return res;
+}
+
+/* ---- অটো ছবি: কার্ড স্থির + আসল NID কার্ডের চিহ্ন (পরপর দুবার) পেলে তবেই ---- */
+function kAutoStart() {
+  kAutoStop(); KA.ok = 0; KA.none = 0; KA.hit = 0; KA.miss = 0; KA.prev = null; KA.busy = false; KA.ocr = false; KA.t0 = Date.now(); K.gate = null;
+  if (!KSRV.on || !S.tok) kWorker();
+  if (K.step === "front") kTiny();
+  KA.pause = document.getElementById("kpop") ? Infinity : 0; KA.tm = setInterval(kAutoTick, 260); KA.mt = setTimeout(kManualShow, 9000);
+}
+function kAutoTick() {
+  if (KA.busy || KA.ocr || Date.now() < KA.pause || K.loadingGal || K.galOpen) return;
+  const v = document.getElementById("kvid"), s = K.step;
+  if (!v || !v.videoWidth || v.readyState < 2 || K.pv || (s !== "front" && s !== "back")) return;
+  const m = kMet(v); if (!m) return;
+  const fr = document.querySelector("#kyc .kfr");
+  const lite = m.edge > .012 && m.edge < .85 && m.cells >= 5 && m.mean > 28 && m.mean < 252;
+  const good = lite && m.diff < 16 && m.sharp > 22;
+  if (!good) { KA.ok = 0; KA.hit = 0; KA.miss = 0; if (fr) fr.classList.remove("lk"); kSt(!lite ? "k_auto" : m.diff >= 16 ? "k_steady" : "k_blur"); return; }
+  KA.ok++; if (KA.ok < 2) { kSt("k_readc"); return; }
+  KA.ocr = true; const g = KAG;
+  (async () => {
+    let ev = null; try { ev = await kGate(v, s); } catch (e) { console.log("gate", e && e.message); }
+    KA.ocr = false;
+    if (g !== KAG || !K.open || K.step !== s || K.pv) return;
+    if (!ev || !ev.ok) { KA.hit = 0; KA.miss++; if (fr) fr.classList.remove("lk"); kSt(KA.miss >= 2 ? "k_notcard" : "k_readc"); KA.pause = Date.now() + 300; return; }
+    if (++KA.hit < 2) { kSt("k_hold"); if (fr) fr.classList.add("lk"); return; }
+    KA.hit = 0; KA.miss = 0; KA.busy = true; const shot = kCardShot(v); K.gate = ev; kFlash(); hap("MEDIUM");
+    setTimeout(() => {
+      KA.busy = false;
+      if (!K.open || K.step !== s || K.pv) return;
+      K.pre[s] = ""; K.pv = shot; K.auto = true; K.adv = ""; K.repSrc = "cam"; K.imgWH = null; K.rep = null; K.vbusy = true; kycRender(); kVal();
+    }, 100);
+  })();
+}
+
+/* =====================================================================
+   v2.54 — NID ছবি তোলার পর: যাচাই-তালিকা বাদ, নিজে নিজে পরের ধাপ, ম্যানুয়ালে Retake/Submit
+   - অটো ছবি: যাচাই চলে (স্ক্যান-রেখা), ঠিক হলে সবুজ টিক-অ্যানিমেশন, তারপর নিজে পরের পাতায়
+   - ম্যানুয়াল (শাটার/গ্যালারি): ছবি দেখে Retake বা Submit; Submit চাপলে তখন ছবি যাচাই
+   - কিছু ঠিক না থাকলে (ঝাপসা, কার্ড নয়, লেখা কম...) তালিকা নয়, একটি লাইন + Retake / Continue
+   ===================================================================== */
+Object.assign(T.bn, {k_sbm: "সাবমিট", k_cont: "চালিয়ে যান"});
+Object.assign(T.en, {k_sbm: "Submit", k_cont: "Continue"});
+
+function kScan(side) {
+  const fr = side === "front", pv = K.pv, ok = !!pv && K.okp === pv, wm = pv && K.wm && K.wm.img === pv ? K.wm.k : "";
+  const busy = !!pv && !!K.vbusy && !ok, rdy = !!pv && !K.vbusy && !ok;
+  const sweep = busy ? '<u class="kswp"></u>' : "";
+  const tick = ok ? '<div class="kdone"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="kdb" cx="40" cy="40" r="34"/><path class="kdt" d="M25 41l10.5 10.5L56 30"/></svg><i></i><i></i></div>' : "";
+  const chip = busy ? `<div class="kchk"><i class="kspin"></i><span>${t("k_chk2")}</span></div>` : "";
+  const btn = rdy ? `${wm ? `<div class="kwn"><i>!</i><span>${t(wm)}</span></div>` : ""}<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="${wm ? "kWarnGo()" : "kSbm()"}">${t(wm ? "k_cont" : "k_sbm")}</button></div>` : "";
+  return `<div class="kcam kn">${kBg()}
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b></b><em>${fr ? 1 : 2}/2</em></div>${kLogo(t(fr ? "k_front" : "k_back"))}
+    <div class="kwr${pv ? " pv" : ""}${ok ? " okp" : ""}"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid()}${sweep}</div>
+      <div class="kfr${pv && !K.vbusy ? " dn" : ""}${wm ? " wn" : ""}"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>${pv ? "" : '<u class="kln"></u>'}</div>${tick}</div>${chip}
+    <div class="kbt">${pv ? btn : `<p id="kst">${t("k_auto")}</p>`}
+      ${pv ? "" : `<div class="ksh"><button type="button" class="kgal" aria-label="Gallery" onclick="kGalOpen()">${kic("gal")}</button><button class="kshut" aria-label="${t("k_snap")}" onclick="kSnap()"><i></i></button><span class="kgal sp"></span></div>`}
+      <small class="knc" id="knc"></small></div></div>`;
+}
+
+/* ম্যানুয়াল শাটার: ছবি তুলে দেখায়, যাচাই হয় না (Submit চাপলে হবে) */
+function kSnap() {
+  const v = document.getElementById("kvid");
+  if (!v || !v.videoWidth) { toast(t("k_nocam")); return; }
+  hap("MEDIUM"); const face = K.step === "face";
+  K.pv = face ? kShrink(v, 1800, .86) : kCardShot(v); K.auto = false; kcamStop();
+  if (face) { kycRender(); return; }
+  K.repSrc = "cam"; K.imgWH = null; K.rep = null; K.vbusy = false; K.okp = ""; K.wm = null; K.pre[K.step] = "";
+  kycRender();
+}
+/* গ্যালারির ছবিও ম্যানুয়াল: Retake / Submit */
+function kFile(inp) {
+  const f = inp && inp.files && inp.files[0];
+  if (!f) { kCamBack(); return; }
+  const side = K.step;
+  if (side !== "front" && side !== "back") { try { inp.value = ""; } catch (e) {} return; }
+  K.loadingGal = true; KA.pause = Infinity; kcamStop();
+  const u = URL.createObjectURL(f), im = new Image();
+  const done = () => { try { URL.revokeObjectURL(u); } catch (e) {} try { inp.value = ""; } catch (e) {} };
+  im.onload = async () => {
+    let shot = false; try { shot = await kIsShot(f, im); } catch (e) {}
+    K.loadingGal = false;
+    if (K.step !== side) { done(); return; }
+    if (shot) { done(); kPop(t("k_shh"), t("k_shm")); return; }
+    K.pv = kShrink(im, 1800, .86); K.repSrc = "gal"; K.imgWH = [im.naturalWidth, im.naturalHeight]; done();
+    K.auto = false; K.adv = ""; K.pre[side] = ""; K.rep = null; K.vbusy = false; K.okp = ""; K.wm = null; kycRender();
+  };
+  im.onerror = () => { done(); K.loadingGal = false; toast(t("k_nocam")); kCamBack(); };
+  im.src = u;
+}
+/* Submit: এখন ছবি যাচাই শুরু */
+function kSbm() {
+  if (!K.pv || K.vbusy || (K.step !== "front" && K.step !== "back")) return;
+  hap(); clearTimeout(K.at); K.vbusy = true; K.wm = null; K.okp = ""; kycRender(); kVal();
+}
+/* কিছু ঠিক না থাকলেও ইউজার চাইলে এগোতে পারে */
+function kWarnGo() {
+  const img = K.pv, s = K.step; if (!img || K.vbusy || (s !== "front" && s !== "back")) return;
+  kOkGo(img, s);
+}
+/* সবুজ টিক-অ্যানিমেশন দেখিয়ে নিজে পরের পাতায় */
+function kOkGo(img, s) {
+  clearTimeout(K.at); K.okp = img; K.wm = null; hap("MEDIUM"); kycRender();
+  K.at = setTimeout(() => { if (K.pv === img && K.step === s && K.okp === img) kUse(); }, 950);
+}
+async function kVal() {
+  const s = K.step, img = K.pv; let txt, geo = null, src = "loc";
+  try { geo = kGeoCv(await kPrep(img, 600)); } catch (e) {}
+  const d = await kSrvRead(img, s);
+  if (K.pv !== img || K.step !== s) return;
+  if (d) { txt = d.text || ""; src = "srv"; }
+  else {
+    try { const cv = await kPrep(img, 1200); txt = await Promise.race([kOcrText(cv, ""), kTO(14000)]); } catch (e) { txt = undefined; }
+    if (K.pv !== img || K.step !== s) return;
+  }
+  K.vbusy = false;
+  const j = kJudge(txt === undefined ? null : txt, s, geo, src); K.gate = null;
+  if (j === "notid") { kReject("k_notid", "k_notidm"); return; }
+  if (j.indexOf("wrong") === 0) { kReject("k_wrong", j === "wrong:front" ? "k_isf" : "k_isb"); return; }
+  if (typeof txt === "string" && txt) K.pre[s] = txt;
+  K.rep = kMakeRep(s, K.repSrc || "cam", geo, txt, img);
+  if (K.rep.warn) {
+    const bad = K.rep.it.find(x => !x.ok);
+    K.wm = {img, k: bad ? bad.k : "k_rp_warn"}; hap("HEAVY"); kycRender(); return;
+  }
+  kOkGo(img, s);
+}
+function kRetake() { hap(); clearTimeout(K.at); K.rep = null; K.pv = ""; K.auto = false; K.vbusy = false; K.okp = ""; K.wm = null; kycRender(); }
+function kReject(a, b) { clearTimeout(K.at); K.pv = ""; K.vbusy = false; K.auto = false; K.okp = ""; K.wm = null; K.pre[K.step] = ""; kycRender(); kPop(t(a), t(b)); }
+function kUse() {
+  hap(); clearTimeout(K.at); K.auto = false; K.rep = null; K.okp = ""; K.wm = null; K.adv = "";
+  if (K.step === "front" && K.cardOnly) { K.front = K.pv; K.pv = ""; K.cardOnly = false; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.mres = null; K.desc = null; K.step = "match"; kycRender(); return; }
+  if (K.step === "front") { K.front = K.pv; K.pv = ""; K.pg.front = 0; K.p1 = kRead(K.front, "front"); K.step = K.redo ? "info" : "back"; if (K.redo) { K.redo = false; K.reading = true; } K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.mres = null; kFaceModel(); kFA(); }
+  else { K.back = K.pv; K.pv = ""; K.pg.back = 0; K.p2 = kRead(K.back, "back"); K.step = "info"; K.reading = true; }
+  kycRender();
+}
+
+/* =====================================================================
+   v2.55 — ফেস স্ক্যান: গোল ক্যামেরা + দাগ-দাগ (টিক) রিং। যেদিকে মুখ ঘোরে সেদিকের দাগগুলো রঙিন হয়।
+   লাইভনেসের নিয়ম (এলোমেলো ৩ ধাপ, মুখ মেলানো, সার্ভার) একটুও বদলায়নি, শুধু রিং ও ঘরের আকৃতি।
+   ===================================================================== */
+function kRingArc(id, a1, a2) {
+  const R = 47, C = 50, p = (a) => { const r = a * Math.PI / 180; return (C + R * Math.cos(r)).toFixed(2) + " " + (C + R * Math.sin(r)).toFixed(2); };
+  const d = `M${p(a1)} A${R} ${R} 0 0 1 ${p(a2)}`;
+  return `<g id="kra${id}" class="kra"><mask id="kmk${id}" maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120"><path d="${d}" pathLength="100" fill="none" stroke="#fff" stroke-width="8" stroke-dasharray="1.2 4.356"/></mask><path class="krt" d="${d}" pathLength="100"/><g mask="url(#kmk${id})"><path class="krf" d="${d}" pathLength="100"/></g></g>`;
+}
+function kFace() {
+  const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
+  const dots = [0, 1, 2].map(i => `<i id="kdt${i}"></i>`).join("");
+  return `<div class="kcam kn kf2 kf3">${kBg()}
+    <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b class="ktt">${t("k_face")}</b><em>3/4</em></div>${kLogo()}
+    <div class="kwr ov" id="kwr"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}</div>
+      ${pv ? "" : `<svg class="krg" viewBox="0 0 100 100" aria-hidden="true">${kRingArc(0, -45, 45)}${kRingArc(1, 45, 135)}${kRingArc(2, 135, 225)}${kRingArc(3, 225, 315)}</svg>`}</div>
+    <div class="kov"><u id="kou" class="${pv ? "dn" : ""}"></u><div class="kfok">${kTickI}</div></div><div class="kcnt" id="kcnt"></div>${pv ? "" : '<div class="kfarr h" id="kfarr"></div>'}
+    <div class="kbt">${pv ? `<div class="krow"><button class="kgh" onclick="kRetake()">${t("k_retake")}</button><button class="kgo" onclick="kFaceUse()">${t("k_use")}</button></div>`
+      : `<div class="kdir pop" id="kdir"><div class="kgd" id="kgd">${KGUIDE}</div><div class="kdt2"><b id="kst" class="kfm">${t("k_fload")}</b><span class="kdots d5">${dots}</span></div></div>
+         <div class="kpg"><div class="kfbar"><i id="kfp"></i></div><div class="kfpc" id="kfpc">0%</div></div><div class="ksh"><span class="kgal sp"></span><button class="kshut" aria-label="${t("k_snap")}" onclick="kFaceCount()"><i></i></button><span class="kgal sp"></span></div>`}
+      <small class="knc" id="knc"></small></div></div>`;
+}

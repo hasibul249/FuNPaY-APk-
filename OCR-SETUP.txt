@@ -1,0 +1,18 @@
+FuNPaY NID লেখা পড়া — সার্ভার OCR সেটআপ (Google Cloud Vision, ফ্রি লিমিটে)
+==========================================================================
+
+কেন: ফোনের ভেতরের Tesseract ধীর। সার্ভারে পড়ালে সাধারণত ২-৪ সেকেন্ডে বাংলা + ইংরেজি দুটোই পড়া যায়।
+ফ্রি: Google Vision এ প্রতি মাসে প্রথম ১০০০ ছবি ফ্রি। একজনের KYC তে সাধারণত ২-৩টি ছবি যায় (সামনে, পেছনে, ভুল হলে আবার)।
+সতর্কতা: NID এর ছবি Google এর সার্ভারে যায় (জমা থাকে না, কিন্তু তৃতীয় পক্ষ)। Google Cloud এ বিলিং অ্যাকাউন্ট (কার্ড) যোগ করতেই হয়, তবে ফ্রি সীমার ভেতরে টাকা কাটে না।
+
+আপনাকে যা করতে হবে (ক্রমে)
+1) console.cloud.google.com এ প্রজেক্ট বানান > Billing চালু করুন > "Cloud Vision API" Enable করুন।
+2) APIs & Services > Credentials > Create credentials > API key। Key টি "Restrict key" করে শুধু "Cloud Vision API" দিন।
+3) (খরচ ঠেকাতে) APIs & Services > Cloud Vision API > Quotas এ প্রতিদিনের সীমা ৩০-৩৩ এর মতো বসিয়ে দিলে মাসে ১০০০ এর বেশি যাবে না।
+4) Supabase > SQL Editor এ backend/update-v2.53.sql Run করুন।
+5) Supabase > Edge Functions > Create function > নাম nid-ocr > supabase/functions/nid-ocr/index.ts এর কোড পেস্ট > Deploy। "Verify JWT" ON রাখুন।
+6) Edge Functions > Secrets এ যোগ করুন: GOOGLE_VISION_KEY = (ধাপ ২ এর key)। চাইলে OCR_DAILY_LIMIT = 12 (একজন ইউজার দিনে কত ছবি)।
+7) কোড GitHub এ তুলুন, OTA আপডেট এলে পরীক্ষা করুন।
+
+না করলে কী হয়: ফাংশন না থাকলে বা key না দিলে অ্যাপ নিজে আগের ফোনের Tesseract পথে ফিরে যায় (ধীর, কিন্তু কাজ করে)।
+সমস্যা হলে: Supabase > Edge Functions > nid-ocr > Logs দেখুন (VISION 403 = API key বা বিলিং/Enable ভুল)।
