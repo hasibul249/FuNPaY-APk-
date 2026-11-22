@@ -2139,7 +2139,7 @@ Object.assign(KV, {
   occ: (v) => KOPT.occ.some(o => o.v === v)
 });
 /* ===== v2.56: দুই পেজ + ঐচ্ছিক ঘর (রক্তের গ্রুপ, উপজেলা/থানা ঐচ্ছিক) ===== */
-const KOPTF = {blood: 1, upazila: 1};
+const KOPTF = {blood: 1};
 const KPG = [["name", "father", "mother", "dob", "nid", "blood", "addr", "division", "district", "upazila", "postoffice", "postcode"], ["gender", "incsrc", "income", "occ"]];
 const kReqAll = () => KF.filter(([k]) => !KOPTF[k]).map(x => x[0]);
 function kRowSt(k, v) { if (KOPTF[k] && !(v && !(k === "blood" && v === "N.A."))) return "op"; return KV[k](v) ? "gd" : "bd"; }
@@ -2292,7 +2292,7 @@ function kFaceUse() { hap(); K.selfie = K.pv; K.pv = ""; K.live = {ok: false, mo
 /* ----- v2.20: NID-র ছবির মুখের সাথে সেলফি মেলানো (পুরোটা ফোনের ভেতরে, face-api) -----
    মিল % = দুই মুখের "দূরত্ব" থেকে হিসাব। ৮৫% মানে দূরত্ব ০.৪৫ বা তার কম (face-api এর সাধারণ সীমা ০.৬ এর চেয়ে কড়া)।
    সার্ভারের SQL (update-v2.20-kyc-auto.sql) একই হিসাব নিজে আবার করে, তাই এই ধাপ সরাসরি অ্যাকাউন্ট চালু করতে পারে না। */
-const KM = {AUTO: 85, REVIEW: 70, SUSPECT: 30, TRIES: 3, SWAP: .62, VER: "1.7.12"};
+const KM = {AUTO: 85, REVIEW: 70, SUSPECT: 35, TRIES: 3, SWAP: .62, VER: "1.7.12"};
 const KMB = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@" + KM.VER;
 const KMA = [[0, 100], [.30, 97], [.50, 85], [.58, 70], [.70, 45], [.85, 30], [1, 10], [1.2, 0]];
 let KFA = null, KFAp = null, KFAbad = 0;
@@ -3266,6 +3266,7 @@ function scanHtml(s) {
     hap("MEDIUM");
     if (e.id === "otpin") return;
     if (e.id === "rk") { const n = document.getElementById("rk2"); if (n) { n.focus(); return; } }
+    if (e.id === "rk2") { const a0 = document.getElementById("rk"); if (a0 && a0.value === e.value) { try { e.blur(); } catch (x) {} return; } } /* v2.57: দ্বিতীয় কনফার্মে কিপ্যাড নামে, "অ্যাকাউন্ট খুলুন" বার দেখা যায় */
     if (/Enter/.test(e.getAttribute("onkeydown") || "")) { e.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", bubbles: true, cancelable: true})); return; }
     const b = footBtn(e); if (b) b.click();
   };
@@ -3868,9 +3869,15 @@ async function kMatchRun() {
     const liveOn = !!(K.live && K.live.ok);
     if (R.d === null) R.st = "low";
     else if (liveOn && !sw.ok) R.st = "low";
-    else if (R.pct >= KM.AUTO) R.st = liveOn ? "ok" : "review";
+    else if (R.pct >= KM.AUTO) R.st = "ok";
     else if (R.pct >= KM.REVIEW) R.st = "review";
     else R.st = "low";
+    /* v2.57: ৩ বারের নিয়ম — ≥85 সক্রিয়; ৭০–৮৫ প্রথমবার আবার চেষ্টার সুযোগ, ২য়বারেও কম হলে সাপোর্ট রিভিউ; ৭০ এর নিচে ৩ বার পর্যন্ত চেষ্টা, তারপর সেরা মিলটুকুই জমা; ৩৫ এর নিচে জমাই হবে না */
+    { const sus = !!(liveOn && !sw.ok), p0 = R.d === null ? -1 : (sus ? Math.min(R.pct, KM.REVIEW - 1) : R.pct);
+      K.att = (K.att || 0) + 1;
+      if (p0 >= 0 && (!K.best || p0 > K.best.pct)) K.best = {pct: p0, d: R.d, desc: K.desc, selfie: K.selfie, live: K.live, mres: R};
+      const A = K.att, E = K.best ? K.best.pct : -1;
+      R.mode = p0 >= KM.AUTO ? "ok" : A === 1 ? (p0 >= KM.REVIEW ? "r1" : "low") : E >= KM.REVIEW ? "rv" : A >= 3 ? (E >= KM.SUSPECT ? "fin" : "none") : "low"; }
     if (R.st === "low") {
       const rs = R.rs;
       if (!s) rs.push("k_r_noface");
@@ -3915,7 +3922,7 @@ function kMatch() {
 
 /* ----- ব্যাক: NID এর ছবির ধাপের পর (তথ্য, মুখ, মিল, PIN) যেখানেই ব্যাক চাপুক, আবার NID সামনের ছবি তোলার জায়গায় ----- */
 function kToFront() {
-  K.pv = ""; K.reading = false; K.front = K.back = K.selfie = ""; K.pre = {}; K.p1 = K.p2 = null; K.auto = false; K.vbusy = false;
+  K.pv = ""; K.reading = false; K.front = K.back = K.selfie = ""; K.pre = {}; K.p1 = K.p2 = null; K.auto = false; K.vbusy = false; K.att = 0; K.best = null;
   K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.cardDesc = null; K.cardDescs = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.rep = null; K.redo = false; K.err = "";
   K.step = "front";
 }
@@ -4977,10 +4984,11 @@ function kFaceFinish() {
 (function () {
   try {
     const de = document.documentElement; let st = null;
+    try { if (localStorage.getItem("fptierv") !== "58") { localStorage.removeItem("fptier"); localStorage.setItem("fptierv", "58"); } } catch (e) {}
     try { st = localStorage.getItem("fptier"); } catch (e) {}
     const set = (tier) => { de.classList.toggle("lowend", tier === "low"); de.classList.toggle("hiend", tier === "hi"); };
     const m = navigator.deviceMemory || 0, c = navigator.hardwareConcurrency || 0;
-    const guess = ((m && m <= 3) || (c && c <= 4)) ? "low" : ((m >= 6 && c >= 8) ? "hi" : "mid");
+    const guess = ((m && m <= 4) || (c && c <= 4)) ? "low" : ((m >= 6 && c >= 8) ? "hi" : "mid");
     set(st === "low" || st === "mid" || st === "hi" ? st : guess);
     if (!st) {
       /* একবার ফ্রেম-রেট মেপে ঠিক করা (ফলাফল মনে রাখে) */
@@ -4988,7 +4996,7 @@ function kFaceFinish() {
         let n = 0, t0 = 0, done = false;
         const fin = (fps) => {
           if (done) return; done = true; if (!fps) return;
-          let tier = fps < 38 ? "low" : fps >= 55 && guess !== "low" && (m >= 6 || c >= 8) ? "hi" : "mid";
+          let tier = fps < 45 ? "low" : fps >= 55 && guess !== "low" && (m >= 6 || c >= 8) ? "hi" : "mid";
           if (guess === "low" && tier === "hi") tier = "mid";
           try { localStorage.setItem("fptier", tier); localStorage.setItem("fplow", tier === "low" ? "1" : "0"); } catch (e) {}
           set(tier);
@@ -5346,3 +5354,308 @@ function kFace() {
          <div class="kpg"><div class="kfbar"><i id="kfp"></i></div><div class="kfpc" id="kfpc">0%</div></div><div class="ksh"><span class="kgal sp"></span><button class="kshut" aria-label="${t("k_snap")}" onclick="kFaceCount()"><i></i></button><span class="kgal sp"></span></div>`}
       <small class="knc" id="knc"></small></div></div>`;
 }
+
+
+/* =====================================================================
+   v2.57 — ভাগ ১ (সবার শেষে বসে, তাই আগের একই নামের ফাংশন বদলে দেয়)
+   ===================================================================== */
+/* ১) স্থির ব্যাকগ্রাউন্ডের জন্য পর্দার পুরো উচ্চতা (কিবোর্ড উঠলে কমে না, শুধু বাড়ে) */
+(function () {
+  const D = document.documentElement; let fh = 0, fw = 0;
+  const u = () => { const h = window.innerHeight, w = window.innerWidth; if (w !== fw) { fw = w; fh = h; } else if (h > fh) fh = h; D.style.setProperty("--fh", fh + "px"); };
+  u(); window.addEventListener("resize", u); window.addEventListener("orientationchange", () => setTimeout(u, 300));
+})();
+/* ২) নাম ঘরে ফোকাস থাকলে "অ্যাকাউন্ট খুলুন" বার লুকানো; কিবোর্ড নামলে আবার আসে */
+document.addEventListener("focusin", (e) => { if (e.target && e.target.id === "rn") document.documentElement.classList.add("rnf"); });
+document.addEventListener("focusout", (e) => { if (e.target && e.target.id === "rn") document.documentElement.classList.remove("rnf"); });
+/* ৩) লেখা */
+Object.assign(T.bn, {lgreg: "লগ ইন রেজিস্ট্রেশন", phh: "মোবাইল নম্বর দিয়ে লগ ইন রেজিস্ট্রেশন করুন"});
+Object.assign(T.en, {lgreg: "Log in or Register", phh: "Log in or Register with your mobile number"});
+/* ৪) ফেস মিল: নতুন লেখা (কোথাও "অ্যাডমিন" নয়, "সাপোর্ট") */
+Object.assign(T.bn, {
+  k_m_okh: "মুখ মিলেছে", k_m_oks: "আপনার মুখ NID-র ছবির সাথে মিলেছে। PIN দিয়ে কনফার্ম করুন।",
+  k_m_r1h: "মিল ভালো হয়নি", k_m_r1s: "আরও ভালো আলোয়, মুখ ফ্রেমের মাঝে রেখে আবার চেষ্টা করতে পারেন।",
+  k_m_rvh: "মিল ভালো হয়নি", k_m_rvs: "আপনার ফেসের সাথে মিল কম পাওয়ায় এটি সাপোর্ট টিম রিভিউ করবে।", k_m_rvs2: "আপনার ফেসের সাথে মিল কম পাওয়ায় এটি সাপোর্ট টিম রিভিউ করবে।",
+  k_m_finh: "মিল অনেক কম", k_m_finp: "আপনার আইডেন্টিটি কার্ডের সাথে আপনার ফেসের মিল অনেক কম পাওয়া গেছে, তাই এটি সাপোর্ট টিম কড়াকড়িভাবে চেক করবে।", k_m_fin0: "আপনার আইডেন্টিটি কার্ডের সাথে আপনার ফেসের মিল অনেক কম পাওয়া গেছে, তাই এটি সাপোর্ট টিম কড়াকড়িভাবে চেক করবে।",
+  k_m_lowh: "মিল হয়নি", k_m_lows: "নিচের বিষয়গুলো ঠিক করে আবার সেলফি তুলুন।",
+  k_m_noh: "মিল পাওয়া যায়নি", k_m_nos: "আপনার মুখের সাথে NID-র ছবির মিল পাওয়া যায়নি। ভালো আলোয় আবার চেষ্টা করুন, দরকার হলে NID-র ছবি আবার তুলুন।",
+  k_m_try: "আবার চেষ্টা করুন", k_m_go: "এগিয়ে যান", k_m_att: "চেষ্টা"});
+Object.assign(T.en, {
+  k_m_okh: "Face matched", k_m_oks: "Your face matches the photo on your NID. Confirm with your PIN.",
+  k_m_r1h: "Match is not good", k_m_r1s: "Try again in better light with your face in the middle of the frame.",
+  k_m_rvh: "Match is not good", k_m_rvs: "Your face match was low, so our support team will review it.", k_m_rvs2: "Your face match was low, so our support team will review it.",
+  k_m_finh: "Very low match", k_m_finp: "Your face match with your ID card is very low, so our support team will check it strictly.", k_m_fin0: "Your face match with your ID card is very low, so our support team will check it strictly.",
+  k_m_lowh: "Face did not match", k_m_lows: "Fix the points below and take your selfie again.",
+  k_m_noh: "No match found", k_m_nos: "Your face does not match your NID photo. Try again in good light, and retake the NID photo if needed.",
+  k_m_try: "Try again", k_m_go: "Continue", k_m_att: "Attempt"});
+function kMatch() {
+  const R = K.mres, th = (src, cls) => `<div class="kmf${cls || ""}">${src ? `<img src="${src}" alt="">` : kic("face")}</div>`;
+  if (!R) return `<div class="kw">${kTop(t("k_face"), "", 3)}<div class="kbody"><div class="kcard kc1 kmx"><div class="kmp">${th(K.cardThumb, " sc")}<i class="kml"></i>${th("", " sc")}</div><h2>${t("k_m_h")}</h2><p id="kmst">${t("k_m_l1")}</p><div class="kbar"><i class="kmind"></i></div></div></div></div>`;
+  const nm = R.st === "nomodel", md = nm ? "nm" : (R.mode || (R.st === "ok" ? "ok" : "low")), ok = md === "ok", hasP = R.d !== null && R.d !== undefined, pc = hasP ? Math.round(R.pct) : 0;
+  const col = ok ? "#12a15b" : (md === "r1" || md === "rv" || md === "fin") ? "#e8a20c" : nm ? "#8b8590" : "#e5484d";
+  const H = {ok: "k_m_okh", r1: "k_m_r1h", rv: "k_m_rvh", fin: "k_m_finh", low: "k_m_lowh", none: "k_m_noh", nm: "k_m_nmh"}[md];
+  const SUB = {ok: "k_m_oks", r1: "k_m_r1s", rv: "k_m_rvs", fin: hasP ? "k_m_finp" : "k_m_fin0", low: "k_m_lows", none: "k_m_nos", nm: "k_m_nm"}[md];
+  const mid = ok ? `<div class="kmrw kmok">${kRing(100, col)}<span>${kTickI.replace('stroke="#fff"', 'stroke="#12a15b"')}</span></div>` : nm ? `<div class="kmrw">${kRing(0, col)}<b style="color:${col}">—</b></div>`
+    : `<div class="kmrw">${kRing(hasP ? R.pct : 0, col)}<b style="color:${col}">${hasP ? pc + "%" : "—"}</b></div>`;
+  const retry = md === "low" || md === "none";
+  const why = md === "low" ? `<div class="kmwy">${(R.rs || []).map(k => `<div class="kmri">${kic("info") || ""}<span>${t(k)}</span></div>`).join("")}</div>` : "";
+  const meta = retry ? `<small class="kmt">${t("k_m_att")} ${Math.min(K.att || 1, 3)}/3</small>` : "";
+  const btns = retry ? `<button class="kbtn" onclick="kMatchRetry(0)">${t("k_m_try")}</button>${R.cardBad || md === "none" ? `<button class="klk" onclick="kMatchRetry(1)">${t("k_m_card")}</button>` : ""}`
+    : md === "r1" ? `<button class="kbtn" onclick="kMatchGo()">${t("k_m_go")}</button><button class="klk" onclick="kMatchRetry(0)">${t("k_m_try")}</button>`
+    : `<button class="kbtn" onclick="kMatchGo()">${t("k_m_go")}</button>`;
+  return `<div class="kw">${kTop(t("k_face"), "kBack()", 3)}<div class="kbody"><div class="kcard kc1 kmx">
+    <div class="kmp">${th(R.card)}<div class="kmc" style="--c:${col}">${mid}</div>${th(R.self)}</div>
+    <h2>${t(H)}</h2><p>${t(SUB)}</p>${meta}${why}</div></div>
+    <div class="kbtm">${btns}</div></div>`;
+}
+{ const _kmr = kMatchRetry; kMatchRetry = function (card) { if (card) { K.att = 0; K.best = null; } return _kmr.apply(this, arguments); }; }
+/* জমার সময় সবচেয়ে ভালো মিলের চেষ্টাটাই জমা হয় ("যতটুকু গিয়েছে ততটুকু") */
+{ const _ks = kSubmit; kSubmit = async function () {
+    if (K.busy) return;
+    if (K.best) { K.selfie = K.best.selfie || K.selfie; K.desc = K.best.desc || K.desc; K.live = K.best.live || K.live; K.mres = K.best.mres || K.mres; }
+    await _ks.apply(this, arguments);
+    if (K.step === "ok" || K.step === "wait") { K.att = 0; K.best = null; }
+  }; }
+/* ৬) "অ্যাডমিন" শব্দ অ্যাপের কোথাও দেখাবে না — সব লেখায় "সাপোর্ট" */
+(function () {
+  const sw = (lg, v) => typeof v !== "string" ? v : lg === "bn" ? v.replace(/অ্যাডমিনকে/g, "সাপোর্ট টিমকে").replace(/অ্যাডমিন|এডমিন|অ্যাডমীন/g, "সাপোর্ট টিম") : v.replace(/\b(?:an |the )?admins?\b/gi, "support team");
+  ["bn", "en"].forEach((lg) => { const o = T[lg]; if (!o) return; Object.keys(o).forEach((k) => { const v = sw(lg, o[k]); if (v !== o[k]) o[k] = v; }); });
+})();
+/* ৭) বাছাই শিট খোলা/বন্ধে পেছনের তথ্য পেজ যেন স্ক্রল-ঝাঁকুনি না খায় */
+(function () {
+  const keep = (fn) => function () {
+    const b = document.querySelector("#kyc .kbody"), y = b ? b.scrollTop : 0, r = fn.apply(this, arguments);
+    if (b) { b.scrollTop = y; requestAnimationFrame(() => { b.scrollTop = y; }); setTimeout(() => { b.scrollTop = y; }, 70); }
+    return r;
+  };
+  kPick = keep(kPick); kPkClose = keep(kPkClose); kPkSel = keep(kPkSel); kDobOpen = keep(kDobOpen); kDobClose = keep(kDobClose); kDobOk = keep(kDobOk);
+})();
+
+
+/* =====================================================================
+   v2.57 — ভাগ ২: KYC এর অগ্রগতি ২ ঘণ্টা ধরে রাখা (অ্যাপ বন্ধ হলে/ক্র্যাশ করলে যেখানে ছিল সেখানেই ফেরা)
+   ===================================================================== */
+const KRS = {ttl: 2 * 3600 * 1000, db: null};
+const krsDb = () => new Promise((res) => {
+  if (KRS.db) return res(KRS.db);
+  try { const r = indexedDB.open("fpkyc", 1); r.onupgradeneeded = () => { r.result.createObjectStore("s"); }; r.onsuccess = () => { KRS.db = r.result; res(KRS.db); }; r.onerror = () => res(null); } catch (e) { res(null); }
+});
+async function krsPut(v) { const db = await krsDb(); if (!db) return; try { const st = db.transaction("s", "readwrite").objectStore("s"); if (v === null) st.delete("k"); else st.put(v, "k"); } catch (e) {} }
+async function krsGet() { const db = await krsDb(); if (!db) return null; return new Promise((res) => { try { const q = db.transaction("s").objectStore("s").get("k"); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); } catch (e) { res(null); } }); }
+let krsT = 0;
+function krsSave() {
+  clearTimeout(krsT);
+  krsT = setTimeout(async () => {
+    if (!S.uid) return;
+    if (!K.flow || K.step === "intro") return;
+    if (K.step === "wait" || K.step === "ok") { krsPut(null); return; }
+    const old = await krsGet(), t0 = old && old.uid === S.uid && Date.now() - old.t0 < KRS.ttl ? old.t0 : Date.now();
+    try { await krsPut({uid: S.uid, t0, ts: Date.now(), step: K.step, ipg: K.ipg || 0, d: K.d, lk: K.lk || {}, front: K.front, back: K.back, selfie: K.selfie, att: K.att || 0, best: K.best || null, mres: K.mres || null, desc: K.desc || null, live: K.live || null, tries: K.tries || 0, cardDesc: K.cardDesc || null, cardDescs: K.cardDescs || null, cardThumb: K.cardThumb || "", ft: K.ft || 0}); } catch (e) {}
+  }, 500);
+}
+{ const _r = kycRender; kycRender = function () { const r = _r.apply(this, arguments); krsSave(); return r; }; }
+{ const _c = kInfoCount; kInfoCount = function () { const r = _c.apply(this, arguments); krsSave(); return r; }; }
+{ const _w = kycClose; kycClose = function (wipe) { if (wipe) { clearTimeout(krsT); krsPut(null); } return _w.apply(this, arguments); }; }
+/* অ্যাপ আবার খুললে (PIN দিয়ে ঢুকলে) সেভ করা ধাপে ফেরা; ২ ঘণ্টা পার হলে মুছে শুরু থেকে */
+{ const _s = kycSync; let tried = false;
+  kycSync = function () {
+    if (tried || K.flow || K.open || !S.auth || !S.me || S.me.kyc_status === undefined || S.me.kyc_status === null) return _s.apply(this, arguments);
+    tried = true; const st = S.me.kyc_status, self = this, args = arguments;
+    if (st !== "none" && st !== "rejected") { krsPut(null); return _s.apply(self, args); }
+    krsGet().then((o) => {
+      if (!o || o.uid !== S.uid || Date.now() - o.t0 >= KRS.ttl || K.flow) { if (o && (o.uid !== S.uid || Date.now() - o.t0 >= KRS.ttl)) krsPut(null); return _s.apply(self, args); }
+      K.d = Object.assign({}, K.d, o.d || {}); K.lk = o.lk || {}; K.ipg = o.ipg || 0; K.front = o.front || ""; K.back = o.back || ""; K.selfie = o.selfie || "";
+      K.att = o.att || 0; K.best = o.best || null; K.mres = o.mres || null; K.desc = o.desc || null; K.live = o.live || null; K.tries = o.tries || 0;
+      K.cardDesc = o.cardDesc || null; K.cardDescs = o.cardDescs || null; K.cardThumb = o.cardThumb || ""; K.ft = o.ft || 0;
+      K.pv = ""; K.reading = false; K.busy = false; K.mrun = false; K.err = ""; K.msg = ""; K.reason = S.me.kyc_reason || "";
+      let s = o.step;
+      if (s === "match" || s === "pin") s = K.mres ? "match" : "face";
+      if (s === "face" && !(K.front && K.back)) s = "front";
+      if (s === "back" && !K.front) s = "front";
+      if (s === "info" && !(K.front && K.back)) s = "front";
+      K.flow = true; K.step = s; kycRender();
+    }).catch(() => _s.apply(self, args));
+  };
+}
+
+/* =====================================================================
+   v2.58 — NID কার্ডের অটো ছবি (নতুন নিয়ম) + ফোন অনুযায়ী অ্যানিমেশন
+   - ক্যামেরা চলার সময় ভেতরে ভারী স্ক্যান নেই: শুধু হালকা পরীক্ষা (কার্ড ফ্রেমে, স্থির, পড়ার মতো পরিষ্কার)
+   - হলেই সঙ্গে সঙ্গে ছবি তোলে, ছবিটা পর্দায় দেখায়, "প্রসেসিং হচ্ছে" লিখে ছবিটাই স্ক্যান করে
+   - ৫ সেকেন্ডে না ধরলে ম্যানুয়াল বাটন আসে; অটো তবুও চলতে থাকে (ক্যামেরা চালু থাকা পর্যন্ত)
+   - অটো সর্বোচ্চ ২ বার (প্রতি পাশে); ২০ মিনিট পর আবার ২ বার
+   ===================================================================== */
+Object.assign(T.bn, {k_chk2: "ছবি তোলা হয়েছে, প্রসেসিং হচ্ছে…", k_got: "ছবি তোলা হয়েছে", k_notcard2: "কার্ড বোঝা যায়নি, কার্ডটি সোজা ও আলোতে ধরুন", k_manonly: "নিচের বাটন চেপে ছবি তুলুন"});
+Object.assign(T.en, {k_chk2: "Photo taken, processing…", k_got: "Photo taken", k_notcard2: "Could not recognise the card, hold it straight and in light", k_manonly: "Tap the button below to take the photo"});
+const KAT = {n: {front: 0, back: 0}, t: 0, note: "", nu: 0}, KAT_MAX = 2, KAT_RESET = 20 * 60 * 1000;
+function katLoad() {
+  try { const o = JSON.parse(localStorage.getItem("fpkat") || "null"); if (o && o.n && Date.now() - o.t < KAT_RESET) { KAT.n = {front: o.n.front || 0, back: o.n.back || 0}; KAT.t = o.t; return; } } catch (e) {}
+  KAT.n = {front: 0, back: 0}; KAT.t = 0;
+}
+function katCount(s) { KAT.n[s] = (KAT.n[s] || 0) + 1; KAT.t = Date.now(); try { localStorage.setItem("fpkat", JSON.stringify({n: KAT.n, t: KAT.t})); } catch (e) {} }
+function katSt(k) { if (KAT.note && Date.now() < KAT.nu) { kSt(KAT.note); return; } kSt(k); }
+function kAutoStart() {
+  kAutoStop(); katLoad(); KA.ok = 0; KA.none = 0; KA.hit = 0; KA.miss = 0; KA.prev = null; KA.busy = false; KA.ocr = false; KA.t0 = Date.now(); K.gate = null;
+  if (!KSRV.on || !S.tok) kWorker();
+  KA.pause = document.getElementById("kpop") ? Infinity : 0;
+  if (K.step === "front") kTiny();
+  KA.tm = setInterval(kAutoTick, 350); KA.mt = setTimeout(kManualShow, 5000);
+}
+/* ---- কার্ডের চেহারা চেনা (আসল কার্ডের ছবিতে পরীক্ষা করা):
+   পেছনের দিক (স্মার্ট ও পুরনো, দুটোতেই): ঘন সাদা-কালো বারকোড ব্লক — আলো/রঙে ফারাক পড়ে না (আগে ধূসর ছবি টেনে নেয়)
+   সামনের দিক (স্মার্ট ও পুরনো, দুটোতেই): কার্ডের বাঁ পাশে মুখের ছবি (ফোনের ভেতরের ছোট ফেস-ডিটেক্টর) ---- */
+function kBarcode(d, W, H) {
+  const n = W * H, gr = new Uint8Array(n), hist = new Uint32Array(256);
+  for (let i = 0, j = 0; j < n; i += 4, j++) { const y = (d[i] * 77 + d[i + 1] * 150 + d[i + 2] * 29) >> 8; gr[j] = y; hist[y]++; }
+  let c = 0, lo = 0, hi = 255; for (let v = 0; v < 256; v++) { c += hist[v]; if (c >= n * .05) { lo = v; break; } }
+  c = 0; for (let v = 255; v >= 0; v--) { c += hist[v]; if (c >= n * .05) { hi = v; break; } }
+  const sc = 255 / Math.max(40, hi - lo);
+  for (let j = 0; j < n; j++) gr[j] = Math.max(0, Math.min(255, (gr[j] - lo) * sc));
+  const x0 = Math.floor(W * .1), x1 = Math.floor(W * .9), rowB = new Uint8Array(H);
+  for (let y = 0; y < H; y++) {
+    let s1 = 0, s2 = 0, cnt = 0; for (let x = x0; x < x1; x++) { const v = gr[y * W + x]; s1 += v; s2 += v * v; cnt++; }
+    const m = s1 / cnt, sd = Math.sqrt(Math.max(0, s2 / cnt - m * m)); if (sd < 45) continue;
+    let t = 0, prev = gr[y * W + x0] < m; for (let x = x0 + 1; x < x1; x++) { const q = gr[y * W + x] < m; if (q !== prev) t++; prev = q; }
+    if (t >= .15 * (x1 - x0)) rowB[y] = 1;
+  }
+  let best = 0, run = 0, gap = 0;
+  for (let y = 0; y < H; y++) {
+    if (rowB[y]) { run += 1 + gap; gap = 0; if (run > best) best = run; }
+    else if (run) { gap++; if (gap > 2) { run = 0; gap = 0; } }
+  }
+  return best / H;
+}
+const kIsBack = (b) => b >= .075 && b <= .4;
+Object.assign(T.bn, {k_showf: "কার্ডের সামনের দিক (ছবিওয়ালা পাশ) ফ্রেমে ধরুন", k_showb: "কার্ডের পেছনের দিক (বারকোডওয়ালা পাশ) ফ্রেমে ধরুন"});
+Object.assign(T.en, {k_showf: "Show the front of the card (the side with your photo)", k_showb: "Show the back of the card (the side with the barcode)"});
+function katDecide(ok, s, v, fr) {
+  if (!ok) { KA.ok = 0; if (fr) fr.classList.remove("lk"); katSt(s === "front" ? "k_showf" : "k_showb"); return; }
+  KA.ok++; if (fr) fr.classList.add("lk"); katSt("k_hold");
+  if (KA.ok < 2) return;
+  KA.ok = 0; katCount(s);
+  const shot = kCardShot(v); hap("MEDIUM");
+  K.pre[s] = ""; K.gate = null; K.pv = shot; K.auto = true; K.adv = ""; K.repSrc = "cam"; K.imgWH = null; K.rep = null; K.okp = ""; K.wm = null; K.vbusy = true;
+  kycRender(); kVal();
+}
+function kAutoTick() {
+  if (KA.busy || KA.ocr || Date.now() < KA.pause || K.loadingGal || K.galOpen) return;
+  const v = document.getElementById("kvid"), s = K.step;
+  if (!v || !v.videoWidth || v.readyState < 2 || K.pv || (s !== "front" && s !== "back")) return;
+  if (Date.now() - KA.t0 > 5000) kManualShow();
+  if ((KAT.n[s] || 0) >= KAT_MAX) { katSt("k_manonly"); return; }
+  const m = kMet(v); if (!m) return;
+  const fr = document.querySelector("#kyc .kfr");
+  const lite = m.edge > .008 && m.edge < .88 && m.cells >= 3 && m.mean > 22 && m.mean < 253;
+  if (!lite) { KA.ok = 0; if (fr) fr.classList.remove("lk"); katSt("k_auto"); return; }
+  if (m.diff >= 16) { KA.ok = 0; if (fr) fr.classList.remove("lk"); katSt("k_steady"); return; }
+  if (m.sharp < 14) { KA.ok = 0; if (fr) fr.classList.remove("lk"); katSt("k_blur"); return; }
+  if (s === "back") {
+    let ok = false;
+    try { const cv = kFrameCv(v, 320), d = cv.getContext("2d", {willReadFrequently: true}).getImageData(0, 0, cv.width, cv.height).data; ok = kIsBack(kBarcode(d, cv.width, cv.height)); } catch (e) { ok = false; }
+    katDecide(ok, s, v, fr); return;
+  }
+  /* সামনের ধাপে পেছনের দিক (বারকোড) দেখালে: ছবি তোলে না, আগে সামনের দিক দেখাতে বলে */
+  try { const cv0 = kFrameCv(v, 320), d0 = cv0.getContext("2d", {willReadFrequently: true}).getImageData(0, 0, cv0.width, cv0.height).data; if (kIsBack(kBarcode(d0, cv0.width, cv0.height))) { KA.ok = 0; if (fr) fr.classList.remove("lk"); katSt("k_frontfirst"); return; } } catch (e) {}
+  KA.ocr = true; const g = KAG;
+  (async () => {
+    let ok = false;
+    try {
+      const fc = await kFaceCheck(kFrameCv(v, 480));
+      if (fc === null) { const b = kBands(kFrameCv(v, 320), .40, .98); ok = b.bands >= 3 && b.ink > .1 && b.ink < .85; }   /* ফেস মডেল না এলে শুধু লেখার সারিতে */
+      else ok = !!fc.ok;
+    } catch (e) { ok = false; }
+    KA.ocr = false;
+    if (g !== KAG || !K.open || K.step !== s || K.pv) return;
+    katDecide(ok, s, v, fr);
+  })();
+}
+/* অটো ছবি কার্ড বলে ধরা না পড়লে পপআপ নয়: চুপচাপ আবার ক্যামেরায় ফিরে একটা লাইন দেখায় */
+const _kReject58 = kReject;
+kReject = function (a, b) {
+  if (K.auto && a === "k_notid") {
+    clearTimeout(K.at); K.pv = ""; K.vbusy = false; K.auto = false; K.okp = ""; K.wm = null; K.pre[K.step] = "";
+    KAT.note = "k_notcard2"; KAT.nu = Date.now() + 2500; kycRender(); return;
+  }
+  return _kReject58.apply(this, arguments);
+};
+/* পেছনে চলে গেলে/ব্যাকগ্রাউন্ডে গেলে অ্যানিমেশন থামে (ব্যাটারি ও RAM বাঁচে) */
+document.addEventListener("visibilitychange", () => { document.documentElement.classList.toggle("bgp", document.hidden); });
+
+/* =====================================================================
+   v2.58b — NID চেনা (গবেষণা অনুযায়ী): বাংলাদেশে দুই ধরন চালু — পুরনো ল্যামিনেটেড (২০০৬–) ও স্মার্ট (২০১৬–)।
+   দুটোই ক্রেডিট-কার্ড মাপের (প্রায় ১.৫৮৬ : ১)। সামনে: বাঁয়ে ছবি, ডানে নাম/পিতা/মাতা/জন্ম তারিখ/ID NO (দ্বিভাষিক);
+   পেছনে: শুধু বাংলা — ঠিকানা, রক্তের গ্রুপ, জন্মস্থান, প্রদানের তারিখ। ID নম্বর স্মার্টে ১০ ডিজিট, পুরনোতে ১৩/১৭।
+   ১) কার্ডের কিনারা খোঁজা (ফ্রেমের চার পাশে লম্বা সোজা দাগ + মাপের অনুপাত) — লেখা ছাড়াই কার্ড-আকৃতি ধরে
+   ২) ছবি তোলার পর লেখা চেনায় ID-নম্বরের ধরন ও "প্রদানের তারিখ" যোগ
+   ===================================================================== */
+function kOutline(gr, W, H) {
+  const T = 22, bd = Math.max(3, Math.round(Math.min(W, H) * .2));
+  const horiz = (y) => { let n = 0; for (let x = 2; x < W - 2; x++) { if (Math.abs(gr[(y + 1) * W + x] - gr[(y - 1) * W + x]) > T) n++; } return n / (W - 4); };
+  const vert = (x) => { let n = 0; for (let y = 2; y < H - 2; y++) { if (Math.abs(gr[y * W + x + 1] - gr[y * W + x - 1]) > T) n++; } return n / (H - 4); };
+  let top = {f: 0, p: 0}, bot = {f: 0, p: 0}, lef = {f: 0, p: 0}, rig = {f: 0, p: 0};
+  for (let y = 1; y <= bd; y++) { const f = horiz(y); if (f > top.f) top = {f, p: y}; }
+  for (let y = H - 2; y >= H - 1 - bd; y--) { const f = horiz(y); if (f > bot.f) bot = {f, p: y}; }
+  for (let x = 1; x <= bd; x++) { const f = vert(x); if (f > lef.f) lef = {f, p: x}; }
+  for (let x = W - 2; x >= W - 1 - bd; x--) { const f = vert(x); if (f > rig.f) rig = {f, p: x}; }
+  const th = .5, ok4 = [top, bot, lef, rig].map(e => e.f >= th), n = ok4.filter(Boolean).length;
+  let asp = 0; if (n === 4) asp = (rig.p - lef.p) / Math.max(1, bot.p - top.p);
+  const fine = n === 4 ? (asp > 1.3 && asp < 1.9) : n === 3;
+  return {n, asp, ok: fine};
+}
+const _kClass2_58 = kClass2;
+kClass2 = function (raw) {
+  const r = _kClass2_58(raw), s = String(raw || "");
+  /* ID নম্বর (১০/১৩/১৭ ডিজিট) সামনের দিকের শক্ত চিহ্ন; "প্রদানের তারিখ/Issue Date" পেছনের */
+  const bn = s.replace(/[০-৯]/g, d => String("০১২৩৪৫৬৭৮৯".indexOf(d)));
+  const idNo = /(?<![0-9])(\d{17}|\d{13}|\d{10})(?![0-9])/.test(bn.replace(/[\s-]/g, m => (/\d\s?\d/.test(m) ? "" : m)));
+  const issue = /প্রদানের\s*তারিখ|Issue\s*Date|Date\s*of\s*Issue/i.test(s);
+  let fs = r.fs + (idNo ? 1 : 0), bs = r.bs + (issue ? 1 : 0);
+  const any = r.any + (idNo ? 1 : 0) + (issue ? 1 : 0);
+  const c = any === 0 ? "none" : (fs >= 2 && fs > bs) ? "front" : (bs >= 1 && bs > fs) ? "back" : "weak";
+  return {c, fs, bs, any};
+};
+
+/* v2.58d — ম্যানুয়াল ছবি আগের মতোই সহজ (কার্ডের ধরন মেলানো হয় না); লেখা না পেলে শুধু আবার তুলতে বলে */
+Object.assign(T.bn, {k_notid: "লেখা পড়া যায়নি", k_notidm: "কার্ডটি আলোতে ধরে পরিষ্কার ছবি তুলুন, তারপর আবার চেষ্টা করুন।"});
+Object.assign(T.en, {k_notid: "Could not read the text", k_notidm: "Hold the card in good light, take a clear photo and try again."});
+Object.assign(T.bn, {k_frontfirst: "আগে কার্ডের সামনের দিক (ছবিওয়ালা পাশ) দেখান, পেছনের দিক পরে"});
+Object.assign(T.en, {k_frontfirst: "Show the front of the card first (the photo side), the back comes next"});
+
+/* =====================================================================
+   v2.59 — কিবোর্ড বারের ফাঁকা অংশ (CSS স্কার্ট), বারের নামা-ওঠা কিবোর্ডের সাথে মেলানো
+   ===================================================================== */
+(function () {
+  /* কিবোর্ড নেমে গেলে বার কিবোর্ডের সাথেই নামে; ওঠার সময় প্রথম ফ্রেমে লাফ নয় */
+  let t0 = 0;
+  const vv = window.visualViewport;
+  if (vv) vv.addEventListener("resize", () => {
+    const fb = document.getElementById("kbar"); if (!fb) return;
+    const n = performance.now(); if (n - t0 < 60) return; t0 = n;
+    fb.style.willChange = "transform"; clearTimeout(fb.__wc); fb.__wc = setTimeout(() => { fb.style.willChange = ""; }, 600);
+  });
+})();
+
+/* =====================================================================
+   v2.60 — নেটিভ (KeyboardSync.java) প্রতি ফ্রেমে কিবোর্ডের বাকি দূরত্ব পাঠায়; বার সেই মাপে সরে, তাই কিবোর্ডের সাথেই ওঠে/নামে।
+   নেটিভ না থাকলে/কাজ না করলে এটা কিছুই করে না, v2.59 এর নিয়মেই চলে।
+   ===================================================================== */
+window.__fpKb = function (off, end) {
+  try {
+    const H = document.documentElement, fb = document.getElementById("kbar");
+    if (end) {
+      H.style.removeProperty("--kbd");
+      if (fb) { fb.classList.remove("kba"); try { delete fb.animate; } catch (e) {} }
+      return;
+    }
+    H.style.setProperty("--kbd", (Math.round(off * 10) / 10) + "px");
+    if (fb) {
+      if (!fb.classList.contains("kba")) fb.classList.add("kba");
+      if (!Object.prototype.hasOwnProperty.call(fb, "animate")) fb.animate = function () { return {cancel: function () {}, finish: function () {}}; };
+    }
+  } catch (e) {}
+};
+/* ভুলে শেষ-সংকেত না এলে ৯০০ms পর নিজে ছেড়ে দেয় */
+(function () {
+  const o = window.__fpKb; let tm = 0;
+  window.__fpKb = function (off, end) { o(off, end); clearTimeout(tm); if (!end) tm = setTimeout(() => o(0, 1), 900); };
+})();

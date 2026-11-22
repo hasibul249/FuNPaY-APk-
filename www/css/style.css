@@ -3271,3 +3271,107 @@ html .pgx .avl,html .pgx .bkp,html .pgx .bkg,html .pgx .bk3t,html .tgrid,html .t
 #kyc .kbody.kflat .kopt{text-decoration:none;font-size:10px;font-weight:700;color:#8a808f;background:#f1edf3;border-radius:8px;padding:1px 6px;margin-left:2px;white-space:nowrap}
 #kyc .kbody.kflat .le.kle{margin-top:10px}
 #kyc .kbody.kflat .kf.kfl textarea{field-sizing:content;min-height:1.4em!important}
+
+
+/* =====================================================================
+   v2.57 — ভাগ ১: স্থির ব্যাকগ্রাউন্ড, PIN ডট, ফিঙ্গারপ্রিন্ট, কোড পেজ, আপনার তথ্য পেজ
+   ===================================================================== */
+/* ১) নম্বর/কোড/নতুন অ্যাকাউন্ট পেজের ব্যাকগ্রাউন্ড: কিবোর্ড উঠলেও এক চুলও নড়ে না (পর্দার উচ্চতা --fh এ আটকানো, ওপর থেকে বসানো) */
+.fl.light{background:#f7f5f7!important;background-attachment:scroll!important}
+.fl.light::after{display:none!important}
+.fl.light::before{content:"";position:fixed;left:0;top:0;width:100%;height:var(--fh,100dvh);z-index:0;pointer-events:none;
+  background:
+    linear-gradient(rgba(247,245,247,.90),rgba(247,245,247,.90)),
+    url(/icons/logo-pink.png) no-repeat left -78px top 30%/200px 200px,
+    url(/icons/logo-pink.png) no-repeat right -84px top 50%/210px 210px,
+    url(/icons/logo-pink.png) no-repeat left 50% bottom 90px/180px 180px,
+    #f7f5f7}
+/* লগইনের সাদা অংশও একই ভাবে স্থির */
+.fl.pinp .psheet.bkl{background-attachment:scroll!important}
+
+/* ২) PIN এর ডট: সব জায়গায় একই মাপ, মাঝারি-মোটা */
+input[type="password"]{font-family:Roboto,Arial,sans-serif!important;font-size:26px!important;font-weight:700!important;letter-spacing:.16em!important;line-height:1!important}
+input[type="password"]::placeholder{font-size:15px!important;font-weight:400!important;letter-spacing:0!important}
+#rk[type="text"],#rk2[type="text"]{font-size:20px!important;font-weight:600!important;letter-spacing:.2em!important}
+
+/* ৩) ফিঙ্গারপ্রিন্ট: একটু বড়, ডান প্রান্তে দাগের শেষ বরাবর, নিচের দাগ থেকে স্পষ্ট ফাঁক */
+.fl.pinp .bkp{height:66px!important;align-items:center!important}
+.fl.pinp .bkfp{width:52px!important;height:52px!important;margin:0 0 8px 0!important;flex:none}
+.fl.pinp .bkfp svg{width:30px!important;height:30px!important}
+
+/* ৪) নাম ঘর: বাংলা প্লেসহোল্ডারে ফাঁক ফাঁক নয় */
+#rn,#rn::placeholder{letter-spacing:0!important;word-spacing:0!important;font-kerning:normal;text-rendering:auto;font-feature-settings:normal}
+/* নাম লেখার সময় "অ্যাকাউন্ট খুলুন" বার কিবোর্ডের সাথে ওঠে না */
+html.rnf .regv .nbar{display:none!important}
+
+/* ৫) কোড পেজ: "কোড পেস্ট করুন" ঘর/বর্ডার ছাড়া লেখা, "যাচাই হচ্ছে/হয়েছে" একই লাইনে সোজা */
+.otpv .otpact{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;height:40px!important;min-height:40px!important;margin-top:14px!important;gap:10px}
+.otpv .otpact .otst{height:40px!important;min-height:0!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;line-height:1!important;align-self:center!important}
+.otpv .otpact .otpp{height:40px!important;margin:0 -8px 0 auto!important;padding:0 8px!important;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:8px;color:var(--lp);display:inline-flex!important;align-items:center!important;gap:6px;font-size:13px!important;font-weight:700!important;line-height:1!important}
+.otpv .otpact .otpp:active{background:#fde7f1!important}
+.otpv .otrow{display:flex;align-items:center;justify-content:space-between;height:40px;min-height:40px;margin-top:20px}
+.otpv .otrow .otl,.otpv .otrow .otprs{line-height:1;display:inline-flex;align-items:center}
+.otpv .otpb{margin-top:6px}
+
+/* ৬) আপনার তথ্য পেজ: গণনার পাশের লেখা নেই, সব মান সাধারণ কালো, "নিশ্চিতভাবে পড়া হয়েছে" নেই */
+#kyc .kbody.kflat .ksum span{display:none!important}
+#kyc .kbody.kflat .kf.kfl .klk2{display:none!important}
+#kyc .kbody.kflat .kf.kfl.lk input,#kyc .kbody.kflat .kf.kfl.lk textarea{color:#2a262b!important}
+#kyc .kbody.kflat .kf.kfl .kdb em{display:inline-flex!important;align-items:center!important;gap:4px;line-height:1!important;height:20px}
+#kyc .kbody.kflat .kf.kfl .kdb em svg{display:block;margin:0!important;transform:none!important;position:relative;top:0}
+#kyc .kbody.kflat .kf.kfl .kdb{align-items:center!important}
+/* বাছাই শিট খোলা/বন্ধে পেছনের পেজ না কাঁপে */
+#kyc .kpkw,#kyc .kdw{contain:layout paint;will-change:opacity}
+#kyc .kbody{overscroll-behavior:contain;scroll-behavior:auto!important}
+/* (v2.57) পুরনো নিয়মের চেয়ে জোরালো, যেন সব PIN ঘরে একই ডট মাপ বসে */
+html body .fl.pinp .bkp input.pinin,html body .regv .pfield input#rk,html body .regv .pfield input#rk2,html body #kyc input#kpin,html body #sheet input[type="password"],html body #sheet2 input[type="password"],html body #app input[type="password"]{font-family:Roboto,Arial,sans-serif!important;font-size:26px!important;font-weight:700!important;letter-spacing:.16em!important;line-height:1!important}
+html body .fl.pinp .bkp input.pinin::placeholder,html body .regv .pfield input#rk::placeholder,html body .regv .pfield input#rk2::placeholder,html body #kyc input#kpin::placeholder{font-size:15px!important;font-weight:400!important;letter-spacing:0!important}
+html body .regv .pfield input#rk[type="text"],html body .regv .pfield input#rk2[type="text"]{font-size:20px!important;font-weight:600!important;letter-spacing:.2em!important}
+html body .regv .pfield input#rk::placeholder,html body .regv .pfield input#rk2::placeholder{font-size:26px!important;font-weight:700!important;letter-spacing:.16em!important;color:#cdc6d0!important}
+.fl.pinp .bkfp{margin-bottom:4px!important}
+
+/* =====================================================================
+   v2.58 — ফোন অনুযায়ী অ্যানিমেশন: html.hiend = পুরো শক্তি; সাধারণ (মাঝারি) = শুধু সাজানোর অনন্ত লুপ বন্ধ; html.lowend = আরও কম
+   (স্পিনার/লোডার সব ফোনেই চলে)
+   ===================================================================== */
+html.bgp *,html.bgp *:before,html.bgp *:after{animation-play-state:paused!important}
+html:not(.hiend) .bn svg.bv,html:not(.hiend) button.hold,html:not(.hiend) .fps-orb,html:not(.hiend) .fpa-ry,html:not(.hiend) .fpa-rp,
+html:not(.hiend) .bkfp.on,html:not(.hiend) #kyc .kov u,html:not(.hiend) #kyc .kcam .kbg .b1,html:not(.hiend) #kyc .kcam.kn .kbg .b1,
+html:not(.hiend) .qdeco .qwm,html:not(.hiend) .sh.scanx .scbg .wm,html:not(.hiend) #kyc .kwm,html:not(.hiend) .otwarn svg,
+html:not(.hiend) #kyc .kn .kfr i,html:not(.hiend) #kyc .kfr2,html:not(.hiend) .scf .sl{animation:none!important}
+html:not(.hiend) #kyc .kcam .kbg .b1,html:not(.hiend) #kyc .kcam.kn .kbg .b1{filter:none!important;opacity:.5}
+html.lowend #kyc .kbg *,html.lowend #kyc .kbg *:before{filter:none!important;animation:none!important}
+html.lowend #kyc .kfa,html.lowend #kyc .kfc,html.lowend #kyc .kmf.sc::after,html.lowend #kyc .kml,html.lowend #kyc .kcir.wt svg{animation:none!important}
+html.lowend #kyc .kpo,html.lowend #kyc .kpi-f,html.lowend #kyc .kpi-b{animation-duration:.16s!important}
+html.lowend #kyc .kflash{animation-duration:.2s!important}
+html.lowend *{will-change:auto!important}
+
+/* =====================================================================
+   v2.59 — কিবোর্ড ওঠার সময় "পরবর্তী/অ্যাকাউন্ট খুলুন" বারের নিচে সাদা ফাঁকা আর পেছনের পেজ ঝিলিক
+   ===================================================================== */
+/* বারের নিচে বারের রঙেরই "স্কার্ট": সিস্টেম কিবোর্ড আঁকার আগের মুহূর্তে নিচে সাদা/পেছনের পেজ আর দেখা যায় না, কিবোর্ড এসে এর ওপর বসে */
+html #kbar{box-shadow:0 100vh 0 0 #9e9a9f;transition:transform .26s cubic-bezier(.2,.8,.2,1),opacity .18s ease,box-shadow .22s ease}
+html #kbar.on{box-shadow:0 100vh 0 0 #e9157a}
+html #kbar:not(.show){box-shadow:none}
+html.lowend #kbar{transition:transform .18s ease-out,opacity .12s ease}
+/* বাছাই-শিট খোলা থাকলে পেছনের পেজ নড়ে না/টানলে স্ক্রল ধরে না */
+#kyc:has(#kpk) .kbody,#kyc:has(.kdw) .kbody{overflow:hidden!important}
+#kyc .kpks{overscroll-behavior:contain}
+
+/* =====================================================================
+   v2.60 — বার কিবোর্ডের সাথে হুবহু একই গতিতে (নেটিভ থেকে প্রতি ফ্রেমে --kbd আসে)
+   ===================================================================== */
+html #kbar.show{transform:translate3d(0,calc(var(--kbd,0px) - var(--dko,0px)),0)}
+html #kbar.kba,html #kbar.kba.show{transition:opacity .18s ease,box-shadow .22s ease!important}
+
+/* =====================================================================
+   v2.60 — বন্ধ হওয়ার অ্যানিমেশন শেষ হওয়ার আগেই পেজ/শিট মুছে যেত (JS টাইমার ২২০–২৬০ms, অ্যানিমেশন ২৪০–৩২০ms) → শেষ মুহূর্তে পেজ "টুক" করে ঝিলিক দিত।
+   এখন সব বন্ধ-অ্যানিমেশন টাইমারের আগে (≤২০০ms) শেষ হয়।
+   ===================================================================== */
+html .sh.out{animation-duration:.2s!important}
+html .sh.pgx.out .box,html .sh.pgx.re.out .box,html .sh.drw.out .box{animation-duration:.2s!important}
+html .sh.dlg.out .box,html .sh.scanx.out .box{animation-duration:.2s!important}
+html #kyc .kpkw:not(.in) .kpks{transition-duration:.2s!important}
+html #kyc .kpkw:not(.in) .kpkb{transition-duration:.2s!important}
+html #kyc .kdw:not(.in) .kds{transition-duration:.2s!important}
+html #kyc .kdw:not(.in) .kdb{transition-duration:.2s!important}

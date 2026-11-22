@@ -144,3 +144,41 @@ console.log("android সেটিং ঠিক করা হয়েছে");
   }
   console.log("ML Kit NID OCR প্লাগইন বসানো হলো");
 })();
+
+/* 10) v2.57: অ্যাপ নিজে নিজে বন্ধ হওয়া কমানো — বড় হিপ মেমরি + ওয়েব-রেন্ডারার মরে গেলে অ্যাপ বন্ধ না হয়ে নিজে আবার খোলা (KYC ধাপ সেভ থাকে) */
+(function () {
+  const m = "android/app/src/main/AndroidManifest.xml";
+  if (fs.existsSync(m)) {
+    let x = fs.readFileSync(m, "utf8");
+    if (!x.includes("android:largeHeap")) { x = x.replace(/<application/, '<application android:largeHeap="true"'); fs.writeFileSync(m, x); console.log("largeHeap চালু"); }
+  }
+  let mainFile = null;
+  (function walk(d) { if (!fs.existsSync(d)) return; for (const n of fs.readdirSync(d)) { const q = d + "/" + n; if (fs.statSync(q).isDirectory()) walk(q); else if (n === "MainActivity.java") mainFile = q; } })("android/app/src/main/java");
+  if (!mainFile) return;
+  let c = fs.readFileSync(mainFile, "utf8");
+  if (c.includes("onRenderProcessGone")) return;
+  const hook = "        try {\n            final android.app.Activity fpAct = this;\n            final com.getcapacitor.Bridge fpBr = getBridge();\n            fpBr.getWebView().setWebViewClient(new com.getcapacitor.BridgeWebViewClient(fpBr) {\n                @Override\n                public boolean onRenderProcessGone(android.webkit.WebView view, android.webkit.RenderProcessGoneDetail detail) {\n                    try { fpAct.runOnUiThread(new Runnable() { public void run() { try { fpAct.recreate(); } catch (Exception e) {} } }); } catch (Exception e) {}\n                    return true;\n                }\n            });\n        } catch (Exception e) {}\n";
+  if (c.includes("OVER_SCROLL_NEVER")) {
+    c = c.replace(/(setOverScrollMode\(android\.view\.View\.OVER_SCROLL_NEVER\);\s*\} catch \(Exception e\) \{\}\n)/, "$1" + hook);
+    if (!c.includes("onRenderProcessGone")) { console.log("MainActivity: রেন্ডারার-গন হুক বসেনি (ম্যানুয়ালি দেখুন)"); return; }
+    fs.writeFileSync(mainFile, c); console.log("MainActivity: ওয়েব-রেন্ডারার রিকভারি বসানো হলো");
+  }
+})();
+
+/* 11) v2.60: কিবোর্ডের প্রতি-ফ্রেম মাপ ওয়েবে পাঠানো (বার কিবোর্ডের সাথে একই গতিতে ওঠে): নেটিভ KeyboardSync.java বসানো + MainActivity.onStart এ চালু */
+(function () {
+  const root = "android/app/src/main/java";
+  if (!fs.existsSync(root) || !fs.existsSync("native/KeyboardSync.java")) return;
+  let mainFile = null;
+  (function walk(d) { for (const n of fs.readdirSync(d)) { const q = d + "/" + n; if (fs.statSync(q).isDirectory()) walk(q); else if (n === "MainActivity.java") mainFile = q; } })(root);
+  if (!mainFile) { console.log("MainActivity.java পাওয়া যায়নি, কিবোর্ড-সিঙ্ক বসানো হয়নি"); return; }
+  let c = fs.readFileSync(mainFile, "utf8");
+  const pkg = (/package\s+([\w.]+)\s*;/.exec(c) || [])[1] || "com.funpay.app";
+  const dir = mainFile.slice(0, mainFile.lastIndexOf("/"));
+  fs.writeFileSync(dir + "/KeyboardSync.java", fs.readFileSync("native/KeyboardSync.java", "utf8").replace(/__PKG__/g, pkg));
+  if (c.includes("KeyboardSync.install")) return;
+  const call = "        try { KeyboardSync.install(this, getBridge().getWebView()); } catch (Throwable e) {}\n";
+  const re = /(setOverScrollMode\(android\.view\.View\.OVER_SCROLL_NEVER\);\s*\} catch \(Exception e\) \{\}\n)/;
+  if (re.test(c)) { c = c.replace(re, "$1" + call); fs.writeFileSync(mainFile, c); console.log("কিবোর্ড-সিঙ্ক বসানো হলো"); }
+  else console.log("MainActivity: কিবোর্ড-সিঙ্ক হুক বসেনি (ম্যানুয়ালি দেখুন)");
+})();
