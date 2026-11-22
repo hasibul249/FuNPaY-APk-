@@ -991,7 +991,7 @@ function mount() { let e = document.getElementById("sheet"); if (!e) { e = docum
 function renderSheet() {
   const s = S.sheet;
   mount().innerHTML = S.upd ? updHtml() : s ? (s.id === "qrs" ? qrHtml() : s.id === "bio" ? bioHtml() : s.id === "net" ? netHtml() : s.id === "flt" ? fltHtml() : s.id === "menu" ? menuHtml() : s.id === "trd" ? trdHtml() : s.id === "inf" ? infHtml() : s.id === "pph" ? pphHtml() : s.id === "stm" ? stmHtml() : s.id === "cpl" ? cplHtml() : sheetHtml()) : "";
-  if (s) { s.fresh = false; s.fxs = false; }
+  if (s) { s.fresh = false; s.fxs = false; s.dir = 0; }
   if (S.upd) S.upd.fresh = false;
   if (s && !s.done && s.step === 2 && !SPECIAL.includes(s.id)) { const f = document.getElementById("f2"); if (f) setTimeout(() => { try { f.focus(); } catch (e) {} }, 240); }
   if (s && !s.done && s.step === 3 && !SPECIAL.includes(s.id)) { const f = document.getElementById("spin"); if (f) setTimeout(() => { try { f.focus(); } catch (e) {} }, 260); }
@@ -1018,7 +1018,7 @@ function shakeBox() { const b = document.querySelector("#sheet .box"); if (!b) r
 const setBusy = (on) => document.querySelectorAll("#sheet .btn:not(.l)").forEach(b => b.classList.toggle("ld", on));
 const wrapDlg = (s, inner) => `<div class="sh dlg${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div><div class="stp${s.fxs ? " go" : ""}">${inner}</div></div></div>`;
 const wrapSheet = wrapDlg;
-const wrapPage = (s, title, back, body, foot) => `<div class="sh pgx${s.fresh ? "" : " re"}"><div class="box"><div class="ph"><button class="pb" aria-label="${t("back")}" onclick="${back}">${ic("back")}</button><b>${title}</b><img src="icons/logo.png" alt=""></div><div class="pbody"><div class="stp${s.fxs ? " go" : ""}">${body}</div></div>${foot ? `<div class="pfoot">${foot}</div>` : ""}</div></div>`;
+const wrapPage = (s, title, back, body, foot) => `<div class="sh pgx${s.fresh ? "" : " re"}"><div class="box"><div class="ph"><button class="pb" aria-label="${t("back")}" onclick="${back}">${ic("back")}</button><b>${title}</b><img src="icons/logo.png" alt=""></div><div class="pbody"><div class="stp${s.fxs ? " go" + (s.dir < 0 ? " bw" : "") : ""}">${body}</div></div>${foot ? `<div class="pfoot">${foot}</div>` : ""}</div></div>`;
 const feeOf = (c, amt) => Math.round((c.fee || 0) * amt * 100) / 100;
 const tickSvg = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const PERSON = ["send", "pay", "cash"];
@@ -1161,7 +1161,7 @@ function backStep() {
   const s = S.sheet; if (!s) return;
   hap();
   if (s.step === 4) s.step = 3; else if (s.step === 3) s.step = 2; else if (s.step === 2 && s.s1) s.step = 1; else { closeS(); return; }
-  s.err = ""; s.pin = ""; s.fxs = true; renderSheet();
+  s.err = ""; s.pin = ""; s.fxs = true; s.dir = -1; renderSheet();
 }
 function amtIn(el) {
   let v = en(el.value).replace(/[^0-9.]/g, ""); const p = v.split(".");
@@ -1588,7 +1588,14 @@ function trdHtml0() {
   if (cells.length % 2) cells[cells.length - 1] = cells[cells.length - 1].replace("<div>", '<div class="wide">');
   return `<div class="sh dlg trdd${s.fresh ? "" : " re"}" onclick="if(event.target===this)closeS()"><div class="box"><div class="grip"></div>
     <div class="ok"><div class="tdh">${SVC.includes(x.type) || x.type === "add" ? tile(x.type) : avatar(nm, ph)}</div><h2>${t(v.key)}</h2><div class="amt ${v.out ? "mi" : "pl"}">${v.out ? "-" : "+"}${money2(v.amt)}</div>${stBadge(x)}</div>
-    <div class="tgrid">${cells.join("")}</div><div class="rbt"><button class="btn l" onclick="shareTrx()">${ic("shr")}${t("share")}</button><button class="btn" onclick="closeS()">${t("ok")}</button></div></div></div>`;
+    <div class="tgrid">${cells.join("")}</div><div class="rbt"><button class="btn l" onclick="shareTrx()">${ic("shr")}${t("share")}</button>${trdCanSend(x) ? `<button class="btn" onclick="trdSend()">${t("send")}</button>` : `<button class="btn" onclick="closeS()">${t("ok")}</button>`}</div><button class="trx" aria-label="${t("close")}" onclick="closeS()"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div>`;
+}
+/* v2.50: ট্রানজেকশন পেজ — "সেন্ড মানি" বাটনে ওই নম্বরেই সেন্ড মানির পেজ খোলে; ডানে ওপরে ক্রস দিয়ে বন্ধ */
+function trdWho(x) { const out = x.from_id === S.uid; return {nm: out ? x.to_name : x.from_name, ph: out ? x.to_phone : x.from_phone}; }
+function trdCanSend(x) { if (!x || !["send", "pay", "cash"].includes(x.type)) return false; const w = trdWho(x); return isPh(w.ph) && !(S.me && w.ph === S.me.phone); }
+function trdSend() {
+  const s = S.sheet; if (!s || !s.x || !trdCanSend(s.x)) { closeS(); return; }
+  const w = trdWho(s.x); hap(); openS("send", w.ph, w.nm || "");
 }
 function shareTrx() {
   const s = S.sheet; if (!s || !s.x) return; const x = s.x, v = tv(x), out = x.from_id === S.uid;
@@ -3466,7 +3473,7 @@ function bkStep4(s) {
   const cell = (l, v, sub) => `<div><span>${l}</span><b>${v}</b>${sub ? `<small>${sub}</small>` : ""}</div>`;
   const rows = [!PERSON.includes(s.id) && s.v ? cell(t(cfg(s.id).f), esc(s.v)) : "", !PERSON.includes(s.id) && s.ch ? cell(t("opr"), t(s.ch)) : ""].join("");
   return `<div class="sh pgx c4${s.fresh ? "" : " re"}"><div class="box"><div class="c4h"><b class="c4t"><em>${t(s.id)}</em><span>${t("g_cfm")}</span></b><button class="c4x" aria-label="${t("close")}" onclick="closeS()"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
-    <div class="c4b"><div class="stp${s.fxs ? " go" : ""}">${bkWho(s) ? `<div class="c4w">${bkWho(s)}</div>` : ""}
+    <div class="c4b"><div class="stp${s.fxs ? " go" + (s.dir < 0 ? " bw" : "") : ""}">${bkWho(s) ? `<div class="c4w">${bkWho(s)}</div>` : ""}
       <div class="c4g"><div class="c4tot"><b>${money2(T3.tot)}</b><small>${T3.fee ? "+ " + t("feel") + " " + money2(T3.fee) : t("g_nochg")}</small></div>${cell(t("nbl"), money2(nb))}${rows}${s.id === "send" ? cell(t("g_ref"), esc(s.note || "—")) : ""}${cd ? `<div class="wide"><span>${t("g_card")}</span><b>${GC_TITLE[cd.cat]}</b></div>` : ""}</div>
       ${s.id === "send" && !s.grp && isFav(s.v) ? `<div class="c4n"><svg class="stn" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"/></svg><p>${t("g_favnote")}</p></div>` : ""}
       ${s.grp ? `<div class="c4n"><p>${T3.n} ${t("g_people")}${s.grp.diff ? "" : " × " + money2(parseFloat(s.a) || 0)}</p></div>` : ""}
