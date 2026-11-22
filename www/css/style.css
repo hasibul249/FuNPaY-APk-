@@ -2519,3 +2519,105 @@ html.pinkb .v3fab{display:none!important}
 #kyc .krep.busy .ri.pn i{background:#f3dbe7}
 #kyc .krep.busy .kspin{display:block;width:16px;height:16px;border-width:2.5px;border-color:rgba(226,19,110,.25);border-top-color:#e2136e}
 #kyc .krep.busy .ri.pn i .kspin{width:11px;height:11px;border-width:2px}
+
+/* =====================================================================
+   v2.36 — স্মুথ পেজ বদল, কিবোর্ডের সাথে বার, কোড যাচাই পেজ, আমার প্রোফাইল
+   ===================================================================== */
+/* ---- পেজ বদল: আগের পেজ ঘোস্ট হয়ে সরে যায়, নতুন পেজ নরমভাবে আসে ---- */
+@keyframes vtIf{from{opacity:0;transform:translate3d(9%,0,0)}to{opacity:1;transform:none}}
+@keyframes vtIb{from{opacity:0;transform:translate3d(-9%,0,0)}to{opacity:1;transform:none}}
+@keyframes vtIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+@keyframes vtOf{from{opacity:1;transform:none}to{opacity:0;transform:translate3d(-9%,0,0)}}
+@keyframes vtOb{from{opacity:1;transform:none}to{opacity:0;transform:translate3d(9%,0,0)}}
+@keyframes vtOn{from{opacity:1;transform:none}to{opacity:0;transform:scale(1.012)}}
+.fl.vtf,.pg.vtf,.pg.in.vtf{animation:vtIf .46s var(--ease) backwards}
+.fl.vtb,.pg.vtb,.pg.in.vtb{animation:vtIb .46s var(--ease) backwards}
+.fl.vtn,.pg.vtn,.pg.in.vtn{animation:vtIn .42s var(--ease) backwards}
+.vgh{position:fixed;top:0;bottom:0;z-index:4;max-width:430px;overflow:hidden;pointer-events:none;will-change:transform,opacity}
+.vgh *{animation:none!important;transition:none!important}
+.vgh.vgf{animation:vtOf .3s cubic-bezier(.4,0,.8,.6) both!important}
+.vgh.vgb{animation:vtOb .3s cubic-bezier(.4,0,.8,.6) both!important}
+.vgh.vgn{animation:vtOn .3s ease-in both!important}
+/* হোম/ইনবক্স/প্রোফাইলের ভেতরের জিনিস: স্প্রিং লাফ নয়, নরম ফেড-আপ */
+.pg.in .it,.pg.in .tri div,.pg.in .fc{animation-name:fup}
+.pg.in .tr,.pg.in .mr,.pg.in .nf{animation-name:fup}
+.pg.in{animation-duration:.01s}
+.pg.vtf.in,.pg.vtb.in{animation-duration:.46s}
+/* নিচের বার: ঢোকার অ্যানিমেশন শেষে আর ট্রান্সফর্ম আটকে রাখে না (কিবোর্ডের সাথে গড়ানো যেন কাজ করে) */
+.nbar{animation:fup .45s var(--ease) .2s backwards}
+.nbar.ld{animation:none}
+
+/* ---- PIN কিপ্যাড: নিচ থেকে নরমভাবে ওঠে ও নামে ---- */
+#kpad{transition:transform .36s var(--ease)!important;will-change:transform}
+#kpad:not(.show){transition-duration:.26s!important;transition-timing-function:cubic-bezier(.4,0,1,1)!important}
+#kbar{transition:transform .34s var(--ease),opacity .22s ease,background-color .2s ease}
+#kbar:not(.show){transition-duration:.24s,.2s,.2s}
+/* কিপ্যাড ওঠার সময় নিচের বাটন-বার হঠাৎ মুছে না গিয়ে গুটিয়ে যায় */
+.pgx .pfoot{max-height:160px;overflow:hidden;transition:max-height .32s var(--ease),padding .32s var(--ease),opacity .22s ease,box-shadow .3s}
+html.pinkb .pgx .pfoot{display:block;max-height:0;padding-top:0;padding-bottom:0;opacity:0;box-shadow:none;pointer-events:none}
+.pgx .pbody{transition:padding-bottom .32s var(--ease)}
+/* নতুন অ্যাকাউন্ট পাতা: কিপ্যাডের ওপরে PIN ঘর সবসময় দেখা যায় */
+.regv .fbody{transition:padding-bottom .34s var(--ease)}
+html.rkp .regv .fbody{padding-bottom:calc(var(--kph,300px) + 26px)}
+html.rkp .regv .lb2{opacity:0;pointer-events:none}
+.regv .lb2{transition:opacity .2s ease,background-color .2s}
+
+/* ---- কোড যাচাই পাতা (বিকাশের মতো সাজানো) ---- */
+.otpv .fbody{display:flex;flex-direction:column;padding-bottom:28px}
+.otpv .fbody h2{font-size:22px;font-weight:400;line-height:1.38;margin-top:2px}
+.otpv .fbody h2 b{font-weight:800;color:#2b2530}
+.otrow{display:flex;align-items:center;justify-content:space-between;margin-top:26px;min-height:30px}
+.otl{font-size:13.5px;color:#8a8490;font-weight:500}
+.otrow .otprs{flex:none;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;margin-right:-10px;border:0;background:transparent;color:var(--lp);font-size:13px;font-weight:700;border-radius:15px;white-space:nowrap;transition:background-color .2s,transform .18s var(--ease)}
+.otrow .otprs:disabled{color:var(--lp);opacity:1}
+.otrow .otprs .otrg{width:16px;height:16px}
+.otrow .otprs.rdy{border:0;background:#fde7f1;color:var(--lp);animation:otrdy .5s var(--spring) both}
+.otrow .otprs:active{transform:scale(.95)}
+.otpv .otpb{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin:10px 0 0}
+.otpv .otpb i{flex:none;width:auto;max-width:none;height:50px;border-radius:12px;border:1.5px solid #e9dfe6;background:#fff;font-size:21px;font-weight:600;box-shadow:none}
+.otpv .otpb i.f{background:#fff7fb;border-color:#f3b9d3}
+.otpv .otpb i.a{border-color:var(--lp);background:#fff;box-shadow:0 0 0 3px rgba(226,19,110,.10);transform:none}
+.otpv .otpact{display:flex;align-items:center;gap:12px;margin-top:14px;min-height:38px}
+.otpv .otpact .otpp{flex:none;height:36px;padding:0 14px;margin:0;border-radius:18px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border:1.5px solid #f3b9d3;background:#fff7fb;color:var(--lp);white-space:nowrap}
+.otpv .otpact .otpp svg{width:16px;height:16px}
+.otpv .otpact .otpp.tap{animation:otptap .4s var(--ease)}
+@keyframes otptap{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+.otpv .otpact .otst{margin:0;min-height:0;flex:1;min-width:0;font-size:13.5px}
+.otsent{margin-top:18px;font-size:14px;line-height:1.6;color:#4a444d}
+.otsent b{font-weight:700;color:#2b2530;white-space:nowrap}
+.otchg{color:var(--lp);font-weight:600;cursor:pointer;white-space:nowrap}
+.otwarn{position:relative;overflow:hidden;margin-top:22px;border-radius:18px;padding:16px 16px 16px 14px;display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#e2136e,#b80c58);color:#fff;box-shadow:0 12px 28px rgba(226,19,110,.26)}
+.otwarn:before{content:"";position:absolute;right:-34px;top:-40px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.10)}
+.otwarn:after{content:"";position:absolute;right:30px;bottom:-50px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.07)}
+.otwarn svg{width:56px;height:56px;flex:none;position:relative;z-index:1;animation:otsh 2.4s ease-in-out infinite}
+.otwarn .ws{fill:#fff}.otwarn .wl{fill:none;stroke:#e2136e;stroke-width:6;stroke-linecap:round}.otwarn .wd{fill:#e2136e}
+.otwarn div{position:relative;z-index:1;min-width:0}
+.otwarn b{display:block;font-size:16px;line-height:1.38;font-weight:800;color:#fff}
+.otwarn span{display:block;margin-top:5px;font-size:12px;line-height:1.45;color:rgba(255,255,255,.9)}
+@keyframes otsh{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+
+/* ---- আমার প্রোফাইল ---- */
+.prof{padding:18px 16px;gap:16px;position:relative;overflow:hidden;border-radius:20px}
+.prof:before{content:"";position:absolute;right:-46px;top:-56px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(226,19,110,.13),transparent 70%);pointer-events:none}
+.prof .pavw .big{width:68px;height:68px;font-size:28px;box-shadow:0 0 0 3px #fff,0 0 0 5px rgba(226,19,110,.35),0 10px 22px rgba(226,19,110,.26)}
+.pi2{position:relative}
+.pi2 h3{font-size:18px;font-weight:800;color:#2a1722}
+.pi2 p{font-size:13.5px;color:#7a727c;letter-spacing:.2px;margin-top:3px}
+.vfy{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:3px 11px 3px 7px;border-radius:12px;background:#e6f7ee;color:#0f8a52;font-style:normal;font-size:11.5px;font-weight:700}
+.vfy svg{width:13px;height:13px;fill:none;stroke:#0f8a52;stroke-width:3}
+.msec{padding:2px 0 6px}
+.msec h4{padding:16px 18px 6px;font-size:11.5px;font-weight:700;letter-spacing:.5px;color:#a38c9c}
+.mr{position:relative;min-height:58px;gap:14px;padding:0 16px 0 16px;font-size:15px;font-weight:600;color:#2f2a32}
+.mr+.mr:before{content:"";position:absolute;left:68px;right:16px;top:0;height:1px;background:#f4ecf1}
+.mic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none;background:#fde7f1;color:#e2136e;transition:transform .2s var(--ease)}
+.mic svg.i{width:20px;height:20px;color:inherit}
+.mr:active .mic{transform:scale(.9)}
+.mic.t1{background:#fde7f1;color:#e2136e}.mic.t2{background:#efeaff;color:#6a4df0}.mic.t3{background:#e4f1ff;color:#1f7ae0}.mic.t4{background:#fff0de;color:#e5820a}
+.mic.t5{background:#e4f6ec;color:#12a15b}.mic.t6{background:#e0f6f6;color:#0e9aa7}.mic.t7{background:#e4f6ec;color:#12a15b}.mic.t8{background:#ffe8ec;color:#e5324b}
+.chv{width:18px;height:18px;flex:none;fill:none;stroke:#cbbac4;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.mr small{font-weight:600}
+.mr .lgp{padding:3px 11px;border-radius:10px;background:#f7eef3;color:#8a3a62;font-weight:700;margin-right:2px}
+.mr .kok{color:#0f8a52;background:#e6f7ee;padding:3px 10px;border-radius:10px;font-weight:700}
+.mr.out span{color:#e5324b;font-weight:700}
+.mr.out:before{display:block}
+@media(prefers-reduced-motion:reduce){.fl.vtf,.fl.vtb,.fl.vtn,.pg.vtf,.pg.vtb,.pg.vtn{animation-duration:.01s}.vgh{display:none}}

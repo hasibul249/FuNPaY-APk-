@@ -168,7 +168,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.35"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.36"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -559,14 +559,14 @@ function pageInbox() {
   return head + `<div class="srch"><div>${ic("srch")}<input placeholder="${t("sq")}" value="${esc(S.q)}" id="sq" oninput="S.q=this.value;document.getElementById('lst').innerHTML=list()"></div><button class="fb${S.ft.length ? " on" : ""}" onclick="openFilter()">${ic("filt")}<span>${t("flt")}</span>${S.ft.length ? `<i>${S.ft.length}</i>` : ""}</button></div><div class="note">${t("last")}</div><div id="lst">${list()}</div>`;
 }
 function pageMine() {
-  const m = S.me || {};
-  const R = (icon, label, js, right) => `<button class="mr" onclick="${js}">${ic(icon)}<span>${label}</span>${right || ""}</button>`;
-  const sw = `<i class="sw${bioOn() ? " on" : ""}"><b></b></i>`;
+  const m = S.me || {}, CH = '<svg class="chv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+  const R = (icon, label, js, right, tone) => `<button class="mr" onclick="${js}"><i class="mic t${tone || 0}">${ic(icon)}</i><span>${label}</span>${right === undefined ? CH : right}</button>`;
+  const sw = `<i class="sw${bioOn() ? " on" : ""}"><b></b></i>`, ver = m.kyc_status === "approved";
   return tbar(t("pr"))
-    + `<div class="prof"><div class="pavw" onclick="openPhoto()"><div class="big">${myAv(m.name)}</div><i class="cam">${ic("cam2")}</i></div><div class="pi2"><h3>${esc(m.name || t("acct"))} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p></div></div>`
-    + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()")}${R("qr", t("myqr"), "openQR('my')")}${R("srch", t("scanqr"), "openQR('scan')")}${R("stmt", t("stmt"), "openStmt()")}${R("fp", t("bioT"), "toggleBio()", sw)}${R("bell", t("nt2"), "S.seg='n';go('inbox')")}${m.kyc_status === "approved" ? `<button class="mr" onclick="toast(t('k_kycok'))">${ic("ok2")}<span>${t("k_kyc")}</span><small class="kok">${t("k_ver")}</small></button>` : ""}</div>`
-    + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()")}${R("lim", t("limt"), "openInfo('lim')")}</div>`
-    + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()")}${R("help", t("help"), "openInfo('help')")}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>`)}${R("out", t("logout"), "logout()")}</div>`
+    + `<div class="prof"><div class="pavw" onclick="openPhoto()"><div class="big">${myAv(m.name)}</div><i class="cam">${ic("cam2")}</i></div><div class="pi2"><h3>${esc(m.name || t("acct"))} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p>${ver ? `<em class="vfy">${ic("ok2")}<span>${t("k_ver")}</span></em>` : ""}</div></div>`
+    + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()", undefined, 1)}${R("qr", t("myqr"), "openQR('my')", undefined, 2)}${R("srch", t("scanqr"), "openQR('scan')", undefined, 3)}${R("stmt", t("stmt"), "openStmt()", undefined, 4)}${R("fp", t("bioT"), "toggleBio()", sw, 5)}${R("bell", t("nt2"), "S.seg='n';go('inbox')", undefined, 6)}${ver ? `<button class="mr" onclick="toast(t('k_kycok'))"><i class="mic t7">${ic("ok2")}</i><span>${t("k_kyc")}</span><small class="kok">${t("k_ver")}</small></button>` : ""}</div>`
+    + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()", undefined, 3)}${R("lim", t("limt"), "openInfo('lim')", undefined, 4)}</div>`
+    + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()", undefined, 1)}${R("help", t("help"), "openInfo('help')", undefined, 2)}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>${CH}`, 6)}<button class="mr out" onclick="logout()"><i class="mic t8">${ic("out")}</i><span>${t("logout")}</span></button></div>`
     ;
 }
 
@@ -627,13 +627,12 @@ function loginHtml() {
   /* 2.5) OTP পেজ: SMS এ কোড যায়, Allow দিলে ঘরে নিজে বসে (ঘর readonly), অ্যান্ড্রয়েডের বাইরে বা না এলে হাতে লেখার পথ খোলে */
   if (S.view === "otp") return `<div class="fl light otpv">${lgBar("otpStop();S.view='ph';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
-      <h2>${t("otph")}</h2><p class="sub">${t("otps")}</p><div class="otpph">+88 ${esc(S.otpPhone)}</div>
+      <h2>${t("otph1")}<br><b>${t("otph2")}</b></h2>
+      <div class="otrow"><span class="otl">${t("otpl")}</span><button class="otprs" id="otprs" onclick="otpResend()"><svg class="otrg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" class="bg"/><circle cx="12" cy="12" r="9" class="fg" id="otrf"/></svg><span id="otrt"></span></button></div>
       <div class="otpb" id="otpbox" onclick="otpFocus()">${[0, 1, 2, 3, 4, 5].map(i => `<i id="ob${i}"></i>`).join("")}<input id="otpin" class="otpi" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" ${S.otpManual ? "" : "readonly"} oninput="otpTyped(this)" onfocus="otpPaint()" onblur="otpPaint()" onpaste="otpPasteEv(event)"></div>
-      <div class="otst" id="otst" aria-live="polite"></div>
-      <div class="otpact">
-        <button class="otprs" id="otprs" onclick="otpResend()"><svg class="otrg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" class="bg"/><circle cx="12" cy="12" r="9" class="fg" id="otrf"/></svg><span id="otrt"></span></button>
-        <button class="otpp" id="otppb" onclick="otpPaste()">${ic("copy")}<span>${t("otppaste")}</span></button>
-      </div>
+      <div class="otpact"><button class="otpp" id="otppb" onclick="otpPaste()">${ic("copy")}<span>${t("otppaste")}</span></button><div class="otst" id="otst" aria-live="polite"></div></div>
+      <p class="otsent">${t("otps")} <b>+88 ${esc(S.otpPhone)}</b> <a class="otchg" onclick="hap();otpStop();S.view='ph';render()">${t("otpchg")}</a></p>
+      <div class="otwarn"><svg viewBox="0 0 64 64" aria-hidden="true"><path class="ws" d="M32 5l21 8v15c0 14-9 25-21 31C20 53 11 42 11 28V13z"/><path class="wl" d="M32 20v16"/><circle class="wd" cx="32" cy="43" r="2.6"/></svg><div><b>${t("otwa")}</b><span>${t("otwb")}</span></div></div>
     </div></div>`;
   /* 3) নতুন অ্যাকাউন্ট (শুধু নম্বরে অ্যাকাউন্ট না থাকলে আসে) */
   if (S.view === "reg") return `<div class="fl light regv">${lgBar("S.view='ph';render()")}
@@ -705,7 +704,7 @@ function otpTick() {
   const b = otpEl("otprs"); if (!b) return;
   const left = Math.max(0, 60 - Math.floor((Date.now() - S.otpAt) / 1000)), f = otpEl("otrf"), x = otpEl("otrt");
   if (f) f.style.strokeDashoffset = String(56.5 * (1 - left / 60));
-  if (left > 0) { b.disabled = true; b.classList.remove("rdy"); if (x) x.textContent = t("otpin") + left + "s"; }
+  if (left > 0) { b.disabled = true; b.classList.remove("rdy"); if (x) x.textContent = t("otpin") + left + t("otpsfx"); }
   else { b.disabled = false; if (!b.classList.contains("rdy")) { b.classList.add("rdy"); } if (x) x.textContent = t("otpr"); }
 }
 function otpManualOn() {
@@ -742,7 +741,12 @@ function otpPasteText(tx) {
 function otpPasteEv(e) { try { e.preventDefault(); otpPasteText((e.clipboardData || window.clipboardData).getData("text")); } catch (x) {} }
 async function otpPaste() {
   hap();
-  try { const tx = await navigator.clipboard.readText(); if (tx) { otpPasteText(tx); return; } } catch (e) {}
+  const b = otpEl("otppb"); if (b) { b.classList.remove("tap"); void b.offsetWidth; b.classList.add("tap"); }
+  let tx = "";
+  /* ১) নেটিভ Clipboard প্লাগিন (ফোনে সবচেয়ে নির্ভরযোগ্য)  ২) ব্রাউজারের clipboard  ৩) না হলে ঘর খুলে দেয়, কিবোর্ডের কপি-করা-কোড সাজেশন বা লম্বা চাপে পেস্ট */
+  try { const C = cap().Clipboard; if (C && C.read) { const r = await C.read(); tx = String((r && (r.value || r.text)) || ""); } } catch (e) {}
+  if (!/\d/.test(tx)) { try { tx = (navigator.clipboard && navigator.clipboard.readText) ? await navigator.clipboard.readText() : ""; } catch (e) { tx = ""; } }
+  if (/\d{4,}/.test(String(tx))) { otpPasteText(tx); return; }
   otpManualOn(); toast(t("otpcb"));
 }
 function otpFill(code) { const i = otpEl("otpin"); if (i) i.value = code; otpPaint(); otpVerify(code); }
@@ -866,19 +870,43 @@ const NAVI = {
   qr: ['<path class="q" d="M4 9V6.5A2.5 2.5 0 016.5 4H9M15 4h2.5A2.5 2.5 0 0120 6.5V9M20 15v2.5a2.5 2.5 0 01-2.5 2.5H15M9 20H6.5A2.5 2.5 0 014 17.5V15"/><rect class="qf" x="8.4" y="8.4" width="2.9" height="2.9" rx=".7"/><rect class="qf" x="12.7" y="8.4" width="2.9" height="2.9" rx=".7"/><rect class="qf" x="8.4" y="12.7" width="2.9" height="2.9" rx=".7"/><path class="q" d="M13 14.2h2.6M14.3 12.9v2.6"/>']
 };
 const navIc = (k, on) => `<svg class="nvi${on ? " on" : ""}" viewBox="0 0 24 24" aria-hidden="true">${NAVI[k][on && NAVI[k][1] ? 1 : 0]}</svg>`;
+/* v2.36: পেজ বদলের অ্যানিমেশন — আগের পেজ ঘোস্ট হয়ে বাঁয়ে সরে ফেড হয়, নতুন পেজ ডান থেকে নরমভাবে আসে (ব্যাক চাপলে উল্টো) */
+let VK = null;
+const VDEP = {land: 0, ph: 1, otp: 2, reg: 3, pin: 3}, TABN = {home: 0, mine: 1, inbox: 2};
+const viewKey = () => !CONFIGURED ? "x" : S.auth ? "t:" + S.tab : (S.phone && !S.view ? "pin" : (S.view || "land"));
+function viewDir(a, b) {
+  if (a === null || a === b) return 0;
+  if (a[0] === "t" && b[0] === "t") return (TABN[b.slice(2)] || 0) > (TABN[a.slice(2)] || 0) ? 1 : -1;
+  if (a[0] === "t" || b[0] === "t" || a === "x" || b === "x") return 0;
+  return (VDEP[b] || 0) >= (VDEP[a] || 0) ? 1 : -1;
+}
+function vGhost(ap, old, dir, sc) {
+  try {
+    if (!old) return;
+    const g = document.createElement("div"), r = ap.getBoundingClientRect(), c = old.cloneNode(true);
+    g.className = "vgh " + (dir > 0 ? "vgf" : dir < 0 ? "vgb" : "vgn");
+    g.style.left = r.left + "px"; g.style.width = r.width + "px";
+    if (old.classList.contains("pg") && sc) c.style.transform = "translateY(" + (-sc) + "px)";
+    g.appendChild(c); document.body.appendChild(g);
+    setTimeout(() => g.remove(), 460);
+  } catch (e) {}
+}
 function render() {
   save();
-  const fx = S.fx;
+  const fx = S.fx, pk = VK, nk = viewKey(), chg = pk !== null && pk !== nk, vdir = chg ? viewDir(pk, nk) : 0;
+  VK = nk;
   let h = "";
   if (!S.auth) h = loginHtml();
   else {
     const pg = S.tab === "home" ? pageHome() : S.tab === "inbox" ? pageInbox() : pageMine();
     h = `<div class="pg${fx ? " in" : ""}">${pg}</div>`;
     const nv = (k, lbl) => `<button class="${S.tab === k ? "on" : ""}" onclick="go('${k}')"><span class="ni">${navIc(k, S.tab === k)}${k === "inbox" && unreadN() ? `<span class="bg">${nbadge(unreadN())}</span>` : ""}</span><em>${lbl}</em></button>`;
-    h += `<nav class="${fx ? "fx" : ""}">${nv("home", t("home"))}${nv("mine", t("mine"))}<button class="qrb" onclick="openQR('scan')"><span class="ni">${navIc("qr", false)}</span><em>${t("qrs")}</em></button>${nv("inbox", t("inbox"))}</nav>`;
+    h += `<nav class="${fx && !(pk && pk[0] === "t") ? "fx" : ""}">${nv("home", t("home"))}${nv("mine", t("mine"))}<button class="qrb" onclick="openQR('scan')"><span class="ni">${navIc("qr", false)}</span><em>${t("qrs")}</em></button>${nv("inbox", t("inbox"))}</nav>`;
   }
   const ap = document.getElementById("app"), sc = ap.scrollTop, ob = document.querySelector(".ban"), bl = ob ? ob.scrollLeft : 0;
+  if (chg) vGhost(ap, ap.querySelector(":scope > .fl") || ap.querySelector(":scope > .pg"), vdir, sc);
   ap.innerHTML = h; ap.className = S.auth ? "au" : "";
+  if (chg) { const nw = ap.firstElementChild; if (nw) nw.classList.add(vdir > 0 ? "vtf" : vdir < 0 ? "vtb" : "vtn"); }
   if (!fx && S.auth) { ap.scrollTop = sc; const nb = document.querySelector(".ban"); if (nb && bl) { nb.style.scrollBehavior = "auto"; nb.scrollLeft = bl; nb.style.scrollBehavior = ""; dot(nb); } }
   S.fx = false; S.hl = null;
   if (S.fq && S.auth) { S.fq = false; setTimeout(() => { const f = document.getElementById("sq"); if (f) { try { f.focus(); } catch (e) {} } }, 380); }
@@ -4319,3 +4347,93 @@ function kScan(side) {
         : `<div class="ksh"><button type="button" class="kgal" aria-label="Gallery" onclick="kGalOpen()">${kic("gal")}</button><button class="kshut" aria-label="${t("k_snap")}" onclick="kSnap()"><i></i></button><span class="kgal sp"></span></div>`}
       <small class="knc" id="knc"></small></div></div>`;
 }
+
+/* =====================================================================
+   v2.36 — স্মুথ অ্যানিমেশন: কিবোর্ডের সাথে বার ওঠানামা, PIN ঘর ঢাকা পড়া ঠিক, কোড পেজের লেখা
+   ===================================================================== */
+Object.assign(T.bn, {otph1: "আপনার মোবাইল নাম্বার", otph2: "যাচাই করুন", otpl: "ভেরিফিকেশন কোড", otpin: "পুনরায় পাঠান ", otpsfx: "s পর", otpr: "আবার পাঠান", otppaste: "কোড পেস্ট করুন", otps: "ভেরিফিকেশন কোড এই নাম্বারে পাঠানো হয়েছে", otpchg: "(পরিবর্তন করুন)", otpchk: "যাচাই হচ্ছে…", otpok: "যাচাই হয়েছে", otpsent: "নতুন কোড পাঠানো হয়েছে", otwa: "আপনার FuNPaY পিন ও ভেরিফিকেশন কোড কাউকে দিবেন না", otwb: "FuNPaY থেকে কেউ কখনো আপনার পিন বা কোড চাইবে না"});
+Object.assign(T.en, {otph1: "Verify your", otph2: "mobile number", otpl: "Verification code", otpin: "Resend in ", otpsfx: "s", otpr: "Resend code", otppaste: "Paste code", otps: "The verification code was sent to", otpchg: "(Change)", otpchk: "Verifying…", otpok: "Verified", otpsent: "New code sent", otwa: "Never share your FuNPaY PIN or verification code", otwb: "No one from FuNPaY will ever ask for your PIN or code"});
+
+(function () {
+  const ap = () => document.getElementById("app"), de = document.documentElement;
+  const EASE = "cubic-bezier(.22,1,.36,1)";
+  let touching = false, smooth = 0, lastH = window.innerHeight, kbUntil = 0, lastSt = 0;
+  window.addEventListener("touchstart", () => { touching = true; }, {passive: true});
+  window.addEventListener("touchend", () => { touching = false; }, {passive: true});
+  window.addEventListener("touchcancel", () => { touching = false; }, {passive: true});
+
+  /* নিজের স্মুথ স্ক্রল (ease-out), যেন লাফ না দেয় */
+  function sScroll(el, to, ms) {
+    if (!el) return;
+    const from = el.scrollTop, max = Math.max(0, el.scrollHeight - el.clientHeight);
+    to = Math.max(0, Math.min(max, to)); const d = to - from; if (Math.abs(d) < 2) return;
+    const id = ++smooth, t0 = performance.now(), D = ms || 320;
+    const step = (now) => {
+      if (id !== smooth || touching) return;
+      const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3);
+      el.scrollTop = from + d * e; lastSt = el.scrollTop;
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  /* ফোকাস করা ঘর কিবোর্ড / কিপ্যাডের ওপরে স্মুথভাবে তুলে আনা */
+  function reveal(el, inset) {
+    const a = ap(); if (!a || !el || !el.isConnected) return;
+    const ar = a.getBoundingClientRect(), r = el.getBoundingClientRect();
+    const vb = ar.bottom - inset - 16, vt = ar.top + 70; let dy = 0;
+    if (r.bottom > vb) dy = r.bottom - vb; else if (r.top < vt) dy = r.top - vt;
+    if (Math.abs(dy) > 2) sScroll(a, a.scrollTop + dy, 340);
+  }
+  const kph = () => { const k = document.getElementById("kpad"); return (k && k.offsetHeight) || parseFloat(getComputedStyle(de).getPropertyValue("--kph")) || 300; };
+
+  /* ---- কিবোর্ড ওঠা/নামার সময় নিচের বারগুলো কিবোর্ডের সাথে গড়িয়ে ওঠে/নামে (বিকাশের মতো) ---- */
+  const DOCK = ".nbar,.pfoot,.bknx,.kbtm,.lpanel";
+  function glide(d) {
+    document.querySelectorAll(DOCK).forEach((el) => {
+      try { el.animate([{transform: "translateY(" + d + "px)"}, {transform: "translateY(0)"}], {duration: 300, easing: EASE}); } catch (e) {}
+    });
+    const kb = document.getElementById("kbar");
+    if (kb && kb.classList.contains("show")) { try { kb.animate([{transform: "translate3d(0," + d + "px,0)"}, {transform: "translate3d(0,0,0)"}], {duration: 300, easing: EASE}); } catch (e) {} }
+  }
+  function onResize() {
+    const h = window.innerHeight, d = lastH - h; lastH = h;
+    if (Math.abs(d) < 60) return;
+    kbUntil = performance.now() + 600; lastSt = ap() ? ap().scrollTop : 0;
+    glide(d);
+  }
+  window.addEventListener("resize", onResize);
+  try { if (window.visualViewport) window.visualViewport.addEventListener("resize", () => { const v = window.visualViewport; if (Math.abs(v.height - lastH) > 60 && Math.abs(window.innerHeight - lastH) < 60) { const d = lastH - v.height; lastH = v.height; kbUntil = performance.now() + 600; glide(d); } }); } catch (e) {}
+  /* কিবোর্ড খোলার সময় ব্রাউজার ঘর দেখাতে হঠাৎ স্ক্রল করলে সেটা নরম করে দেয় */
+  document.addEventListener("scroll", (ev) => {
+    const a = ap(); if (!a || ev.target !== a) return;
+    const d = a.scrollTop - lastSt, now = performance.now();
+    if (now < kbUntil && !touching && !smooth_busy() && Math.abs(d) > 36) {
+      const c = a.firstElementChild; if (c) { try { c.animate([{transform: "translateY(" + d + "px)"}, {transform: "translateY(0)"}], {duration: 280, easing: EASE}); } catch (e) {} }
+    }
+    lastSt = a.scrollTop;
+  }, true);
+  const smooth_busy = () => false;
+
+  /* ---- ফোকাসে ঘর দেখানো ---- */
+  document.addEventListener("focusin", (ev) => {
+    const e = ev.target; if (!e || e.tagName !== "INPUT") return;
+    if (e.closest("#app .fl")) {
+      const pinF = e.getAttribute("data-kp") === "1", grp = e.closest(".rgf") || e.closest(".pfield") || e;
+      const tgt = e.id === "rk" ? (document.getElementById("rk2f") || grp) : grp;
+      if (pinF) { setTimeout(() => reveal(tgt, kph()), 70); setTimeout(() => reveal(tgt, kph()), 340); }
+      else { setTimeout(() => reveal(grp, 64), 330); }
+    }
+  });
+
+  /* ---- PIN কিপ্যাড ওঠা/নামার সময় পেজ নিচে জায়গা রাখে, নামার পর নরমভাবে ছেড়ে দেয় (লাফ নেই) ---- */
+  let rkOn = false, rkT = 0;
+  new MutationObserver(() => {
+    const on = de.classList.contains("pinkb");
+    if (on && !rkOn) { rkOn = true; clearTimeout(rkT); de.classList.add("rkp"); }
+    else if (!on && rkOn) {
+      rkOn = false; const a = ap();
+      if (a) { const extra = Math.max(0, kph() - 2), nat = Math.max(0, a.scrollHeight - extra - a.clientHeight); if (a.scrollTop > nat) sScroll(a, nat, 300); }
+      clearTimeout(rkT); rkT = setTimeout(() => { if (!de.classList.contains("pinkb")) de.classList.remove("rkp"); }, 340);
+    }
+  }).observe(de, {attributes: true, attributeFilter: ["class"]});
+})();
