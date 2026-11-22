@@ -1,3 +1,16 @@
+/* v2.47 — কিবোর্ড নিজে খুলবে না: ঘরে ইউজারের আঙুল/টাইপ ছাড়া কোড দিয়ে focus() করলে ব্লক (ট্যাপের সাথে সাথের focus চলে) */
+(function () {
+  try {
+    let gt = 0; const mark = () => { gt = performance.now(); };
+    ["pointerdown", "touchstart", "touchend", "mousedown", "click", "keydown", "keyup", "beforeinput", "input"].forEach((e) => document.addEventListener(e, mark, true));
+    const of = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function () {
+      const n = this.tagName;
+      if ((n === "INPUT" || n === "TEXTAREA") && !this.readOnly && performance.now() - gt > 150) return;
+      return of.apply(this, arguments);
+    };
+  } catch (e) {}
+})();
 /* FuNPaY ওয়ালেট অ্যাপ */
 const P = {
   send:'<path d="M7 17L17 7M8 7h9v9"/>', cash:'<path d="M17 7L7 17M16 17H7V8"/>',
@@ -566,7 +579,7 @@ function pageMine() {
   const sw = `<i class="sw${bioOn() ? " on" : ""}"><b></b></i>`, ver = m.kyc_status === "approved";
   return tbar(t("pr"))
     + `<div class="prof"><div class="pavw" onclick="openPhoto()"><div class="big">${myAv(m.name)}</div><i class="cam">${ic("cam2")}</i></div><div class="pi2"><h3>${esc(m.name || t("acct"))} ${agBadge()}</h3><p>+88 ${esc(m.phone)}</p>${ver ? `<em class="vfy">${ic("ok2")}<span>${t("k_ver")}</span></em>` : ""}</div></div>`
-    + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()", undefined, 1)}${R("qr", t("myqr"), "openQR('my')", undefined, 2)}${R("srch", t("scanqr"), "openQR('scan')", undefined, 3)}${R("stmt", t("stmt"), "openStmt()", undefined, 4)}${R("fp", t("bioT"), "toggleBio()", sw, 5)}${R("bell", t("nt2"), "S.seg='n';go('inbox')", undefined, 6)}${ver ? `<button class="mr" onclick="toast(t('k_kycok'))"><i class="mic t7">${ic("ok2")}</i><span>${t("k_kyc")}</span><small class="kok">${t("k_ver")}</small></button>` : ""}</div>`
+    + `<div class="msec"><h4>${t("sec1")}</h4>${R("cam2", t("ph1"), "openPhoto()", undefined, 1)}${R("qr", t("myqr"), "openQR('my')", undefined, 2)}${R("srch", t("scanqr"), "openQR('scan')", undefined, 3)}${R("stmt", t("stmt"), "openStmt()", undefined, 4)}${R("fp", t("bioT3"), "toggleBio()", sw, 5)}${R("bell", t("nt2"), "S.seg='n';go('inbox')", undefined, 6)}${ver ? `<button class="mr" onclick="toast(t('k_kycok'))"><i class="mic t7">${ic("ok2")}</i><span>${t("k_kyc")}</span><small class="kok">${t("k_ver")}</small></button>` : ""}</div>`
     + `<div class="msec"><h4>${t("sec2")}</h4>${R("lang", t("lang"), "lang()", undefined, 3)}${R("lim", t("limt"), "openInfo('lim')", undefined, 4)}</div>`
     + `<div class="msec"><h4>${t("sec3")}</h4>${R("ref", t("refer"), "inviteFriend()", undefined, 1)}${R("help", t("help"), "openInfo('help')", undefined, 2)}${R("up", t("chk"), "checkUpdate(true)", `<small>v${APP_REL} (${APP_VERSION})</small>${CH}`, 6)}<button class="mr out" onclick="logout()"><i class="mic t8">${ic("out")}</i><span>${t("logout")}</span></button></div>`
     ;
@@ -2115,7 +2128,7 @@ function kFaceOrd() {
 function kFaceStop() { KFc.on = false; clearTimeout(KFc.tm); }
 function kFaceMsg(k) { if (KFc.last !== k) { KFc.last = k; kSt(k); } }
 async function kFaceStart() {
-  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.sd = null; KFc.c1 = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
+  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.sd = null; KFc.c1 = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
   KFc.bn = 0; kFaceMsg("k_fload"); kFaceUI();
   const m = await kFaceModel();
   if (!KFc.on || K.step !== "face" || K.pv) return;
@@ -2142,9 +2155,9 @@ function kFaceLoop() {
   if (bsh && bsh.length) { const g = (n) => { const c = bsh.find(x => x.categoryName === n); return c ? c.score : 0; }; blink = (g("eyeBlinkLeft") + g("eyeBlinkRight")) / 2; }
   if (KFc.st < 0) {
     if (fit && Math.abs(yaw - .5) < .09 && (blink < 0 || blink < .3)) {
-      KFc.bs.push({yaw, pit, pdn});
+      KFc.bs.push({yaw, pit, pdn}); if (KFc.bs.length === 1) KFc.tc = Date.now();
       if (KFc.bs.length === 4) KFc.c1 = {img: kShrink(v, 1400, .9), sh: kSharp(v)};
-      if (KFc.bs.length >= 8) {
+      if (KFc.bs.length >= 5) {
         const av = (k) => KFc.bs.reduce((a, b) => a + b[k], 0) / KFc.bs.length;
         KFc.base = {yaw: av("yaw"), pit: av("pit"), pdn: av("pdn")};
         const c2 = {img: kShrink(v, 1400, .9), sh: kSharp(v)}; KFc.shot = KFc.c1 && KFc.c1.sh > c2.sh ? KFc.c1.img : c2.img;
@@ -2155,7 +2168,7 @@ function kFaceLoop() {
   }
   /* সময়সীমা: ৪০ সেকেন্ডে শেষ না হলে ধাপগুলো আবার প্রথম থেকে */
   if (Date.now() - KFc.t0 > KLIMIT) {
-    KFc.rs++; KFc.st = 0; KFc.done = [0, 0, 0, 0, 0]; KFc.hold = 0; KFc.fr = []; KFc.bl = {c: false, n: 0}; KFc.t0 = Date.now(); KFc.last = "";
+    KFc.rs++; KFc.st = 0; KFc.done = [0, 0, 0]; KFc.hold = 0; KFc.fr = []; KFc.bl = {c: false, n: 0}; KFc.t0 = Date.now(); KFc.last = "";
     hap("HEAVY"); kFaceUI(); kFaceMsg("k_frs"); kFaceProg(0); return;
   }
   if (!fit) { KFc.hold = 0; kFaceMsg("k_fcen"); return; }
@@ -2167,17 +2180,17 @@ function kFaceLoop() {
     else {
       if (blink > .5 && !KFc.bl.c) KFc.bl.c = true;
       else if (blink < .25 && KFc.bl.c) { KFc.bl.c = false; KFc.bl.n++; hap(); }
-      p = Math.min(1, KFc.bl.n / 2) + (KFc.bl.c ? .2 : 0); p = Math.min(p, KFc.bl.n >= 2 ? 1 : .95); done = KFc.bl.n >= 2;
+      p = Math.min(1, KFc.bl.n / 1) + (KFc.bl.c ? .2 : 0); p = Math.min(p, KFc.bl.n >= 1 ? 1 : .95); done = KFc.bl.n >= 1;
     }
   } else {
     /* নিচ: নতুন মাপ (চোখ থেকে নাক-থুতনির অনুপাত) + পুরনো মাপ, দুটোর যেটা আগে পূরণ হয়; অল্প নিচু করলেই হবে */
-    p = {right: (b.yaw - yaw) / .12, left: (yaw - b.yaw) / .12, up: (b.pit - pit) / .06, down: Math.max((pdn - b.pdn) / .028, (pit - b.pit) / .04)}[cur];
-    if (p >= 1) { if (++KFc.hold >= 4) done = true; } else KFc.hold = 0;
+    p = {right: (b.yaw - yaw) / .10, left: (yaw - b.yaw) / .10, up: (b.pit - pit) / .06, down: Math.max((pdn - b.pdn) / .028, (pit - b.pit) / .04)}[cur];
+    if (p >= 1) { if (++KFc.hold >= 2) done = true; } else KFc.hold = 0;
   }
   kFaceProg(p);
   if (!done) return;
   KFc.fr.push(kShrink(v, 480, .8)); KFc.done[st] = 1; KFc.st = st + 1; KFc.hold = 0; KFc.bl = {c: false, n: 0}; hap("MEDIUM"); kFaceUI();
-  if (KFc.st > 4) { kFaceFinish(); return; }
+  if (KFc.st > 2) { kFaceFinish(); return; }
   kFaceMsg(KDKM[KFc.ord[KFc.st]]); kFaceProg(0);
 }
 function kFaceFinish() {
@@ -2491,7 +2504,7 @@ async function kcamGet(face) {
   const f = face ? "user" : "environment";
   if (KS && KSf === f && KS.getVideoTracks().some(x => x.readyState === "live")) return KS;
   if (KS) { try { KS.getTracks().forEach(x => x.stop()); } catch (e) {} KS = null; KSf = ""; }
-  const tries = [face ? {video: {facingMode: {ideal: f}, width: {ideal: 640}, height: {ideal: 480}, frameRate: {ideal: 30, max: 30}}, audio: false} : {video: {facingMode: {ideal: f}, width: {ideal: 1280}, height: {ideal: 720}}, audio: false}, {video: {facingMode: f}, audio: false}, {video: true, audio: false}];
+  const tries = [face ? {video: {facingMode: {ideal: f}, width: {ideal: 640}, height: {ideal: 480}, frameRate: {ideal: 30, max: 30}}, audio: false} : {video: {facingMode: {ideal: f}, width: {ideal: 1280}, height: {ideal: 720}, frameRate: {ideal: 30, max: 30}}, audio: false}, {video: {facingMode: f}, audio: false}, {video: true, audio: false}];
   let err;
   for (const c of tries) {
     try { KS = await navigator.mediaDevices.getUserMedia(c); KSf = f; return KS; }
@@ -2512,7 +2525,7 @@ async function kcamInit() {
     const pl = v2.play(); if (pl && pl.catch) pl.catch(() => {});
     v2.classList.add("on");
     if (!face) {
-      try { const tr = s.getVideoTracks()[0]; tr.applyConstraints({width: {ideal: 1920}, height: {ideal: 1080}}).catch(() => {}); tr.applyConstraints({advanced: [{focusMode: "continuous"}]}).catch(() => {}); } catch (e) {}
+      try { const tr = s.getVideoTracks()[0]; tr.applyConstraints({advanced: [{focusMode: "continuous"}]}).catch(() => {}); } catch (e) {}
     }
     await new Promise((ok) => { if (v2.videoWidth) ok(); else { v2.onloadedmetadata = ok; setTimeout(ok, 1500); } });
     if (!document.getElementById("kvid") || K.step !== step || K.pv) return;
@@ -2661,7 +2674,7 @@ function kRingArc(id, a1, a2) {
 }
 function kFaceUI() {
   const wr = document.getElementById("kwr"), c = KFc.ord[KFc.st];
-  for (let i = 0; i < 5; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
+  for (let i = 0; i < 3; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
   KFc.ord.forEach((s, i) => {
     if (s === "blink") return;
     const a = document.getElementById("kra" + KDM[s]); if (!a) return;
@@ -2935,7 +2948,7 @@ function kFaceAnim() {
 }
 function kFace() {
   const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
-  const dots = [0, 1, 2, 3, 4].map(i => `<i id="kdt${i}"></i>`).join("");
+  const dots = [0, 1, 2].map(i => `<i id="kdt${i}"></i>`).join("");
   return `<div class="kcam kn">${kBg()}
     <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t("k_face")}</b><em>3/4</em></div>${kLogo()}
     <div class="kwr ov" id="kwr"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}</div>
@@ -3710,7 +3723,7 @@ function kBack() {
 const KGUIDE = '<svg class="kgf" viewBox="0 0 64 64" aria-hidden="true"><path class="gs" d="M10 64c1-10 9-14 22-14s21 4 22 14z"/><ellipse class="gk" cx="32" cy="30" rx="16.5" ry="20"/><g class="gf"><path class="gb" d="M21.5 24.6q3.2-2.2 6.4-.4M36.1 24.2q3.2-1.8 6.4.4"/><g class="ge"><ellipse cx="25.3" cy="30.2" rx="2.7" ry="3.1"/><ellipse cx="38.7" cy="30.2" rx="2.7" ry="3.1"/></g><path class="gn" d="M32 31.5v6q-2 1.6-3.4.6"/><path class="gm" d="M26.5 42.6q5.5 4.2 11 0"/></g><path class="gr" d="M15 28c.2-11.5 7-17.5 17-17.5S48.8 16.5 49 28c-3.8-5.2-9.2-7.8-17-7.8S18.8 22.8 15 28z"/></svg>';
 function kFaceUI() {
   const wr = document.getElementById("kwr"), c = KFc.ord[KFc.st];
-  for (let i = 0; i < 5; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
+  for (let i = 0; i < 3; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
   KFc.ord.forEach((s, i) => {
     if (s === "blink") return;
     const a = document.getElementById("kra" + KDM[s]); if (!a) return;
@@ -3738,7 +3751,7 @@ function kFaceAnim() {
   KFc.raf = 0;
   const cur = KFc.pd || 0, d = KFc.pt - cur;
   KFc.pd = Math.abs(d) < .004 ? KFc.pt : cur + d * .18;
-  const nd = KFc.done.filter(Boolean).length, tot = Math.min(1, (nd + KFc.pd) / 5), x = Math.round(tot * 100), s = KFc.ord[KFc.st];
+  const nd = KFc.done.filter(Boolean).length, tot = Math.min(1, (nd + KFc.pd) / 3), x = Math.round(tot * 100), s = KFc.ord[KFc.st];
   const b = document.getElementById("kfp"), c = document.getElementById("kfpc");
   if (b) b.style.width = tot * 100 + "%";
   if (c) c.textContent = x + "%";
@@ -3747,7 +3760,7 @@ function kFaceAnim() {
 }
 function kFace() {
   const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
-  const dots = [0, 1, 2, 3, 4].map(i => `<i id="kdt${i}"></i>`).join("");
+  const dots = [0, 1, 2].map(i => `<i id="kdt${i}"></i>`).join("");
   return `<div class="kcam kn kf2">${kBg()}
     <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b class="ktt">${t("k_face")}</b><em>3/4</em></div>${kLogo()}
     <div class="kwr ov" id="kwr"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}</div>
@@ -4221,6 +4234,7 @@ function kycRender() {
   if (changed) { K.galOpen = 0; const nw = el.firstElementChild; if (nw) nw.classList.add(dir > 0 ? "kpi-f" : "kpi-b"); }
   if (old) { el.appendChild(old); setTimeout(() => { try { old.remove(); } catch (e) {} }, 360); }
   KLAST = K.step;
+  if (K.step === "back") kPreload(); if (K.step === "face") setTimeout(kPreloadFA, 2500);
   kSb();
   if (["front", "back", "face"].includes(K.step) && !K.pv && !K.galOpen) setTimeout(kcamInit, changed ? 140 : 80);
   if (K.step === "info" && K.reading) kInfoStart();
@@ -4639,3 +4653,82 @@ function kAutoTick() {
     lastE = b; lastT = n;
   }, true);
 })();
+
+
+/* =====================================================================
+   v2.47 — স্মুথ পেজ, কিবোর্ড শুধু ট্যাপে, দ্রুত NID অটো-ছবি, ছোট লাইভনেস ভিডিও
+   ===================================================================== */
+Object.assign(T.bn, {bioT3: "ফিঙ্গারপ্রিন্ট লক"});
+Object.assign(T.en, {bioT3: "Fingerprint lock"});
+/* NID যাচাইয়ের পাতার লেখা: দুই ভাষাতেই ইংরেজি (শুধু এই দুই পাতায়) */
+const K247 = {k_pb2: "Scanning the card", k_pb3: "Reading the card", k_pb4: "Checking image quality", k_pb5: "Analyzing the card", k_chk2: "Checking the card…", k_got: "Photo captured", k_rp_cam: "Photo captured", k_rp_gal: "Photo selected", k_readd: "Reading details from your NID", k_readw: "This may take a moment, please wait"};
+Object.assign(T.bn, K247); Object.assign(T.en, K247);
+
+/* স্ট্যাটাস বার সবসময় থিমের রঙে (বায়োমেট্রিক/অন্য অ্যাপ থেকে ফিরলে নেটিভ কালো হয়ে যেত) */
+(function () {
+  const re = () => { try { sbar(); } catch (e) {} };
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { re(); setTimeout(re, 350); setTimeout(re, 1200); } });
+  window.addEventListener("focus", () => { re(); setTimeout(re, 400); });
+  setInterval(() => { if (!document.hidden && !S.auth) re(); }, 1500);
+  try { const A = cap().App; if (A && A.addListener) A.addListener("appStateChange", (st) => { if (st && st.isActive) { re(); setTimeout(re, 300); setTimeout(re, 1000); } }); } catch (e) {}
+})();
+
+/* মডেল আগে থেকে নামানো: মুখ যাচাই ও মেলানোর সময় কালো অপেক্ষা কমায় */
+function kPreload() { if (window.__kpre) return; window.__kpre = 1; setTimeout(() => { try { kFaceModel(); } catch (e) {} }, 600); }
+function kPreloadFA() { if (window.__kpre2) return; window.__kpre2 = 1; try { kFA(); } catch (e) {} }
+
+/* অটো ছবি: কার্ড ফ্রেমে স্থির ও পরিষ্কার হলেই (প্রায় আধা সেকেন্ডে) ছবি; যাচাই ছবি তোলার পরই এই ধাপে হয় */
+function kAutoStart() {
+  kAutoStop(); KA.ok = 0; KA.none = 0; KA.prev = null; KA.busy = false; KA.t0 = Date.now(); kWorker();
+  KA.pause = document.getElementById("kpop") ? Infinity : 0; KA.tm = setInterval(kAutoTick, 220); KA.mt = setTimeout(kManualShow, 7000);
+}
+function kAutoTick() {
+  if (KA.busy || Date.now() < KA.pause || K.loadingGal || K.galOpen) return;
+  const v = document.getElementById("kvid"), s = K.step;
+  if (!v || !v.videoWidth || v.readyState < 2 || K.pv || (s !== "front" && s !== "back")) return;
+  const m = kMet(v); if (!m) return;
+  const late = Date.now() - (KA.t0 || 0) > 3500, fr = document.querySelector("#kyc .kfr");
+  const lite = late ? (m.edge > .008 && m.edge < .85 && m.cells >= 3 && m.mean > 25 && m.mean < 252) : (m.edge > .012 && m.edge < .8 && m.cells >= 5 && m.mean > 30 && m.mean < 250);
+  const good = lite && m.diff < 16 && m.sharp > (late ? 16 : 22);
+  if (!good) { KA.ok = 0; if (fr) fr.classList.remove("lk"); kSt(!lite ? "k_auto" : m.diff >= 16 ? "k_steady" : "k_blur"); return; }
+  KA.ok++; if (fr) fr.classList.add("lk"); kSt("k_hold");
+  if (KA.ok < 2) return;
+  KA.ok = 0; KA.busy = true;
+  const shot = kCardShot(v); kFlash(); hap("MEDIUM");
+  setTimeout(() => {
+    KA.busy = false;
+    if (!K.open || K.step !== s || K.pv) return;
+    K.pre[s] = ""; K.pv = shot; K.auto = true; K.adv = ""; K.repSrc = "cam"; K.imgWH = null; K.rep = null; K.vbusy = true; kycRender(); kVal();
+  }, 120);
+}
+async function kVal() {
+  const s = K.step, img = K.pv; let txt, geo = null;
+  try { const cv = await kPrep(img, 1200); geo = kGeoCv(cv); txt = await Promise.race([kOcrText(cv, ""), kTO(9000)]); } catch (e) { txt = undefined; }
+  if (K.pv !== img || K.step !== s) return;
+  K.vbusy = false;
+  const j = kJudge(txt === undefined ? null : txt, s, geo);
+  if (j === "notid") { kReject("k_notid", "k_notidm"); return; }
+  if (j.indexOf("wrong") === 0) { kReject("k_wrong", j === "wrong:front" ? "k_isf" : "k_isb"); return; }
+  if (typeof txt === "string" && txt) K.pre[s] = txt;
+  K.rep = kMakeRep(s, K.repSrc || "cam", geo, txt, img);
+  K.adv = (!K.rep.warn) ? img : "";
+  kycRender();
+  if (K.adv === img) K.at = setTimeout(() => { if (K.pv === img && K.step === s && K.adv === img) kUse(); }, 1100);
+}
+
+/* লাইভনেস: মোট ৩ ধাপ (১টি পলক + ২টি এলোমেলো মুখ ঘোরানো) */
+function kFaceOrd() {
+  const a = ["right", "left", "up", "down"];
+  for (let i = a.length - 1; i > 0; i--) { const j = kRnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+  const r = a.slice(0, 2); r.splice(kRnd(3), 0, "blink"); return r;
+}
+/* শেষ হলে কালো নয়: শেষ ছবিটাই ওভালে স্থির থাকে, আর দ্রুত পরের পাতায় যায় */
+function kFaceFinish() {
+  KFc.on = false; clearTimeout(KFc.tm); K.selfie = KFc.shot; kFaceMsg("k_fok"); kFaceProg(1);
+  K.live = {ok: !KFc.nob, mode: "live", ord: KFc.ord.slice(), ms: Date.now() - (KFc.tc || KFc.t0), rs: KFc.rs, fr: KFc.fr.slice()};
+  K.mres = null; K.desc = null;
+  try { const w = document.querySelector("#kyc .kwin"); if (w && KFc.shot) { const im = new Image(); im.className = "kpvi kfz"; im.src = KFc.shot; im.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)"; w.appendChild(im); } } catch (e) {}
+  const u = document.getElementById("kou"); if (u) u.classList.add("dn"); const o = document.querySelector("#kyc .kov"); if (o) o.classList.add("fin");
+  const a = document.getElementById("kfarr"); if (a) a.className = "kfarr h";
+  setTimeout(() => { if (K.step === "face") { K.pv = ""; K.step = "match"; K.err = ""; kycRender(); } }, 550);
+}

@@ -2811,3 +2811,32 @@ html.pinkb .fl.pinp .psheet.bkl{padding-bottom:16px!important}
 .fl.pinp .bkfp:active{background:#e2136e14!important}
 .fl.pinp .bkfp svg{width:30px;height:30px}
 .fl.pinp .psheet .pgbtn{align-self:stretch;width:auto!important;margin:auto -22px calc(-16px - var(--sb)) -22px!important;height:calc(52px + var(--sb));padding:0 0 var(--sb);border-radius:0!important;box-shadow:none!important}
+
+/* =====================================================================
+   v2.47 — স্মুথ পেজ বদল, ঝিলিক/রং লাফ বন্ধ, লগইন বিকাশের ধাঁচে
+   ===================================================================== */
+/* ১) পেজ খুলতে/বন্ধ হতে #app নড়ে না, ফিল্টার নেই (আগে নিচের বার/ফিক্সড অংশ লাফাত আর রং বদলাত) */
+#app{transition:none!important}
+body:has(#sheet .sh.pgx:not(.out)) #app,body:has(#sheet .sh.pgx.out) #app{transform:none!important;filter:none!important}
+/* ২) পেজ নিজে স্লাইড করে ওঠে, পেছনে ঝাপসা/আধা-স্বচ্ছ স্তর নেই, দুই পেজ মিশে দেখা যায় না */
+.sh.pgx,.sh.pgx.out{background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;animation:none!important}
+.sh.pgx .box{animation:pgSlideIn .3s cubic-bezier(.22,.9,.3,1) both!important;box-shadow:-8px 0 24px rgba(60,0,30,.12);will-change:transform;backface-visibility:hidden}
+.sh.pgx.out .box{animation:pgSlideOut .24s cubic-bezier(.4,0,.8,.6) both!important}
+.sh.pgx.re .box,.sh.pgx.re.out .box{animation:none!important}
+.sh.pgx.re.out .box{animation:pgSlideOut .24s cubic-bezier(.4,0,.8,.6) both!important}
+/* ৩) হেডারের ঝাপসা (backdrop blur) বন্ধ: স্লাইডের সময় ঝিলিক কাটত */
+.pgx .ph,.tbar{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:linear-gradient(180deg,#e2136e,#ec2f84)!important}
+/* ৪) কিবোর্ড নামলে নিচে গাঢ় গোলাপি ব্লক নয়: পেছনের রং পেজের রঙের সাথে মেলে */
+html:has(#app.au),html:has(#app.au) body{background:#f5f0f5!important}
+html:has(.fl.pinp),html:has(.fl.pinp) body{background:#fff!important}
+html:has(.fl.light),html:has(.fl.light) body{background:#f7f5f7!important}
+/* ৫) লগইনের সাদা অংশে হালকা লোগো প্যাটার্ন, পেছনে স্থির */
+.fl.pinp .psheet.bkl{background:linear-gradient(rgba(255,255,255,.93),rgba(255,255,255,.93)),url(/icons/logo-pink.png) 0 0/56px 56px space fixed,#fff!important}
+.fl.light{background:linear-gradient(rgba(247,245,247,.92),rgba(247,245,247,.92)),url(/icons/logo-pink.png) 0 0/56px 56px space fixed,#f7f5f7!important}
+/* ৬) ফিঙ্গারপ্রিন্ট আইকন: বিকাশের মতো চার কোণা ব্র্যাকেট ঘর */
+.fl.pinp .bkfp{position:relative;width:46px!important;height:46px!important;border-radius:0!important;background:none!important}
+.fl.pinp .bkfp::after{content:"";position:absolute;inset:0;border:2.5px solid #e2136e;border-radius:12px;pointer-events:none;
+  -webkit-mask:linear-gradient(#000,#000) 0 0/13px 13px no-repeat,linear-gradient(#000,#000) 100% 0/13px 13px no-repeat,linear-gradient(#000,#000) 0 100%/13px 13px no-repeat,linear-gradient(#000,#000) 100% 100%/13px 13px no-repeat;
+  mask:linear-gradient(#000,#000) 0 0/13px 13px no-repeat,linear-gradient(#000,#000) 100% 0/13px 13px no-repeat,linear-gradient(#000,#000) 0 100%/13px 13px no-repeat,linear-gradient(#000,#000) 100% 100%/13px 13px no-repeat}
+.fl.pinp .bkfp svg{width:26px!important;height:26px!important}
+.fl.pinp .bkfp:active{background:#e2136e14!important}

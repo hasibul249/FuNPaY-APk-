@@ -3,7 +3,7 @@
   "appName": "FuNPaY",
   "webDir": "www",
   "android": {
-    "backgroundColor": "#c40f5e"
+    "backgroundColor": "#f5f0f5"
   },
   "plugins": {
     "SplashScreen": {
