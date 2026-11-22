@@ -3375,3 +3375,81 @@ html #kyc .kpkw:not(.in) .kpks{transition-duration:.2s!important}
 html #kyc .kpkw:not(.in) .kpkb{transition-duration:.2s!important}
 html #kyc .kdw:not(.in) .kds{transition-duration:.2s!important}
 html #kyc .kdw:not(.in) .kdb{transition-duration:.2s!important}
+
+/* =====================================================================
+   v2.61 — (১) কিবোর্ড↔কিপ্যাড বদলে বার নিচ থেকে ওঠে (উপর থেকে নামে না) (২) প্রথম PIN ঘরেও টিক, দ্বিতীয় ঘর নজরে আসে
+   (৩) KYC পেজ ফোটার সময় পেছনের হোম পেজ ঝলকে ওঠা বন্ধ
+   ===================================================================== */
+@keyframes kbup{from{transform:translate3d(0,calc(100% + 6px),0)}}
+html #kbar.kup{animation:kbup .28s cubic-bezier(.2,.8,.2,1) backwards;transition:none!important}
+html .regv .pfield .rgm{margin-right:2px}
+html .regv .pfield.okf .rgm{display:grid}
+@keyframes rgpl{0%{background:rgba(226,19,110,.14)}100%{background:transparent}}
+html .regv .rgf.rgpulse .pfield{animation:rgpl .9s ease-out both!important}
+/* KYC: স্বচ্ছ হয়ে নয়, শুধু নিচ থেকে উঠে আসে; পেছনের অ্যাপ লুকানো, তাই হোম পেজ দেখা যায় না */
+@keyframes kin2{from{transform:translateY(26px)}to{transform:none}}
+html #kyc.kin{animation:kin2 .3s var(--ease,cubic-bezier(.22,1,.36,1)) both}
+html:has(#kyc.kin),body:has(#kyc.kin){background:var(--bg,#f5f0f5)!important}
+body:has(#kyc.kin) #app{visibility:hidden}
+
+/* v3.02 — কিপ্যাড ও বার একই সময়/গতিতে নিচ থেকে ওঠে */
+html #kpad{transition:transform .28s cubic-bezier(.2,.8,.2,1)!important}
+html.lowend #kpad{transition:none!important}
+html #kbar.kup{animation-duration:.28s}
+
+/* =====================================================================
+   v3.03 — অ্যানিমেশন একই নিয়মে (শেষ ব্লক, আগের সব ওভাররাইড ছাপিয়ে)
+   নিয়ম: ঢোকা = --t-in + --mi (শুরুতে দ্রুত, শেষে নরম), বেরোনো = --t-out + --mo (দ্রুত সরে যায়)
+   সময় বদলাতে চাইলে শুধু নিচের চার মান বদলান। বেরোনোর সময় JS টাইমার (২২০–২৪০ms) এর কম রাখুন।
+   ===================================================================== */
+:root{--mi:cubic-bezier(.32,.72,0,1);--mo:cubic-bezier(.4,0,1,1);--t-in:.32s;--t-out:.2s}
+
+/* পূর্ণ পেজ: ডান থেকে ঢোকে, ডানে বেরোয় */
+html .sh.pgx .box{animation:pgSlideIn var(--t-in) var(--mi) both!important;will-change:transform;backface-visibility:hidden}
+html .sh.pgx.out .box{animation:pgSlideOut var(--t-out) var(--mo) both!important}
+html .sh.pgx.re .box,html .sh.pgx.re.out .box{animation:none!important}
+html .sh.pgx.re.out .box{animation:pgSlideOut var(--t-out) var(--mo) both!important}
+
+/* নিচ থেকে ওঠা ডায়ালগ ও পেছনের আবছা পর্দা */
+html .sh:not(.pgx){animation:fade calc(var(--t-in) - .06s) ease both}
+html .sh:not(.pgx).out{animation:fadeo var(--t-out) ease both}
+html .sh.dlg .box,html .sh.scanx .box{animation:up var(--t-in) var(--mi) both;will-change:transform;backface-visibility:hidden}
+html .sh.dlg.out .box,html .sh.scanx.out .box{animation:down var(--t-out) var(--mo) both}
+html .sh.re,html .sh.re .box{animation:none}
+html .sh.dlg.re.out .box{animation:down var(--t-out) var(--mo) both}
+
+/* বাম থেকে আসা মেনু */
+html .sh.drw .box{animation:dslin var(--t-in) var(--mi) both}
+html .sh.drw.out .box{animation:dslout var(--t-out) var(--mo) both}
+
+/* কিবোর্ড ↔ কিপ্যাড: কিপ্যাড ও বার হুবহু এক সময়ে, এক গতিতে নিচ থেকে ওঠে */
+html #kpad{transition:transform var(--t-in) var(--mi)!important;will-change:transform}
+html #kbar{transition:transform var(--t-in) var(--mi),opacity .18s ease}
+html #kbar.nt{transition:none!important}
+@keyframes kbup{from{transform:translate3d(0,calc(100% + 6px),0)}}
+html #kbar.kup{animation:kbup var(--t-in) var(--mi) backwards;transition:none!important}
+/* কিপ্যাড ওঠার সময় পেজের নিচের ফাঁকা অংশ প্রতি ফ্রেমে বদলে ঝাঁকুনি দিত; এখন একবারে বসে */
+html .pgx .pbody,html #kyc .kbody{transition:none!important}
+html.pinkb .pgx .pbody,html.pinkb #kyc .kbody{scroll-behavior:smooth}
+
+/* ধাপ বদল ও ট্যাব পেজ */
+html .stp.go{animation:stepin2 .26s var(--mi) both}
+html .stp.go.bw{animation-name:stepinb}
+@keyframes stepinb{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+html .pg.in .it{animation-delay:min(calc(var(--i,0) * 30ms + 60ms),260ms)}
+
+/* স্পর্শ: সব বাটন একই চাপ-অনুভূতি */
+html button:not(:disabled):active,html .it:active,html .fc:active,html .mr:active,html .rr:active{transition-duration:.08s}
+
+/* ফোন ধীর হলে (lowend) শুধু সরানো থাকে, আবছা/ঝাপসা ছাড়া */
+html.lowend .sh:not(.pgx){-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(48,8,30,.42)!important}
+html.lowend .sh.pgx .box{animation-duration:.22s!important}
+html.lowend .sh.pgx.out .box{animation-duration:.16s!important}
+/* পেজের ভেতরের ধাপ: একই সময়/ইজিং (আগে .36s আলাদা বক্ররেখায় ছিল) */
+html .pgx .stp.go{animation:fp50in .3s var(--mi) both!important}
+html .pgx .stp.go.bw{animation:fp50bk .3s var(--mi) both!important}
+html.lowend .pgx .stp.go,html.lowend .pgx .stp.go.bw{animation-duration:.2s!important}
+/* নামার সময়ও কিপ্যাড ও বার একই সময়/গতিতে */
+html #kpad:not(.show){transition:transform var(--t-out) var(--mo)!important}
+html #kbar:not(.show):not(.nt){transition:transform var(--t-out) var(--mo),opacity .16s ease}
+html.lowend #kpad:not(.show){transition:none!important}

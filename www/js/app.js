@@ -468,6 +468,13 @@ async function enter() {
   if (nnGet() === null) nnSet(0);
   try { localStorage.setItem("fpreg", "1"); } catch (e) {}
   S.auth = true; S.fx = true; S.pin = ""; S.tab = "home"; S.view = "";
+  /* v3.02: KYC বাকি থাকলে আগে KYC খুলে তারপর পেছনে হোম আঁকা — মাঝে হোম ঝলকায় না */
+  const kst = S.me && S.me.kyc_status;
+  if (kst !== undefined && kst !== null && kst !== "approved") {
+    try { kycWaitMark(); const a = document.activeElement; if (a && a.blur) a.blur(); hideKeypadNow(); } catch (e) {}
+    try { await kycSync(); } catch (e) {}
+    if (K.open) { await new Promise((r) => setTimeout(r, 480)); }
+  }
   render(); startPoll(); setTimeout(checkUpdate, 1500); setTimeout(askNotifPerm, 2600);
   setTimeout(() => offerBio(lp || ""), 1400);
 }
@@ -840,7 +847,7 @@ async function doReg() {
   const bad = !isPh(p) ? t("badn") : !nm ? t("nmreq") : !isPin(k) ? t("badpin") : k !== k2 ? t("pinmm") : "";
   if (bad) { le.textContent = bad; hap("HEAVY"); const fb = document.querySelector(".regv .fbody"); if (fb) { fb.classList.remove("shk2"); void fb.offsetWidth; fb.classList.add("shk2"); } return; }
   S.busy = true; le.textContent = ""; document.querySelector(".lb2").classList.add("ld");
-  try { await signUp(p, k, nm); S.phone = p; S.name = nm; S.lp = k; await enter(); setTimeout(nfWelcome, 5200); }
+  try { await signUp(p, k, nm); S.phone = p; S.name = nm; S.lp = k; await enter(); }
   catch (e) {
     if (/NOTVERIFIED|saving new user/i.test(String((e && e.message) || ""))) { S.busy = false; S.view = "ph"; S.regPhone = ""; render(); toast(t("otpexp")); return; }
     const l2 = document.querySelector(".le"); if (l2) l2.textContent = errMsg(e); const b2 = document.querySelector(".lb2"); if (b2) b2.classList.remove("ld"); hap("HEAVY"); }
@@ -2193,7 +2200,7 @@ async function kFaceModel() {
 const KALL = ["right", "left", "up", "down"];
 const KSKM = {right: "k_sr", left: "k_sl", up: "k_su", down: "k_sd", blink: "k_sb"}, KDKM = {right: "k_dr", left: "k_dl", up: "k_du", down: "k_dd", blink: "k_db"};
 const KARR = {right: "M5 12h14M13 6l6 6-6 6", left: "M19 12H5M11 6l-6 6 6 6", up: "M12 19V5M6 11l6-6 6 6", down: "M12 5v14M6 13l6 6 6-6", blink: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 100-6 3 3 0 000 6z"};
-const KLIMIT = 55000;
+const KLIMIT = 85000;
 function kRnd(n) { try { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; } catch (e) { return Math.floor(Math.random() * n); } }
 function kFaceOrd() {
   const a = KALL.slice(); for (let i = a.length - 1; i > 0; i--) { const j = kRnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
@@ -2202,7 +2209,7 @@ function kFaceOrd() {
 function kFaceStop() { KFc.on = false; clearTimeout(KFc.tm); }
 function kFaceMsg(k) { if (KFc.last !== k) { KFc.last = k; kSt(k); } }
 async function kFaceStart() {
-  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.sd = null; KFc.c1 = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
+  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.sd = null; KFc.c1 = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
   KFc.bn = 0; kFaceMsg("k_fload"); kFaceUI();
   const m = await kFaceModel();
   if (!KFc.on || K.step !== "face" || K.pv) return;
@@ -2242,7 +2249,7 @@ function kFaceLoop() {
   }
   /* সময়সীমা: ৪০ সেকেন্ডে শেষ না হলে ধাপগুলো আবার প্রথম থেকে */
   if (Date.now() - KFc.t0 > KLIMIT) {
-    KFc.rs++; KFc.st = 0; KFc.done = [0, 0, 0]; KFc.hold = 0; KFc.fr = []; KFc.bl = {c: false, n: 0}; KFc.t0 = Date.now(); KFc.last = "";
+    KFc.rs++; KFc.st = 0; KFc.done = [0, 0, 0, 0, 0]; KFc.hold = 0; KFc.fr = []; KFc.bl = {c: false, n: 0}; KFc.t0 = Date.now(); KFc.last = "";
     hap("HEAVY"); kFaceUI(); kFaceMsg("k_frs"); kFaceProg(0); return;
   }
   if (!fit) { KFc.hold = 0; kFaceMsg("k_fcen"); return; }
@@ -2258,13 +2265,13 @@ function kFaceLoop() {
     }
   } else {
     /* নিচ: নতুন মাপ (চোখ থেকে নাক-থুতনির অনুপাত) + পুরনো মাপ, দুটোর যেটা আগে পূরণ হয়; অল্প নিচু করলেই হবে */
-    p = {right: (b.yaw - yaw) / .10, left: (yaw - b.yaw) / .10, up: (b.pit - pit) / .06, down: Math.max((pdn - b.pdn) / .028, (pit - b.pit) / .04)}[cur];
+    p = {right: (b.yaw - yaw) / .10, left: (yaw - b.yaw) / .10, up: (b.pit - pit) / .06, down: Math.max((pdn - b.pdn) / .020, (pit - b.pit) / .028)}[cur];
     if (p >= 1) { if (++KFc.hold >= 2) done = true; } else KFc.hold = 0;
   }
   kFaceProg(p);
   if (!done) return;
   KFc.fr.push(kShrink(v, 480, .8)); KFc.done[st] = 1; KFc.st = st + 1; KFc.hold = 0; KFc.bl = {c: false, n: 0}; hap("MEDIUM"); kFaceUI();
-  if (KFc.st > 2) { kFaceFinish(); return; }
+  if (KFc.st >= KFc.ord.length) { kFaceFinish(); return; }
   kFaceMsg(KDKM[KFc.ord[KFc.st]]); kFaceProg(0);
 }
 function kFaceFinish() {
@@ -2483,7 +2490,7 @@ async function kSubmit() {
   K.busy = false; K.flow = false; K.msg = ""; K.err = ""; K.front = K.back = K.selfie = ""; K.p1 = K.p2 = null; K.live = null; K.mres = null; K.desc = null; K.tries = 0; K.cardDesc = null; K.cardThumb = "";
   if (S.me) { S.me.kyc_status = auto ? "approved" : "pending"; S.me.kyc_reason = null; }
   if (!auto) kycNotify("submitted");
-  fpNotify({title: t("k_kyc"), body: t(auto ? "k_oks" : "k_nf_sub"), ch: "info"});
+  if (auto) kycApprovedNotify(); else fpNotify({title: t("k_kyc_sub"), body: t("k_nf_sub"), ch: "info"});
   hap("MEDIUM"); K.step = auto ? "ok" : "wait"; kycRender();
 }
 /* অ্যাডমিনকে Telegram এ খবর (Edge Function "kyc-notify" না থাকলে চুপচাপ বাদ যায়) */
@@ -2750,7 +2757,7 @@ function kRingArc(id, a1, a2) {
 }
 function kFaceUI() {
   const wr = document.getElementById("kwr"), c = KFc.ord[KFc.st];
-  for (let i = 0; i < 3; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
+  for (let i = 0; i < 5; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
   KFc.ord.forEach((s, i) => {
     if (s === "blink") return;
     const a = document.getElementById("kra" + KDM[s]); if (!a) return;
@@ -2938,7 +2945,7 @@ function fpNotify(o) {
   try {
     const LN = cap().LocalNotifications; if (!LN) return; nfSetup();
     const id = (Number(String(Date.now()).slice(-8)) * 10 + (NFN++ % 10)) % 2000000000 || 1;
-    Promise.resolve(LN.schedule({notifications: [{id, title: o.title, body: o.body, largeBody: o.body, summaryText: "FuNPaY", channelId: o.ch === "info" ? "funpay_info" : "funpay_tx", smallIcon: "ic_stat_funpay", iconColor: "#e2136e", autoCancel: true, extra: {trx: o.trx || ""}}]})).catch(() => {});
+    Promise.resolve(LN.schedule({notifications: [{id, title: o.title, body: o.body, largeBody: o.body, channelId: o.ch === "info" ? "funpay_info" : "funpay_tx", smallIcon: "ic_stat_funpay", iconColor: "#e2136e", autoCancel: true, extra: {trx: o.trx || ""}}]})).catch(() => {});
   } catch (e) {}
 }
 function nfOwn(sh) {
@@ -3024,7 +3031,7 @@ function kFaceAnim() {
 }
 function kFace() {
   const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
-  const dots = [0, 1, 2].map(i => `<i id="kdt${i}"></i>`).join("");
+  const dots = [0, 1, 2, 3, 4].map(i => `<i id="kdt${i}"></i>`).join("");
   return `<div class="kcam kn">${kBg()}
     <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b>${t("k_face")}</b><em>3/4</em></div>${kLogo()}
     <div class="kwr ov" id="kwr"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}</div>
@@ -3312,8 +3319,10 @@ function scanHtml(s) {
     if (fb && fb.classList.contains("show")) fb.classList.remove("show");
     if (DE.classList.contains("phkb")) DE.classList.remove("phkb");
   };
+  let kpWait = 0; /* v3.02: কিবোর্ড নামা শেষ হওয়ার অপেক্ষা */
   const dkSync = () => {
     dkQ = 0;
+    if (kpWait) return;
     const pg = topPage(), ae = document.activeElement, kpUp = !!(kp && cur && kp.classList.contains("show")), kbUp = kbH() > 80;
     let own = null, ins = [], btn = null, tr = null;
     if (pg) { const d = drivers(pg), b = footBtn(pg); if (d.length && b) { own = pg; ins = d; btn = b; } }
@@ -3371,16 +3380,23 @@ function scanHtml(s) {
       for (let i = 0; i < rs.length; i++) { const m = rs[i]; if (m.type === "attributes" && !(m.target.classList && m.target.classList.contains("pgx"))) continue; dkQs(); return; }
     }).observe(document.documentElement, {childList: true, subtree: true, attributes: true, attributeFilter: ["class"]});
   } catch (e) {}
-  const hide = () => { if (kp) kp.classList.remove("show"); document.documentElement.classList.remove("pinkb"); cur = null; dkSync(); };
+  const hide = () => { kpWait = 0; if (kp) kp.classList.remove("show"); document.documentElement.classList.remove("pinkb"); cur = null; dkSync(); };
   document.addEventListener("focusin", (ev) => {
     fix(ev.target.parentNode || document);
     if (!isPin(ev.target)) { dkQs(); return; }
     clearTimeout(hideT); cur = ev.target; mk(); upd();
-    requestAnimationFrame(() => {
+    const go2 = () => {
+      kpWait = 0; if (!cur || !kp) return;
       kp.classList.add("show"); document.documentElement.classList.add("pinkb");
       dkSync();
-      try { if (cur && !cur.closest(".pinp")) cur.scrollIntoView({block: "nearest"}); } catch (e) {}
-    });
+      try { if (cur && !cur.closest(".pinp")) cur.scrollIntoView({block: "nearest", behavior: "smooth"}); } catch (e) {}
+    };
+    /* v3.02: ফোনের কিবোর্ড ওঠা অবস্থায় (ভিউ ছোট) কিপ্যাড+বার আঁকলে ওপরে বসে পরে নিচে লাফ দিত।
+       তাই ভিউ আবার পুরো মাপে ফেরা পর্যন্ত অপেক্ষা (সর্বোচ্চ ৭০০ms), তারপর দুটোই একসাথে নিচ থেকে ওঠে */
+    if (kp.classList.contains("show") || kbH() <= 80) { requestAnimationFrame(go2); return; }
+    kpWait = 1; const t0 = performance.now();
+    const tick = () => { if (!kpWait) return; if (kbH() <= 40 || performance.now() - t0 > 700) { go2(); return; } requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
   });
   document.addEventListener("focusout", (ev) => {
     setTimeout(dkSync, 170);
@@ -3944,7 +3960,7 @@ function kBack() {
 const KGUIDE = '<svg class="kgf" viewBox="0 0 64 64" aria-hidden="true"><path class="gs" d="M10 64c1-10 9-14 22-14s21 4 22 14z"/><ellipse class="gk" cx="32" cy="30" rx="16.5" ry="20"/><g class="gf"><path class="gb" d="M21.5 24.6q3.2-2.2 6.4-.4M36.1 24.2q3.2-1.8 6.4.4"/><g class="ge"><ellipse cx="25.3" cy="30.2" rx="2.7" ry="3.1"/><ellipse cx="38.7" cy="30.2" rx="2.7" ry="3.1"/></g><path class="gn" d="M32 31.5v6q-2 1.6-3.4.6"/><path class="gm" d="M26.5 42.6q5.5 4.2 11 0"/></g><path class="gr" d="M15 28c.2-11.5 7-17.5 17-17.5S48.8 16.5 49 28c-3.8-5.2-9.2-7.8-17-7.8S18.8 22.8 15 28z"/></svg>';
 function kFaceUI() {
   const wr = document.getElementById("kwr"), c = KFc.ord[KFc.st];
-  for (let i = 0; i < 3; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
+  for (let i = 0; i < 5; i++) { const e = document.getElementById("kdt" + i); if (e) e.className = KFc.done[i] ? "dn2" : (i === KFc.st ? "on" : ""); }
   KFc.ord.forEach((s, i) => {
     if (s === "blink") return;
     const a = document.getElementById("kra" + KDM[s]); if (!a) return;
@@ -3972,7 +3988,7 @@ function kFaceAnim() {
   KFc.raf = 0;
   const cur = KFc.pd || 0, d = KFc.pt - cur;
   KFc.pd = Math.abs(d) < .004 ? KFc.pt : cur + d * .18;
-  const nd = KFc.done.filter(Boolean).length, tot = Math.min(1, (nd + KFc.pd) / 3), x = Math.round(tot * 100), s = KFc.ord[KFc.st];
+  const nd = KFc.done.filter(Boolean).length, tot = Math.min(1, (nd + KFc.pd) / (KFc.ord.length || 5)), x = Math.round(tot * 100), s = KFc.ord[KFc.st];
   const b = document.getElementById("kfp"), c = document.getElementById("kfpc");
   if (b) b.style.width = tot * 100 + "%";
   if (c) c.textContent = x + "%";
@@ -3981,7 +3997,7 @@ function kFaceAnim() {
 }
 function kFace() {
   const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
-  const dots = [0, 1, 2].map(i => `<i id="kdt${i}"></i>`).join("");
+  const dots = [0, 1, 2, 3, 4].map(i => `<i id="kdt${i}"></i>`).join("");
   return `<div class="kcam kn kf2">${kBg()}
     <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b class="ktt">${t("k_face")}</b><em>3/4</em></div>${kLogo()}
     <div class="kwr ov" id="kwr"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}</div>
@@ -4960,11 +4976,11 @@ async function kVal() {
   if (K.adv === img) K.at = setTimeout(() => { if (K.pv === img && K.step === s && K.adv === img) kUse(); }, 1100);
 }
 
-/* লাইভনেস: মোট ৩ ধাপ (১টি পলক + ২টি এলোমেলো মুখ ঘোরানো) */
+/* লাইভনেস: মোট ৫ ধাপ এলোমেলো ক্রমে (ডান, বাম, উপর, নিচ, চোখের পলক) */
 function kFaceOrd() {
-  const a = ["right", "left", "up", "down"];
+  const a = ["right", "left", "up", "down", "blink"];
   for (let i = a.length - 1; i > 0; i--) { const j = kRnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
-  const r = a.slice(0, 2); r.splice(kRnd(3), 0, "blink"); return r;
+  return a;
 }
 /* শেষ হলে কালো নয়: শেষ ছবিটাই ওভালে স্থির থাকে, আর দ্রুত পরের পাতায় যায় */
 function kFaceFinish() {
@@ -5343,7 +5359,7 @@ function kRingArc(id, a1, a2) {
 }
 function kFace() {
   const pv = K.pv; if (!pv) KFc.ord = kFaceOrd();
-  const dots = [0, 1, 2].map(i => `<i id="kdt${i}"></i>`).join("");
+  const dots = [0, 1, 2, 3, 4].map(i => `<i id="kdt${i}"></i>`).join("");
   return `<div class="kcam kn kf2 kf3">${kBg()}
     <div class="ktp"><button class="kbk" onclick="kBack()">${kBk}</button><b class="ktt">${t("k_face")}</b><em>3/4</em></div>${kLogo()}
     <div class="kwr ov" id="kwr"><div class="kwin">${pv ? `<img class="kpvi" src="${pv}" alt="">` : kVid().replace('id="kvid"', 'id="kvid" class="mir"')}</div>
@@ -5462,7 +5478,7 @@ function krsSave() {
     if (tried || K.flow || K.open || !S.auth || !S.me || S.me.kyc_status === undefined || S.me.kyc_status === null) return _s.apply(this, arguments);
     tried = true; const st = S.me.kyc_status, self = this, args = arguments;
     if (st !== "none" && st !== "rejected") { krsPut(null); return _s.apply(self, args); }
-    krsGet().then((o) => {
+    return krsGet().then((o) => {
       if (!o || o.uid !== S.uid || Date.now() - o.t0 >= KRS.ttl || K.flow) { if (o && (o.uid !== S.uid || Date.now() - o.t0 >= KRS.ttl)) krsPut(null); return _s.apply(self, args); }
       K.d = Object.assign({}, K.d, o.d || {}); K.lk = o.lk || {}; K.ipg = o.ipg || 0; K.front = o.front || ""; K.back = o.back || ""; K.selfie = o.selfie || "";
       K.att = o.att || 0; K.best = o.best || null; K.mres = o.mres || null; K.desc = o.desc || null; K.live = o.live || null; K.tries = o.tries || 0;
@@ -5659,3 +5675,80 @@ window.__fpKb = function (off, end) {
   const o = window.__fpKb; let tm = 0;
   window.__fpKb = function (off, end) { o(off, end); clearTimeout(tm); if (!end) tm = setTimeout(() => o(0, 1), 900); };
 })();
+
+/* =====================================================================
+   v2.61 — নতুন অ্যাকাউন্ট পেজ ও কিবোর্ড-বার
+   ===================================================================== */
+/* ১) PIN মিললে দুই ঘরেই টিক */
+regTouch = function () {
+  const a = document.getElementById("rk"), b = document.getElementById("rk2"), f1 = document.getElementById("rkf"), f2 = document.getElementById("rk2f"), le = document.querySelector(".le");
+  if (le) le.textContent = "";
+  if (!a || !b || !f1 || !f2) return;
+  if (!f1.querySelector(".rgm")) {
+    const src = f2.querySelector(".rgm"), s = document.createElement("span"); s.className = "rgm"; s.innerHTML = src ? src.innerHTML : "";
+    const eye = f1.querySelector(".eyeb"); if (eye) f1.insertBefore(s, eye); else f1.appendChild(s);
+  }
+  const ok = b.value.length === 6 && a.value === b.value, bad = b.value.length === 6 && a.value !== b.value;
+  f1.classList.toggle("okf", ok); f2.classList.toggle("okf", ok); f2.classList.toggle("badf", bad);
+};
+/* ২) PIN ঘরে ফোকাস গেলে ঘরটা ওপরের দিকে উঠে আসে; দ্বিতীয় ঘরে এলে হালকা জ্বলে ওঠে, যেন বোঝা যায় ঘর বদলেছে */
+document.addEventListener("focusin", (ev) => {
+  const e = ev.target; if (!e || (e.id !== "rk" && e.id !== "rk2")) return;
+  const f = e.closest(".rgf"); if (!f) return;
+  if (e.id === "rk2") { f.classList.remove("rgpulse"); void f.offsetWidth; f.classList.add("rgpulse"); setTimeout(() => f.classList.remove("rgpulse"), 950); }
+  const scroller = () => { let n = f.parentElement; while (n && n !== document.body) { const o = getComputedStyle(n).overflowY; if ((o === "auto" || o === "scroll") && n.scrollHeight > n.clientHeight + 2) return n; n = n.parentElement; } return null; };
+  const go = () => { const sc = scroller(); if (!sc || !f.isConnected) return; const r = f.getBoundingClientRect(), want = Math.round(window.innerHeight * 0.22); const d = r.top - want; if (Math.abs(d) > 6) { try { sc.scrollBy({top: d, behavior: "smooth"}); } catch (x) { sc.scrollTop += d; } } };
+  setTimeout(go, 80); setTimeout(go, 460);
+}, true);
+/* ৩) কিবোর্ড ↔ অ্যাপের নিজের কিপ্যাড বদলে বার উপর থেকে নামত (পুরনো গ্লাইড-অ্যানিমেশন)। এখন সেই অ্যানিমেশন বন্ধ, বার নিচ থেকে কিপ্যাডের সাথে ওঠে */
+(function () {
+  const oa = Element.prototype.animate;
+  const kpShown = () => { const k = document.getElementById("kpad"); return !!(k && k.classList.contains("show")); };
+  Element.prototype.animate = function () {
+    if (this.id === "kbar" && (kpShown() || this.classList.contains("kup"))) return {cancel: function () {}, finish: function () {}, onfinish: null};
+    return oa.apply(this, arguments);
+  };
+  /* নেটিভ কিবোর্ডের মাপ: কিপ্যাড দেখা গেলে বার সিস্টেম কিবোর্ডের পিছু নেয় না */
+  const o = window.__fpKb;
+  window.__fpKb = function (off, end) { if (kpShown()) { o(0, 1); return; } o(off, end); };
+  let last = false;
+  const hook = () => {
+    const kp = document.getElementById("kpad"); if (!kp) return false; if (kp.__w) return true; kp.__w = 1;
+    new MutationObserver(() => {
+      const sh = kp.classList.contains("show"); if (sh === last) return; last = sh; if (!sh) return;
+      const fb = document.getElementById("kbar"); if (!fb || !fb.classList.contains("show")) return;
+      fb.classList.remove("kup"); void fb.offsetWidth; fb.classList.add("kup");
+      clearTimeout(fb.__ku); fb.__ku = setTimeout(() => fb.classList.remove("kup"), 340);
+    }).observe(kp, {attributes: true, attributeFilter: ["class"]});
+    return true;
+  };
+  if (!hook()) new MutationObserver((m, ob) => { if (hook()) ob.disconnect(); }).observe(document.body, {childList: true, subtree: true});
+})();
+
+/* =====================================================================
+   v3.02 — (১) কিবোর্ড→কিপ্যাড বদলে বার+কিপ্যাড একসাথে নিচ থেকে ওঠে (উপরে ফোকাস-হ্যান্ডলারে kpWait)
+   (২) লগইন/রেজিস্ট্রেশনের পর KYC আগে খোলে, হোম ঝলকায় না (enter() ও kycSync) (৩) নোটিফিকেশন: নাম একবার, KYC শেষে দুটো আলাদা বার্তা
+   ===================================================================== */
+Object.assign(T.bn, {nf_acc_t: "অ্যাকাউন্ট খোলা হয়েছে", nf_acc_b: "স্বাগতম! আপনার FuNPaY অ্যাকাউন্ট এখন চালু।", k_kyc_ok_t: "KYC সফল হয়েছে", k_kyc_sub: "KYC জমা হয়েছে"});
+Object.assign(T.en, {nf_acc_t: "Account opened", nf_acc_b: "Welcome! Your FuNPaY account is now active.", k_kyc_ok_t: "KYC successful", k_kyc_sub: "KYC submitted"});
+function kycWaitMark() { try { if (S.uid) localStorage.setItem("fpkw_" + S.uid, "1"); } catch (e) {} }
+function hideKeypadNow() {
+  const kp = document.getElementById("kpad"), fb = document.getElementById("kbar");
+  if (kp) kp.classList.remove("show"); if (fb) fb.classList.remove("show");
+  document.documentElement.classList.remove("pinkb");
+}
+/* KYC সফল হলে (অটো বা সাপোর্ট অনুমোদনে) ঠিক একবার: "অ্যাকাউন্ট খোলা হয়েছে" তারপর "KYC সফল হয়েছে" */
+function kycApprovedNotify() {
+  try {
+    if (!S.uid) return; const k = "fpkw_" + S.uid;
+    if (!localStorage.getItem(k)) return; localStorage.removeItem(k);
+    fpNotify({title: t("nf_acc_t"), body: t("nf_acc_b") + (S.bal > 0 ? " " + t("nf_bal") + " " + money2(S.bal) : ""), ch: "info"});
+    setTimeout(() => fpNotify({title: t("k_kyc_ok_t"), body: t("k_oks"), ch: "info"}), 1300);
+  } catch (e) {}
+}
+{ const _s = kycSync;
+  kycSync = function () {
+    try { const st = S.me && S.me.kyc_status; if (S.auth && st) { if (st === "approved") kycApprovedNotify(); else kycWaitMark(); } } catch (e) {}
+    return _s.apply(this, arguments);
+  };
+}
