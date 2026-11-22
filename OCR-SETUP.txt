@@ -1,18 +1,24 @@
-FuNPaY NID লেখা পড়া — সার্ভার OCR সেটআপ (Google Cloud Vision, ফ্রি লিমিটে)
-==========================================================================
-
-কেন: ফোনের ভেতরের Tesseract ধীর। সার্ভারে পড়ালে সাধারণত ২-৪ সেকেন্ডে বাংলা + ইংরেজি দুটোই পড়া যায়।
-ফ্রি: Google Vision এ প্রতি মাসে প্রথম ১০০০ ছবি ফ্রি। একজনের KYC তে সাধারণত ২-৩টি ছবি যায় (সামনে, পেছনে, ভুল হলে আবার)।
-সতর্কতা: NID এর ছবি Google এর সার্ভারে যায় (জমা থাকে না, কিন্তু তৃতীয় পক্ষ)। Google Cloud এ বিলিং অ্যাকাউন্ট (কার্ড) যোগ করতেই হয়, তবে ফ্রি সীমার ভেতরে টাকা কাটে না।
+FuNPaY NID লেখা পড়া — সার্ভার OCR সেটআপ (Google Gemini API, ফ্রি)
+================================================================
+কেন: ফোনের ভেতরের Tesseract ধীর ও বাংলায় ভুল করে। Gemini সার্ভারে ২-৪ সেকেন্ডে বাংলা + ইংরেজি দুটোই নির্ভুল পড়ে।
+ফ্রি: Google AI Studio র ফ্রি কী দিয়ে চলে, কার্ড/বিলিং লাগে না (ফ্রি সীমা প্রতি মিনিট/দিনে সীমিত; অ্যাপে প্রতি ইউজার দিনে ১২ ছবির সীমা আছে)।
+সতর্কতা: NID এর ছবি Google এর সার্ভারে যায় (তৃতীয় পক্ষ)। ফ্রি স্তরে Google ডেটা উন্নয়নে ব্যবহার করতে পারে; চাইলে পরে পেইড স্তরে যান।
 
 আপনাকে যা করতে হবে (ক্রমে)
-1) console.cloud.google.com এ প্রজেক্ট বানান > Billing চালু করুন > "Cloud Vision API" Enable করুন।
-2) APIs & Services > Credentials > Create credentials > API key। Key টি "Restrict key" করে শুধু "Cloud Vision API" দিন।
-3) (খরচ ঠেকাতে) APIs & Services > Cloud Vision API > Quotas এ প্রতিদিনের সীমা ৩০-৩৩ এর মতো বসিয়ে দিলে মাসে ১০০০ এর বেশি যাবে না।
-4) Supabase > SQL Editor এ backend/update-v2.53.sql Run করুন।
-5) Supabase > Edge Functions > Create function > নাম nid-ocr > supabase/functions/nid-ocr/index.ts এর কোড পেস্ট > Deploy। "Verify JWT" ON রাখুন।
-6) Edge Functions > Secrets এ যোগ করুন: GOOGLE_VISION_KEY = (ধাপ ২ এর key)। চাইলে OCR_DAILY_LIMIT = 12 (একজন ইউজার দিনে কত ছবি)।
-7) কোড GitHub এ তুলুন, OTA আপডেট এলে পরীক্ষা করুন।
+1) aistudio.google.com > Get API key > Create API key (আপনার আগের Gemini key হলেও চলবে)।
+2) Supabase > SQL Editor এ backend/update-v2.53.sql Run করুন (একবার; আগে করে থাকলে লাগবে না)।
+3) Supabase > Edge Functions > nid-ocr > supabase/functions/nid-ocr/index.ts এর নতুন কোড পেস্ট > Deploy। "Verify JWT" ON রাখুন।
+4) Edge Functions > Secrets এ যোগ করুন: GEMINI_API_KEY = (ধাপ ১ এর key)। চাইলে OCR_DAILY_LIMIT = 12, GEMINI_MODEL = gemini-2.5-flash (না দিলে এটাই)।
+   পুরোনো GOOGLE_VISION_KEY আর লাগবে না।
+5) কোড GitHub এ তুলুন, OTA আপডেট এলে পরীক্ষা করুন।
 
-না করলে কী হয়: ফাংশন না থাকলে বা key না দিলে অ্যাপ নিজে আগের ফোনের Tesseract পথে ফিরে যায় (ধীর, কিন্তু কাজ করে)।
-সমস্যা হলে: Supabase > Edge Functions > nid-ocr > Logs দেখুন (VISION 403 = API key বা বিলিং/Enable ভুল)।
+না করলে কী হয়: key না দিলে বা ফাংশন ফেল করলে অ্যাপ নিজে ফোনের Tesseract পথে ফিরে যায় (ধীর, কিন্তু কাজ করে)।
+সমস্যা হলে: Supabase > Edge Functions > nid-ocr > Logs দেখুন (GEMINI 400/403 = key ভুল; 429 = ফ্রি সীমা শেষ; 404 = মডেলের নাম ভুল)।
+
+ML Kit (ফোনের ভেতরে, ফ্রি, তাৎক্ষণিক) — v2.56b
+----------------------------------------------
+- NID-র ইংরেজি লেখা ও সংখ্যা (নাম, NID নম্বর, জন্মতারিখ) ফোনেই <১ সেকেন্ডে পড়ে; কার্ড ঠিক দিক কিনা তাও সাথে সাথে যাচাই হয়।
+- বাংলা অংশ (পিতা, মাতা, ঠিকানা) Gemini একই সময়ে সার্ভারে পড়ে। দুটো একসাথে শুরু হয়, একটা অন্যটার জন্য থামে না।
+- নাম/NID দুই ইঞ্জিন মিললে "নিশ্চিত" (লক); না মিললে Gemini-র মান বসে কিন্তু ঘর খোলা থাকে, ইউজার ঠিক করতে পারে।
+- এটা নেটিভ কোড, তাই OTA আপডেটে আসবে না: GitHub Actions থেকে নতুন APK বিল্ড করে ইনস্টল করতে হবে (build.gradle ও MainActivity স্ক্রিপ্ট নিজে ঠিক করে)।
+- নতুন APK না বসালে অ্যাপ আগের মতো শুধু Gemini দিয়ে চলে।

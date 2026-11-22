@@ -111,3 +111,36 @@ console.log("android সেটিং ঠিক করা হয়েছে");
   }
   console.log("SMS User Consent প্লাগইন বসানো হলো");
 })();
+
+/* 9) ML Kit লেখা পড়া (NID, ফোনের ভেতরে ফ্রি): নেটিভ প্লাগইন বসানো + MainActivity তে রেজিস্টার + ML Kit লাইব্রেরি */
+(function () {
+  const root = "android/app/src/main/java";
+  if (!fs.existsSync(root) || !fs.existsSync("native/NidOcrPlugin.java")) return;
+  let mainFile = null;
+  (function walk(d) {
+    for (const n of fs.readdirSync(d)) {
+      const q = d + "/" + n;
+      if (fs.statSync(q).isDirectory()) walk(q);
+      else if (n === "MainActivity.java") mainFile = q;
+    }
+  })(root);
+  if (!mainFile) { console.log("MainActivity.java পাওয়া যায়নি, ML Kit প্লাগইন বসানো হয়নি"); return; }
+  let c = fs.readFileSync(mainFile, "utf8");
+  const pkg = (/package\s+([\w.]+)\s*;/.exec(c) || [])[1] || "com.funpay.app";
+  const dir = mainFile.slice(0, mainFile.lastIndexOf("/"));
+  fs.writeFileSync(dir + "/NidOcrPlugin.java", fs.readFileSync("native/NidOcrPlugin.java", "utf8").replace(/__PKG__/g, pkg));
+  if (!c.includes("registerPlugin(NidOcrPlugin.class)")) {
+    if (c.includes("registerPlugin(SmsConsentPlugin.class);")) c = c.replace("registerPlugin(SmsConsentPlugin.class);", "registerPlugin(SmsConsentPlugin.class);\n        registerPlugin(NidOcrPlugin.class);");
+    else c = c.replace(/extends BridgeActivity\s*\{/, "extends BridgeActivity {\n    @Override\n    public void onCreate(android.os.Bundle savedInstanceState) {\n        registerPlugin(NidOcrPlugin.class);\n        super.onCreate(savedInstanceState);\n    }\n");
+    fs.writeFileSync(mainFile, c);
+  }
+  const bg = "android/app/build.gradle";
+  if (fs.existsSync(bg)) {
+    let b = fs.readFileSync(bg, "utf8");
+    if (!b.includes("com.google.mlkit:text-recognition")) {
+      b = b.replace(/dependencies\s*\{/, "dependencies {\n    implementation 'com.google.mlkit:text-recognition:16.0.1'");
+      fs.writeFileSync(bg, b);
+    }
+  }
+  console.log("ML Kit NID OCR প্লাগইন বসানো হলো");
+})();

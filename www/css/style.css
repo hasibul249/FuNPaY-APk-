@@ -3134,7 +3134,7 @@ html .pgx .avl,html .pgx .bkp,html .pgx .bkg,html .pgx .bk3t,html .tgrid,html .t
 
 /* ===== v2.52: NID তথ্যের নতুন ঘর ও বাছাই পপ-আপ ===== */
 #kyc .kshd{font-size:13px;font-weight:700;color:var(--p);margin:14px 4px 8px;letter-spacing:.2px}
-#kyc .kpick span.ph{color:#c1bac6;font-weight:500;font-size:14px}
+#kyc .kpick span.kph{color:#c1bac6;font-weight:500;font-size:14px}
 #kyc .kpick em{padding:3px 6px;line-height:0}
 #kyc .kpick em svg{width:18px;height:18px;fill:none;stroke:var(--p);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 #kyc .kpkw{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;justify-content:flex-end}
@@ -3219,3 +3219,55 @@ html .pgx .avl,html .pgx .bkp,html .pgx .bkg,html .pgx .bk3t,html .tgrid,html .t
 #kyc .kcam.kn.kf3 .kfarr.right{right:1%}
 #kyc .kcam.kn.kf3 .kfarr.left{left:1%}
 #kyc .kcam.kn.kf3 .kwr.ov.burst::after{inset:2%;border-width:3px}
+
+
+/* ===== v2.56: "আপনার তথ্য" — কম্প্যাক্ট ঘর (বিকাশের মতো, এক স্ক্রিনে বেশি ঘর) ===== */
+#kyc .kbody .kf{padding:7px 12px!important;gap:10px!important;border-radius:14px!important;margin-bottom:7px!important;background:#fff!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:0 2px 8px rgba(170,20,95,.07)!important;border:1.5px solid transparent!important;animation-duration:.22s!important;animation-delay:calc(var(--n) * .03s)!important}
+#kyc .kbody .kf.gd{border-color:#bfe9d1!important}
+#kyc .kbody .kf.bd{border-color:#ffc9d1!important}
+#kyc .kbody .kf.op{border-color:#e6e1e8!important}
+#kyc .kbody .kf .kfi{width:32px!important;height:32px!important;border-radius:10px!important}
+#kyc .kbody .kf .kfi svg{width:17px!important;height:17px!important}
+#kyc .kbody .kf label{font-size:11px!important;margin-bottom:0!important}
+#kyc .kbody .kf input,#kyc .kbody .kf textarea{font-size:14.5px!important;line-height:1.3!important;padding:1px 0!important}
+#kyc .kbody .kf textarea{min-height:0!important}
+#kyc .kbody .kdb,#kyc .kbody .kdb span{font-size:14.5px!important;min-height:26px!important}
+#kyc .kbody .kdb em{padding:5px 11px!important;font-size:12px!important;right:46px!important}
+#kyc .kbody .kf .kt2{width:23px!important;height:23px!important;animation-delay:calc(var(--n) * .03s + .08s)!important}
+#kyc .kbody .kf .kt2 svg{width:13px!important;height:13px!important}
+#kyc .kbody .kf .kt2.op{background:#cfc8d3!important}
+#kyc .kbody .kshd{margin:10px 4px 6px!important;font-size:12.5px!important}
+#kyc .kbody .ksum{padding:9px 14px!important;margin-bottom:8px!important}
+#kyc .kbody .kopt{text-decoration:none;font-size:10px;font-weight:700;color:#8a808f;background:#f1edf3;border-radius:8px;padding:1px 6px;margin-left:4px}
+
+
+/* ===== v2.56b: বিকাশের মতো সমতল তালিকা — বাঁয়ে লেবেল, ডানে মান, নিচে সরু দাগ, কার্ড/আইকন নেই ===== */
+#kyc .kbody.kflat{background:#fff!important;padding:14px 16px 24px!important}
+#kyc .kbody.kflat .kbh{font-size:16px;font-weight:700;color:#2a262b;margin:2px 0 4px}
+#kyc .kbody.kflat .kbs{font-size:12.5px;color:#7d7480;margin:0 0 10px;line-height:1.4}
+#kyc .kbody.kflat .ksum{background:#fff!important;box-shadow:none!important;border:0!important;padding:0 0 6px!important;margin:0 0 4px!important;border-radius:0!important}
+#kyc .kbody.kflat .ksum b{font-size:15px!important}
+#kyc .kbody.kflat .ksum span{font-size:12.5px!important}
+#kyc .kbody.kflat .ksum div:first-child{margin-bottom:6px!important}
+#kyc .kbody.kflat .kshd{margin:16px 0 4px!important;font-size:13.5px!important;font-weight:800;color:var(--p)}
+#kyc .kbody.kflat .kf.kfl{display:grid!important;grid-template-columns:34% 1fr 22px;align-items:center;column-gap:10px;padding:9px 0!important;margin:0!important;border:0!important;border-bottom:1px solid #ece7ee!important;border-radius:0!important;background:#fff!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;opacity:1!important;animation:none!important;min-height:46px}
+#kyc .kbody.kflat .kf.kfl.gd,#kyc .kbody.kflat .kf.kfl.bd,#kyc .kbody.kflat .kf.kfl.op{border-color:#ece7ee!important}
+#kyc .kbody.kflat .kf.kfl > label{font-size:12.5px!important;font-weight:600;color:#7d7480;margin:0!important;line-height:1.3;align-self:center}
+#kyc .kbody.kflat .kf.kfl .kfb{min-width:0}
+#kyc .kbody.kflat .kf.kfl input,#kyc .kbody.kflat .kf.kfl textarea{width:100%;font-size:14.5px!important;font-weight:600!important;color:#2a262b;border:0;outline:0;background:transparent;padding:2px 0!important;line-height:1.35!important;resize:none}
+#kyc .kbody.kflat .kf.kfl.bd input,#kyc .kbody.kflat .kf.kfl.bd textarea{border-bottom:1.5px solid #ffc9d1}
+#kyc .kbody.kflat .kf.kfl .kro{font-size:14.5px;font-weight:600;color:#2a262b}
+#kyc .kbody.kflat .kf.kfl .kdb{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:24px!important;padding:0!important;background:none;border:0}
+#kyc .kbody.kflat .kf.kfl .kdb span{font-size:14.5px!important;font-weight:600!important;color:#2a262b}
+#kyc .kbody.kflat .kf.kfl .kdb span.kph{color:#b8b0bd!important;font-weight:500!important}
+#kyc .kbody.kflat .kf.kfl .kdb em{position:static!important;transform:none!important;background:none!important;box-shadow:none!important;padding:0!important;font-size:12.5px!important;font-weight:700;color:var(--p)}
+#kyc .kbody.kflat .kf.kfl .kdb em svg{width:14px!important;height:14px!important}
+#kyc .kbody.kflat .kf.kfl .kdb.kpick em svg{width:18px!important;height:18px!important;stroke:#8a808f!important}
+#kyc .kbody.kflat .kf.kfl .kt2{width:20px!important;height:20px!important;transform:none!important;animation:none!important;opacity:1!important;box-shadow:none!important}
+#kyc .kbody.kflat .kf.kfl .kt2 svg{width:12px!important;height:12px!important}
+#kyc .kbody.kflat .kf.kfl.lk{background:#fff!important}
+#kyc .kbody.kflat .kf.kfl.lk input{color:#0e7a44!important}
+#kyc .kbody.kflat .kf.kfl .klk2{display:block;font-size:10.5px;color:#12a15b;margin-top:1px}
+#kyc .kbody.kflat .kopt{text-decoration:none;font-size:10px;font-weight:700;color:#8a808f;background:#f1edf3;border-radius:8px;padding:1px 6px;margin-left:2px;white-space:nowrap}
+#kyc .kbody.kflat .le.kle{margin-top:10px}
+#kyc .kbody.kflat .kf.kfl textarea{field-sizing:content;min-height:1.4em!important}

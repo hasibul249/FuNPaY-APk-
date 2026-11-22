@@ -1811,7 +1811,7 @@ function kIntro() {
     <div class="kcard kc2">${li("ki", "k_l1")}${li("face", "k_l2")}${li("pin", "k_l3")}</div><p class="knote">${t("k_note")}</p></div>
     <div class="kbtm"><button class="kbtn" onclick="kStart()">${t(K.reason ? "k_again" : "k_start")}</button><button class="klk" onclick="logout()">${t("logout")}</button></div></div>`;
 }
-function kStart() { hap(); K.flow = true; K.pv = ""; K.front = K.back = K.selfie = ""; K.err = ""; K.pre = {}; K.auto = false; K.vbusy = false; K.step = "front"; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.lk = {}; K.ft = 0; K.redo = false; K.manual = false; K.rep = null; K.sum = null; kWorker(); KPERM = null; kCamPerm(); kycRender(); }
+function kStart() { hap(); K.flow = true; K.pv = ""; K.front = K.back = K.selfie = ""; K.err = ""; K.pre = {}; K.auto = false; K.vbusy = false; K.step = "front"; K.live = null; K.cardOnly = false; K.mres = null; K.mrun = false; K.mid++; K.tries = 0; K.cardDesc = null; K.cardThumb = ""; K.cardQ = null; K.desc = null; K.lk = {}; K.ft = 0; K.redo = false; K.manual = false; K.rep = null; K.sum = null; if (!(typeof KSRV !== "undefined" && KSRV.on && S.tok)) kWorker(); KPERM = null; kCamPerm(); kycRender(); }
 
 /* ----- ক্যামেরা (v2.19: ভিডিও-লোগো বন্ধ, অটো ছবি তোলা, বাছাই-যাচাই) ----- */
 const KPOST = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
@@ -2016,11 +2016,16 @@ async function kRead(img, side) {
       if (nidOk) o.nid = R.nid; else why.push("nid");
       if (R.nameOk) o.name = R.name; else why.push("name");
       if (why.length) o.sbad = why;
+      if (R.weak) o.weak = true;
       return o;
     }
     let txt = K.pre[side];
     KPS = {i: 0, n: 1};
-    if (txt == null || txt === "") { txt = await kOcrText(await kPrep(img, 1800), side); if (txt === null) throw new Error("NOOCR"); }
+    if (txt == null || txt === "") {
+      const g = await kSrvRead(img, side), m = g ? null : await kMlRead(img, side), d = g || m;
+      if (d && d.text) txt = d.text;
+      else { txt = await kOcrText(await kPrep(img, 1800), side); if (txt === null) throw new Error("NOOCR"); }
+    }
     K.pg[side] = 1; kPct();
     const o = kParse(txt, side); delete o.nid; delete o.name; return o;
   } catch (e) { console.log("ocr", e && e.message); K.pg[side] = 1; kPct(); return {fail: true}; }
@@ -2079,10 +2084,10 @@ async function kInfoStart() {
   [b, a].forEach(r => { if (r && !r.fail) ["father", "mother", "name_bn", "dob", "addr", "blood", "postcode", "postoffice", "district", "upazila"].forEach(k => { if (r[k]) K.d[k] = r[k]; }); });
   /* v2.52: জেলা পাওয়া গেলে বিভাগ নিজে বসে; না মিললে ফাঁকা থাকে, ইউজার বাছবে */
   try { const dn = K.d.district; if (dn && KDISTBN[dn]) { const dv = Object.keys(KGEO).find(x => KGEO[x][dn]); if (dv) K.d.division = dv; } if (!KV.district(K.d.district)) { K.d.district = ""; K.d.upazila = ""; } } catch (e) {}
-  if (a && !a.fail && a.nid) { K.d.nid = a.nid; K.lk.nid = true; }
-  if (a && !a.fail && a.name) { K.d.name = a.name; K.lk.name = true; }
+  if (a && !a.fail && a.nid) { K.d.nid = a.nid; if (!a.weak) K.lk.nid = true; }
+  if (a && !a.fail && a.name) { K.d.name = a.name; if (!a.weak) K.lk.name = true; }
   K.fail = !!K.manual;
-  K.reading = false; hap("MEDIUM"); kycRender();
+  K.reading = false; K.ipg = 0; hap("MEDIUM"); kycRender();
 }
 /* নাম বা NID নম্বর নিশ্চিত পড়া যায়নি: ভুল কিছু না নিয়ে সামনের দিক আবার স্ক্যান */
 function kFrontRedo() {
@@ -2133,6 +2138,15 @@ Object.assign(KV, {
   income: (v) => KOPT.income.some(o => o.v === v),
   occ: (v) => KOPT.occ.some(o => o.v === v)
 });
+/* ===== v2.56: দুই পেজ + ঐচ্ছিক ঘর (রক্তের গ্রুপ, উপজেলা/থানা ঐচ্ছিক) ===== */
+const KOPTF = {blood: 1, upazila: 1};
+const KPG = [["name", "father", "mother", "dob", "nid", "blood", "addr", "division", "district", "upazila", "postoffice", "postcode"], ["gender", "incsrc", "income", "occ"]];
+const kReqAll = () => KF.filter(([k]) => !KOPTF[k]).map(x => x[0]);
+function kRowSt(k, v) { if (KOPTF[k] && !(v && !(k === "blood" && v === "N.A."))) return "op"; return KV[k](v) ? "gd" : "bd"; }
+const kDashI = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M7 12h10"/></svg>';
+const kStI = (st) => st === "gd" ? kTickI : st === "bd" ? kCrossI : kDashI;
+const kReqOkN = () => kReqAll().filter(k => KV[k](K.d[k])).length;
+Object.assign(T.bn, {k_opt: "ঐচ্ছিক", k_vh: "আপনার NID এর তথ্য যাচাই করুন", k_vs: "অনুগ্রহ করে NID এর সাথে মিলিয়ে সকল তথ্য নিশ্চিত করুন"}); Object.assign(T.en, {k_opt: "Optional", k_vh: "Verify your NID details", k_vs: "Please check every detail against your NID"});
 function kInfoOld() {
   if (K.reading) return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="krd"><div class="kscn"><svg viewBox="0 0 200 126" aria-hidden="true"><rect x="3" y="3" width="194" height="120" rx="14" fill="#fff" stroke="#e2136e" stroke-width="3"/><circle cx="44" cy="50" r="15" fill="#fde7f1"/><path d="M80 38h86M80 56h70M80 74h80M26 98h140" stroke="#f0a3c6" stroke-width="6" stroke-linecap="round"/></svg><u></u></div><b>${t("k_readd")}</b><span id="kpct">0%</span><div class="kbar"><i id="kbi"></i></div><small>${t("k_readw")}</small></div></div>`;
   const n = kOkN();
@@ -3034,19 +3048,20 @@ function kDobNorm(v) { const o = kDobParse(v); return o ? String(o.d).padStart(2
 function kInfo() {
   if (K.reading) return kInfoOld();
   if (K.d.dob) K.d.dob = kDobNorm(K.d.dob);
-  const n = kOkN(), tot = KF.length;
-  const rows = KF.map(([k, lb, ik], i) => {
-    const v = K.d[k] || "", ok = KV[k](v), lock = K.lk && K.lk[k];
+  const pg = K.ipg || 0, keys = KPG[pg], n = kReqOkN(), tot = kReqAll().length;
+  const rows = KF.filter(([k]) => keys.includes(k)).map(([k, lb, ik], i) => {
+    const v = K.d[k] || "", st = kRowSt(k, v), lock = K.lk && K.lk[k];
     let body;
     if (k === "dob") body = `<button type="button" class="kdb" onclick="kDobOpen()"><span id="kv_dob">${v ? esc(v) : t("k_miss")}</span><em><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>${t("k_edit")}</em></button>`;
     else if (k === "addr") body = `<textarea id="kv_${k}" rows="2" placeholder="${t("k_miss")}" oninput="kSet('${k}',this)">${esc(v)}</textarea>`;
-    else if (KPKEYS.includes(k)) body = `<button type="button" class="kdb kpick" onclick="kPick('${k}')"><span id="kv_${k}"${v ? "" : ' class="ph"'}>${v ? esc(kLbl(k, v)) : t("k_gpick")}</span><em>${KCHEV}</em></button>`;
+    else if (KPKEYS.includes(k)) body = `<button type="button" class="kdb kpick" onclick="kPick('${k}')"><span id="kv_${k}"${v ? "" : ' class="kph"'}>${v ? esc(kLbl(k, v)) : t("k_gpick")}</span><em>${KCHEV}</em></button>`;
     else body = `<input id="kv_${k}" value="${esc(v)}" placeholder="${k === "name" ? t("k_nmen") : k === "postcode" ? t("k_gpcph") : k === "postoffice" ? t("k_gpoph") : t("k_miss")}" ${k === "nid" ? 'inputmode="numeric" maxlength="17"' : k === "postcode" ? 'inputmode="numeric" maxlength="4"' : 'maxlength="80"'}${k === "name" ? ' autocapitalize="words" autocorrect="off" spellcheck="false"' : ""}${lock ? " readonly" : ""} oninput="kSet('${k}',this)">`;
     const hd = KSEC[k] ? `<p class="kshd">${t(KSEC[k])}</p>` : "";
-    return hd + `<div class="kf ${ok ? "gd" : "bd"}${lock ? " lk" : ""}" style="--n:${Math.min(i, 6)}"><div class="kfi">${kic(ik)}</div><div class="kfb"><label>${t(lb)}</label>${body}${lock ? `<small class="klk2">${t("k_lockd")}</small>` : ""}</div><i class="kt2 ${ok ? "gd" : "no"}">${ok ? kTickI : kCrossI}</i></div>`;
+    const nb = k === "name" && K.d.name_bn ? `<div class="kf kfl lk kbn"><label>${S.lang === "bn" ? "নাম (বাংলা)" : "Name (Bangla)"}</label><div class="kfb"><span class="kro">${esc(K.d.name_bn)}</span></div><i class="kt2 gd">${kTickI}</i></div>` : "";
+    return hd + nb + `<div class="kf kfl ${st}${lock ? " lk" : ""}"><label>${t(lb)}${KOPTF[k] ? ` <u class="kopt">${t("k_opt")}</u>` : ""}</label><div class="kfb">${body}${lock ? `<small class="klk2">${t("k_lockd")}</small>` : ""}</div><i class="kt2 ${st}">${kStI(st)}</i></div>`;
   }).join("");
-  return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="kbody"><div class="ksum"><div><b id="ksn">${n}/${tot}</b><span>${t("k_okc")}</span></div><div class="kbar"><i id="ksb2" style="width:${n * 100 / tot}%"></i></div></div>
-    ${K.fail ? `<p class="ksubt">${t("k_ocrfail")}</p>` : ""}${rows}<div class="le kle">${esc(K.err)}</div></div>
+  return `<div class="kw">${kTop(t("k_info"), "kBack()", 1)}<div class="kbody kflat"><p class="kbh">${t("k_vh")}</p><p class="kbs">${t("k_vs")}</p><div class="ksum"><div><b id="ksn">${n}/${tot}</b><span>${t("k_okc")}</span></div><div class="kbar"><i id="ksb2" style="width:${n * 100 / tot}%"></i></div></div>
+    ${K.fail && pg === 0 ? `<p class="ksubt">${t("k_ocrfail")}</p>` : ""}${rows}<div class="le kle">${esc(K.err)}</div></div>
     <div class="kbtm"><button class="kbtn" onclick="kInfoNext()">${t("k_next")}</button></div></div>`;
 }
 function kSet(k, el) {
@@ -3056,19 +3071,22 @@ function kSet(k, el) {
   else if (k === "postcode") { v = digs(v, 4); }
   if (el.value !== v) el.value = v;
   K.d[k] = v;
-  const row = el.closest(".kf"), tk = row.querySelector(".kt2"), ok = KV[k](v);
-  tk.className = "kt2 " + (ok ? "gd" : "no"); tk.style.animation = "none"; tk.style.transform = "scale(1)"; tk.innerHTML = ok ? kTickI : kCrossI;
-  row.classList.toggle("gd", ok); row.classList.toggle("bd", !ok);
+  const row = el.closest(".kf"), tk = row.querySelector(".kt2"), st = kRowSt(k, v);
+  tk.className = "kt2 " + st; tk.style.animation = "none"; tk.style.transform = "scale(1)"; tk.innerHTML = kStI(st);
+  row.classList.remove("gd", "bd", "op"); row.classList.add(st);
   kInfoCount();
 }
 function kInfoCount() {
-  const n = kOkN(), tot = KF.length, a = document.getElementById("ksn"), b = document.getElementById("ksb2"); if (a) a.textContent = n + "/" + tot; if (b) b.style.width = n * 100 / tot + "%";
+  const n = kReqOkN(), tot = kReqAll().length, a = document.getElementById("ksn"), b = document.getElementById("ksb2"); if (a) a.textContent = n + "/" + tot; if (b) b.style.width = n * 100 / tot + "%";
 }
 function kInfoNext() {
-  const d = K.d, le = document.querySelector(".kle");
-  const bad = KF.some(([k]) => k !== "nid" && !KV[k](d[k])) ? t("k_bad") : !KV.nid(d.nid) ? t("k_badnid") : "";
+  const d = K.d, le = document.querySelector(".kle"), pg = K.ipg || 0;
+  const need = KPG[pg].filter(k => !KOPTF[k]);
+  const bad = need.some(k => k !== "nid" && !KV[k](d[k])) ? t("k_bad") : (need.includes("nid") && !KV.nid(d.nid)) ? t("k_badnid") : "";
   if (bad) { K.err = bad; if (le) le.textContent = bad; hap("HEAVY"); return; }
-  hap(); K.err = ""; K.pv = ""; K.step = "face"; kycRender();
+  hap(); K.err = "";
+  if (pg === 0) { K.ipg = 1; kycRender(); return; }
+  K.ipg = 0; K.pv = ""; K.step = "face"; kycRender();
 }
 
 /* ----- জন্মতারিখ: চাকার মতো ঘুরিয়ে বাছা (দিন / মাস / বছর) ----- */
@@ -3100,7 +3118,7 @@ function kDobOk() {
   K.d.dob = String(d).padStart(2, "0") + "/" + String(mo + 1).padStart(2, "0") + "/" + y;
   hap("MEDIUM"); kDobClose();
   const s = document.getElementById("kv_dob"); if (s) s.textContent = K.d.dob;
-  const row = s && s.closest(".kf"); if (row) { row.classList.add("gd"); row.classList.remove("bd"); const tk = row.querySelector(".kt2"); if (tk) { tk.className = "kt2 gd"; tk.innerHTML = kTickI; } }
+  const row = s && s.closest(".kf"); if (row) { row.classList.add("gd"); row.classList.remove("bd", "op"); const tk = row.querySelector(".kt2"); if (tk) { tk.className = "kt2 gd"; tk.style.animation = "none"; tk.style.transform = "scale(1)"; tk.innerHTML = kTickI; } }
   kInfoCount();
 }
 
@@ -3148,18 +3166,18 @@ function kPkSel(el) {
   else if (key === "district") { if (d.district !== v) { d.district = v; d.upazila = ""; } }
   else d[key] = v;
   kPkClose(); kPkRows();
-  const nx = key === "division" && !KV.district(d.district) ? "district" : key === "district" && !KV.upazila(d.upazila) ? "upazila" : "";
+  const nx = key === "division" && !KV.district(d.district) ? "district" : "";
   if (nx) setTimeout(() => { if (K.step === "info") kPick(nx); }, 320);
 }
 function kPkClose() { const o = document.getElementById("kpk"); if (!o) return; o.classList.remove("in"); setTimeout(() => { if (o.parentNode) o.remove(); }, 260); }
 function kPkRows() {
   KPKEYS.forEach(k => {
     const s = document.getElementById("kv_" + k); if (!s) return;
-    const v = K.d[k], ok = KV[k](v);
-    s.textContent = v ? kLbl(k, v) : t("k_gpick"); s.classList.toggle("ph", !v);
+    const v = K.d[k], st = kRowSt(k, v);
+    s.textContent = v ? kLbl(k, v) : t("k_gpick"); s.classList.toggle("kph", !v);
     const row = s.closest(".kf"); if (!row) return;
-    row.classList.toggle("gd", ok); row.classList.toggle("bd", !ok);
-    const tk = row.querySelector(".kt2"); if (tk) { tk.className = "kt2 " + (ok ? "gd" : "no"); tk.style.animation = "none"; tk.style.transform = "scale(1)"; tk.innerHTML = ok ? kTickI : kCrossI; }
+    row.classList.remove("gd", "bd", "op"); row.classList.add(st);
+    const tk = row.querySelector(".kt2"); if (tk) { tk.className = "kt2 " + st; tk.style.animation = "none"; tk.style.transform = "scale(1)"; tk.innerHTML = kStI(st); }
   });
   kInfoCount();
 }
@@ -3906,6 +3924,7 @@ function kBack() {
   hap();
   if (K.busy && K.step !== "face") return;
   const s = K.step;
+  if (s === "info" && K.ipg === 1 && !K.reading) { K.ipg = 0; kycRender(); return; }
   if (s === "front") { if (K.pv) { K.pv = ""; kycRender(); return; } if (K.cardOnly) { K.cardOnly = false; K.step = "match"; kycRender(); return; } if (K.redo) { K.redo = false; K.step = "back"; kycRender(); return; } K.flow = false; K.step = "intro"; }
   else if (s === "back") { K.pv = ""; K.step = "front"; }
   else if (s === "info" || s === "face" || s === "pin") { if (s === "pin" && K.busy) return; kToFront(); }
@@ -4993,27 +5012,56 @@ Object.assign(T.en, {k_notcard: "No ID card found. Place your NID card inside th
 /* ---- সার্ভারে লেখা পড়া (Supabase Edge Function: nid-ocr) ---- */
 const KSRV = {on: true};
 const KSV = {front: null, back: null};
-async function kSrvRead(img, side) {
-  if (!KSRV.on) return null;
+function kSrvRead(img, side) {
+  if (!KSRV.on) return Promise.resolve(null);
+  const c = KSV[side]; if (c && c.img === img) return c.p;
   const BASE = String(SUPA_URL).replace(/[\s"']/g, "").replace(/\/+$/, ""), KEY = String(SUPA_KEY).replace(/[\s"']/g, "");
-  if (!BASE || !KEY || !S.tok) return null;
-  const c = KSV[side]; if (c && c.img === img) return c.d;
-  try {
-    const cv = await kPrep(img, 1500, "none");
-    const b64 = cv.toDataURL("image/jpeg", .82).split(",")[1];
-    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 14000);
-    let r; try { r = await fetch(BASE + "/functions/v1/nid-ocr", {method: "POST", signal: ctl.signal, headers: {apikey: KEY, Authorization: "Bearer " + S.tok, "Content-Type": "application/json"}, body: JSON.stringify({image: b64, side})}); } finally { clearTimeout(tm); }
-    if (!r.ok) { if (r.status === 404 || r.status === 503) KSRV.on = false; console.log("srvocr", r.status); return null; }
-    const j = await r.json();
-    if (!j || !j.ok || typeof j.text !== "string") return null;
-    const d = {text: j.text, srv: 1, lines: (j.lines || []).map(l => ({text: l.t, words: (l.w || []).map(w => ({text: w[0], confidence: w[1]}))}))};
-    KSV[side] = {img, d}; return d;
-  } catch (e) { console.log("srvocr", e && e.message); return null; }
+  if (!BASE || !KEY || !S.tok) return Promise.resolve(null);
+  const p = (async () => {
+    try {
+      const cv = await kPrep(img, 1280, "none");
+      const b64 = cv.toDataURL("image/jpeg", .8).split(",")[1];
+      const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 9000);
+      let r; try { r = await fetch(BASE + "/functions/v1/nid-ocr", {method: "POST", signal: ctl.signal, headers: {apikey: KEY, Authorization: "Bearer " + S.tok, "Content-Type": "application/json"}, body: JSON.stringify({image: b64, side})}); } finally { clearTimeout(tm); }
+      if (!r.ok) { if (r.status === 404 || r.status === 503) KSRV.on = false; console.log("srvocr", r.status); return null; }
+      const j = await r.json();
+      if (!j || !j.ok || typeof j.text !== "string") return null;
+      return {text: j.text, srv: 1, lines: (j.lines || []).map(l => ({text: l.t, words: (l.w || []).map(w => ({text: w[0], confidence: w[1]}))}))};
+    } catch (e) { console.log("srvocr", e && e.message); return null; }
+  })();
+  KSV[side] = {img, p}; return p;
 }
+/* ---- ফোনের ভেতরে তাৎক্ষণিক পড়া: Google ML Kit (নেটিভ, ফ্রি, <১ সেকেন্ড; ইংরেজি/সংখ্যা)। প্লাগইন না থাকলে null ---- */
+const KMLC = {front: null, back: null};
+const kMlAvail = () => { try { return !!(window.Capacitor && Capacitor.isPluginAvailable && Capacitor.isPluginAvailable("NidOcr") && cap().NidOcr && cap().NidOcr.recognize); } catch (e) { return false; } };
+function kMlRead(img, side) {
+  if (!kMlAvail()) return Promise.resolve(null);
+  const c = KMLC[side]; if (c && c.img === img) return c.p;
+  const p = (async () => {
+    try {
+      const cv = await kPrep(img, 1600, "none");
+      const b64 = cv.toDataURL("image/jpeg", .85).split(",")[1];
+      const r = await Promise.race([cap().NidOcr.recognize({image: b64}), kTO(4000)]);
+      if (!r || typeof r.text !== "string") return null;
+      return {text: r.text, ml: 1, lines: (r.lines || []).map(l => ({text: l.t, words: (l.w || []).map(w => ({text: w[0], confidence: w[1]}))}))};
+    } catch (e) { console.log("mlocr", e && e.message); return null; }
+  })();
+  KMLC[side] = {img, p}; return p;
+}
+/* ছবি তোলামাত্র দুটোই একসাথে শুরু (একটা অন্যটার জন্য অপেক্ষা করে না) */
+function kKick(img, side) { kMlRead(img, side); kSrvRead(img, side); }
 /* সামনের দিকের তথ্য: সার্ভারের পড়া পেলে সেটাই (ভরসা মান সহ), নইলে আগের ফোনের Tesseract পথ */
 async function kStrictFront(img, pre) {
-  const d = await kSrvRead(img, "front");
-  if (d) { const r = kReadOf(d), R = kDecide([r, r]); R.text = d.text || ""; KPS = {i: 0, n: 1}; return R; }
+  kKick(img, "front");
+  const [g, m] = await Promise.all([kSrvRead(img, "front"), kMlRead(img, "front")]);
+  if (g || m) {
+    KPS = {i: 0, n: 1};
+    const rg = g && kReadOf(g), rm = m && kReadOf(m);
+    let R, weak = false;
+    if (rg && rm) { R = kDecide([rg, rm]); if (!(R.nidOk && R.nameOk)) { const Rg = kDecide([rg, rg]); weak = !!(Rg.nidOk || Rg.nameOk); R = Rg; } }
+    else { const r1 = rg || rm; R = kDecide([r1, r1]); }
+    R.weak = weak; R.text = (g && g.text) || (m && m.text) || ""; return R;
+  }
   return kStrictFrontLocal(img, pre);
 }
 
@@ -5035,7 +5083,7 @@ async function kVal() {
   if (K.pv !== img || K.step !== s) return;
   if (d) { txt = d.text || ""; src = "srv"; }
   else {
-    try { const cv = await kPrep(img, 1200); txt = await Promise.race([kOcrText(cv, ""), kTO(14000)]); } catch (e) { txt = undefined; }
+    try { const cv = await kPrep(img, 1200); txt = await Promise.race([kOcrText(cv, ""), kTO(8000)]); } catch (e) { txt = undefined; }
     if (K.pv !== img || K.step !== s) return;
   }
   K.vbusy = false;
@@ -5238,20 +5286,28 @@ function kOkGo(img, s) {
 }
 async function kVal() {
   const s = K.step, img = K.pv; let txt, geo = null, src = "loc";
+  kKick(img, s);
   try { geo = kGeoCv(await kPrep(img, 600)); } catch (e) {}
-  const d = await kSrvRead(img, s);
+  let d = await kMlRead(img, s);               /* তাৎক্ষণিক (ML Kit) */
   if (K.pv !== img || K.step !== s) return;
-  if (d) { txt = d.text || ""; src = "srv"; }
+  let repTxt;
+  if (d) { txt = d.text || ""; src = "loc"; const rc = kClass2(txt); repTxt = rc.c === s ? txt : undefined; }
   else {
-    try { const cv = await kPrep(img, 1200); txt = await Promise.race([kOcrText(cv, ""), kTO(14000)]); } catch (e) { txt = undefined; }
+    d = await Promise.race([kSrvRead(img, s), kTO(7000)]);   /* ML Kit নেই: Gemini (সর্বোচ্চ ৭s) */
     if (K.pv !== img || K.step !== s) return;
+    if (d) { txt = d.text || ""; src = "srv"; repTxt = txt; }
+    else {
+      try { const cv = await kPrep(img, 1200); txt = await Promise.race([kOcrText(cv, ""), kTO(8000)]); } catch (e) { txt = undefined; }
+      if (K.pv !== img || K.step !== s) return;
+      repTxt = txt;
+    }
   }
   K.vbusy = false;
   const j = kJudge(txt === undefined ? null : txt, s, geo, src); K.gate = null;
   if (j === "notid") { kReject("k_notid", "k_notidm"); return; }
   if (j.indexOf("wrong") === 0) { kReject("k_wrong", j === "wrong:front" ? "k_isf" : "k_isb"); return; }
-  if (typeof txt === "string" && txt) K.pre[s] = txt;
-  K.rep = kMakeRep(s, K.repSrc || "cam", geo, txt, img);
+  if (typeof txt === "string" && txt && src !== "loc") K.pre[s] = txt;
+  K.rep = kMakeRep(s, K.repSrc || "cam", geo, repTxt, img);
   if (K.rep.warn) {
     const bad = K.rep.it.find(x => !x.ok);
     K.wm = {img, k: bad ? bad.k : "k_rp_warn"}; hap("HEAVY"); kycRender(); return;
