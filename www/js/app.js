@@ -168,7 +168,7 @@ try {
 const save = () => { try { localStorage.setItem("fp2", JSON.stringify({lang:S.lang, phone:S.phone, name:S.name})); } catch (e) {} };
 
 /* ---------- নেটিভ ফিচার (Capacitor প্লাগইন থাকলে কাজ করে, না থাকলে ব্রাউজারেও চলে) ---------- */
-const APP_REL = "2.37"; /* অ্যাপে দেখানো রিলিজ নম্বর */
+const APP_REL = "2.38"; /* অ্যাপে দেখানো রিলিজ নম্বর */
 const APP_VERSION = "1.2.0"; /* GitHub বিল্ডের সময় নিজে বদলে যায় */
 const OTA_URL = ""; /* GitHub বিল্ডের সময় নিজে বসে যায় */
 const cap = () => (window.Capacitor && window.Capacitor.Plugins) || {};
@@ -288,6 +288,8 @@ const en = (x) => String(x == null ? "" : x).replace(/[\u09e6-\u09ef]/g, c => St
 /* শুধু ইংরেজি সংখ্যা, সর্বোচ্চ max টা (নম্বর 11, PIN 6) */
 const digs = (x, max) => en(x).replace(/\D/g, "").slice(0, max);
 function numIn(el) { const v = digs(el.value, 11); if (el.value !== v) el.value = v; }
+/* v2.46: নম্বর পুরো হলে নিচের "পরবর্তী" বার ধূসর থেকে গোলাপি হয় (বিকাশের মতো) */
+function phBar() { const i = document.getElementById("lp"), b = document.getElementById("phnext"), le = document.querySelector(".le"); if (le && le.textContent) le.textContent = ""; if (i && b) b.classList.toggle("on", isPh(digs(i.value, 11))); }
 function pinOnly(el) { const v = digs(el.value, 6); if (el.value !== v) el.value = v; }
 const isPh = (x) => /^01\d{9}$/.test(String(x));
 const isPin = (x) => /^\d{6}$/.test(String(x));
@@ -633,11 +635,11 @@ function loginHtml() {
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
       <h2>${t("phh")}</h2>
       <label>${t("cc")}</label><div class="cfield"><i class="flag"></i>${t("bd")}</div>
-      <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="lp" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="numIn(this)"></div>
+      <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="lp" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="numIn(this);phBar()"></div>
       <div class="le"></div>
       <p class="terms">${t("terms")}</p>
-      <button class="nbar nin" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button>
-      </div></div>`;
+      </div>
+      <button class="nbar lb2 bkbar" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
   /* 2.5) OTP পেজ: SMS এ কোড যায়, Allow দিলে ঘরে নিজে বসে (ঘর readonly), অ্যান্ড্রয়েডের বাইরে বা না এলে হাতে লেখার পথ খোলে */
   if (S.view === "otp") return `<div class="fl light otpv">${lgBar("otpStop();S.view='ph';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
@@ -919,8 +921,11 @@ function render() {
   }
   const ap = document.getElementById("app"), sc = ap.scrollTop, ob = document.querySelector(".ban"), bl = ob ? ob.scrollLeft : 0;
   if (chg) vGhost(ap, ap.querySelector(":scope > .fl") || ap.querySelector(":scope > .pg"), vdir, sc);
-  ap.innerHTML = h; ap.className = S.auth ? "au" : "";
-  if (chg) { const nw = ap.firstElementChild; if (nw) nw.classList.add(vdir > 0 ? "vtf" : vdir < 0 ? "vtb" : "vtn"); }
+  /* v2.40: পেজ আগের মতোই হলে ভেতরটা নতুন করে আঁকি না — চলমান অ্যানিমেশন কেটে/রিস্টার্ট হয় না, স্ক্রল ও ফোকাস থাকে */
+  const ae = document.activeElement, same = S.auth && !chg && !fx && ap.__fh === h && ap.firstElementChild && !(ae && ap.contains(ae) && /^(INPUT|TEXTAREA)$/.test(ae.tagName));
+  if (!same) { ap.innerHTML = h; ap.__fh = h; }
+  ap.className = S.auth ? "au" : "";
+  if (chg && !same) { const nw = ap.firstElementChild; if (nw) nw.classList.add(vdir > 0 ? "vtf" : vdir < 0 ? "vtb" : "vtn"); }
   if (!fx && S.auth) { ap.scrollTop = sc; const nb = document.querySelector(".ban"); if (nb && bl) { nb.style.scrollBehavior = "auto"; nb.scrollLeft = bl; nb.style.scrollBehavior = ""; dot(nb); } }
   S.fx = false; S.hl = null;
   if (S.fq && S.auth) { S.fq = false; setTimeout(() => { const f = document.getElementById("sq"); if (f) { try { f.focus(); } catch (e) {} } }, 380); }
@@ -4321,7 +4326,7 @@ function kAutoStart() {
   kAutoStop(); KA.ok = 0; KA.none = 0; KA.prev = null; KA.busy = false; KA.t0 = Date.now(); kWorker();
   KA.pause = document.getElementById("kpop") ? Infinity : 0; KA.tm = setInterval(kAutoTick, 350); KA.mt = setTimeout(kManualShow, 9000);
 }
-function kAutoStop() { clearInterval(KA.tm); clearTimeout(KA.mt); KA.tm = 0; KA.busy = false; KAG++; }
+function kAutoStop() { clearInterval(KA.tm); clearTimeout(KA.mt); KA.tm = 0; KA.busy = false; KA.ocr = false; KAG++; }
 function kFlash() {
   const w = document.querySelector("#kyc .kwr"), f = document.querySelector("#kyc .kfr"); if (f) f.classList.add("dn");
   if (!w) return; const x = document.createElement("div"); x.className = "kflash"; w.appendChild(x); setTimeout(() => x.remove(), 520);
@@ -4412,7 +4417,21 @@ Object.assign(T.en, {otph1: "Verify your", otph2: "mobile number", otpl: "Verifi
     const h = savedKb(); pre.on = sign; pre.h = h;
     dockEls().forEach((el) => { el.style.transition = "transform .3s " + EASE; el.style.willChange = "transform"; el.style.transform = "translate3d(0," + (sign * -h) + "px,0)"; });
   }
+  /* v2.46 — লগইন/রেজিস্ট্রেশন পেজে: কিবোর্ডের আসল মাপ জানার মুহূর্তে বার চোখে যেখানে দেখা যাচ্ছিল ঠিক সেখান থেকেই শুরু করে কিবোর্ডের মাথায় গড়িয়ে বসে (মাঝখানে লাফ নেই) */
+  function settleLive(d) {
+    const H = pre.h || 1;
+    dockEls().forEach((el) => {
+      let tc = 0;
+      try { tc = new DOMMatrixReadOnly(getComputedStyle(el).transform).m42 || 0; } catch (e) {}
+      const from = tc + d, k = Math.min(1, Math.abs(tc) / H), ms = Math.max(140, Math.round(300 * (1 - k)));
+      el.style.transition = "none"; el.style.transform = "translate3d(0," + from + "px,0)"; void el.offsetHeight;
+      el.style.transition = "transform " + ms + "ms " + EASE; el.style.transform = "";
+      setTimeout(() => { el.style.transition = ""; el.style.willChange = ""; }, ms + 40);
+    });
+    pre.on = 0;
+  }
   function settle(d) {
+    if (document.querySelector("#app > .fl")) { settleLive(d); return; }
     /* d>0 কিবোর্ড উঠেছে, d<0 নেমেছে. ভবিষ্যদ্বাণী যা ছিল তা আসল মাপের সাথে মিলিয়ে অবশিষ্ট ফারাকটুকু নরমে মেটানো */
     const T0 = d > 0 ? pre.h * -1 : pre.h, resid = T0 + d;
     dockEls().forEach((el) => {
@@ -4515,3 +4534,108 @@ Object.assign(T.en, {otwa: "Never share your PIN or code with anyone", otwb: "No
   window.addEventListener("load", () => { try { window.__fpFull = Math.max(window.__fpFull || 0, window.innerHeight); } catch (e) {} });
 })();
 
+/* =====================================================================
+   v2.37b — অটো ছবি: ফ্রেমে আসল NID কার্ড দেখা ও লেখা পড়া গেলে তবেই ছবি (ফাঁকা জায়গা/কাপড়/দেয়ালের ছবি নয়)
+   ===================================================================== */
+Object.assign(T.bn, {k_readc: "কার্ড পড়া হচ্ছে, স্থির রাখুন…"});
+Object.assign(T.en, {k_readc: "Reading the card, hold still…"});
+function kAutoTick() {
+  if (KA.busy || KA.ocr || Date.now() < KA.pause || K.loadingGal || K.galOpen) return;
+  const v = document.getElementById("kvid"), s = K.step;
+  if (!v || !v.videoWidth || v.readyState < 2 || K.pv || (s !== "front" && s !== "back")) return;
+  const m = kMet(v); if (!m) return;
+  const fr = document.querySelector("#kyc .kfr");
+  const lite = m.edge > .012 && m.edge < .85 && m.cells >= 5 && m.mean > 28 && m.mean < 252;
+  const good = lite && m.diff < 14 && m.sharp > 24;
+  if (!good) { KA.ok = 0; if (fr) fr.classList.remove("lk"); kSt(!lite ? "k_auto" : m.diff >= 14 ? "k_steady" : "k_blur"); return; }
+  KA.ok++; kSt("k_readc");
+  if (KA.ok < 2) return;
+  /* ফ্রেম স্থির ও পরিষ্কার: এবার লেখা পড়ে দেখা হবে কার্ড কি না */
+  KA.ocr = true; const g = KAG, shot = kCardShot(v);
+  (async () => {
+    let ok = false;
+    try {
+      const cv = await kPrep(shot, 1100);
+      const txt = await Promise.race([kOcrText(cv, "", "auto"), kTO(7000)]);
+      if (typeof txt === "string") { const r = kClass2(txt); ok = r.any >= 3 && (r.c === s || (r.c === "weak" && r.any >= 4)); }
+    } catch (e) { ok = false; }
+    KA.ocr = false;
+    if (g !== KAG || !K.open || K.step !== s || K.pv) return;
+    if (!ok) { KA.ok = 0; if (fr) fr.classList.remove("lk"); kSt("k_auto"); KA.pause = Date.now() + 700; return; }
+    if (fr) fr.classList.add("lk");
+    KA.busy = true; kFlash(); hap("MEDIUM");
+    setTimeout(() => {
+      KA.busy = false;
+      if (!K.open || K.step !== s || K.pv) return;
+      K.pre[s] = ""; K.pv = shot; K.auto = true; K.adv = ""; K.repSrc = "cam"; K.imgWH = null; K.rep = null; K.vbusy = true; kycRender(); kVal();
+    }, 180);
+  })();
+}
+
+
+/* =====================================================================
+   v2.39 — অটো ছবি আরও কড়া: ফ্রেমে আসল NID কার্ড থাকলে এবং তার লেখা পরিষ্কার পড়া গেলে তবেই ছবি।
+   কাপড়/নকশা/দেয়াল/ফাঁকা জায়গার এলোমেলো দাগ থেকে ভুল করে ছবি উঠবে না।
+   (১) শুধু ভরসাযোগ্য (confidence ≥ 62) শব্দ গোনা হয়  (২) পরপর দুইবার একই পাশের কার্ড পড়া গেলে তবেই ছবি
+   ===================================================================== */
+function kHiWords(d) {
+  let ws = [];
+  if (d && d.lines && d.lines.length) { for (const l of d.lines) for (const w of (l.words || [])) ws.push(w); }
+  else if (d && d.words) ws = d.words;
+  const hi = ws.filter(w => w && typeof w.text === "string" && (w.confidence || 0) >= 62 && w.text.replace(/[^\u0980-\u09FFA-Za-z0-9]/g, "").length >= 2);
+  return {n: hi.length, txt: hi.map(w => w.text).join(" ")};
+}
+function kAutoTick() {
+  if (KA.busy || KA.ocr || Date.now() < KA.pause || K.loadingGal || K.galOpen) return;
+  const v = document.getElementById("kvid"), s = K.step;
+  if (!v || !v.videoWidth || v.readyState < 2 || K.pv || (s !== "front" && s !== "back")) return;
+  if (KA.hs !== s) { KA.hs = s; KA.hit = 0; }
+  const m = kMet(v); if (!m) return;
+  const fr = document.querySelector("#kyc .kfr");
+  const lite = m.edge > .012 && m.edge < .85 && m.cells >= 5 && m.mean > 28 && m.mean < 252;
+  const good = lite && m.diff < 14 && m.sharp > 24;
+  if (!good) { KA.ok = 0; KA.hit = 0; if (fr) fr.classList.remove("lk"); kSt(!lite ? "k_auto" : m.diff >= 14 ? "k_steady" : "k_blur"); return; }
+  KA.ok++; kSt("k_readc");
+  if (KA.ok < 2) return;
+  KA.ocr = true; const g = KAG, shot = kCardShot(v);
+  (async () => {
+    let ok = false;
+    try {
+      const cv = await kPrep(shot, 1300);
+      const d = await Promise.race([kOcrData(cv, "", "auto"), kTO(8000)]);
+      if (d && typeof d === "object") {
+        const h = kHiWords(d), r = kClass2(h.txt);
+        ok = h.n >= 6 && r.any >= 3 && r.c === s;
+      }
+    } catch (e) { ok = false; }
+    KA.ocr = false;
+    if (g !== KAG || !K.open || K.step !== s || K.pv) return;
+    if (!ok) { KA.ok = 0; KA.hit = 0; if (fr) fr.classList.remove("lk"); kSt("k_auto"); KA.pause = Date.now() + 700; return; }
+    if (++KA.hit < 2) return;
+    KA.hit = 0; if (fr) fr.classList.add("lk");
+    KA.busy = true; kFlash(); hap("MEDIUM");
+    setTimeout(() => {
+      KA.busy = false;
+      if (!K.open || K.step !== s || K.pv) return;
+      K.pre[s] = ""; K.pv = shot; K.auto = true; K.adv = ""; K.repSrc = "cam"; K.imgWH = null; K.rep = null; K.vbusy = true; kycRender(); kVal();
+    }, 120);
+  })();
+}
+
+/* =====================================================================
+   v2.40 — নেটিভ অনুভূতি: ব্যাকগ্রাউন্ডে অ্যানিমেশন থামে; দ্রুত ডবল-ট্যাপে পেজ/শিট দুবার খোলা ঠেকানো
+   ===================================================================== */
+(function () {
+  const de = document.documentElement;
+  const sync = () => de.classList.toggle("fpbg", document.hidden);
+  document.addEventListener("visibilitychange", sync); sync();
+  /* একই বাটনে খুব দ্রুত দুবার চাপলে দ্বিতীয়টা বাদ (দুইবার পেজ খোলা/দুইবার অ্যানিমেশন চলা বন্ধ) */
+  let lastT = 0, lastE = null;
+  document.addEventListener("click", (ev) => {
+    const b = ev.target && ev.target.closest && ev.target.closest("button[onclick],.it[onclick],.mr[onclick],.tr[onclick]");
+    if (!b || b.closest("#kpad,#pinbar,#kbar,.kpg,.pin,.pinp")) { return; }
+    const n = performance.now();
+    if (b === lastE && n - lastT < 320) { ev.stopImmediatePropagation(); ev.preventDefault(); return; }
+    lastE = b; lastT = n;
+  }, true);
+})();

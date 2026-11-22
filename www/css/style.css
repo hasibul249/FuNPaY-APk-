@@ -2663,3 +2663,151 @@ body:before{background:linear-gradient(180deg,#fdeef4 0,#fdeef4 4px,rgba(253,238
 #kyc .kdb span{font-size:16px;font-weight:600;line-height:1.35;letter-spacing:0;color:#2a262b}
 #kyc .kfb input,#kyc .kfb textarea{font-size:16px;font-weight:600}
 #kyc .krep.busy .rg{grid-template-columns:1fr 1fr}
+
+/* =====================================================================
+   v2.40 — নেটিভ অ্যাপের মতো ভারি ও স্মুথ অনুভূতি
+   (এই ব্লক সবার শেষে, তাই আগের নিয়মের ওপর বসে)
+   ===================================================================== */
+:root{--nat:cubic-bezier(.32,.72,0,1);--natout:cubic-bezier(.4,0,.6,1)}
+
+/* ১) কাচের মতো ঝাপসা (blur) আগের মতোই থাকে — এখানে কিছু বদলানো হয়নি */
+
+/* ২) স্পর্শের অনুভূতি: চাপলে ছোট হয়, ছাড়লে নরমভাবে ফেরে (স্ক্রল শুরু করলে ঝিলিক দেয় না) */
+button:not(.hold):not(.lgh):not(.kpb):not(.fpb):not(:disabled),.it,.tr,.mr,.fc,.bn,.v3t,.qrb{transition:transform .26s var(--nat),background-color .2s ease,opacity .2s ease;-webkit-tap-highlight-color:transparent}
+button:not(.hold):not(.lgh):not(.kpb):not(.fpb):not(:disabled):active,.it:active,.tr:active,.mr:active,.fc:active,.bn:active,.v3t:active{transform:scale(.965);transition:transform .11s ease-out .045s,background-color .11s ease}
+nav button:active{transform:scale(.9)}
+.btn:active,#kyc .kbtn:active{transform:scale(.975)}
+
+/* ৩) পেজ খোলা/বন্ধ: iOS-এর মতো ভারি স্লাইড, নিচের পেজ সামান্য সরে যায় (parallax) */
+.sh.pgx .box{animation:pgSlideIn .42s var(--nat) both!important;will-change:transform;box-shadow:-14px 0 34px rgba(60,0,30,.16)}
+.sh.pgx.out .box{animation:pgSlideOut .32s var(--natout) both!important}
+.sh.pgx.re .box{animation:none!important}
+.sh.dlg .box{animation:up .38s var(--nat) both;will-change:transform}
+.sh.dlg.out .box{animation:down .28s var(--natout) both}
+.sh{animation-duration:.22s}
+.sh.out{animation-duration:.26s}
+#app{transition:transform .42s var(--nat),filter .42s var(--nat)}
+body:has(#sheet .sh.pgx:not(.out)) #app{transform:translate3d(-22%,0,0);filter:brightness(.9)}
+body:has(#sheet .sh.pgx.out) #app{transition-duration:.32s;transition-timing-function:var(--natout)}
+
+/* ৪) ট্যাব বদল: নরম ফেড + সামান্য ওঠা, কাটাকাটি নেই */
+.pg.in{animation:fp40in .3s var(--nat) both!important}
+@keyframes fp40in{from{opacity:0;transform:translate3d(0,10px,0)}to{opacity:1;transform:none}}
+
+/* ৫) ঘর ফোকাস/রং বদল নরম */
+input,textarea{transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+
+/* ৬) ওয়েবের মতো আচরণ বন্ধ: ছবি টানা, লেখা বাছাই, টেনে রিফ্রেশ/ওভারস্ক্রল, ঝিলিক */
+img,svg{-webkit-user-drag:none;user-drag:none}
+html,body,#app,.pbody,#kyc .kbody{overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+#app,.pbody,#kyc .kbody{scroll-behavior:auto}
+a{-webkit-touch-callout:none}
+*{-webkit-font-smoothing:antialiased}
+
+/* ৭) GPU-তে ভারি অংশ আলাদা স্তরে (শুধু যেগুলো সত্যিই নড়ে) */
+nav,#pinbar,#kbar,#kpad{transform-style:flat;backface-visibility:hidden}
+
+/* ৮) অ্যাপ ব্যাকগ্রাউন্ডে গেলে অনন্ত অ্যানিমেশন থেমে থাকে (ব্যাটারি + ফিরে এলে কাটে না) */
+html.fpbg *,html.fpbg *:before,html.fpbg *:after{animation-play-state:paused!important}
+
+/* =====================================================================
+   v2.42 — কাচের (glass) ভাব সব জায়গায়: নিচের বার, হেডার, শিট, ডায়ালগ, কার্ড, কিপ্যাড, নোটিশ, KYC কার্ড
+   (আগের "*{backdrop-filter:none!important}" ঠেলে দিতে এখানে !important লাগে)
+   ===================================================================== */
+:root{--gblur:blur(22px) saturate(1.7);--gblur2:blur(30px) saturate(1.9)}
+
+/* ১) পেজের হেডার (শিট-পেজ): পেজের ওপর ভাসে, নিচ দিয়ে লেখা স্ক্রল করলে ঝাপসা দেখা যায় */
+.pgx .box{position:relative}
+.pgx .ph{position:absolute;top:0;left:0;right:0;z-index:6;background:linear-gradient(180deg,rgba(226,19,110,.84),rgba(238,56,138,.76))!important;-webkit-backdrop-filter:var(--gblur)!important;backdrop-filter:var(--gblur)!important;border-bottom:1px solid rgba(255,255,255,.28);box-shadow:0 6px 22px rgba(190,20,100,.16)}
+.pgx .ph~.pbody{padding-top:calc(52px + var(--st,0px))!important}
+.tbar{background:linear-gradient(180deg,rgba(226,19,110,.86),rgba(238,56,138,.78))!important;-webkit-backdrop-filter:var(--gblur)!important;backdrop-filter:var(--gblur)!important}
+
+/* ২) নিচের বার (আগের কাচ আবার নিশ্চিত) ও কিপ্যাড */
+nav,nav.fx{-webkit-backdrop-filter:var(--gblur)!important;backdrop-filter:var(--gblur)!important}
+#kpad{background:rgba(244,244,246,.8)!important;-webkit-backdrop-filter:var(--gblur2)!important;backdrop-filter:var(--gblur2)!important}
+.pfoot:not(:has(.v3bar)):not(:has(.bknx)){background:rgba(255,255,255,.8)!important;-webkit-backdrop-filter:var(--gblur)!important;backdrop-filter:var(--gblur)!important}
+
+/* ৩) শিটের পেছনের পর্দা ও ডায়ালগ বক্স */
+.sh:not(.pgx):not(.scanx){background:rgba(48,8,30,.32)!important;-webkit-backdrop-filter:blur(10px)!important;backdrop-filter:blur(10px)!important}
+.sh.dlg .box{background:rgba(255,255,255,.8)!important;-webkit-backdrop-filter:var(--gblur2)!important;backdrop-filter:var(--gblur2)!important;border:1px solid rgba(255,255,255,.75);border-bottom:0;box-shadow:0 -10px 40px rgba(60,0,30,.18)}
+
+/* ৪) কার্ড/সেকশন: আধা-স্বচ্ছ সাদা + ঝাপসা। পেজের পেছনে হালকা রঙিন আভা, যেন কাচের ভেতর দিয়ে দেখা যায় */
+.wsheet,.sec,.pcard,.msec,.prof,.balc,.nt,.pg>.seg,.pg>.srch,.pg>.note,.fc,.bp{background:rgba(255,255,255,.66)!important;-webkit-backdrop-filter:var(--gblur)!important;backdrop-filter:var(--gblur)!important;border:1px solid rgba(255,255,255,.8);box-shadow:0 8px 26px rgba(170,20,95,.09),inset 0 1px 0 rgba(255,255,255,.9)}
+.pg{background-image:radial-gradient(280px 280px at 100% 34%,rgba(226,19,110,.11),transparent 72%),radial-gradient(320px 320px at 0% 70%,rgba(110,80,255,.08),transparent 72%),radial-gradient(260px 260px at 90% 96%,rgba(255,170,60,.08),transparent 72%)}
+
+/* ৫) টোস্ট/অফলাইন বার, ব্যানারের আইকন, লগইনের প্যানেল, সেগমেন্ট ট্যাব */
+.toast,#offbar{background:rgba(42,22,32,.78)!important;-webkit-backdrop-filter:blur(16px) saturate(1.5)!important;backdrop-filter:blur(16px) saturate(1.5)!important}
+.bn svg.bv{-webkit-backdrop-filter:blur(10px)!important;backdrop-filter:blur(10px)!important}
+.lpanel{-webkit-backdrop-filter:blur(16px)!important;backdrop-filter:blur(16px)!important}
+.sctabs{-webkit-backdrop-filter:blur(10px)!important;backdrop-filter:blur(10px)!important}
+
+/* ৬) KYC: কার্ড, তালিকা, ফলাফল বক্স, স্ক্যানের চিপ */
+#kyc .kcard,#kyc .kf{background:rgba(255,255,255,.72)!important;-webkit-backdrop-filter:var(--gblur)!important;backdrop-filter:var(--gblur)!important;border:1px solid rgba(255,255,255,.8)}
+#kyc .krep{background:rgba(255,255,255,.84)!important;-webkit-backdrop-filter:var(--gblur2)!important;backdrop-filter:var(--gblur2)!important;border:1px solid rgba(255,255,255,.8)}
+#kyc .kchk{-webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important;background:rgba(14,4,10,.62)}
+#kyc .kchk.gd{background:rgba(18,161,91,.9)}
+
+/* =====================================================================
+   v2.44 — আইডি কার্ড ছবি তোলার পর ফলাফল পাতা: শুধু ঘরের মাপ ও জায়গা (লেখা বদলায়নি)
+   ১) ফলাফল বক্স ও দুই বাটন চিকন ও ছোট  ২) নিচের বাড়তি ফাঁকা কমিয়ে সব নিচে নামানো
+   ৩) কার্ডের ছবির ঘর আর ফলাফল বক্সের মাঝে ফাঁক
+   ===================================================================== */
+/* ছবির ঘরের ঠিক নিচ থেকে নিচ পর্যন্ত জায়গা; ভেতরের জিনিস নিচে বসে, ছবির ঘরের সাথে অন্তত ২২px ফাঁক থাকে */
+#kyc .kcam.kn .kwr.pv~.kbt{top:calc(50% + min(88vw,380px) / 3.172 + 22px);padding:0 16px calc(14px + var(--sb,0px));display:flex;flex-direction:column;justify-content:flex-end;background:none}
+#kyc .kcam.kn .kwr.pv~.kbt .knc{display:none}
+
+/* ফলাফল বক্স: ছোট ও চিকন */
+#kyc .kcam.kn .krep{border-radius:16px;padding:8px 9px 7px;margin:0 0 9px;box-shadow:0 6px 20px rgba(170,20,95,.16)}
+#kyc .kcam.kn .krep .rh{gap:8px;margin-bottom:6px}
+#kyc .kcam.kn .krep .rc{width:28px;height:28px;font-size:15px}
+#kyc .kcam.kn .krep .rc svg{width:15px;height:15px}
+#kyc .kcam.kn .krep .rh b{font-size:14px;line-height:1.15}
+#kyc .kcam.kn .krep .rh small{font-size:11px;margin-top:1px}
+#kyc .kcam.kn .krep .rg{gap:4px}
+#kyc .kcam.kn .krep .ri{gap:6px;padding:4px 7px;border-radius:9px;font-size:11.5px}
+#kyc .kcam.kn .krep .ri i{width:16px;height:16px;font-size:10px}
+#kyc .kcam.kn .krep .ri i svg{width:10px;height:10px}
+
+/* "আবার তুলুন" ও "ঠিক আছে" বাটন: চিকন ও ছোট */
+#kyc .kcam.kn .krow{gap:10px}
+#kyc .kcam.kn .kgh,#kyc .kcam.kn .kgo{height:40px;border-radius:12px;font-size:14px}
+#kyc .kcam.kn .kgo{box-shadow:0 5px 12px rgba(226,19,110,.28)}
+
+/* v2.45 — আইডি কার্ডের ফ্রন্ট/ব্যাক পেজ: শিরোনাম (লেখা) লোগোর থেকে আরেকটু নিচে; শুধু জায়গা বদল, লোগো যেখানে ছিল সেখানেই */
+#kyc .kcam.kn:has(.kwr:not(.ov)) .klg strong{margin-top:16px}
+
+/* =====================================================================
+   v2.46 — লগইন / রেজিস্ট্রেশন পেজ (শুধু এই পেজগুলো): বিকাশের মতো
+   ১) ঘেরা বক্স/আলাদা ঘর নেই, শুধু নিচে একটা লাইন
+   ২) "পরবর্তী" বার দুই পাশে ফাঁকা ছাড়া পুরো চওড়া, নিচে বসা; কিবোর্ড উঠলে কিবোর্ডের মাথায় লেগে থাকে
+   ৩) PIN পেজে সাদা অংশ পুরো চওড়া (দুই পাশে গোলাপি ফাঁক নেই)
+   ===================================================================== */
+
+/* ---- নম্বর পেজ + নতুন অ্যাকাউন্ট পেজ: সমতল ঘর ---- */
+.fl.light .pfield,.regv .pfield{border:0!important;border-bottom:1.5px solid #cfc8d2!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;gap:12px}
+.fl.light .pfield:focus-within,.regv .pfield:focus-within{border-bottom-color:var(--lp)!important;box-shadow:none!important}
+.regv .pfield.okf{border-bottom-color:#2cc47c!important;box-shadow:none!important}
+.regv .pfield.badf{border-bottom-color:#ef5a73!important;box-shadow:none!important}
+.fl.light .pfield.ro{background:transparent!important}
+.fl.light .pfield.ro input{color:#6f6973}
+.fl.light .cfield{border:0!important;border-radius:6px!important;background:#efecef!important;height:50px!important;box-shadow:none!important}
+
+/* ---- "পরবর্তী" বার (নম্বর পেজ): পুরো চওড়া, নিচে, ধূসর → নম্বর পুরো হলে গোলাপি ---- */
+.fl.light .nbar.bkbar{position:sticky;bottom:0;flex:none;width:100%;height:calc(52px + var(--sb));margin:0;padding:0 20px var(--sb);border-radius:0;box-shadow:none;background:#9e9a9f;color:#fff;font-size:16px;font-weight:700;animation:nbfade37 .3s ease both!important;transition:background-color .2s}
+.fl.light:focus-within .nbar.bkbar:not(.on){background:#9e9a9f}
+.fl.light .nbar.bkbar.on,.fl.light:focus-within .nbar.bkbar.on{background:linear-gradient(90deg,#e2136e,#f0549a)}
+.fl.light .nbar.bkbar svg{width:26px;height:26px;stroke-width:2.2}
+.fl.light .nbar.bkbar.ld{background:var(--lp,#e2136e)!important}
+
+/* ---- PIN পেজ: সাদা অংশ পুরো চওড়া ও নিচ পর্যন্ত, ঘর সমতল, নিচের বাটন বার ---- */
+.fl.pinp .psheet.bkl{flex:1 1 auto!important;margin:0!important;border-radius:22px 22px 0 0!important;box-shadow:none!important;padding:20px 22px calc(16px + var(--sb))!important}
+html.pinkb .fl.pinp .psheet.bkl{padding-bottom:16px!important}
+.fl.pinp .bkn{border:0!important;border-bottom:1.5px solid #cfc8d2!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:2px 0 10px!important;font-size:18px}
+.fl.pinp .bkp{border:0!important;border-bottom:1.5px solid #cfc8d2!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;height:50px;gap:8px}
+.fl.pinp .bkp:focus-within{border-bottom-color:var(--lp,#e2136e)!important;box-shadow:none!important}
+.fl.pinp .bkp input.pinin{text-align:left!important;height:48px!important;padding:0!important}
+.fl.pinp .bkp input.pinin::placeholder{text-align:left!important}
+.fl.pinp .bkfp{border:0!important;background:none!important;border-radius:50%;width:44px;height:44px;box-shadow:none!important}
+.fl.pinp .bkfp:active{background:#e2136e14!important}
+.fl.pinp .bkfp svg{width:30px;height:30px}
+.fl.pinp .psheet .pgbtn{align-self:stretch;width:auto!important;margin:auto -22px calc(-16px - var(--sb)) -22px!important;height:calc(52px + var(--sb));padding:0 0 var(--sb);border-radius:0!important;box-shadow:none!important}
