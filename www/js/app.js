@@ -2484,9 +2484,9 @@ async function kSubmit() {
   kUpSet(4);
   try { if (r && r.id) api("/rest/v1/rpc/kyc_extra", {m: "POST", tries: 1, b: {p_id: r.id, p_mother: (K.d.mother || "").trim(), p_name_bn: (K.d.name_bn || "").trim()}}).catch(() => {}); } catch (e) {}
   /* v2.52: অতিরিক্ত তথ্য (SQL চালানো না থাকলে চুপচাপ বাদ যায়, জমা আটকায় না) */
-  try { if (r && r.id) { const x = K.d; api("/rest/v1/rpc/kyc_extra2", {m: "POST", tries: 1, b: {p_id: r.id, p_data: {blood: x.blood || "", division: x.division || "", district: x.district || "", upazila: (x.upazila || "").trim(), post_office: (x.postoffice || "").trim(), post_code: x.postcode || "", gender: x.gender || "", income_source: x.incsrc || "", monthly_income: x.income || "", occupation: x.occ || ""}}}).catch(() => {}); } } catch (e) {}
+  try { if (r && r.id) { const x = K.d; api("/rest/v1/rpc/kyc_extra2", {m: "POST", tries: 1, b: {p_id: r.id, p_data: {blood: x.blood || "", division: x.division || "", district: x.district || "", upazila: (x.upazila || "").trim(), post_office: (x.postoffice || "").trim(), post_code: x.postcode || "", gender: x.gender || "", income_source: x.incsrc || "", monthly_income: x.income || "", occupation: x.occ || "", doc_type: K.doc === "minor" ? "nid_under_18" : "nid_18_plus"}}}).catch(() => {}); } } catch (e) {}
   const auto = !!(r && typeof r === "object" && r.status === "approved");
-  { const R0 = K.mres || {}, nd = String(K.d.nid || ""); K.sum = {th: [K.front, K.back, K.selfie], name: K.d.name, nid: nd ? "••••••" + nd.slice(-4) : "", pct: R0.d === null || R0.d === undefined || R0.pct >= KM.AUTO ? null : Math.round(R0.pct), auto}; }
+  { const R0 = K.mres || {}, nd = String(K.d.nid || ""); K.sum = {th: [K.front, K.back, K.selfie], name: K.d.name, nid: nd ? "••••••" + nd.slice(-4) : "", pct: R0.d === null || R0.d === undefined || R0.pct >= KM.REVIEW ? null : Math.round(R0.pct), auto}; }
   K.busy = false; K.flow = false; K.msg = ""; K.err = ""; K.front = K.back = K.selfie = ""; K.p1 = K.p2 = null; K.live = null; K.mres = null; K.desc = null; K.tries = 0; K.cardDesc = null; K.cardThumb = "";
   if (S.me) { S.me.kyc_status = auto ? "approved" : "pending"; S.me.kyc_reason = null; }
   if (!auto) kycNotify("submitted");
@@ -5760,4 +5760,150 @@ function kycApprovedNotify() {
     try { const st = S.me && S.me.kyc_status; if (S.auth && st) { if (st === "approved") kycApprovedNotify(); else kycWaitMark(); } } catch (e) {}
     return _s.apply(this, arguments);
   };
+}
+
+
+/* =====================================================================
+   v3.06 — KYC নতুন ডিজাইন (ডেমো অনুযায়ী) — ভেতরের সিস্টেম/লজিক আগের মতোই, শুধু চেহারা ও লেখা বদলেছে
+   (১) নতুন হেডার + ৪ ধাপের সূচক (Document/Photo/Face/Confirm)  (২) নতুন "ডকুমেন্ট বাছাই" পাতা: শুধু NID (১৮+ ও ১৮-র নিচে), দেশ বাংলাদেশ (বদলানো যায় না)
+   (৩) ইন্ট্রো: ৪টি ধাপ, নিচে ছোট লেখা নেই  (৪) ক্যামেরা: টিক চিহ্ন নিচের চিপে, ওপরের হিন্টে শুধু ছবির সমস্যা
+   (৫) যাচাই পাতা: ৪টি চেকলিস্ট, % শুধু ৭০-এর নিচে ইউজারকে দেখায় (বাকিটা সাপোর্ট/অ্যাডমিন দেখে)  (৬) ফেস পাতার নাম "Live Checking"
+   ===================================================================== */
+{
+  const N = {
+    k_title: "Verification (KYC)", k_h: "Verify your identity", k_sub: "Only 4 steps to activate your account. It takes about 2 minutes.",
+    k_start: "Start", k_li1: "Select your NID", k_li2: "Front & back photos", k_li3: "Live Checking", k_li4: "Confirm with PIN", k_enc: "Your information stays encrypted",
+    k_s_doc: "Document", k_s_pho: "Photo", k_s_fac: "Face", k_s_cnf: "Confirm",
+    k_doc_h: "Select your document", k_cty: "Issuing country", k_bd: "Bangladesh",
+    k_nid_a: "NID Card (18 years and above)", k_nid_m: "NID Card (Under 18 years)", k_nid_s: "Smart Card or Digital Copy",
+    k_doc_note: "An expired document will not be accepted", k_cont2: "Continue",
+    k_ck1: "Checking Document Image", k_ck2: "Checking Document Reality", k_ck3: "Confirming Document Details", k_ck4: "Checking Face Scan",
+    k_face: "Live Checking", k_m_okh: "Your KYC Was Submitted", k_m_oks: "Now confirm with your PIN.", k_m_h: "Checking your documents",
+    k_hint0: "Keep the card inside the frame", k_hint1: "Hold steady…", k_got2: "Photo taken", k_lowm: "Match"
+  };
+  Object.assign(T.bn, N); Object.assign(T.en, N);
+  if (K.doc === undefined) K.doc = "adult";
+  KORD.splice(1, 0, "doc");
+
+  /* ----- হেডার: গোলাপি গ্রেডিয়েন্ট + ভাসমান বুদবুদ + ধাপ সূচক ----- */
+  kTop = function (title, back, idx) {
+    const L = ["k_s_doc", "k_s_pho", "k_s_fac", "k_s_cnf"].map(k => t(k));
+    const sp = idx >= 0 ? `<div class="ksp">${L.map((x, i) => `<div class="nd ${i < idx ? "d" : i === idx ? "a" : ""}"><i>${i < idx ? kTickI : i + 1}</i><span>${x}</span></div>${i < 3 ? `<s class="${i < idx ? "f" : ""}"><u></u></s>` : ""}`).join("")}</div>` : "";
+    return `<div class="kt kt2"><i class="kbb b1"></i><i class="kbb b2"></i><div class="ktr"><button class="kbk${back ? "" : " h"}" onclick="${back || ""}">${kBk}</button><b>${title}</b><span></span></div>${sp}</div>`;
+  };
+
+  /* ----- ইন্ট্রো ----- */
+  kIntro = function () {
+    const rej = K.reason ? `<div class="krej">${ic("info")}<div><b>${t("k_rej")}</b><span>${esc(K.reason)}</span></div></div>` : "";
+    const li = (k, tx, n) => `<div class="kli2">${kic(k)}<b>${t(tx)}</b><em>${n}</em></div>`;
+    return `<div class="kw kw2">${kTop(t("k_title"), "", -1)}<div class="kbody">${rej}<div class="kcard kc1">${KILL}<h2>${t("k_h")}</h2><p>${t("k_sub")}</p></div>
+      <div class="kcard kc2">${li("ki", "k_li1", 1)}${li("cam2", "k_li2", 2)}${li("face", "k_li3", 3)}${li("pin", "k_li4", 4)}</div><p class="knote">${kic("pin")}<span>${t("k_enc")}</span></p></div>
+      <div class="kbtm"><button class="kbtn" onclick="kStart()">${t(K.reason ? "k_again" : "k_start")}</button><button class="klk" onclick="logout()">${t("logout")}</button></div></div>`;
+  };
+
+  /* ----- ডকুমেন্ট বাছাই: শুধু NID (১৮+ / ১৮-র নিচে) ----- */
+  kDoc = function () {
+    const o = (k, tx, d) => `<button class="ksel${K.doc === k ? " on" : ""}" data-k="${k}" style="--d:${d}s" onclick="kDocPick('${k}')">${kic("ki")}<div><b>${t(tx)}</b><span>${t("k_nid_s")}</span></div><i class="krd2"></i></button>`;
+    return `<div class="kw kw2">${kTop(t("k_doc_h"), "kBack()", 0)}<div class="kbody"><div class="kfld"><div><small>${t("k_cty")}</small>${t("k_bd")}</div>${kic("ka")}</div>
+      ${o("adult", "k_nid_a", .08)}${o("minor", "k_nid_m", .16)}<p class="knote kn2">${t("k_doc_note")}</p></div>
+      <div class="kbtm"><button class="kbtn" onclick="kDocGo()">${t("k_cont2")}</button></div></div>`;
+  };
+  kDocPick = function (k) { hap(); K.doc = k; document.querySelectorAll("#kyc .ksel").forEach(e => e.classList.toggle("on", e.dataset.k === k)); };
+  kDocGo = function () { hap(); K.step = "front"; kycRender(); };
+  const _kh = kHtml; kHtml = function () { return K.step === "doc" ? kDoc() : _kh.apply(this, arguments); };
+
+  /* শুরু: আগের সব রিসেট একই, শুধু প্রথম ধাপ এখন ডকুমেন্ট বাছাই */
+  const _ks = kStart;
+  kStart = function () {
+    const _r = kycRender; kycRender = function () {};
+    try { _ks.apply(this, arguments); } finally { kycRender = _r; }
+    K.step = "doc"; kycRender();
+  };
+
+  /* পেছনে যাওয়া: প্রথম ক্যামেরা পাতা থেকে এখন ডকুমেন্ট পাতায়, ডকুমেন্ট থেকে ইন্ট্রোতে */
+  const _kb = kBack;
+  kBack = function () {
+    if (K.step === "doc") { hap(); K.flow = false; K.step = "intro"; kycRender(); return; }
+    if (K.step === "front" && !K.pv && !K.cardOnly && !K.redo && !document.getElementById("kpk")) { hap(); K.pv = ""; K.step = "doc"; kycRender(); return; }
+    return _kb.apply(this, arguments);
+  };
+}
+
+/* ---- v3.06 ভাগ ২: ক্যামেরা পাতা (টিক নিচের চিপে, ওপরের হিন্টে শুধু ছবির সমস্যা), যাচাই পাতা, স্থির লোগোর পটভূমি ---- */
+{
+  /* সব সাধারণ পাতায় (ক্যামেরা বাদে) লগইনের মতো স্থির বড় লোগোর পটভূমি */
+  const _kh2 = kHtml;
+  kHtml = function () { const h = _kh2.apply(this, arguments); return typeof h === "string" ? h.replace('<div class="kw">', '<div class="kw kw2">') : h; };
+
+  const _ksc = kScan;
+  kScan = function (side) {
+    let h = _ksc.apply(this, arguments);
+    const pv = K.pv, ok = !!pv && K.okp === pv, wm = pv && K.wm && K.wm.img === pv ? K.wm.k : "", busy = !!pv && !!K.vbusy && !ok;
+    h = h.replace(/<div class="kdone">[\s\S]*?<\/div>/, "").replace(/<div class="kchk">[\s\S]*?<\/div>/, "").replace(/<div class="kwn">[\s\S]*?<\/div>/, "");
+    const hint = wm ? `<p class="khint bad">${kic("info")}<span>${t(wm)}</span></p>` : "";
+    const chip = ok ? `<div class="kchp gd"><i class="kck">${kTickI}</i><span>${t("k_got2")}</span></div>` : busy ? `<div class="kchp"><i class="kspin"></i><span>${t("k_chk2")}</span></div>` : "";
+    /* হিন্ট ও চিপ কার্ড-ফ্রেমের (.kwr) ভেতরেই বসে, তাই সবসময় কার্ডের ঠিক ওপরে/নিচে থাকে */
+    return h.replace(/(<div class="kwr[^"]*">)/, "$1" + hint).replace(/<\/div>\s*<div class="kbt">/, chip + '</div><div class="kbt">');
+  };
+
+  /* ---- যাচাই পাতা: ৪টি চেকলিস্ট, % ইউজারকে শুধু ৭০-এর নিচে ---- */
+  kMatch = function () {
+    const R = K.mres, th = (src, cls) => `<div class="kmf${cls || ""}">${src ? `<img src="${src}" alt="">` : kic("face")}</div>`;
+    const keys = ["k_ck1", "k_ck2", "k_ck3", "k_ck4"];
+    const list = (state) => `<div class="kck2s">${keys.map((k, i) => `<div class="kck2 ${state}" style="--i:${i}"><em>${kTickI}<i class="kspin"></i></em><span>${t(k)}</span></div>`).join("")}</div>`;
+    if (!R) return `<div class="kw">${kTop(t("k_title"), "", 3)}<div class="kbody"><div class="kcard kc1 kmx"><div class="kmp">${th(K.cardThumb, " sc")}<i class="kml"></i>${th(K.selfie, " sc")}</div>
+      <h2>${t("k_m_h")}</h2><p id="kmst" class="kmh">${t("k_m_l1")}</p>${list("run")}</div></div></div>`;
+    const nm = R.st === "nomodel", md = nm ? "nm" : (R.mode || (R.st === "ok" ? "ok" : "low")), ok = md === "ok", hasP = R.d !== null && R.d !== undefined, pc = hasP ? Math.round(R.pct) : 0;
+    const showPct = hasP && R.pct < KM.REVIEW;   /* % ইউজারকে শুধু ৭০-এর নিচে; বাকিটা শুধু সাপোর্ট/অ্যাডমিন দেখে */
+    const col = ok ? "#12a15b" : (md === "r1" || md === "rv" || md === "fin") ? "#e8a20c" : nm ? "#8b8590" : "#e5484d";
+    const H = {ok: "k_m_okh", r1: "k_m_r1h", rv: "k_m_rvh", fin: "k_m_finh", low: "k_m_lowh", none: "k_m_noh", nm: "k_m_nmh"}[md];
+    const SUB = {ok: "k_m_oks", r1: "k_m_r1s", rv: "k_m_rvs", fin: hasP ? "k_m_finp" : "k_m_fin0", low: "k_m_lows", none: "k_m_nos", nm: "k_m_nm"}[md];
+    const mid = ok ? `<div class="kmrw kmok">${kRing(100, col)}<span>${kTickI.replace('stroke="#fff"', 'stroke="#12a15b"')}</span></div>` : showPct ? `<div class="kmrw">${kRing(R.pct, col)}<b style="color:${col}">${pc}%</b></div>` : `<div class="kmrw">${kRing(0, col)}<b style="color:${col}">!</b></div>`;
+    const retry = md === "low" || md === "none";
+    const why = md === "low" ? `<div class="kmwy">${(R.rs || []).map(k => `<div class="kmri">${kic("info") || ""}<span>${t(k)}</span></div>`).join("")}</div>` : "";
+    const meta = retry ? `<small class="kmt">${t("k_m_att")} ${Math.min(K.att || 1, 3)}/3</small>` : "";
+    const btns = retry ? `<button class="kbtn" onclick="kMatchRetry(0)">${t("k_m_try")}</button>${R.cardBad || md === "none" ? `<button class="klk" onclick="kMatchRetry(1)">${t("k_m_card")}</button>` : ""}`
+      : md === "r1" ? `<button class="kbtn" onclick="kMatchGo()">${t("k_m_go")}</button><button class="klk" onclick="kMatchRetry(0)">${t("k_m_try")}</button>`
+      : `<button class="kbtn" onclick="kMatchGo()">${t("k_m_go")}</button>`;
+    return `<div class="kw">${kTop(t("k_title"), "kBack()", 3)}<div class="kbody"><div class="kcard kc1 kmx kz"><div class="kmp">${th(R.card)}<div class="kmc" style="--c:${col}">${mid}</div>${th(R.self)}</div>
+      <h2>${t(H)}</h2><p>${t(SUB)}</p>${meta}${ok || md === "r1" || md === "rv" ? list("on") : ""}${why}</div></div>
+      <div class="kbtm">${btns}</div></div>`;
+  };
+}
+
+/* ---- v3.06 ভাগ ৩: অ্যাপের কোথাও বাংলা সংখ্যা নয় — সব লেখার বাংলা অঙ্ক (০-৯) ইংরেজি অঙ্ক (0-9) হয়ে যায় ---- */
+{
+  const en = s => typeof s === "string" ? s.replace(/[\u09E6-\u09EF]/g, d => String(d.charCodeAt(0) - 0x09E6)) : s;
+  [T.bn, T.en].forEach(L => { if (L) Object.keys(L).forEach(k => { if (typeof L[k] === "string") L[k] = en(L[k]); }); });
+}
+
+/* ---- v3.06 ভাগ ৪: ফেস পাতার বাকি লেখাতেও "লাইভ মুখ/মুখ যাচাই" নয়, "Live Checking" ---- */
+{
+  const F = {
+    k_fload: "Live Checking শুরু হচ্ছে…",
+    k_fok: "Live Checking সম্পন্ন",
+    k_ffb: "Live Checking চালু করা যায়নি (নেট লাগে)। নিচের বাটনে চেপে ছবি তুলুন"
+  };
+  Object.assign(T.bn, F);
+  Object.assign(T.en, {k_fload: "Starting Live Checking…", k_fok: "Live Checking complete", k_ffb: "Live Checking could not start (internet needed). Tap the button below to take a photo"});
+}
+
+/* ---- v3.06 ভাগ ৫: ক্যামেরা পাতা — ছোট লোগো+বাংলা শিরোনাম সরিয়ে ডেমোর মতো ওপরে শিরোনাম (NID Front/Back Side), নিচের ডিফল্ট নির্দেশনা বাদ
+   (শুধু সমস্যার বার্তা — ক্যামেরা স্থির রাখুন/আরও কাছে ধরুন — আসে); ফেস আইকন হাসিমুখের বদলে ফেস-স্ক্যান আইকন ---- */
+{
+  KI.face = '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 10v1.2M15 10v1.2M12 10v3.2h-1M9.5 16c.7.6 1.5.9 2.5.9s1.8-.3 2.5-.9"/>';
+  const N5 = {k_front: "NID Front Side", k_back: "NID Back Side", k_auto: "\u00a0", k_showf: "\u00a0", k_showb: "\u00a0"};
+  Object.assign(T.bn, N5); Object.assign(T.en, N5);
+  const _ks5 = kScan;
+  kScan = function (side) {
+    let h = _ks5.apply(this, arguments);
+    const ti = t(side === "front" ? "k_front" : "k_back");
+    return h.replace(/<div class="klg">[\s\S]*?<\/div>/, "").replace('onclick="kBack()">' + kBk + '</button><b></b>', 'onclick="kBack()">' + kBk + '</button><b>' + ti + '</b>');
+  };
+}
+
+/* ---- v3.06 ভাগ ৬: তথ্য পাতার ড্রপডাউনের (আয় ইত্যাদি) বাংলা অঙ্কও ইংরেজি অঙ্ক ---- */
+{
+  const en6 = s => typeof s === "string" ? s.replace(/[\u09E6-\u09EF]/g, d => String(d.charCodeAt(0) - 0x09E6)) : s;
+  Object.keys(KOPT).forEach(k => { if (Array.isArray(KOPT[k])) KOPT[k].forEach(o => { if (o && typeof o === "object" && o.bn) o.bn = en6(o.bn); }); });
 }

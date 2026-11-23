@@ -3175,12 +3175,12 @@ html .pgx .avl,html .pgx .bkp,html .pgx .bkg,html .pgx .bk3t,html .tgrid,html .t
 @keyframes kdfade{from{opacity:0}to{opacity:1}}
 #kyc .kwr.okp{animation:kwlift .7s cubic-bezier(.22,1,.36,1) both}
 @keyframes kwlift{0%{transform:translate(-50%,-50%) scale(1)}35%{transform:translate(-50%,-50%) scale(1.035)}100%{transform:translate(-50%,-50%) scale(1)}}
-#kyc .kdone{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;z-index:6;pointer-events:none}
-#kyc .kdone svg{position:relative;z-index:2;width:100%;height:100%;filter:drop-shadow(0 8px 20px rgba(18,161,91,.5))}
-#kyc .kdone .kdb{fill:#12a15b;transform-origin:40px 40px;animation:kdpop .55s cubic-bezier(.2,1.5,.4,1) both}
-#kyc .kdone .kdt{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:kdtk .42s .28s cubic-bezier(.4,0,.2,1) forwards}
-#kyc .kdone i{position:absolute;inset:4px;border-radius:50%;border:3px solid #12a15b;opacity:0;animation:kdrip 1s .12s ease-out both}
-#kyc .kdone i+i{animation-delay:.38s}
+#kyc .kwr .kdone{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;z-index:6;pointer-events:none}
+#kyc .kwr .kdone svg{position:relative;z-index:2;width:100%;height:100%;filter:drop-shadow(0 8px 20px rgba(18,161,91,.5))}
+#kyc .kwr .kdone .kdb{fill:#12a15b;transform-origin:40px 40px;animation:kdpop .55s cubic-bezier(.2,1.5,.4,1) both}
+#kyc .kwr .kdone .kdt{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:kdtk .42s .28s cubic-bezier(.4,0,.2,1) forwards}
+#kyc .kwr .kdone i{position:absolute;inset:4px;border-radius:50%;border:3px solid #12a15b;opacity:0;animation:kdrip 1s .12s ease-out both}
+#kyc .kwr .kdone i+i{animation-delay:.38s}
 @keyframes kdpop{from{transform:scale(0)}to{transform:scale(1)}}
 @keyframes kdtk{to{stroke-dashoffset:0}}
 @keyframes kdrip{0%{transform:scale(.8);opacity:.75}100%{transform:scale(2);opacity:0}}
@@ -3476,3 +3476,97 @@ html #kyc .kpi-f .kcard,html #kyc .kpi-b .kcard,html #kyc .kpi-f .kwr:not(.pv),h
 html #kyc .kpi-b .kshield,html #kyc .kpi-b .kt2{animation:none!important}
 html.lowend #kyc .kpi-f,html.lowend #kyc .kpi-b,html.lowend #kyc .kpo-f{animation-duration:.2s!important}
 html.lowend #kyc .kpo-b{animation-duration:.16s!important}
+
+
+/* =====================================================================
+   v3.06 — KYC নতুন ডিজাইন: গ্রেডিয়েন্ট হেডার + ধাপ সূচক, ইন্ট্রো, ডকুমেন্ট বাছাই, স্থির বড় লোগোর ব্যাকগ্রাউন্ড
+   ===================================================================== */
+/* ব্যাকগ্রাউন্ড: লগইনের মতো ৩টি বড় স্থির লোগো (কোনোটা নড়ে না) */
+#kyc .kw2{background:linear-gradient(rgba(248,244,247,.9),rgba(248,244,247,.9)),url(../icons/logo-pink.png) no-repeat left -78px top 36%/200px 200px,url(../icons/logo-pink.png) no-repeat right -84px top 56%/210px 210px,url(../icons/logo-pink.png) no-repeat left 50% bottom 70px/180px 180px,var(--bg)}
+#kyc .kw2 .kbody,#kyc .kw2 .kbtm{background:transparent}
+/* হেডার */
+#kyc .kt.kt2{position:relative;overflow:hidden;display:block;width:100%;box-sizing:border-box;align-self:stretch;height:auto;padding:calc(10px + var(--st)) 14px 18px;background:linear-gradient(160deg,#ff4d9a,#e2136e 48%,#b80d58);border-radius:0 0 30px 30px;box-shadow:0 12px 30px rgba(226,19,110,.28);z-index:3}
+#kyc .kt2 .kbb{position:absolute;border-radius:50%;background:rgba(255,255,255,.09);pointer-events:none;will-change:transform;animation:kfl 9s ease-in-out infinite alternate}
+#kyc .kt2 .b1{width:170px;height:170px;right:-52px;top:-72px}
+#kyc .kt2 .b2{width:110px;height:110px;left:-34px;bottom:-54px;animation-delay:-3.5s}
+@keyframes kfl{to{transform:translate(14px,10px) scale(1.12)}}
+#kyc .kt2 .ktr{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
+#kyc .kt2 .ktr b{flex:1;text-align:center;font-size:17px;font-weight:700;letter-spacing:.2px}
+#kyc .kt2 .kbk{background:rgba(255,255,255,.22);width:40px;height:40px;flex:none;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#kyc .kt2 .ktr span{width:40px;flex:none}
+#kyc .ksp{position:relative;display:flex;align-items:flex-start;padding:8px 8px 0}
+#kyc .ksp .nd{width:56px;text-align:center;font-size:10.5px;color:rgba(255,255,255,.75);flex:none}
+#kyc .ksp .nd i{display:grid;place-items:center;width:26px;height:26px;margin:0 auto 4px;border-radius:50%;background:rgba(255,255,255,.22);font-style:normal;font-size:12px;font-weight:700;color:#fff;transition:background .4s,color .4s}
+#kyc .ksp .nd i svg{width:14px;height:14px;stroke:var(--p)}
+#kyc .ksp .nd.d i{background:#fff;color:var(--p)}
+#kyc .ksp .nd.a i{background:#fff;color:var(--p);animation:kpu 2s infinite}
+#kyc .ksp .nd.a{color:#fff;font-weight:700}
+#kyc .ksp s{flex:1;height:3px;margin-top:12px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden;text-decoration:none}
+#kyc .ksp s u{display:block;height:100%;width:0;background:#fff;border-radius:3px;text-decoration:none}
+#kyc .ksp s.f u{width:100%;animation:kfw .8s .2s cubic-bezier(.22,1,.36,1) backwards}
+@keyframes kpu{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.5)}50%{box-shadow:0 0 0 6px rgba(255,255,255,0)}}
+@keyframes kfw{from{width:0}}
+/* ইন্ট্রো তালিকা */
+#kyc .kli2{display:flex;align-items:center;gap:14px;padding:11px 0;font-size:15px;color:#3b3540}
+#kyc .kli2+.kli2{border-top:1px solid var(--ln)}
+#kyc .kli2 svg{width:42px;height:42px;padding:10px;border-radius:14px;background:linear-gradient(145deg,var(--pl),#fff0);color:var(--p);stroke-width:1.8;flex:none;box-shadow:inset 0 0 0 1px var(--ln)}
+#kyc .kli2 b{flex:1;font-weight:700;font-size:14.5px}
+#kyc .kli2 em{font-style:normal;font-size:12px;font-weight:700;color:var(--p);background:var(--pl);width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none}
+#kyc .knote{display:flex;align-items:center;justify-content:center;gap:6px}
+#kyc .knote svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}
+/* ডকুমেন্ট বাছাই */
+#kyc .kfld{display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:18px;padding:13px 16px;font-size:14.5px;font-weight:600;color:#2a262b;box-shadow:0 6px 20px rgba(170,20,95,.08);margin-bottom:12px;animation:kup .5s both}
+#kyc .kfld small{display:block;color:var(--mu);font-size:11.5px;font-weight:500}
+#kyc .kfld svg{width:22px;height:22px;color:var(--p);fill:none;stroke:currentColor;stroke-width:1.8}
+#kyc .ksel{display:flex;gap:13px;align-items:center;background:#fff;border:2px solid transparent;border-radius:20px;padding:14px;text-align:left;width:100%;box-shadow:0 6px 20px rgba(170,20,95,.08);margin-bottom:12px;cursor:pointer;font:inherit;color:inherit;opacity:0;animation:kup .5s var(--d,0s) both;transition:border-color .35s,background .35s,transform .35s cubic-bezier(.22,1,.36,1)}
+#kyc .ksel>svg{width:42px;height:42px;padding:10px;border-radius:14px;background:var(--pl);color:var(--p);stroke-width:1.8;flex:none}
+#kyc .ksel b{display:block;font-size:15px;color:#2a262b}
+#kyc .ksel span{font-size:12px;color:var(--mu)}
+#kyc .ksel.on{border-color:var(--p);background:var(--pl);transform:scale(1.012)}
+#kyc .ksel:active{transform:scale(.975)}
+#kyc .krd2{margin-left:auto;width:24px;height:24px;border-radius:50%;border:2px solid var(--ln);flex:none;display:grid;place-items:center;transition:all .3s}
+#kyc .krd2:after{content:"";width:10px;height:6px;border-left:2.6px solid #fff;border-bottom:2.6px solid #fff;transform:translateY(-1px) rotate(-45deg) scale(0);transition:transform .35s cubic-bezier(.22,1,.36,1)}
+#kyc .ksel.on .krd2{border-color:var(--p);background:var(--p)}
+#kyc .ksel.on .krd2:after{transform:translateY(-1px) rotate(-45deg) scale(1)}
+@media (prefers-reduced-motion:reduce){#kyc .kt2 .kbb,#kyc .ksp .nd.a i{animation:none}}
+
+/* ---- v3.06 ভাগ ২: ক্যামেরা চিপ/হিন্ট, যাচাই চেকলিস্ট ---- */
+#kyc .kcam .kchp{position:absolute;left:50%;top:100%;margin-top:20px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:9px;padding:9px 16px;border-radius:22px;font-size:13.5px;font-weight:700;color:#4a3340;background:rgba(255,255,255,.82);box-shadow:0 6px 18px rgba(226,19,110,.16);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);white-space:nowrap;animation:kchi .45s cubic-bezier(.22,1,.36,1) both}
+#kyc .kcam .kchp.gd{background:#12a15b;color:#fff;box-shadow:0 8px 20px rgba(18,161,91,.4)}
+#kyc .kcam .kchp .kck{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.25)}
+#kyc .kcam .kchp .kck svg{width:13px;height:13px;stroke-dasharray:30;stroke-dashoffset:30;animation:kdr .5s .12s ease forwards}
+#kyc .kcam .kchp .kspin{width:15px;height:15px}
+@keyframes kchi{from{opacity:0;transform:translateX(-50%) translateY(10px) scale(.94)}}
+@keyframes kdr{to{stroke-dashoffset:0}}
+#kyc .kcam .khint{position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:18px;width:100%;z-index:4;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;font-size:13.5px;font-weight:700;line-height:1.35;color:#b3202f;background:rgba(255,255,255,.88);border-radius:16px;padding:9px 12px;box-shadow:0 6px 18px rgba(226,19,110,.14);animation:kchi .4s cubic-bezier(.22,1,.36,1) both}
+#kyc .kcam .khint svg{width:20px;height:20px;flex:none}
+/* যাচাই পাতা */
+#kyc .kmh{display:none}
+#kyc .kz{animation:none;opacity:1}
+#kyc .kck2s{margin-top:16px;text-align:left;border-top:1px solid var(--ln);padding-top:4px}
+#kyc .kck2{display:flex;align-items:center;gap:12px;padding:11px 2px;font-size:14px;font-weight:600;color:#3b3540;opacity:.35;transform:translateX(-6px);transition:opacity .5s,transform .5s cubic-bezier(.22,1,.36,1)}
+#kyc .kck2+.kck2{border-top:1px solid var(--ln)}
+#kyc .kck2 em{position:relative;width:24px;height:24px;border-radius:50%;background:var(--ln);display:grid;place-items:center;flex:none;transition:background .4s}
+#kyc .kck2 em svg{width:13px;height:13px;opacity:0;transform:scale(.4);transition:opacity .3s,transform .45s cubic-bezier(.22,1,.36,1)}
+#kyc .kck2 em .kspin{position:absolute;inset:3px;width:auto;height:auto;border:2.5px solid rgba(226,19,110,.25);border-top-color:var(--p);opacity:0}
+#kyc .kck2.on{opacity:1;transform:none}
+#kyc .kck2.on em{background:#12a15b}
+#kyc .kck2.on em svg{opacity:1;transform:none}
+/* চলার সময়: একে একে টিক (সময় ধরে), শেষটা ফলাফল না আসা পর্যন্ত ঘোরে */
+#kyc .kck2.run{animation:kck2 .6s calc(.9s + var(--i)*1.05s) cubic-bezier(.22,1,.36,1) forwards}
+#kyc .kck2.run em{animation:kck2e .01s calc(.9s + var(--i)*1.05s) forwards}
+#kyc .kck2.run em svg{animation:kck2s .45s calc(.95s + var(--i)*1.05s) cubic-bezier(.22,1,.36,1) forwards}
+#kyc .kck2.run:last-child{animation:kck2l .5s .2s forwards}
+#kyc .kck2.run:last-child em{animation:none;background:var(--ln)}
+#kyc .kck2.run:last-child em svg{animation:none}
+#kyc .kck2.run:last-child em .kspin{opacity:1}
+@keyframes kck2{to{opacity:1;transform:none}}
+@keyframes kck2e{to{background:#12a15b}}
+@keyframes kck2s{to{opacity:1;transform:none}}
+@keyframes kck2l{to{opacity:1;transform:none}}
+
+/* ---- v3.06 ভাগ ৫: ক্যামেরা পাতার ওপরের শিরোনাম দেখানো, বাদ দেওয়া লোগো-ব্লকের জায়গা ---- */
+#kyc .kcam.kn .ktp b{display:block;text-align:center;white-space:nowrap}
+
+/* ---- v3.06 ভাগ ৬: ক্যামেরা চালু থাকার সময়ের সমস্যার বার্তা (স্থির রাখুন / আরও কাছে ধরুন) ওপরের হিন্টের জায়গায়, ফ্রেমের ঠিক ওপরে ---- */
+#kyc .kcam.kn .kwr:not(.pv)~.kbt #kst{position:fixed;left:50%;transform:translateX(-50%);width:min(88%,380px);top:calc(50% - min(88vw,380px) / 3.172 - 58px);margin:0;text-align:center;color:#b3202f;font-size:13.5px;font-weight:700;line-height:1.35;z-index:4;pointer-events:none}
