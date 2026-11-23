@@ -785,19 +785,15 @@ const FPI_GIFT = `<svg viewBox="0 0 128 104" aria-hidden="true"><ellipse cx="62"
 const FPI_SV = `<div class="sg"><div><i><svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></i><span>%1</span></div><div><i><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></i><span>%2</span></div><div><i><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></i><span>%3</span></div><div><i><svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></i><span>%4</span></div></div>`;
 function phPageHtml() {
   const fromI = fpiDe.classList.contains("fpi-hold");
-  const sv = FPI_SV.replace("%1", t("i_s1")).replace("%2", t("i_s2")).replace("%3", t("i_s3")).replace("%4", t("i_s4"));
   return `<div class="fl light fph${fromI ? " fph-i" : ""}"><div class="fph-hz"></div>
     <div class="fph-top"><button class="fback" aria-label="${t("back")}" onclick="hap();S.view='';render()"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>${flpHtml("lt")}</div>
     <div class="fph-hd"><i class="fpi-ph"></i><b>FuNPaY</b></div>
     <div class="fph-bn fpn" style="--k:0"><div><p>${t("i_b1")}</p><strong><span>${t("i_b2")}</span><sup>*</sup></strong><p>${t("i_b3")}</p></div>${FPI_GIFT}</div>
-    <div class="fph-sh"><h1 class="ti fpn" style="--k:0">${t("phh")}</h1>
-      <p class="fph-lb fpn" style="--k:1">${t("cc")}</p>
-      <div class="cfield fpn" style="--k:1"><i class="flag"></i><span>${t("bd")}</span><svg class="fph-ch" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
-      <p class="fph-lb fpn" style="--k:2">${t("mob")}</p>
-      <div class="pfield fpn" style="--k:2"><b>+88</b><input id="lp" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="numIn(this);phBar()"></div>
+    <div class="fph-sh">${fpiWk()}<h1 class="ti fpn" style="--k:0">${t("phh")}</h1>
+      <p class="fph-lb fpn" style="--k:1">${t("mob")}</p>
+      <div class="pfield fpn" style="--k:1"><b>+88</b><input id="lp" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="numIn(this);phBar()"></div>
       <div class="le"></div>
-      <p class="terms fpn" style="--k:3">${t("terms")}</p>
-      <div class="sv4 fpn" style="--k:5"><p class="st">${t("i_sv")}</p>${sv}</div>
+      <p class="terms fpn" style="--k:2">${t("terms")}</p>
     </div>
     <button class="nbar lb2 bkbar" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
 }
@@ -977,7 +973,7 @@ async function otpVerify(code) {
     await new Promise((ok) => setTimeout(ok, 720));
     S.otpBusy = false;
     if (S.view !== "otp") return;
-    if (r && r.exists) { S.phone = S.otpPhone; S.name = ""; S.view = ""; S.pin = ""; render(); }
+    if (r && r.exists) { S.phone = S.otpPhone; S.name = ""; S.view = ""; S.pin = ""; try { localStorage.setItem("fpreg", "1"); } catch (e) {} render(); }
     else { S.regPhone = S.otpPhone; S.view = "reg"; render(); }
   } catch (e) {
     S.otpBusy = false; hap("HEAVY");

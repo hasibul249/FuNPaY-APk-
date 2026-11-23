@@ -3746,3 +3746,14 @@ html.kbup .fph .sv4{display:none}
 @keyframes fpiSoft{from{opacity:0}to{opacity:1}}
 #app>.fl.land{animation:none!important}
 html.fpi-hold #app>.fl{animation:none!important}
+
+/* =====================================================================
+   v3.12 — (১) লগইন (PIN) পাতায় লোগোর ওপর লোগো: পুরনো ছবির ব্যাকগ্রাউন্ড আর নতুন .wk লোগো দুটোই আঁকা হচ্ছিল, এখন শুধু .wk
+           (২) রেজিস্ট্রেশন (নম্বর) পাতা: দেশের কোড ও "যা যা পাবেন" সরানোর পর নিচের ফাঁকা অংশে হালকা লোগো
+   ===================================================================== */
+.fl.pinp .psheet.bkl{background:#fff!important}
+.fph .fph-sh>*:not(.wk){position:relative;z-index:1}
+.fph .fph-sh .wk{position:absolute;opacity:.11;pointer-events:none;z-index:0}
+.fph .fph-sh .w1{left:-74px;bottom:-22px;width:190px;height:190px}
+.fph .fph-sh .w2{right:-84px;bottom:104px;width:170px;height:170px}
+.fph .fph-sh .w3{display:none}
