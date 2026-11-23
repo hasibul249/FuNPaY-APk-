@@ -3570,3 +3570,179 @@ html.lowend #kyc .kpo-b{animation-duration:.16s!important}
 
 /* ---- v3.06 ভাগ ৬: ক্যামেরা চালু থাকার সময়ের সমস্যার বার্তা (স্থির রাখুন / আরও কাছে ধরুন) ওপরের হিন্টের জায়গায়, ফ্রেমের ঠিক ওপরে ---- */
 #kyc .kcam.kn .kwr:not(.pv)~.kbt #kst{position:fixed;left:50%;transform:translateX(-50%);width:min(88%,380px);top:calc(50% - min(88vw,380px) / 3.172 - 58px);margin:0;text-align:center;color:#b3202f;font-size:13.5px;font-weight:700;line-height:1.35;z-index:4;pointer-events:none}
+
+/* =====================================================================
+   v3.11 — ডেমো (funpay-intro-v4) অনুযায়ী: ইন্ট্রো, নতুন ইউজারের নম্বর পাতা,
+   পুরনো ইউজারের PIN পাতা, ভাষা বোতামের গোল ঘর। (ভেতরের অ্যাপ অপরিবর্তিত)
+   ===================================================================== */
+:root{--fi-cur:radial-gradient(120% 65% at 50% 0%,rgba(255,130,180,.5),rgba(255,130,180,0) 62%),linear-gradient(165deg,#e8247a 0%,#c40f5e 50%,#8c0941 100%);--fe:cubic-bezier(.2,.9,.2,1)}
+
+/* ---------- ভাষা বোতাম: গোল ঘর (ডান কোণেই) ---------- */
+.flp{display:inline-flex;gap:2px;padding:3px;border-radius:99px;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .5s,border-color .5s}
+.flp button{height:30px;min-width:0;padding:0 11px;border:0;border-radius:99px;background:transparent;color:#fff;font:600 12px/1 system-ui,-apple-system,"Noto Sans Bengali","Segoe UI",sans-serif;display:grid;place-items:center;cursor:pointer;transition:background .5s,color .5s,transform .15s}
+.flp button:active{transform:scale(.9)}
+.flp button.on{background:#fff;color:#e2136e}
+.flp.lt{background:#fff;border-color:#e8d8e1;-webkit-backdrop-filter:none;backdrop-filter:none}
+.flp.lt button{color:#8a7683}
+.flp.lt button.on{background:#e2136e;color:#fff}
+html.lowend .flp{-webkit-backdrop-filter:none;backdrop-filter:none}
+
+/* ---------- ইন্ট্রো ওভারলে (#fpi) ---------- */
+#fpi{--aw:390px;--ah:760px;--L:128px;--tx:0px;--ty:0px;--ts:.235;--yl:#ffc83d;--dk:#c40f5e;--pk:#e2136e;position:fixed;inset:0;z-index:99990;overflow:hidden;pointer-events:none;contain:layout paint;font-family:system-ui,-apple-system,"Noto Sans Bengali","Segoe UI",sans-serif;opacity:1;transition:opacity .35s ease}
+#fpi.s{z-index:4}
+#fpi.off{opacity:0;visibility:hidden;transition:opacity .35s ease,visibility 0s .35s}
+#fpi.nt,#fpi.nt *,#fpi.nt *::before,#fpi.nt *::after{transition:none!important;animation:none!important}
+#fpi.fi-cn .fi-cur{transition:none!important}
+#fpi .fi-cur{position:absolute;inset:0 0 -64px 0;z-index:2;overflow:hidden;background:var(--fi-cur);border-radius:0 0 50% 50%/0 0 7% 7%;transform:translate3d(0,0,0);transition:transform 1.25s cubic-bezier(.76,0,.2,1),opacity .75s ease .15s;will-change:transform;contain:paint}
+#fpi.m-new.g .fi-cur{transform:translate3d(0,-102%,0)}
+#fpi.m-old .fi-cur{bottom:0;border-radius:0}
+#fpi.m-old.g .fi-cur{opacity:0}
+#fpi.m-old.g .fi-cur b{display:none}
+#fpi.s .fi-cur{visibility:hidden}
+#fpi.m-old:not(.g):not(.nt) .fi-cur{pointer-events:auto}
+#fpi .fi-orb{position:absolute;border-radius:50%;pointer-events:none;will-change:transform}
+#fpi .fi-o1{width:380px;height:380px;right:-150px;top:-130px;background:radial-gradient(circle,rgba(255,190,222,.40),transparent 68%);animation:fiDrift 10s ease-in-out infinite alternate}
+#fpi .fi-o2{width:440px;height:440px;left:-200px;bottom:-180px;background:radial-gradient(circle,rgba(255,120,185,.30),transparent 68%);animation:fiDrift 13s ease-in-out -5s infinite alternate-reverse}
+@keyframes fiDrift{to{transform:translate3d(-28px,34px,0) scale(1.12)}}
+#fpi .fi-cur b{position:absolute;top:100%;border-radius:50%;background:#fff;opacity:0;animation:fiRise var(--d) linear var(--dl) infinite;will-change:transform}
+@keyframes fiRise{0%{transform:translate3d(0,0,0);opacity:0}12%{opacity:var(--po)}85%{opacity:var(--po)}100%{transform:translate3d(var(--dx),calc(var(--ah) * -1.1),0);opacity:0}}
+html.lowend #fpi .fi-cur b{display:none}
+html.lowend #fpi .fi-orb{animation:none}
+
+/* লোগো */
+#fpi .fi-lg{position:absolute;z-index:3;left:0;top:0;width:var(--L);height:var(--L);--w:#fff;--y:var(--yl);--t:var(--dk);transform:translate3d(calc(var(--aw)/2 - 64px),calc(var(--ah)*.5 - 64px),0);transition:transform 1.3s cubic-bezier(.25,.85,.2,1),opacity .35s;will-change:transform}
+#fpi.w .fi-lg{transform:translate3d(calc(var(--aw)/2 - 64px),calc(var(--ah)*.47 - 50px - 64px),0)}
+#fpi.g .fi-lg{transform:translate3d(var(--tx),var(--ty),0) scale(var(--ts));transition:transform 1.25s cubic-bezier(.66,0,.2,1),opacity .35s}
+#fpi.g.s .fi-lg{transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .35s}
+#fpi.hl .fi-lg{opacity:0}
+#fpi.L .fi-lg{--w:var(--pk);--t:#fff}
+#fpi .fi-sv{position:absolute;inset:0}
+#fpi .fi-lg svg{display:block;width:100%;height:100%;overflow:visible}
+#fpi .fdw,#fpi .fcc{fill:var(--w)}#fpi .fdy{fill:var(--y)}#fpi .frl{stroke:var(--w);stroke-width:3;stroke-linecap:round}
+#fpi .ftk{font:700 58px system-ui,-apple-system,"Noto Sans Bengali","Segoe UI",sans-serif;fill:var(--t);text-anchor:middle;dominant-baseline:central}
+#fpi.g .fi-lg .fdw,#fpi.g .fi-lg .fcc,#fpi.g .fi-lg .frl,#fpi.g .fi-lg .ftk{transition:fill .4s .5s,stroke .4s .5s}
+#fpi .frA{opacity:0;transform-origin:100px 100px}
+#fpi .frB{transform-origin:100px 100px}
+#fpi .fdw,#fpi .fdy,#fpi .fcc{transform-box:fill-box;transform-origin:center;transform:scale(0)}
+#fpi .ftk{opacity:0;transform-box:fill-box;transform-origin:center}
+#fpi .frl{stroke-dasharray:14;stroke-dashoffset:14}
+#fpi.e .frA{animation:fiRin 1.7s cubic-bezier(.16,.84,.24,1) .05s both}
+#fpi.e .frB{animation:fiSpin 60s linear infinite}
+#fpi.e .fdw,#fpi.e .fdy{animation:fiDpop .6s cubic-bezier(.3,1.6,.5,1) calc(.25s + var(--i) * 42ms) both,fiWave 3.4s ease-in-out calc(2.2s + var(--i) * 110ms) infinite}
+#fpi.e .frl{animation:fiTick .5s ease-out calc(.35s + var(--i) * 40ms) forwards}
+#fpi.e .fcc{animation:fiCpop .9s cubic-bezier(.2,1.2,.3,1) .5s both}
+#fpi.e .ftk{animation:fiTkin .7s cubic-bezier(.2,.9,.3,1) .85s both}
+html.lowend #fpi.e .fdw,html.lowend #fpi.e .fdy{animation:fiDpop .6s cubic-bezier(.3,1.6,.5,1) calc(.25s + var(--i) * 42ms) both}
+@keyframes fiRin{0%{transform:rotate(-210deg) scale(.5);opacity:0}35%{opacity:1}100%{transform:rotate(0) scale(1);opacity:1}}
+@keyframes fiSpin{to{transform:rotate(360deg)}}
+@keyframes fiDpop{0%{transform:scale(0)}100%{transform:scale(1)}}
+@keyframes fiWave{0%,100%{transform:scale(1)}50%{transform:scale(1.45)}}
+@keyframes fiTick{to{stroke-dashoffset:0}}
+@keyframes fiCpop{0%{transform:scale(0)}100%{transform:scale(1)}}
+@keyframes fiTkin{0%{opacity:0;transform:translateY(8px) scale(.6)}100%{opacity:1;transform:none}}
+
+/* নাম, ট্যাগলাইন, লোডার */
+#fpi .fi-nm,#fpi .fi-tg,#fpi .fi-ld{position:absolute;z-index:3;left:0;right:0}
+#fpi .fi-nm{top:calc(var(--ah)*.47 + 28px);text-align:center;color:#fff;font-weight:700;font-size:38px;line-height:44px;letter-spacing:.6px}
+#fpi .fi-nm span{display:inline-block;opacity:0;transform:translate3d(0,18px,0);filter:blur(7px);transition:opacity .7s,transform .8s var(--fe),filter .7s}
+#fpi.w .fi-nm span{opacity:1;transform:none;filter:blur(0);transition-delay:calc(.25s + var(--i) * .07s)}
+#fpi.g .fi-nm span{opacity:0;transform:translate3d(0,-12px,0);filter:blur(4px);transition-duration:.4s;transition-delay:0s}
+#fpi .fi-tg{top:calc(var(--ah)*.47 + 82px);text-align:center;color:rgba(255,255,255,.9);font-size:14.5px;line-height:22px;letter-spacing:.2px;opacity:0;transform:translate3d(0,8px,0);transition:opacity .8s,transform .8s var(--fe)}
+#fpi.w .fi-tg{opacity:1;transform:none;transition-delay:.85s}
+#fpi.g .fi-tg{opacity:0;transform:translate3d(0,-8px,0);transition-duration:.35s;transition-delay:0s}
+#fpi .fi-ld{top:calc(var(--ah)*.47 + 130px);left:50%;right:auto;width:108px;margin-left:-54px;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden;opacity:0;transition:opacity .5s}
+#fpi .fi-ld i{display:block;height:100%;border-radius:3px;background:#fff;transform:scaleX(0);transform-origin:left}
+#fpi.w .fi-ld{opacity:1;transition-delay:1.2s}
+#fpi.w .fi-ld i{animation:fiFill 1.3s cubic-bezier(.4,.1,.2,1) 1.3s forwards}
+@keyframes fiFill{to{transform:scaleX(1)}}
+#fpi.b .fi-ld,#fpi.g .fi-ld,#fpi.m-old.w .fi-ld.x{opacity:0;transition-delay:0s;transition-duration:.3s}
+
+/* বোতাম */
+#fpi .fi-bt{position:absolute;z-index:3;left:34px;right:34px;bottom:calc(20px + env(safe-area-inset-bottom,0px));height:48px;padding:0 46px 0 20px;border:0;border-radius:99px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#ffeaf4);color:#e2136e;font:600 15px system-ui,-apple-system,"Noto Sans Bengali","Segoe UI",sans-serif;letter-spacing:.2px;box-shadow:0 10px 22px rgba(70,0,35,.26),inset 0 1px 0 rgba(255,255,255,.9);transform:translate3d(0,220%,0);opacity:0;transition:transform .9s var(--fe),opacity .6s;-webkit-tap-highlight-color:transparent;cursor:pointer}
+#fpi .fi-bt::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;background:linear-gradient(100deg,transparent,rgba(226,19,110,.18),transparent);transform:translate3d(-130%,0,0) skewX(-18deg)}
+#fpi .fi-ch{position:absolute;right:6px;top:6px;width:36px;height:36px;border-radius:50%;background:#e2136e;color:#fff;display:grid;place-items:center}
+#fpi .fi-ch svg{width:18px;height:18px;animation:fiNg 1.8s ease-in-out 1.4s infinite}
+@keyframes fiNg{0%,100%{transform:none}50%{transform:translateX(3px)}}
+#fpi.b.m-new:not(.g) .fi-bt{transform:none;opacity:1;pointer-events:auto}
+#fpi.b.m-new:not(.g) .fi-bt::after{animation:fiShine 3.4s ease-in-out 1s infinite}
+#fpi .fi-bt:active{transform:scale(.97);transition-duration:.15s}
+#fpi.g.m-new .fi-bt,#fpi.g .fi-bt{transform:translate3d(0,220%,0);opacity:0;transition-duration:.5s;pointer-events:none}
+@keyframes fiShine{0%{transform:translate3d(-130%,0,0) skewX(-18deg)}45%,100%{transform:translate3d(330%,0,0) skewX(-18deg)}}
+
+/* ইন্ট্রোর ভাষা-ঘর */
+#fpi .fi-lt{position:absolute;z-index:6;top:calc(12px + var(--st,0px));right:14px;opacity:0;pointer-events:none;transition:opacity .8s}
+#fpi.w .fi-lt{opacity:1;pointer-events:auto;transition-delay:.7s}
+#fpi.g .fi-lt{opacity:0;pointer-events:none;transition-duration:.25s;transition-delay:0s}
+
+/* ---------- পেজগুলো ইন্ট্রো চলার সময় লুকানো থাকে (ইন্ট্রো শেষে নরমভাবে ওঠে) ---------- */
+.fpi-ph{display:block;flex:none;width:30px;height:30px;pointer-events:none}
+html.fpi-hold .fl.pinp .psheet.bkl{animation:none!important;transform:translate3d(0,102%,0);visibility:hidden}
+html.fpi-hold .fl.pinp .phead b{animation:none!important;opacity:0}
+html.fpi-hold .fph .fpn,html.fpi-hold .fph .fph-hd b{animation:none!important;opacity:0}
+html.fpi-hold .fph .nbar{animation:none!important;opacity:0;transform:translate3d(0,102%,0)}
+html.fpi-hold .fph .fph-sh .pfield::after{animation:none!important;transform:scaleX(0)}
+html.fpi-hold .fl.land{background:var(--fi-cur)!important}
+
+/* ---------- নতুন ইউজার: মোবাইল নম্বর (রেজিস্ট্রেশন) পাতা ---------- */
+.fl.light.fph{background:#fbf2f7!important;color:#2b1a26;display:flex;flex-direction:column;height:100vh;height:100dvh;min-height:0;overflow:hidden}
+.fph .fph-hz{position:absolute;left:0;right:0;top:0;height:330px;overflow:hidden;background:linear-gradient(180deg,#ffcde3 0%,#ffe4f0 55%,#fbf2f7 100%);pointer-events:none}
+.fph .fph-hz::before,.fph .fph-hz::after{content:"";position:absolute;border-radius:50%}
+.fph .fph-hz::before{width:280px;height:280px;right:-100px;top:-90px;background:radial-gradient(circle,rgba(255,255,255,.8),transparent 70%)}
+.fph .fph-hz::after{width:220px;height:220px;left:-80px;top:110px;background:radial-gradient(circle,rgba(226,19,110,.13),transparent 70%)}
+.fph .fph-top{position:relative;z-index:2;flex:none;display:flex;align-items:center;justify-content:space-between;padding:calc(12px + var(--st)) 14px 0 10px}
+.fph .fph-hd{position:relative;z-index:2;flex:none;display:flex;align-items:center;gap:11px;height:30px;margin:28px 0 0 25px}
+.fph .fph-hd b{font-weight:700;font-size:20px;line-height:26px;letter-spacing:.3px;color:#e2136e;animation:fpiHd .7s var(--fe) .1s both}
+.fph.fph-i .fph-hd b{animation-delay:.95s}
+.fph .fph-bn{position:relative;z-index:2;flex:none;margin:14px 18px 0 22px;height:108px;display:flex;align-items:center;justify-content:space-between;overflow:hidden;transition:height .3s ease,margin .3s ease,opacity .25s ease}
+html.kbup .fph .fph-bn{height:0;margin-top:0;opacity:0}
+.fph .fph-bn p{margin:0;font-size:12.5px;line-height:1.4;color:#6a3d55}
+.fph .fph-bn strong{display:block;font-size:40px;line-height:1.1;font-weight:700;color:#e2136e;letter-spacing:-.3px}
+.fph .fph-bn sup{font-size:20px;margin-left:2px;vertical-align:top}
+.fph .fph-bn svg{width:128px;height:104px;flex:none;overflow:visible}
+.fph .cn{animation:fiFl 3.2s ease-in-out infinite}.fph .c2{animation-delay:-1.5s}
+@keyframes fiFl{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.fph .fph-sh{position:relative;z-index:2;flex:1 1 auto;min-height:0;margin-top:10px;padding:24px 22px 12px;background:#fff;border-radius:28px 28px 0 0;box-shadow:0 -12px 36px rgba(150,20,90,.10);overflow:hidden}
+.fph .fph-sh .ti{margin:0 0 18px;font-size:20px;font-weight:700;line-height:1.4;color:#2b1a26}
+.fph .fph-lb{margin:0 0 6px;font-size:12.5px;color:#8a7683}
+.fl.light.fph .cfield{height:auto!important;display:flex;align-items:center;gap:10px;padding:12px 14px!important;border:1px solid #e8d8e1!important;border-radius:12px!important;background:#fff!important;font-size:15.5px;margin-bottom:20px;box-shadow:0 8px 22px rgba(120,20,70,.07)!important;color:#2b1a26}
+.fph .cfield .flag{width:22px;height:22px}
+.fph .cfield .fph-ch{width:18px;height:18px;margin-left:auto;color:#8a7683;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.fl.light.fph .pfield{position:relative;gap:10px!important;padding:8px 2px 2px!important;border:0!important;border-bottom:1px solid #e8d8e1!important}
+.fl.light.fph .pfield::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#e2136e;transform-origin:left;animation:fiUl .9s var(--fe) .3s both}
+.fph.fph-i .pfield::after{animation-delay:1.5s}
+@keyframes fiUl{from{transform:scaleX(0)}to{transform:none}}
+.fl.light.fph .pfield b{font-size:18px}
+.fl.light.fph .pfield input{height:42px;font-size:18px}
+.fl.light.fph .le{margin-top:8px;min-height:20px}
+.fl.light.fph .terms{margin:6px 0 0;font-size:12.5px;line-height:1.5;color:#8a7683}
+.fl.light.fph .terms b{color:#e2136e;font-weight:600}
+.fph .sv4{margin-top:18px}
+.fph .sv4 .st{margin:0 0 12px;font-size:13px;font-weight:600;color:#2b1a26}
+.fph .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.fph .sg div{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11.5px;line-height:1.3;color:#8a7683}
+.fph .sg i{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#e2136e;background:linear-gradient(145deg,#fff1f7,#ffdcec)}
+.fph .sg svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-height:740px){.fph .sv4{display:none}}
+html.kbup .fph .sv4{display:none}
+.fph .fpn{animation:fpiIn .9s var(--fe) calc(var(--k) * .08s) both}
+.fph.fph-i .fpn{animation-delay:calc(.5s + var(--k) * .08s)}
+.fph.fph-i .nbar{animation:fpiBar .8s var(--fe) 1s both!important}
+@keyframes fpiIn{from{opacity:0;transform:translate3d(0,22px,0)}to{opacity:1;transform:none}}
+@keyframes fpiHd{from{opacity:0;transform:translate3d(-8px,0,0)}to{opacity:1;transform:none}}
+@keyframes fpiBar{from{transform:translate3d(0,102%,0)}to{transform:none}}
+
+/* ---------- পুরনো ইউজার: PIN পাতা ---------- */
+.fl.pinp{background:var(--fi-cur)!important}
+.fl.pinp .phead .fpi-ph{width:clamp(62px,15dvh,112px);height:auto;aspect-ratio:1/1;flex:none}
+.fl.pinp .phead b{animation:fpiHd2 .7s var(--fe) .85s both}
+@keyframes fpiHd2{from{opacity:0;transform:translate3d(0,10px,0)}to{opacity:1;transform:none}}
+.fl.pinp .psheet.bkl{animation:fpiSheet .95s var(--fe) .1s both!important;overflow:hidden;position:relative}
+@keyframes fpiSheet{from{transform:translate3d(0,102%,0)}to{transform:none}}
+.fl.pinp .psheet.bkl>*:not(.wk){position:relative;z-index:1}
+.psheet .wk{position:absolute;width:200px;height:200px;opacity:.11;pointer-events:none;z-index:0}
+.psheet .w1{left:-78px;top:30%}.psheet .w2{right:-84px;top:52%;width:210px;height:210px}.psheet .w3{left:50%;margin-left:-90px;bottom:6px;width:180px;height:180px}
+/* ---------- পাতা বদলে ঝিলিক নয়: লগইনের সব পাতায় শুধু নরম ফেড ---------- */
+.fl.vtf,.fl.vtb,.fl.vtn{animation:fpiSoft .45s ease-out both!important}
+@keyframes fpiSoft{from{opacity:0}to{opacity:1}}
+#app>.fl.land{animation:none!important}
+html.fpi-hold #app>.fl{animation:none!important}

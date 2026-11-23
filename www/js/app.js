@@ -644,26 +644,198 @@ function fpSplash() {
   el.onclick = end; document.body.appendChild(el); setTimeout(end, 2200);
 }
 
-const lgBar = (backJs) => `<div class="fbar"><button class="fback" aria-label="${t("back")}" onclick="${backJs}"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="flang"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>`;
+const lgBar = (backJs) => `<div class="fbar"><button class="fback" aria-label="${t("back")}" onclick="${backJs}"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>${flpHtml("lt")}</div>`;
 const NXT = `<svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 const REG = () => { try { return localStorage.getItem("fpreg") === "1"; } catch (e) { return false; } };
+/* =====================================================================
+   v3.11 ইন্ট্রো — ডেমো (funpay-intro-v4) অনুযায়ী ইন্ট্রো + নতুন/পুরনো ইউজারের লগইন পাতা + গোল ভাষা-ঘর
+   ভাগ: ১) লেখা ২) ভাষা-ঘর ৩) ইন্ট্রো ওভারলে #fpi ৪) নতুন ইউজারের নম্বর পাতা ৫) ভাষা বদলানো (পাতা নতুন করে আঁকা ছাড়া)
+   ===================================================================== */
+Object.assign(T.bn, {i_b1: "প্রথমবার FuNPaY-তে এসে KYC করলেই", i_b2: "100 টাকা", i_b3: "ওয়েলকাম বোনাস", i_sv: "FuNPaY-তে যা যা পাবেন", i_s1: "সেন্ড মানি", i_s2: "মোবাইল রিচার্জ", i_s3: "ক্যাশ আউট", i_s4: "পেমেন্ট"});
+Object.assign(T.en, {i_b1: "Join FuNPaY and complete KYC to get", i_b2: "৳100", i_b3: "Welcome Bonus", i_sv: "What you get with FuNPaY", i_s1: "Send Money", i_s2: "Mobile Recharge", i_s3: "Cash Out", i_s4: "Payment"});
+
+/* ২) ভাষা-ঘর: গোল (pill)। cls "lt" = সাদা পাতার জন্য, ফাঁকা = গোলাপি পাতার জন্য */
+/* inline onclick এ `lang` নামটা বোতামের নিজের lang প্রপার্টির সাথে মিশে যায়, তাই আলাদা নাম */
+function fpLang() { lang(); }
+const flpHtml = (c) => `<div class="flp${c ? " " + c : ""}"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')fpLang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')fpLang()">বাং</button></div>`;
+
+/* ৩) ইন্ট্রো ওভারলে */
+const FPI = {el: null, T: [], phase: "", mode: "new", fd: 0, ro: null};
+const fpiDe = document.documentElement;
+const fpiAt = (ms, f) => { FPI.T.push(setTimeout(f, ms)); };
+const fpiClr = () => { FPI.T.forEach(clearTimeout); FPI.T = []; };
+function fpiLogo() {
+  let d = "", r = "";
+  for (let i = 0; i < 16; i++) {
+    const a = i * 22.5 * Math.PI / 180, b = a + 11.25 * Math.PI / 180;
+    d += `<circle class="${i % 2 ? "fdw" : "fdy"}" style="--i:${i}" cx="${(100 + 66 * Math.cos(a)).toFixed(1)}" cy="${(100 + 66 * Math.sin(a)).toFixed(1)}" r="6"/>`;
+    r += `<line class="frl" style="--i:${i}" x1="${(100 + 82 * Math.cos(b)).toFixed(1)}" y1="${(100 + 82 * Math.sin(b)).toFixed(1)}" x2="${(100 + 95 * Math.cos(b)).toFixed(1)}" y2="${(100 + 95 * Math.sin(b)).toFixed(1)}"/>`;
+  }
+  return `<svg viewBox="0 0 200 200" aria-hidden="true"><g class="frA"><g class="frB">${r}${d}</g></g><circle class="fcc" cx="100" cy="100" r="44"/><text class="ftk" x="100" y="101">৳</text></svg>`;
+}
+/* PIN শিটের পেছনের হালকা লোগো (ওয়াটারমার্ক) */
+const FPI_WM = (() => {
+  let s = `<circle cx="100" cy="100" r="44" fill="#e2136e"/><text x="100" y="101" text-anchor="middle" dominant-baseline="central" font-size="58" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,'Noto Sans Bengali','Segoe UI',sans-serif">৳</text>`;
+  for (let i = 0; i < 16; i++) {
+    const a = i * 22.5 * Math.PI / 180, b = a + 11.25 * Math.PI / 180;
+    s += `<circle cx="${(100 + 66 * Math.cos(a)).toFixed(1)}" cy="${(100 + 66 * Math.sin(a)).toFixed(1)}" r="6" fill="${i % 2 ? "#e2136e" : "#ffc83d"}"/><line x1="${(100 + 82 * Math.cos(b)).toFixed(1)}" y1="${(100 + 82 * Math.sin(b)).toFixed(1)}" x2="${(100 + 95 * Math.cos(b)).toFixed(1)}" y2="${(100 + 95 * Math.sin(b)).toFixed(1)}" stroke="#e2136e" stroke-width="3" stroke-linecap="round"/>`;
+  }
+  return s;
+})();
+const fpiWk = () => ["w1", "w2", "w3"].map(c => `<svg class="wk ${c}" viewBox="0 0 200 200" aria-hidden="true">${FPI_WM}</svg>`).join("");
+function fpiEnsure() {
+  if (FPI.el && FPI.el.isConnected) return FPI.el;
+  const el = document.createElement("div"); el.id = "fpi"; el.className = "nt";
+  let b = "";
+  for (let i = 0; i < 16; i++) { const s = 3 + Math.random() * 6, d = 9 + Math.random() * 9; b += `<b style="left:${(Math.random() * 100).toFixed(1)}%;width:${s.toFixed(1)}px;height:${s.toFixed(1)}px;--d:${d.toFixed(1)}s;--dl:-${(Math.random() * d).toFixed(1)}s;--dx:${(Math.random() * 60 - 30).toFixed(0)}px;--po:${(.18 + Math.random() * .35).toFixed(2)}"></b>`; }
+  const nm = [..."FuNPaY"].map((c, i) => `<span style="--i:${i}">${c}</span>`).join("");
+  el.innerHTML = `<div class="fi-cur"><i class="fi-orb fi-o1"></i><i class="fi-orb fi-o2"></i>${b}</div><div class="fi-lg"><div class="fi-sv">${fpiLogo()}</div></div><div class="fi-nm" aria-label="FuNPaY">${nm}</div><div class="fi-tg"></div><div class="fi-ld"><i></i></div><button class="fi-bt" type="button"><span></span><i class="fi-ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></button><div class="fi-lt"></div>`;
+  document.body.appendChild(el); FPI.el = el;
+  el.querySelector(".fi-bt").onclick = fpiStart;
+  el.querySelector(".fi-cur").onpointerdown = () => { if (FPI.phase === "intro" && FPI.mode === "old") fpiSettle("pin"); };
+  fpiTexts();
+  return el;
+}
+function fpiTexts() {
+  const el = FPI.el; if (!el) return;
+  el.querySelector(".fi-tg").textContent = t("tag");
+  el.querySelector(".fi-bt span").textContent = t("lgreg");
+  el.querySelector(".fi-lt").innerHTML = flpHtml("");
+}
+/* লোগো কোথায় বসবে: পাতার ফাঁকা ঘর (.fpi-ph) মেপে নেওয়া */
+function fpiMeasure() {
+  const el = FPI.el; if (!el) return;
+  el.style.setProperty("--aw", innerWidth + "px"); el.style.setProperty("--ah", innerHeight + "px");
+  const p = document.querySelector(".fpi-ph"); if (!p) return;
+  const r = p.getBoundingClientRect(); if (r.width < 4) return;
+  el.style.setProperty("--tx", (r.left + r.width / 2 - 64).toFixed(1) + "px");
+  el.style.setProperty("--ty", (r.top + r.height / 2 - 64).toFixed(1) + "px");
+  el.style.setProperty("--ts", (r.width / 128).toFixed(4));
+}
+function fpiWatch() {
+  if (FPI.ro) { try { FPI.ro.disconnect(); } catch (e) {} FPI.ro = null; }
+  const p = document.querySelector(".fpi-ph");
+  if (p && window.ResizeObserver) { try { FPI.ro = new ResizeObserver(() => fpiMeasure()); FPI.ro.observe(p); FPI.ro.observe(p.parentNode); } catch (e) {} }
+}
+function fpiMode(m) {
+  const el = FPI.el; if (!el || el.classList.contains("m-" + m)) return;
+  el.classList.add("fi-cn"); el.classList.remove("m-new", "m-old"); el.classList.add("m-" + m); void el.offsetWidth; el.classList.remove("fi-cn");
+}
+/* ইন্ট্রো চালানো (অ্যাপ খোলার সময়) */
+function fpiIntro(mode) {
+  const el = fpiEnsure(); fpiClr(); FPI.mode = mode; FPI.phase = "intro";
+  fpiDe.classList.add("fpi-hold");
+  el.className = "nt m-" + mode; fpiTexts(); fpiMeasure(); fpiWatch(); void el.offsetWidth;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.classList.remove("nt");
+    fpiAt(60, () => el.classList.add("e"));
+    fpiAt(1500, () => el.classList.add("w"));
+    if (mode === "new") fpiAt(4000, () => el.classList.add("b"));
+    fpiAt(mode === "new" ? 6500 : 4300, () => { if (mode === "new") fpiStart(); else fpiSettle("pin"); });
+  }));
+}
+/* বোতাম চাপলে (বা নিজে নিজে): নম্বর পাতায় যাওয়া */
+function fpiStart() {
+  if (FPI.phase !== "intro" || FPI.mode !== "new" || S.auth) return;
+  hap(); S.view = "ph"; FPI.fd = 1450; render(); FPI.fd = 0;
+}
+/* ইন্ট্রো শেষ: পর্দা সরে লোগো পাতার জায়গায় বসে */
+function fpiSettle(k) {
+  const el = fpiEnsure(); fpiClr();
+  const first = FPI.phase === "intro" || FPI.phase === "off" || !FPI.phase;
+  FPI.phase = "done";
+  if (!el.classList.contains("e")) { el.classList.add("nt"); el.classList.add("e", "w"); void el.offsetWidth; requestAnimationFrame(() => el.classList.remove("nt")); }
+  fpiMode(k === "pin" ? "old" : "new"); fpiMeasure(); fpiWatch();
+  el.classList.remove("off"); el.classList.add("g");
+  el.classList.toggle("L", k === "ph"); el.classList.toggle("hl", k !== "ph" && k !== "pin");
+  const had = fpiDe.classList.contains("fpi-hold");
+  fpiDe.classList.remove("fpi-hold");
+  fpiAt(first ? 1500 : 60, () => { el.classList.add("s"); fpiMeasure(); });
+  if (had && k === "pin") fpiAt(1100, () => { const f = document.getElementById("pinin"); if (f && !S.busy && !S.auth && !bioOn() && viewKey() === "pin") { try { f.focus(); } catch (e) {} } });
+}
+/* নম্বর পাতা থেকে ব্যাক: পর্দা নরমভাবে নেমে ইন্ট্রো ফেরে */
+function fpiReverse() {
+  const el = fpiEnsure(); fpiClr(); FPI.phase = "intro"; FPI.mode = "new";
+  fpiDe.classList.add("fpi-hold"); fpiMode("new");
+  el.classList.remove("s", "g", "L", "hl"); el.classList.add("e", "w", "b");
+}
+function fpiOff() { if (FPI.el) { FPI.el.classList.add("off"); FPI.phase = "off"; fpiClr(); } fpiDe.classList.remove("fpi-hold"); }
+/* প্রতিটি render() এর শেষে ডাকা হয় */
+function fpiSync() {
+  if (!CONFIGURED) return;
+  if (S.auth) { fpiOff(); return; }
+  const k = viewKey();
+  if (!FPI.el) {
+    if (k === "land") fpiIntro("new"); else if (k === "pin") fpiIntro("old"); else fpiSettle(k);
+    return;
+  }
+  fpiTexts();
+  if (FPI.phase === "intro") {
+    if (k === "land" || (FPI.mode === "old" && k === "pin")) { fpiMeasure(); return; }
+    fpiSettle(k); return;
+  }
+  if (k === "land") { fpiReverse(); return; }
+  fpiSettle(k);
+}
+/* মেপে নেওয়া জায়গা ঠিক রাখা (কিবোর্ড/স্ক্রিন বদলালে) */
+addEventListener("resize", () => { fpiMeasure(); setTimeout(fpiMeasure, 120); });
+
+/* ৪) নতুন ইউজারের মোবাইল নম্বর পাতা */
+const FPI_GIFT = `<svg viewBox="0 0 128 104" aria-hidden="true"><ellipse cx="62" cy="96" rx="38" ry="6" fill="rgba(120,20,70,.13)"/><rect x="28" y="52" width="68" height="42" rx="8" fill="#e2136e"/><rect x="22" y="40" width="80" height="18" rx="7" fill="#f4408f"/><rect x="55" y="40" width="14" height="54" fill="#ffc83d"/><path d="M62 40C50 20 32 24 40 34c5 6 15 6 22 6zM62 40c12-20 30-16 22-6-5 6-15 6-22 6z" fill="#ffc83d"/><g class="cn"><circle cx="106" cy="26" r="13" fill="#ffc83d"/><circle cx="106" cy="26" r="9" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6"/><text x="106" y="31" text-anchor="middle" font-size="13" font-weight="700" fill="#a85f08">৳</text></g><g class="cn c2"><circle cx="16" cy="48" r="8" fill="#ffd966"/><circle cx="16" cy="48" r="5.5" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.2"/></g></svg>`;
+const FPI_SV = `<div class="sg"><div><i><svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></i><span>%1</span></div><div><i><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></i><span>%2</span></div><div><i><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></i><span>%3</span></div><div><i><svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></i><span>%4</span></div></div>`;
+function phPageHtml() {
+  const fromI = fpiDe.classList.contains("fpi-hold");
+  const sv = FPI_SV.replace("%1", t("i_s1")).replace("%2", t("i_s2")).replace("%3", t("i_s3")).replace("%4", t("i_s4"));
+  return `<div class="fl light fph${fromI ? " fph-i" : ""}"><div class="fph-hz"></div>
+    <div class="fph-top"><button class="fback" aria-label="${t("back")}" onclick="hap();S.view='';render()"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>${flpHtml("lt")}</div>
+    <div class="fph-hd"><i class="fpi-ph"></i><b>FuNPaY</b></div>
+    <div class="fph-bn fpn" style="--k:0"><div><p>${t("i_b1")}</p><strong><span>${t("i_b2")}</span><sup>*</sup></strong><p>${t("i_b3")}</p></div>${FPI_GIFT}</div>
+    <div class="fph-sh"><h1 class="ti fpn" style="--k:0">${t("phh")}</h1>
+      <p class="fph-lb fpn" style="--k:1">${t("cc")}</p>
+      <div class="cfield fpn" style="--k:1"><i class="flag"></i><span>${t("bd")}</span><svg class="fph-ch" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <p class="fph-lb fpn" style="--k:2">${t("mob")}</p>
+      <div class="pfield fpn" style="--k:2"><b>+88</b><input id="lp" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="numIn(this);phBar()"></div>
+      <div class="le"></div>
+      <p class="terms fpn" style="--k:3">${t("terms")}</p>
+      <div class="sv4 fpn" style="--k:5"><p class="st">${t("i_sv")}</p>${sv}</div>
+    </div>
+    <button class="nbar lb2 bkbar" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
+}
+
+/* ৫) ভাষা বদলানো: লগইনের পাতা নতুন করে আঁকা হয় না, শুধু লেখাগুলো জায়গায় বদলায় */
+function fpiMorph(a, b) {
+  if (a.childNodes.length !== b.childNodes.length) return false;
+  for (let i = 0; i < a.childNodes.length; i++) {
+    const x = a.childNodes[i], y = b.childNodes[i];
+    if (x.nodeType !== y.nodeType) return false;
+    if (x.nodeType === 3) { if (x.nodeValue !== y.nodeValue) x.nodeValue = y.nodeValue; continue; }
+    if (x.nodeType !== 1) continue;
+    if (x.tagName !== y.tagName) return false;
+    if (x.matches && x.matches(".le,#otst,#otrt,#otrf,#otpbox,.otpi,input,textarea")) {
+      ["placeholder", "aria-label"].forEach(n => { if (y.getAttribute(n) !== x.getAttribute(n)) { if (y.hasAttribute(n)) x.setAttribute(n, y.getAttribute(n)); else x.removeAttribute(n); } });
+      continue;
+    }
+    ["placeholder", "aria-label", "title"].forEach(n => { if (y.getAttribute(n) !== x.getAttribute(n)) { if (y.hasAttribute(n)) x.setAttribute(n, y.getAttribute(n)); else x.removeAttribute(n); } });
+    if (x.closest(".flp") && x.className !== y.className) x.className = y.className;
+    if (!fpiMorph(x, y)) return false;
+  }
+  return true;
+}
+function fpiLang() {
+  const ap = document.getElementById("app");
+  try {
+    const h = loginHtml(), d = document.createElement("div"); d.innerHTML = h;
+    if (ap && ap.firstElementChild && fpiMorph(ap, d)) { ap.__fh = h; save(); fpiTexts(); return; }
+  } catch (e) {}
+  render();
+}
+
 function loginHtml() {
   if (!CONFIGURED) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div><div class="lhero">${LOGOF("land")}<h1>FuNPaY</h1><p>${t("setup")}</p></div></div>`;
-  /* 1) স্বাগতম পেজ */
-  if (S.view === "" && !S.phone) return `<div class="fl land"><div class="orb o1"></div><div class="orb o2"></div>
-    <div class="ltop"><div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
-    <div class="lhero">${LOGOF("land")}<h1>FuNPaY</h1><p>${t("tag")}</p></div>
-    <div class="lpanel"><button class="lwb" onclick="hap();S.view='ph';render()">${t("lgreg")}</button></div></div>`;
-  /* 2) মোবাইল নম্বর পেজ */
-  if (S.view === "ph" && !S.phone) return `<div class="fl light">${lgBar("S.view='';render()")}
-    <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
-      <h2>${t("phh")}</h2>
-      <label>${t("cc")}</label><div class="cfield"><i class="flag"></i>${t("bd")}</div>
-      <label>${t("mob")}</label><div class="pfield"><b>+88</b><input id="lp" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01XXXXXXXXX" autocomplete="tel-national" onkeydown="if(event.key==='Enter')setPhone()" oninput="numIn(this);phBar()"></div>
-      <div class="le"></div>
-      <p class="terms">${t("terms")}</p>
-      </div>
-      <button class="nbar lb2 bkbar" id="phnext" onclick="setPhone()"><span>${t("next")}</span>${NXT}</button></div>`;
+  /* 1) স্বাগতম পেজ: ফাঁকা (ওপরে ইন্ট্রো ওভারলে #fpi চলে) */
+  if (S.view === "" && !S.phone) return `<div class="fl land"></div>`;
+  /* 2) মোবাইল নম্বর পেজ (v3.11: ডেমোর নতুন ইউজার পাতা) */
+  if (S.view === "ph" && !S.phone) return phPageHtml();
   /* 2.5) OTP পেজ: SMS এ কোড যায়, Allow দিলে ঘরে নিজে বসে (ঘর readonly), অ্যান্ড্রয়েডের বাইরে বা না এলে হাতে লেখার পথ খোলে */
   if (S.view === "otp") return `<div class="fl light otpv">${lgBar("otpStop();S.view='ph';render()")}
     <div class="fbody"><img class="mini" src="icons/logo-pink.png" alt="">
@@ -687,9 +859,9 @@ function loginHtml() {
     <button class="nbar lb2" onclick="doReg()"><span>${t("reg")}</span>${NXT}</button></div>`;
   /* 4) PIN পেজ: উপরে লোগো অ্যানিমেশন (আগের মতোই), নিচে বিকাশের মতো নম্বর + PIN ঘর + ফিঙ্গারপ্রিন্ট আইকন, কিবোর্ড ফোনের নিজের */
   return `<div class="fl pinp"><div class="orb o1"></div><div class="orb o2"></div>
-    <div class="fbar pbar">${REG() ? '<span class="fback-sp"></span>' : `<button class="fback" aria-label="${t("back")}" onclick="hap();S.phone='';S.pin='';S.view='ph';render()"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>`}<div class="flang w"><button class="${S.lang === "en" ? "on" : ""}" onclick="if(S.lang!=='en')lang()">Eng</button><button class="${S.lang === "bn" ? "on" : ""}" onclick="if(S.lang!=='bn')lang()">বাং</button></div></div>
-    <div class="phead">${LOGOF("pin")}<b>${greet()}</b></div>
-    <div class="psheet bkl">
+    <div class="fbar pbar">${REG() ? '<span class="fback-sp"></span>' : `<button class="fback" aria-label="${t("back")}" onclick="hap();S.phone='';S.pin='';S.view='ph';render()"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>`}${flpHtml("")}</div>
+    <div class="phead"><i class="fpi-ph"></i><b>${greet()}</b></div>
+    <div class="psheet bkl">${fpiWk()}
       <div class="bkf"><label>${t("accno")}</label><div class="bkn">+88&nbsp;&nbsp;${esc(S.phone)}</div></div>
       <div class="bkf"><label>${t("pinl")}</label>
         <div class="bkp"><input id="pinin" class="pinin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${t("pinph")}" aria-label="PIN" value="${esc(S.pin)}" oninput="pinIn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();pinGo()}">
@@ -956,15 +1128,16 @@ function render() {
   if (S.fq && S.auth) { S.fq = false; setTimeout(() => { const f = document.getElementById("sq"); if (f) { try { f.focus(); } catch (e) {} } }, 380); }
   sbar();
   if (S.auth && S.tab === "inbox" && S.seg === "n" && unreadN()) setTimeout(() => { if (S.auth && S.tab === "inbox" && S.seg === "n") markRead(); }, 1600);
-  if (!S.auth && CONFIGURED && S.phone && !S.view && !bioOn()) setTimeout(() => { const f = document.getElementById("pinin"); if (f && !S.busy) { try { f.focus(); } catch (e) {} } }, 400);
-  if (!S.auth && CONFIGURED) { const f = document.getElementById(S.view === "reg" ? "rn" : "lp"); if (f && S.view) setTimeout(() => { try { f.focus(); } catch (e) {} }, 350); }
+  if (!S.auth && CONFIGURED && S.phone && !S.view && !bioOn()) setTimeout(() => { const f = document.getElementById("pinin"); if (f && !S.busy && !fpiDe.classList.contains("fpi-hold")) { try { f.focus(); } catch (e) {} } }, 400);
+  if (!S.auth && CONFIGURED) { const f = document.getElementById(S.view === "reg" ? "rn" : "lp"); if (f && S.view) setTimeout(() => { try { f.focus(); } catch (e) {} }, FPI.fd || 350); }
   kycSync();
+  fpiSync();
 }
 const go = (k) => {
   if (S.tab === k) { render(); document.getElementById("app").scrollTo({top: 0, behavior: "smooth"}); return; }
   hap(); S.tab = k; S.fx = true; render(); document.getElementById("app").scrollTop = 0;
 };
-const lang = () => { hap(); S.lang = S.lang === "bn" ? "en" : "bn"; render(); };
+const lang = () => { hap(); S.lang = S.lang === "bn" ? "en" : "bn"; if (!S.auth && CONFIGURED) fpiLang(); else render(); };
 let peekTimer;
 function peek(b) {
   hap();
@@ -2879,10 +3052,10 @@ function kbSync() {
   if (up) { try { localStorage.setItem("fpkb", String(d)); } catch (e) {} }
   try { sv = Number(localStorage.getItem("fpkb")) || 0; } catch (e) {}
   document.documentElement.style.setProperty("--kb", (up ? 0 : (sv > 120 ? sv : Math.round(KBMAX * .4))) + "px");
+  document.documentElement.classList.toggle("kbup", up);
 }
 window.addEventListener("resize", kbSync); kbSync();
 render();
-fpSplash();
 /* নেটিভ স্প্ল্যাশ সঙ্গে সঙ্গে সরিয়ে আমাদের অ্যানিমেশন দেখানো (কালো/ফাঁকা স্ক্রিন নয়) */
 try { const SS = cap().SplashScreen; if (SS) requestAnimationFrame(() => Promise.resolve(SS.hide({fadeOutDuration: 120})).catch(() => {})); } catch (e) {}
 window.__fpready = true;
