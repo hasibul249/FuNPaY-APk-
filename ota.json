@@ -1,0 +1,5 @@
+{
+  "version": "1.2.46",
+  "pkg": "https://raw.githubusercontent.com/hasibul249/FuNPaY-APk-/ota/app-1.2.46.json",
+  "notes": "v3.09: মুখ যাচাই আরও দ্রুত (ফোনের ভেতরের ML Kit + MobileFaceNet; নতুন APK ইনস্টল করলে চালু হয়, না করলে আগের পথেই চলে)"
+}
