@@ -2184,6 +2184,7 @@ function kInfoNext() {
 
 /* ----- মুখ যাচাই: ডান → বাম → উপর → নিচ, ক্যামেরায় সরাসরি মুখের অবস্থান দেখে ----- */
 async function kFaceModel() {
+  if (!KNLbad) { const nr = await kNatInit(); if (nr && nr.det) return KNL; } /* v3.09: নেটিভ ML Kit পেলে MediaPipe নামানোই লাগে না */
   if (KFL) return KFL; if (KFLbad) return null;
   if (!KFLp) KFLp = (async () => {
     try {
@@ -2209,12 +2210,12 @@ function kFaceOrd() {
 function kFaceStop() { KFc.on = false; clearTimeout(KFc.tm); }
 function kFaceMsg(k) { if (KFc.last !== k) { KFc.last = k; kSt(k); } }
 async function kFaceStart() {
-  kFaceStop(); KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.sd = null; KFc.c1 = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
+  kFaceStop(); KFc.gen = (KFc.gen || 0) + 1; KFc.on = true; KFc.st = -1; KFc.base = null; KFc.bs = []; KFc.hold = 0; KFc.lost = 0; KFc.shot = ""; KFc.done = [0, 0, 0, 0, 0]; KFc.last = ""; KFc.fr = []; KFc.rs = 0; KFc.sy = null; KFc.sp = null; KFc.sd = null; KFc.c1 = null; KFc.pd = 0; KFc.pt = 0; KFc.t0 = 0; KFc.nob = false; KFc.bl = {c: false, n: 0};
   KFc.bn = 0; kFaceMsg("k_fload"); kFaceUI();
   const m = await kFaceModel();
   if (!KFc.on || K.step !== "face" || K.pv) return;
   if (!m) { kFaceMsg("k_ffb"); kManualShow(); return; }
-  kFaceMsg("k_fcen"); kFaceLoop();
+  KFc.nat = !!m.native; kFaceMsg("k_fcen"); if (m.native) kFaceLoopN(); else kFaceLoop();
 }
 function kFaceLoop() {
   if (!KFc.on || K.step !== "face" || K.pv) return;
@@ -2222,20 +2223,59 @@ function kFaceLoop() {
   const v = document.getElementById("kvid"); if (!v || !v.videoWidth || v.readyState < 2) return;
   let res; try { res = KFL.detectForVideo(v, performance.now()); } catch (e) { return; }
   const L = res && res.faceLandmarks && res.faceLandmarks[0];
-  if (!L) { if (++KFc.lost > 12) { KFc.hold = 0; KFc.bs = []; kFaceMsg("k_fnone"); } return; }
-  KFc.lost = 0;
+  if (!L) { kFaceStep(null, v); return; }
   const nose = L[1], xa = L[234].x, xb = L[454].x, xl = Math.min(xa, xb), xr = Math.max(xa, xb), fh = L[10], ch = L[152];
   const eyeY = (L[33].y + L[133].y + L[362].y + L[263].y) / 4;
   const w = xr - xl, yaw0 = (nose.x - xl) / w, pit0 = (nose.y - fh.y) / (ch.y - fh.y), pdn0 = (nose.y - eyeY) / Math.max(.02, ch.y - eyeY);
-  const sm = (o, v) => (o == null ? v : o + (v - o) * .6);
-  const yaw = (KFc.sy = sm(KFc.sy, yaw0)), pit = (KFc.sp = sm(KFc.sp, pit0)), pdn = (KFc.sd = sm(KFc.sd, pdn0)), cx = (xl + xr) / 2, cy = (fh.y + ch.y) / 2;
-  /* শুরুতে কড়া, ধাপ চলার সময় নরম: মাথা নিচু/ঘোরালে মুখ ফ্রেমের একটু বাইরে গেলেও ধাপ থামবে না */
-  const fit = KFc.st < 0 ? (Math.abs(cx - .5) < .14 && Math.abs(cy - .45) < .17 && w > .26 && w < .85) : (Math.abs(cx - .5) < .25 && Math.abs(cy - .46) < .3 && w > .2 && w < .95);
   /* চোখের পলক: ব্লেন্ডশেপ স্কোর (০ = খোলা, ১ = বন্ধ) */
   let blink = -1; const bsh = res.faceBlendshapes && res.faceBlendshapes[0] && res.faceBlendshapes[0].categories;
   if (bsh && bsh.length) { const g = (n) => { const c = bsh.find(x => x.categoryName === n); return c ? c.score : 0; }; blink = (g("eyeBlinkLeft") + g("eyeBlinkRight")) / 2; }
+  kFaceStep({yaw: yaw0, pit: pit0, pdn: pdn0, cx: (xl + xr) / 2, cy: (fh.y + ch.y) / 2, w, blink}, v);
+}
+/* v3.09: নেটিভ ML Kit লাইভনেস — ফ্রেম ছোট করে নেটিভে পাঠানো, ফিরতি বিন্দু থেকে একই মাপ (yaw/pit/pdn/blink) বানিয়ে একই ধাপ-যন্ত্র (kFaceStep) চালানো */
+const KNT = {yaw: .09, up: .06, down: .06};
+let KNLbad = false, KNerr = 0, KNg = null;
+function kGrab(v, mw) {
+  const w = v.videoWidth, h = v.videoHeight, k = Math.min(1, mw / w), cw = Math.round(w * k), ch = Math.round(h * k);
+  if (!KNg) KNg = document.createElement("canvas");
+  if (KNg.width !== cw) KNg.width = cw; if (KNg.height !== ch) KNg.height = ch;
+  KNg.getContext("2d").drawImage(v, 0, 0, cw, ch);
+  return KNg.toDataURL("image/jpeg", .7).split(",")[1];
+}
+function kNatObs(r) {
+  if (!r || !r.n || !r.box || !r.eA || !r.eB || !r.nose || !r.mB || !r.w || !r.h) return null;
+  const ed = Math.hypot(r.eB[0] - r.eA[0], r.eB[1] - r.eA[1]); if (ed < 3) return null;
+  const mx = (r.eA[0] + r.eB[0]) / 2, my = (r.eA[1] + r.eB[1]) / 2, dn = r.mB[1] - my; if (dn < 3) return null;
+  const pdn = (r.nose[1] - my) / dn;
+  let bl = -1; if (r.ol >= 0 && r.or >= 0) bl = 1 - (r.ol + r.or) / 2;
+  return {yaw: (r.nose[0] - mx) / (2.3 * ed) + .5, pit: pdn, pdn, cx: (r.box[0] + r.box[2] / 2) / r.w, cy: (r.box[1] + r.box[3] / 2) / r.h, w: r.box[2] / r.w, blink: bl};
+}
+async function kFaceLoopN() {
+  const g = KFc.gen; if (!KFc.on || K.step !== "face" || K.pv) return;
+  const v = document.getElementById("kvid");
+  if (!v || !v.videoWidth || v.readyState < 2) { KFc.tm = setTimeout(kFaceLoopN, 60); return; }
+  let o = null, bad = false;
+  try {
+    const r = await Promise.race([cap().FaceNative.detect({image: kGrab(v, 360)}), kTO(2500)]);
+    if (r === undefined) throw new Error("NTO");
+    KNerr = 0; o = kNatObs(r);
+  } catch (e) { console.log("natlive", e && e.message); bad = ++KNerr >= 4; }
+  if (g !== KFc.gen || !KFc.on || K.step !== "face" || K.pv) return;
+  if (bad) { KNLbad = true; KNerr = 0; KFc.on = false; clearTimeout(KFc.tm); kFaceStart(); return; } /* নেটিভ বারবার ব্যর্থ: পুরনো MediaPipe-এ ফিরে যাওয়া */
+  try { kFaceStep(o, v); } catch (e) { console.log("fstep", e && e.message); }
+  if (g === KFc.gen && KFc.on) KFc.tm = setTimeout(kFaceLoopN, 0);
+}
+/* সব ধাপ-যন্ত্র একই: ইনপুট o = {yaw, pit, pdn, cx, cy, w, blink} (MediaPipe বা ML Kit থেকে), মুখ না পেলে null */
+function kFaceStep(o, v) {
+  const nat = !!KFc.nat;
+  if (!o) { if (++KFc.lost > (nat ? 4 : 12)) { KFc.hold = 0; KFc.bs = []; kFaceMsg("k_fnone"); } return; }
+  KFc.lost = 0;
+  const sm = (q, x) => (q == null ? x : q + (x - q) * (nat ? .5 : .6));
+  const yaw = (KFc.sy = sm(KFc.sy, o.yaw)), pit = (KFc.sp = sm(KFc.sp, o.pit)), pdn = (KFc.sd = sm(KFc.sd, o.pdn)), cx = o.cx, cy = o.cy, w = o.w, blink = o.blink;
+  /* শুরুতে কড়া, ধাপ চলার সময় নরম: মাথা নিচু/ঘোরালে মুখ ফ্রেমের একটু বাইরে গেলেও ধাপ থামবে না */
+  const fit = KFc.st < 0 ? (Math.abs(cx - .5) < .14 && Math.abs(cy - .45) < .17 && w > .26 && w < .85) : (Math.abs(cx - .5) < .25 && Math.abs(cy - .46) < .3 && w > .2 && w < .95);
   if (KFc.st < 0) {
-    if (fit && Math.abs(yaw - .5) < .09 && (blink < 0 || blink < .3)) {
+    if (fit && Math.abs(yaw - .5) < (nat ? .12 : .09) && (blink < 0 || blink < (nat ? .4 : .3))) {
       KFc.bs.push({yaw, pit, pdn}); if (KFc.bs.length === 1) KFc.tc = Date.now();
       if (KFc.bs.length === 4) KFc.c1 = {img: kShrink(v, 1400, .9), sh: kSharp(v)};
       if (KFc.bs.length >= 5) {
@@ -2259,13 +2299,14 @@ function kFaceLoop() {
   if (cur === "blink") {
     if (blink < 0) { KFc.nob = true; done = true; p = 1; }
     else {
-      if (blink > .5 && !KFc.bl.c) KFc.bl.c = true;
-      else if (blink < .25 && KFc.bl.c) { KFc.bl.c = false; KFc.bl.n++; hap(); }
+      if (blink > (nat ? .45 : .5) && !KFc.bl.c) KFc.bl.c = true;
+      else if (blink < (nat ? .3 : .25) && KFc.bl.c) { KFc.bl.c = false; KFc.bl.n++; hap(); }
       p = Math.min(1, KFc.bl.n / 1) + (KFc.bl.c ? .2 : 0); p = Math.min(p, KFc.bl.n >= 1 ? 1 : .95); done = KFc.bl.n >= 1;
     }
   } else {
     /* নিচ: নতুন মাপ (চোখ থেকে নাক-থুতনির অনুপাত) + পুরনো মাপ, দুটোর যেটা আগে পূরণ হয়; অল্প নিচু করলেই হবে */
-    p = {right: (b.yaw - yaw) / .10, left: (yaw - b.yaw) / .10, up: (b.pit - pit) / .06, down: Math.max((pdn - b.pdn) / .020, (pit - b.pit) / .028)}[cur];
+    p = nat ? {right: (b.yaw - yaw) / KNT.yaw, left: (yaw - b.yaw) / KNT.yaw, up: (b.pdn - pdn) / KNT.up, down: (pdn - b.pdn) / KNT.down}[cur]
+      : {right: (b.yaw - yaw) / .10, left: (yaw - b.yaw) / .10, up: (b.pit - pit) / .06, down: Math.max((pdn - b.pdn) / .020, (pit - b.pit) / .028)}[cur];
     if (p >= 1) { if (++KFc.hold >= 2) done = true; } else KFc.hold = 0;
   }
   kFaceProg(p);
@@ -2299,11 +2340,42 @@ function kFaceUse() { hap(); K.selfie = K.pv; K.pv = ""; K.live = {ok: false, mo
 /* ----- v2.20: NID-র ছবির মুখের সাথে সেলফি মেলানো (পুরোটা ফোনের ভেতরে, face-api) -----
    মিল % = দুই মুখের "দূরত্ব" থেকে হিসাব। ৮৫% মানে দূরত্ব ০.৪৫ বা তার কম (face-api এর সাধারণ সীমা ০.৬ এর চেয়ে কড়া)।
    সার্ভারের SQL (update-v2.20-kyc-auto.sql) একই হিসাব নিজে আবার করে, তাই এই ধাপ সরাসরি অ্যাকাউন্ট চালু করতে পারে না। */
-const KM = {AUTO: 85, REVIEW: 70, SUSPECT: 35, TRIES: 3, SWAP: .62, VER: "1.7.12"};
+const KM = {AUTO: 85, REVIEW: 70, SUSPECT: 35, TRIES: 3, SWAP: .62, MS: .56, VER: "1.7.12"};
 const KMB = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@" + KM.VER;
 const KMA = [[0, 100], [.30, 97], [.50, 85], [.58, 70], [.70, 45], [.85, 30], [1, 10], [1.2, 0]];
 let KFA = null, KFAp = null, KFAbad = 0;
+/* ----- v3.09: নেটিভ মুখ মেলানো (ML Kit মুখ খোঁজা + সোজা করা, MobileFaceNet ছাপ) -----
+   ছাপ দৈর্ঘ্য ১ করা হয়; KM.MS দিয়ে গুণ করে পাঠানো হয়, যাতে সার্ভারের আগের হিসাব (দূরত্ব→মিল %, অটো ≥৮৫%, একই মুখ <০.৪৫) হুবহু একই থাকে, SQL বদলাতে হয় না। */
+let KNMbad = false, KNp = null; const KNL = {native: true}, KNM = {native: true};
+const kNatAvail = () => { try { return !!(window.Capacitor && Capacitor.isPluginAvailable && Capacitor.isPluginAvailable("FaceNative") && cap().FaceNative && cap().FaceNative.detect); } catch (e) { return false; } };
+function kNatInit() {
+  if (!kNatAvail()) return Promise.resolve(null);
+  if (!KNp) KNp = (async () => {
+    try { const r = await Promise.race([cap().FaceNative.warmup(), kTO(20000)]); if (!r || !r.det) throw new Error("NW"); return r; }
+    catch (e) { console.log("nat", e && e.message); KNp = null; return null; }
+  })();
+  return KNp;
+}
+function kToB64(src, mx) {
+  const W = src.naturalWidth || src.videoWidth || src.width, H = src.naturalHeight || src.videoHeight || src.height, k = Math.min(1, mx / Math.max(W, H));
+  const c = document.createElement("canvas"); c.width = Math.max(8, Math.round(W * k)); c.height = Math.max(8, Math.round(H * k));
+  c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+  return {b64: c.toDataURL("image/jpeg", .92).split(",")[1], k: c.width / W};
+}
+async function kDetN(input) {
+  const g = kToB64(input, 1280);
+  const r = await Promise.race([cap().FaceNative.embed({image: g.b64}), kTO(20000)]);
+  if (r === undefined) throw new Error("NTO");
+  if (!r || !r.n || !r.emb || r.emb.length !== 128 || !r.box) return null;
+  const k = 1 / g.k;
+  return {desc: r.emb.map(x => x * KM.MS), score: .95, box: {x: r.box[0] * k, y: r.box[1] * k, width: r.box[2] * k, height: r.box[3] * k}};
+}
 function kFA() {
+  if (KFA && KFA.native) return Promise.resolve(KFA);
+  if (!KNMbad && kNatAvail()) return kNatInit().then(r => { if (r && r.det && r.tf && !KNMbad) { KFA = KNM; return KNM; } return kFAold(); });
+  return kFAold();
+}
+function kFAold() {
   if (KFA) return Promise.resolve(KFA);
   if (KFAbad >= 2) return Promise.resolve(null);
   if (!KFAp) KFAp = (async () => {
@@ -3824,6 +3896,7 @@ function kSharp(v) {
 
 /* ----- মুখ খোঁজা (কম আলো/ঝাপসাতেও পেতে একাধিক উপায়) ----- */
 async function kDet(f, input, kind, mc) {
+  if (f && f.native) return kDetN(input);
   const o = kind === "tiny" ? new f.TinyFaceDetectorOptions({inputSize: 416, scoreThreshold: mc || .3}) : new f.SsdMobilenetv1Options({minConfidence: mc || .3, maxResults: 6});
   const all = await f.detectAllFaces(input, o).withFaceLandmarks().withFaceDescriptors(); if (!all || !all.length) return null;
   all.sort((a, b) => b.detection.score * b.detection.box.area - a.detection.score * a.detection.box.area);
@@ -3831,14 +3904,25 @@ async function kDet(f, input, kind, mc) {
 }
 async function kSelfieDet(f, shot, frs) {
   const sim = await kImg(shot);
-  let s = await kDet(f, sim, "ssd"); if (!s) s = await kDet(f, sim, "tiny"); if (!s) s = await kDet(f, sim, "ssd", .12);
+  let s = await kDet(f, sim, "ssd"); if (!s && !f.native) s = await kDet(f, sim, "tiny"); if (!s && !f.native) s = await kDet(f, sim, "ssd", .12);
   if (s) return {s, sim};
-  for (const fr of (frs || [])) { try { const im = await kImg(fr); const q = (await kDet(f, im, "ssd")) || (await kDet(f, im, "tiny")); if (q) return {s: q, sim: im}; } catch (e) {} }
+  for (const fr of (frs || [])) { try { const im = await kImg(fr); const q = (await kDet(f, im, "ssd")) || (f.native ? null : await kDet(f, im, "tiny")); if (q) return {s: q, sim: im}; } catch (e) {} }
   return {s: null, sim};
 }
 function kEnh(c) { try { const o = document.createElement("canvas"); o.width = c.width; o.height = c.height; const g = o.getContext("2d"); g.filter = "contrast(1.3) brightness(1.08) saturate(.7)"; g.drawImage(c, 0, 0); return o; } catch (e) { return c; } }
 /* NID কার্ডের মুখ: একাধিক কাটা/উজ্জ্বল করা কপি থেকে একাধিক "ছাপ", পরে সেলফির সাথে সবচেয়ে ভালো জোড়া নেওয়া হয় */
 async function kCardFace(f, src) {
+  if (f && f.native) {
+    const im0 = await kImg(src), W0 = im0.naturalWidth, H0 = im0.naturalHeight; let base0 = im0, n1 = await kDetN(im0);
+    if (!n1) { base0 = kCrop(im0, {x: 0, y: 0, w: W0 * .55, h: H0}, 1000); n1 = await kDetN(base0); }
+    if (!n1) return null;
+    const nd = [n1.desc]; let nb = n1, nbb = base0;
+    const nc2 = kCrop(base0, kGrow(n1.box, 1.7), 480);
+    try { const n2 = await kDetN(nc2); if (n2) { nb = n2; nbb = nc2; nd.push(n2.desc); } } catch (e) {}
+    try { const n3 = await kDetN(kEnh(nc2)); if (n3) nd.push(n3.desc); } catch (e) {}
+    const nq = kQual(nbb, nb.box), nth = kCrop(nbb, kGrow(nb.box, 1.5), 160).toDataURL("image/jpeg", .82);
+    return {desc: nb.desc, descs: nd, thumb: nth, q: nq, score: nb.score};
+  }
   const im = await kImg(src), W = im.naturalWidth, H = im.naturalHeight; let base = im, r = await kDet(f, im, "ssd");
   if (!r) { base = kCrop(im, {x: 0, y: 0, w: W * .55, h: H}, 1000); r = await kDet(f, base, "ssd"); }
   if (!r) r = await kDet(f, base, "ssd", .12);
@@ -3871,7 +3955,7 @@ async function kMatchRun() {
     if (s && K.live && K.live.ok) {
       for (const fr of K.live.fr) {
         if (!live()) return;
-        try { const im = await kImg(fr); let q = await kDet(f, im, "tiny"); if (!q) q = await kDet(f, im, "ssd"); if (!q) continue;
+        try { const im = await kImg(fr); let q = await kDet(f, im, "tiny"); if (!q && !f.native) q = await kDet(f, im, "ssd"); if (!q) continue;
           const dd = kDist(q.desc, s.desc); sw.n++; sw.max = Math.max(sw.max, dd); if (dd <= KM.SWAP && q.score >= .6 && sds.length < 5) sds.push(q.desc); } catch (e) {}
       }
       sw.ok = sw.n >= 2 && sw.max <= KM.SWAP;
@@ -3912,7 +3996,10 @@ async function kMatchRun() {
     }
     return fin();
   } catch (e) {
-    console.log("match", e && e.message); R.st = "nomodel"; K.desc = null; return fin();
+    console.log("match", e && e.message);
+    /* v3.09: নেটিভ মেলানো ব্যর্থ হলে একবার পুরনো face-api পথে আবার চেষ্টা (ছাপের ধরন আলাদা, তাই কার্ডের ছাপও নতুন করে) */
+    if (KFA && KFA.native && !KNMbad) { KNMbad = true; KFA = null; K.cardDesc = null; K.cardDescs = null; K.mrun = false; return kMatchRun(); }
+    R.st = "nomodel"; K.desc = null; return fin();
   } finally { if (K.mid === id) K.mrun = false; }
 }
 /* মিল পাতা: ৮৫%+ এ % দেখানো হয় না (শুধু টিক); ৮৫ এর নিচে % দেখায়; "অ্যাডমিন" শব্দ নেই; ইউজারের "পাঠান" চাপা লাগে না */

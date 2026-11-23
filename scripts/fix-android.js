@@ -182,3 +182,41 @@ console.log("android সেটিং ঠিক করা হয়েছে");
   if (re.test(c)) { c = c.replace(re, "$1" + call); fs.writeFileSync(mainFile, c); console.log("কিবোর্ড-সিঙ্ক বসানো হলো"); }
   else console.log("MainActivity: কিবোর্ড-সিঙ্ক হুক বসেনি (ম্যানুয়ালি দেখুন)");
 })();
+
+/* 12) v3.09: ফোনের ভেতরে মুখ চেনা (ML Kit Face Detection + MobileFaceNet TFLite): নেটিভ প্লাগইন, মডেল ফাইল (assets), রেজিস্টার, লাইব্রেরি */
+(function () {
+  const root = "android/app/src/main/java";
+  if (!fs.existsSync(root) || !fs.existsSync("native/FaceNativePlugin.java")) return;
+  let mainFile = null;
+  (function walk(d) {
+    for (const n of fs.readdirSync(d)) {
+      const q = d + "/" + n;
+      if (fs.statSync(q).isDirectory()) walk(q);
+      else if (n === "MainActivity.java") mainFile = q;
+    }
+  })(root);
+  if (!mainFile) { console.log("MainActivity.java পাওয়া যায়নি, ফেস প্লাগইন বসানো হয়নি"); return; }
+  let c = fs.readFileSync(mainFile, "utf8");
+  const pkg = (/package\s+([\w.]+)\s*;/.exec(c) || [])[1] || "com.funpay.app";
+  const dir = mainFile.slice(0, mainFile.lastIndexOf("/"));
+  fs.writeFileSync(dir + "/FaceNativePlugin.java", fs.readFileSync("native/FaceNativePlugin.java", "utf8").replace(/__PKG__/g, pkg));
+  if (!c.includes("registerPlugin(FaceNativePlugin.class)")) {
+    if (c.includes("registerPlugin(NidOcrPlugin.class);")) c = c.replace("registerPlugin(NidOcrPlugin.class);", "registerPlugin(NidOcrPlugin.class);\n        registerPlugin(FaceNativePlugin.class);");
+    else if (c.includes("registerPlugin(SmsConsentPlugin.class);")) c = c.replace("registerPlugin(SmsConsentPlugin.class);", "registerPlugin(SmsConsentPlugin.class);\n        registerPlugin(FaceNativePlugin.class);");
+    else c = c.replace(/extends BridgeActivity\s*\{/, "extends BridgeActivity {\n    @Override\n    public void onCreate(android.os.Bundle savedInstanceState) {\n        registerPlugin(FaceNativePlugin.class);\n        super.onCreate(savedInstanceState);\n    }\n");
+    fs.writeFileSync(mainFile, c);
+  }
+  /* মডেল ফাইল অ্যাপের ভেতরে (ডাউনলোড লাগে না) */
+  const ad = "android/app/src/main/assets";
+  fs.mkdirSync(ad, {recursive: true});
+  if (fs.existsSync("native/models/mobile_facenet.tflite")) fs.copyFileSync("native/models/mobile_facenet.tflite", ad + "/mobile_facenet.tflite");
+  else console.log("সতর্কতা: native/models/mobile_facenet.tflite পাওয়া যায়নি, মুখ মেলানো পুরনো (face-api) পথে চলবে");
+  const bg = "android/app/build.gradle";
+  if (fs.existsSync(bg)) {
+    let b = fs.readFileSync(bg, "utf8");
+    if (!b.includes("com.google.mlkit:face-detection")) b = b.replace(/dependencies\s*\{/, "dependencies {\n    implementation 'com.google.mlkit:face-detection:16.1.7'");
+    if (!b.includes("org.tensorflow:tensorflow-lite")) b = b.replace(/dependencies\s*\{/, "dependencies {\n    implementation 'org.tensorflow:tensorflow-lite:2.16.1'");
+    fs.writeFileSync(bg, b);
+  }
+  console.log("ML Kit ফেস + MobileFaceNet প্লাগইন বসানো হলো");
+})();
