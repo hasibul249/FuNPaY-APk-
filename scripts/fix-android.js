@@ -220,3 +220,15 @@ console.log("android সেটিং ঠিক করা হয়েছে");
   }
   console.log("ML Kit ফেস + MobileFaceNet প্লাগইন বসানো হলো");
 })();
+
+/* 13) APK ছোট করা: শুধু আসল ফোনের ABI (arm64-v8a, armeabi-v7a); x86/x86_64 (এমুলেটর) বাদ। ML Kit + TFLite এর নেটিভ লাইব্রেরি ৪ ABI তে মিলে APK ১২০ MB+ হয়ে যাচ্ছিল */
+(function () {
+  const bg = "android/app/build.gradle";
+  if (!fs.existsSync(bg)) return;
+  let b = fs.readFileSync(bg, "utf8");
+  if (!b.includes("abiFilters")) {
+    b = b.replace(/defaultConfig\s*\{/, "defaultConfig {\n        ndk { abiFilters 'arm64-v8a', 'armeabi-v7a' }");
+    fs.writeFileSync(bg, b);
+    console.log("abiFilters বসানো হলো (arm64-v8a, armeabi-v7a)");
+  }
+})();
